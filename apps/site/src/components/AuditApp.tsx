@@ -22,7 +22,9 @@ import {
 	type SessionPage,
 	type Status,
 	setEvaluation,
+	setPageProcess,
 } from "@rampe/core/audit-session";
+import { computeConformity, formatRate } from "@rampe/core/conformity";
 import { parseAuditUrl, parseSampleFile, plural } from "@rampe/core/sample-file";
 import type { ComponentChildren } from "preact";
 import { useEffect, useLayoutEffect, useMemo, useRef, useState } from "preact/hooks";
@@ -480,6 +482,20 @@ export default function AuditApp({ topics, criteria }: { topics: AuditTopic[]; c
 				)}
 			</section>
 
+			<Result
+				session={session}
+				criteria={criteria}
+				showMissing={(f) => {
+					setFilter(f);
+					const first = criteria.find(matchesWith(f));
+					if (first) goTo(first);
+					const n = criteria.filter(matchesWith(f)).length;
+					setAnnounce(
+						`${plural(n, "critère")} affiché${n > 1 ? "s" : ""}${first ? ` ; critère ${first.id} affiché` : ""}`,
+					);
+				}}
+			/>
+
 			<p aria-live="polite" class="audit-live">
 				{announce}
 			</p>
@@ -722,6 +738,12 @@ function Pages({
 			<h2 id="audit-echantillon" ref={headingRef} tabIndex={-1}>
 				1. Pages de l’échantillon
 			</h2>
+			{session.pages.length > 0 && (
+				<p id="audit-processus-aide" class="audit-help">
+					Processus : donnez le même nom aux pages d’un même parcours, par ex. « Commande ». Un critère n’y est validé
+					que s’il l’est sur toutes les pages du parcours.
+				</p>
+			)}
 			{session.pages.length > 0 ? (
 				<ol class="audit-page-list" ref={listRef}>
 					{session.pages.map((p) => (
@@ -729,6 +751,21 @@ function Pages({
 							<span>
 								{pageName(p)}
 								{p.title.trim() && <span class="audit-url"> {p.url}</span>}
+							</span>
+							<span class="audit-process">
+								<label for={`processus-${p.id}`}>
+									Processus (facultatif)<span class="visually-hidden"> de {pageName(p)}</span>
+								</label>
+								<input
+									id={`processus-${p.id}`}
+									type="text"
+									value={p.process ?? ""}
+									aria-describedby="audit-processus-aide"
+									onInput={(e) => {
+										const value = e.currentTarget.value;
+										setSession((s) => setPageProcess(s, p.id, value));
+									}}
+								/>
 							</span>
 							<button type="button" onClick={() => remove(p)}>
 								Retirer<span class="visually-hidden"> {pageName(p)}</span>
@@ -924,3 +961,134 @@ function ImportReport({
 
 const summaryText = (s: ImportSummary) =>
 	`Import terminé : ${plural(s.pagesAdded, "page")} ajoutée${s.pagesAdded > 1 ? "s" : ""}, ${plural(s.statusesSet, "statut")} « Non conforme » à confirmer, ${plural(s.findingsAdded, "indice")}${s.pagesSkipped.length > 0 ? `, ${plural(s.pagesSkipped.length, "page")} en erreur non importée${s.pagesSkipped.length > 1 ? "s" : ""}` : ""}. Vos évaluations déjà saisies n’ont pas été modifiées.`;
+
+/** Méthode officielle, sections « Test des pages » et « Taux de conformité à la norme ». */
+const METHOD_URL = "https://accessibilite.numerique.gouv.fr/obligations/evaluation-conformite/";
+
+/**
+ * Résultat (ADR-0015) : le seul endroit de l'interface où un pourcentage apparaît, et seulement quand l'audit est
+ * complet. Sinon, ce qui manque et un raccourci vers les critères concernés.
+ */
+function Result({
+	session,
+	criteria,
+	showMissing,
+}: {
+	session: AuditSession;
+	criteria: AuditCriterion[];
+	showMissing: (f: "NT" | "auto") => void;
+}) {
+	const ids = useMemo(() => criteria.map((c) => c.id), [criteria]);
+	const r = useMemo(() => computeConformity(session, ids), [session, ids]);
+	const rate = (value: number | null) => (value === null ? "sans objet (aucun critère applicable)" : formatRate(value));
+	let body: ComponentChildren;
+	if (session.pages.length === 0)
+		body = <p>Ajoutez au moins une page à l’échantillon : le résultat s’affichera ici.</p>;
+	else if (!r.complete)
+		body = (
+			<>
+				<p>
+					<strong>
+						Audit incomplet : {plural(r.remaining, "évaluation")} restante{r.remaining > 1 ? "s" : ""},{" "}
+						{plural(r.toConfirm, "statut")} à confirmer.
+					</strong>{" "}
+					Le taux de conformité n’est calculé que lorsque chaque critère a un statut confirmé sur chaque page.
+				</p>
+				<p class="audit-result-actions">
+					{r.remaining > 0 && (
+						<button type="button" onClick={() => showMissing("NT")}>
+							Afficher les critères non testés
+						</button>
+					)}
+					{r.toConfirm > 0 && (
+						<button type="button" onClick={() => showMissing("auto")}>
+							Afficher les statuts à confirmer
+						</button>
+					)}
+				</p>
+			</>
+		);
+	else {
+		const failed = criteria.filter((c) => r.criteria.some((x) => x.criterion === c.id && x.status === "non validé"));
+		body = (
+			<>
+				<dl class="audit-rates">
+					<dt>Pourcentage de critères respectés (taux global)</dt>
+					<dd>
+						<strong class="audit-rate">{rate(r.globalRate)}</strong>
+						<p>
+							« Le pourcentage de critères RGAA respectés s’obtient en divisant le nombre de critères validés par le
+							nombre de critères applicables. » Ici : {plural(r.validated, "critère")} validé
+							{r.validated > 1 ? "s" : ""} sur {r.applicable} applicable{r.applicable > 1 ? "s" : ""}.
+						</p>
+					</dd>
+					<dt>Taux moyen de conformité</dt>
+					<dd>
+						<strong class="audit-rate">{rate(r.averageRate)}</strong>
+						<p>
+							« Le taux moyen de conformité du service en ligne s’obtient en faisant la moyenne des taux de conformité
+							de chaque page. » Une page sans critère applicable n’a pas de taux et n’entre pas dans la moyenne.
+						</p>
+					</dd>
+				</dl>
+				<p>
+					Source : <a href={METHOD_URL}>méthode officielle d’évaluation de la conformité</a> (RGAA, sections « Test des
+					pages » et « Taux de conformité à la norme »). {plural(r.notApplicable, "critère")} non applicable
+					{r.notApplicable > 1 ? "s" : ""} sur toutes les pages n’entre{r.notApplicable > 1 ? "nt" : ""} pas dans le
+					calcul.
+				</p>
+				<p>
+					<strong>Ce taux mesure la conformité de votre échantillon ; il n’est pas une certification.</strong>
+				</p>
+				<table>
+					<caption>Résultat par page</caption>
+					<thead>
+						<tr>
+							<th scope="col">Page</th>
+							<th scope="col">Processus</th>
+							<th scope="col">Critères validés</th>
+							<th scope="col">Non validés</th>
+							<th scope="col">Non applicables</th>
+							<th scope="col">Taux de conformité</th>
+						</tr>
+					</thead>
+					<tbody>
+						{r.pages.map((pr) => {
+							const p = session.pages.find((x) => x.id === pr.pageId) as SessionPage;
+							return (
+								<tr key={pr.pageId}>
+									<th scope="row">{pageName(p)}</th>
+									<td>{p.process?.trim() || "aucun"}</td>
+									<td>{pr.validated}</td>
+									<td>{pr.invalidated}</td>
+									<td>{pr.notApplicable}</td>
+									<td>{rate(pr.rate)}</td>
+								</tr>
+							);
+						})}
+					</tbody>
+				</table>
+				<h3>Critères non validés ({failed.length})</h3>
+				{failed.length > 0 ? (
+					<ul class="audit-failed">
+						{failed.map((c) => (
+							<li key={c.id}>
+								<a href={c.href}>
+									Critère {c.id} : <span {...trustedBuildHtml(c.titleTextHtml)} />
+								</a>
+							</li>
+						))}
+					</ul>
+				) : (
+					<p>Aucun : tous les critères applicables sont validés sur toutes les pages.</p>
+				)}
+			</>
+		);
+	}
+	return (
+		<section aria-labelledby="audit-resultat" class="audit-result">
+			<h2 id="audit-resultat">3. Résultat</h2>
+			{body}
+		</section>
+	);
+}

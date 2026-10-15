@@ -9,6 +9,7 @@ import type { AddressInfo } from "node:net";
 import { tmpdir } from "node:os";
 import { dirname, extname, join, normalize } from "node:path";
 import { fileURLToPath } from "node:url";
+import { rgaa } from "@rampe/core";
 import axe from "axe-core";
 import { type Browser, chromium, type Page } from "playwright";
 import { afterAll, beforeAll, describe, expect, it } from "vitest";
@@ -140,7 +141,8 @@ describe("audit guidé (bout en bout)", { timeout: 60_000 }, () => {
 			`/audit/ : ${files} modules JS, ${js} octets non compressés ; scripts en ligne d'Astro : ${inline} octets`,
 		);
 		expect(js).toBeGreaterThan(0);
-		expect(js).toBeLessThan(60_000);
+		// Budget relevé de 60 000 à 70 000 avec l'écran « Résultat » (ADR-0015) : 62 299 octets à ce moment-là.
+		expect(js).toBeLessThan(70_000);
 		await page.close();
 	});
 
@@ -282,8 +284,8 @@ describe("audit guidé (bout en bout)", { timeout: 60_000 }, () => {
 			page.getByRole("group", { name: "Critère 1.1, page Contact (https://exemple.fr/contact)" }).count(),
 		).resolves.toBe(1);
 		await expect(page.getByLabel("Note sur Contact (facultative)").count()).resolves.toBe(1);
-		await expect(page.locator(".audit-help").isVisible()).resolves.toBe(true);
-		await expect(page.locator(".audit-help").textContent()).resolves.toContain(
+		await expect(page.locator(".audit-pages-eval .audit-help").isVisible()).resolves.toBe(true);
+		await expect(page.locator(".audit-pages-eval .audit-help").textContent()).resolves.toContain(
 			"Non applicable : le contenu visé par ce critère n’existe pas sur la page.",
 		);
 		await page.close();
@@ -759,5 +761,138 @@ describe("audit guidé (bout en bout)", { timeout: 60_000 }, () => {
 		await expect(page.evaluate(() => localStorage.getItem("rampe.audit.session"))).resolves.toBe(future);
 		await expect(page.evaluate(() => localStorage.getItem("rampe.audit.session.ignoree"))).resolves.toBeNull();
 		await page.close();
+	});
+
+	// Taux de conformité (ADR-0015). Une session complète demande 106 critères × 3 pages : elle est INJECTÉE dans le
+	// stockage local (même format que ce que l'outil écrit, relu par parseSession), pas saisie clic par clic. Le
+	// processus, lui, est saisi au clavier : c'est lui qui fait passer le taux moyen de 77,77 % à 61,11 %.
+	describe("taux de conformité (ADR-0015)", () => {
+		const [P1, P2, P3] = [1, 2, 3].map((n) => `00000000-0000-4000-8000-00000000000${n}`) as [string, string, string];
+		const PCT = "\u00a0%";
+		/** Tout NA sur les 3 pages, sauf 1.1, 3.2 et 8.3 (exemple chiffré du test de conformity.ts). */
+		function sessionJson(patch: (evaluations: Record<string, Record<string, unknown>>) => void = () => {}) {
+			const evaluations: Record<string, Record<string, unknown>> = {};
+			const e = (status: string) => ({ status, note: "", source: "humain" });
+			for (const c of rgaa.criteria) evaluations[c.id] = { [P1]: e("NA"), [P2]: e("NA"), [P3]: e("NA") };
+			evaluations["1.1"] = { [P1]: e("C"), [P2]: e("C"), [P3]: e("NC") };
+			evaluations["3.2"] = { [P1]: e("C"), [P2]: e("C"), [P3]: e("C") };
+			evaluations["8.3"] = { [P1]: e("NC"), [P2]: e("NA"), [P3]: e("C") };
+			patch(evaluations);
+			const at = "2026-10-15T10:00:00.000Z";
+			return JSON.stringify({
+				schemaVersion: 2,
+				site: "https://exemple.fr",
+				createdAt: at,
+				updatedAt: at,
+				pages: [
+					{ id: P1, url: "https://exemple.fr/", title: "Accueil" },
+					{ id: P2, url: "https://exemple.fr/panier", title: "Panier" },
+					{ id: P3, url: "https://exemple.fr/paiement", title: "Paiement" },
+				],
+				evaluations,
+				findings: {},
+			});
+		}
+		async function openWith(page: Page, json: string) {
+			await page.addInitScript((value) => {
+				if (!sessionStorage.getItem("seeded")) {
+					localStorage.setItem("rampe.audit.session", value);
+					sessionStorage.setItem("seeded", "1");
+				}
+			}, json);
+			await openAudit(page);
+		}
+		const rates = (page: Page) => page.locator(".audit-rate").allTextContents();
+		const rows = (page: Page) =>
+			page
+				.locator(".audit-result tbody tr")
+				.evaluateAll((trs) => trs.map((tr) => [...tr.children].map((td) => td.textContent)));
+		/** Processus « Commande » saisi au clavier seul sur Panier et Paiement. */
+		async function typeProcess(page: Page) {
+			await page.focus("body");
+			for (const id of [P2, P3]) {
+				await tabUntil(page, `el.id === 'processus-${id}'`);
+				await page.keyboard.type("Commande");
+			}
+		}
+
+		it("processus saisi au clavier ; taux exactement égaux au calcul à la main", async () => {
+			const page = await browser.newPage();
+			await openWith(page, sessionJson());
+			// Sans processus (calcul à la main) : Accueil 2/3, Panier 1/1 (1.1 C, 3.2 C, le reste NA), Paiement 2/3.
+			// Global : 1 validé (3.2) ÷ 3 applicables = 33,333… ; moyen : (66,666… + 100 + 66,666…) ÷ 3 = 77,777…
+			await expect(rates(page)).resolves.toEqual([`33,33${PCT}`, `77,77${PCT}`]);
+
+			await typeProcess(page);
+			// Avec « Commande » (Panier + Paiement) : 1.1 NC sur Paiement invalide 1.1 sur Panier → Panier 1/2 = 50.
+			// Moyen : (66,666… + 50 + 66,666…) ÷ 3 = 61,111… ; global inchangé.
+			await expect(rates(page)).resolves.toEqual([`33,33${PCT}`, `61,11${PCT}`]);
+			// Page, processus, validés, non validés, non applicables (106 - 3 + NA propres), taux.
+			await expect(rows(page)).resolves.toEqual([
+				["Accueil", "aucun", "2", "1", "103", `66,66${PCT}`],
+				["Panier", "Commande", "1", "1", "104", `50${PCT}`],
+				["Paiement", "Commande", "2", "1", "103", `66,66${PCT}`],
+			]);
+			await expect(page.locator(".audit-failed a").allTextContents()).resolves.toEqual([
+				expect.stringMatching(/^Critère 1\.1 : /),
+				expect.stringMatching(/^Critère 8\.3 : /),
+			]);
+			await expect(page.locator(".audit-result").textContent()).resolves.toContain(
+				"Ce taux mesure la conformité de votre échantillon ; il n’est pas une certification.",
+			);
+			// Le processus est enregistré comme le reste.
+			await page.waitForFunction(() => localStorage.getItem("rampe.audit.session")?.includes('"process":"Commande"'));
+			await page.close();
+		});
+
+		it("une évaluation non testée et un statut à confirmer : aucun pourcentage nulle part", async () => {
+			const page = await browser.newPage();
+			await openWith(
+				page,
+				sessionJson((ev) => {
+					delete (ev["11.1"] as Record<string, unknown>)[P1];
+					(ev["8.3"] as Record<string, unknown>)[P1] = { status: "NC", note: "Détecté", source: "auto" };
+				}),
+			);
+			await expect(page.locator(".audit-result strong").first().textContent()).resolves.toBe(
+				"Audit incomplet : 1 évaluation restante, 1 statut à confirmer.",
+			);
+			expect(await page.evaluate(() => document.body.innerText)).not.toContain("%");
+			await page.getByRole("button", { name: "Afficher les critères non testés" }).click();
+			await page.waitForFunction(() => document.activeElement?.id === "audit-titre");
+			expect(await page.evaluate(() => document.activeElement?.textContent)).toMatch(/^Critère 11\.1, /);
+			await expect(page.getByLabel("Critères avec des pages non testées").isChecked()).resolves.toBe(true);
+			await page.getByRole("button", { name: "Afficher les statuts à confirmer" }).click();
+			await page.waitForFunction(() => document.activeElement?.textContent?.startsWith("Critère 8.3, "));
+			await page.close();
+		});
+
+		for (const colorScheme of ["light", "dark"] as const) {
+			it(`axe : aucune violation sur le résultat (${colorScheme === "light" ? "clair" : "sombre"})`, async () => {
+				const page = await browser.newPage({ colorScheme });
+				await openWith(page, sessionJson());
+				await typeProcess(page);
+				await expect(rates(page)).resolves.toEqual([`33,33${PCT}`, `61,11${PCT}`]);
+				if (captures) {
+					await page.locator(".audit-result").screenshot({ path: join(captures, `resultat-${colorScheme}.png`) });
+					await page.locator(".audit-sample").screenshot({ path: join(captures, `processus-${colorScheme}.png`) });
+				}
+				expect(await axeViolations(page)).toEqual([]);
+				await page.close();
+			});
+		}
+
+		it("axe : aucune violation sur un résultat incomplet (clair)", async () => {
+			const page = await browser.newPage();
+			await openWith(
+				page,
+				sessionJson((ev) => {
+					delete (ev["11.1"] as Record<string, unknown>)[P1];
+				}),
+			);
+			if (captures) await page.locator(".audit-result").screenshot({ path: join(captures, "resultat-incomplet.png") });
+			expect(await axeViolations(page)).toEqual([]);
+			await page.close();
+		});
 	});
 });
