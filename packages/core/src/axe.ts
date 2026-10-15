@@ -9,12 +9,15 @@ interface AxeRuleFlags {
 	bestPractice: boolean;
 	/** Règle expérimentale d'axe. */
 	experimental: boolean;
+	/** Règle dépréciée par axe (étiquette `deprecated`) : vouée à disparaître, à ne plus présenter comme une vérification. */
+	deprecated: boolean;
 }
 
 /**
  * Rattachement d'une règle axe au RGAA. Le niveau qualifie la PRÉCISION DU RATTACHEMENT,
  * pas la certitude du défaut : une bonne pratique ou une règle expérimentale d'axe peut être
  * au niveau `rgaa` ; elle est alors signalée par `bestPractice` / `experimental`.
+ * Une règle dépréciée par axe garde aussi son niveau, avec `deprecated`.
  */
 export type AxeRuleMapping =
 	/** Étiquettes RGAA natives : rattachement direct aux tests. */
@@ -57,6 +60,7 @@ export function classifyAxeRule(tags: readonly string[]): AxeRuleMapping {
 		unknownRgaaTags: sortIds(unknownRgaaTags),
 		bestPractice: tags.includes("best-practice"),
 		experimental: tags.includes("experimental"),
+		deprecated: tags.includes("deprecated"),
 	};
 	if (tests.length > 0)
 		return { level: "rgaa", tests: sortIds(tests), criteria: sortIds(tests.map(criterionOf)), ...flags };
