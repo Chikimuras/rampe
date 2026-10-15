@@ -19,6 +19,8 @@ const phases = roadmap
 		const total = done + (block.match(/^- \[ \]/gm) ?? []).length;
 		return { name, done, total };
 	});
+// « En attente d’Alexandre » = tâches non faites marquées ⛔ dans la roadmap (seule source de vérité).
+const waiting = [...roadmap.matchAll(/^- \[ \] (.+?) ⛔ (.+)$/gm)].map(([, task, reason]) => ({ task, reason }));
 const fr = (d: Date) =>
 	d.toLocaleDateString("fr-FR", {
 		day: "numeric",
@@ -30,6 +32,22 @@ const fr = (d: Date) =>
 <Base title="Cockpit">
 	<h1>Cockpit</h1>
 	<p>Tout ce qui est affiché ici est généré depuis le dossier <code>docs/</code> du dépôt, à chaque mise en production.</p>
+
+	{
+		waiting.length > 0 && (
+			<section class="waiting" aria-labelledby="en-attente">
+				<h2 id="en-attente">En attente d’Alexandre</h2>
+				<p>Ces tâches demandent une action humaine (compte tiers, dépense, engagement juridique). Le reste avance sans intervention.</p>
+				<ul>
+					{waiting.map((w) => (
+						<li>
+							<strong>{w.task}</strong> — {w.reason}
+						</li>
+					))}
+				</ul>
+			</section>
+		)
+	}
 
 	<h2 id="avancement">Avancement</h2>
 	<ul class="phases">
@@ -69,6 +87,12 @@ const fr = (d: Date) =>
 </Base>
 
 <style>
+	.waiting {
+		border: 2px solid var(--warn);
+		border-radius: 6px;
+		padding: 0 1rem;
+		margin-bottom: 2rem;
+	}
 	.phases {
 		list-style: none;
 		padding: 0;

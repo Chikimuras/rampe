@@ -42,7 +42,9 @@ Chaque case cochée correspond à du code mergé sur `main` avec la CI verte. Le
 ## Phase 5 — Audit sans installation
 
 - [ ] Scanner hébergé ⛔ compte Cloudflare (gratuit) à créer par Alexandre
-- [ ] Extension Firefox (gratuit) — Chrome : 5 $ ⛔ dépense à valider
+- [ ] Extension navigateur (code, testable en local)
+- [ ] Publication Firefox ⛔ compte Mozilla (gratuit) à créer par Alexandre
+- [ ] Publication Chrome ⛔ 5 $ de frais d’inscription : dépense à valider
 
 ## Phase 6 — Lancement
 
