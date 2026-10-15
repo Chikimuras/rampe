@@ -1,0 +1,103 @@
+# Synchro hebdomadaire du référentiel RGAA par PR automatique (ADR-0009).
+# La PR n'est jamais mergée ici : elle suit le flux normal (CI verte, relecture, ADR-0006).
+name: Synchro RGAA
+
+on:
+  schedule:
+    - cron: "0 6 * * 1" # chaque lundi, 06:00 UTC
+  workflow_dispatch:
+    inputs:
+      ref:
+        description: "Branche, tag ou SHA du dépôt DINUM (défaut : main)"
+        required: false
+        type: string
+
+# Aucun droit par défaut ; le job ne reçoit que le strict nécessaire — OWASP Top 10 CI/CD, CICD-SEC-5.
+permissions: {}
+
+concurrency:
+  group: ${{ github.workflow }}
+  cancel-in-progress: false
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write # pousser la branche chore/sync-rgaa-*
+      pull-requests: write # ouvrir la PR
+      actions: write # déclencher ci.yml sur la branche (workflow_dispatch)
+    steps:
+      # Actions épinglées par SHA — OWASP Top 10 CI/CD, CICD-SEC-3.
+      # persist-credentials: false : le jeton n'est pas écrit dans .git/config pour tout le job ;
+      # il n'est fourni qu'à l'étape qui pousse, via un en-tête HTTP éphémère (CICD-SEC-6).
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: 22
+      # Pas de `pnpm install` : le script n'utilise que la bibliothèque standard de Node. Ne pas
+      # exécuter les scripts d'installation des dépendances dans un job qui a des droits d'écriture
+      # (CICD-SEC-3) ; la CI déclenchée sur la branche installe et teste tout, sans ces droits.
+
+      # Les valeurs issues des entrées ne sont jamais interpolées par ${{ }} dans `run:` : elles passent
+      # par `env:` et sont lues comme variables shell, ce qui empêche l'injection de script
+      # (OWASP Top 10 CI/CD, CICD-SEC-4 ; GitHub, « Security hardening for GitHub Actions »).
+      # Le contenu téléchargé n'est jamais exécuté : seulement validé comme JSON puis écrit.
+      - id: sync
+        env:
+          REF: ${{ inputs.ref }}
+          GITHUB_TOKEN: ${{ github.token }}
+        run: node packages/core/scripts/sync-rgaa.mjs "${REF:-main}" --if-changed
+
+      - if: steps.sync.outputs.changed == 'true'
+        env:
+          GH_TOKEN: ${{ github.token }}
+          SHA: ${{ steps.sync.outputs.sha }}
+          PREVIOUS: ${{ steps.sync.outputs.previous }}
+        run: |
+          set -euo pipefail
+          short="${SHA:0:7}"
+          branch="chore/sync-rgaa-${short}"
+          auth="$(printf 'x-access-token:%s' "$GH_TOKEN" | base64 -w0)"
+          echo "::add-mask::${auth}"
+          git_auth() { git -c "http.https://github.com/.extraheader=AUTHORIZATION: basic ${auth}" "$@"; }
+
+          # Une branche par commit DINUM : si elle existe déjà, la PR a déjà été proposée.
+          status=0
+          git_auth ls-remote --exit-code --heads origin "refs/heads/${branch}" >/dev/null || status=$?
+          if [ "$status" -eq 0 ]; then
+            echo "La branche ${branch} existe déjà : aucune nouvelle PR."
+            exit 0
+          elif [ "$status" -ne 2 ]; then
+            echo "::error::ls-remote a échoué (code ${status})."
+            exit "$status"
+          fi
+
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git switch -c "$branch"
+          git add packages/core/data/rgaa
+          git commit -m "chore(core): synchro du référentiel RGAA (DINUM ${short})"
+          git_auth push origin "HEAD:refs/heads/${branch}"
+
+          repo="https://github.com/DISIC/accessibilite.numerique.gouv.fr"
+          cat > "$RUNNER_TEMP/pr-body.md" <<EOF
+          Synchro automatique du référentiel RGAA (ADR-0009).
+
+          - Commit DINUM source : [\`${SHA}\`](${repo}/commit/${SHA})
+          - Diff DINUM depuis l'import précédent : ${repo}/compare/${PREVIOUS}...${SHA}
+
+          ## À faire par le relecteur
+
+          - [ ] **Confirmer la version du RGAA** dans \`packages/core/data/rgaa/source.json\` : elle a été reprise de l'import précédent et n'est pas déductible des fichiers.
+          - [ ] Relire \`git diff packages/core/data\` : c'est là qu'on voit ce que la DINUM a changé.
+          - [ ] La CI (check \`check\`) doit passer avant tout merge ; elle a été déclenchée sur cette branche par \`workflow_dispatch\`.
+          EOF
+          gh pr create --base main --head "$branch" \
+            --title "chore(core): synchro du référentiel RGAA (DINUM ${short})" \
+            --body-file "$RUNNER_TEMP/pr-body.md"
+
+          # Une PR ouverte avec le GITHUB_TOKEN ne déclenche pas `pull_request` : on lance la CI
+          # explicitement pour que le check requis s'attache au commit de tête (ADR-0009).
+          gh workflow run ci.yml --ref "$branch"
