@@ -15,6 +15,7 @@
 		"check": "pnpm lint && pnpm typecheck && pnpm test"
 	},
 	"devDependencies": {
+		"@rampe/cli": "workspace:*",
 		"@biomejs/biome": "2.5.15",
 		"typescript": "^6.0.3"
 	}

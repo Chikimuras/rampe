@@ -7,7 +7,14 @@
 	},
 	"files": {
 		"ignoreUnknown": false,
-		"includes": ["**", "!**/dist", "!**/.astro", "!**/node_modules", "!packages/core/data"]
+		"includes": [
+			"**",
+			"!**/dist",
+			"!**/.astro",
+			"!**/node_modules",
+			"!packages/core/data",
+			"!packages/cli/test/fixtures"
+		]
 	},
 	"formatter": {
 		"enabled": true,
