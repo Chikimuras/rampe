@@ -18,7 +18,7 @@ Chaque case cochée correspond à du code mergé sur `main` avec la CI verte. Le
 - [x] Import du référentiel officiel (critères, tests, méthodologies, glossaire)
 - [x] Correspondance règles axe-core → critères RGAA, testée
 - [x] Synchronisation automatique (cron CI) qui ouvre une PR si le référentiel officiel change
-- [ ] Référentiel consultable sur le site, en langage simple
+- [x] Référentiel consultable sur le site, en langage simple
 
 ## Phase 2 — Audit automatisé (CLI)
 

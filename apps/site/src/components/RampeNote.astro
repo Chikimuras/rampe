@@ -1,0 +1,27 @@
+---
+// Encadré d'un texte rédigé par Rampe : visuellement et textuellement distinct du texte officiel (ADR-0010 §3).
+// Pas d'<aside> : un repère « complementary » imbriqué dans <main> est déconseillé.
+---
+
+<div class="rampe-note">
+	<p class="label">Explication Rampe — non normative</p>
+	<p><slot /></p>
+</div>
+
+<style>
+	.rampe-note {
+		margin: 1rem 0 1.5rem;
+		padding: 0.75rem 1rem;
+		background: var(--accent-soft);
+		border-left: 4px solid var(--accent);
+		border-radius: 0 6px 6px 0;
+	}
+	.rampe-note p {
+		margin: 0;
+	}
+	.rampe-note .label {
+		font-size: 0.875rem;
+		font-weight: 600;
+		margin-bottom: 0.25rem;
+	}
+</style>

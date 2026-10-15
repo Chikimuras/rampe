@@ -5,11 +5,21 @@
 	"scripts": {
 		"dev": "astro dev",
 		"build": "astro build",
-		"typecheck": "astro check"
+		"typecheck": "astro check",
+		"test": "vitest run"
 	},
 	"dependencies": {
 		"@astrojs/check": "0.9.10",
+		"@rampe/core": "workspace:*",
 		"astro": "7.3.8",
+		"hast-util-sanitize": "5.0.2",
+		"hast-util-to-html": "9.0.5",
+		"satteri": "0.10.5",
 		"typescript": "^6"
+	},
+	"devDependencies": {
+		"@types/hast": "3.0.5",
+		"axe-core": "4.14.0",
+		"vitest": "5.0.4"
 	}
 }

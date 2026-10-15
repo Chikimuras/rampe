@@ -1,0 +1,228 @@
+---
+import { type Criterion, type Note, rgaa } from "@rampe/core";
+import RgaaSource from "../../components/RgaaSource.astro";
+import Base from "../../layouts/Base.astro";
+import { axeVersion, rulesFor } from "../../lib/axe-rules";
+import { renderMarkdown } from "../../lib/render";
+import { url } from "../../lib/url";
+
+const slug = (id: string) => id.replace(".", "-");
+
+export function getStaticPaths() {
+	return rgaa.criteria.map((criterion, i) => ({
+		params: { id: criterion.id.replace(".", "-") },
+		props: { criterion, prev: rgaa.criteria[i - 1], next: rgaa.criteria[i + 1] },
+	}));
+}
+
+interface Props {
+	criterion: Criterion;
+	prev?: Criterion;
+	next?: Criterion;
+}
+const { criterion: c, prev, next } = Astro.props;
+const topic = rgaa.topics.find((t) => t.number === c.topic);
+const { direct, indirect } = rulesFor(c.id);
+const indirectSc = [...new Set(indirect.flatMap((r) => r.wcag))].join(", ");
+const flags = (r: { bestPractice: boolean; experimental: boolean }) =>
+	`${r.bestPractice ? " Bonne pratique selon axe." : ""}${r.experimental ? " Règle expérimentale." : ""}`;
+const md = (s: string) => renderMarkdown(s, { inline: true });
+const notes: [string, Note[] | undefined][] = [
+	["Cas particuliers", c.particularCases],
+	["Notes techniques", c.technicalNote],
+];
+// Même forme d'ancre que les liens du glossaire officiel vers les critères (ex. `criteres-et-tests/#12.10`).
+const officialUrl = `https://accessibilite.numerique.gouv.fr/methode/criteres-et-tests/#${c.id}`;
+---
+
+<Base title={`Critère RGAA ${c.id}`} description={`Critère ${c.id} du RGAA ${rgaa.version} : texte officiel, tests et méthodologie.`}>
+	<nav aria-label="Fil d’Ariane" class="crumbs">
+		<a href={url("referentiel/")}>Référentiel</a> ›{" "}
+		<a href={url(`referentiel/#thematique-${c.topic}`)}>Thématique {c.topic} : {topic?.title}</a>
+	</nav>
+
+	<h1><span class="num">Critère {c.id}</span> <span set:html={md(c.title)} /></h1>
+	<p class="official">
+		Texte officiel du RGAA {rgaa.version}. Voir aussi{" "}
+		<a href={officialUrl}>le critère {c.id} sur accessibilite.numerique.gouv.fr</a>.
+	</p>
+
+	<h2>Tests</h2>
+	{
+		c.tests.map((t) => {
+			const [statement = "", ...conditions] = t.text;
+			return (
+				<section class="test" aria-labelledby={`test-${t.id}`}>
+					<h3 id={`test-${t.id}`}>Test {t.id}</h3>
+					<p set:html={md(statement)} />
+					{conditions.length > 0 && (
+						<ul>
+							{conditions.map((cond) => (
+								<li set:html={md(cond)} />
+							))}
+						</ul>
+					)}
+					{t.methodology && (
+						<details>
+							<summary>Méthodologie du test {t.id}</summary>
+							<div set:html={renderMarkdown(t.methodology)} />
+						</details>
+					)}
+				</section>
+			);
+		})
+	}
+
+	{
+		notes.map(
+			([heading, list]) =>
+				list && (
+					<>
+						<h2>{heading}</h2>
+						{list.map((n) =>
+							typeof n === "string" ? (
+								<div set:html={renderMarkdown(n)} />
+							) : (
+								<ul>
+									{n.ul.map((item) => (
+										<li set:html={md(item)} />
+									))}
+								</ul>
+							),
+						)}
+					</>
+				),
+		)
+	}
+
+	<h2>Références WCAG {rgaa.wcagVersion}</h2>
+	<ul>
+		{
+			c.wcag.map((w) => (
+				<li>
+					<span lang="en">
+						{w.sc} {w.name}
+					</span>{" "}
+					(niveau {w.level})
+				</li>
+			))
+		}
+	</ul>
+	{
+		c.techniques.length > 0 && (
+			<p>
+				Techniques WCAG : <span lang="en">{c.techniques.join(", ")}</span>
+			</p>
+		)
+	}
+
+	<h2>Ce que l’audit automatique peut détecter</h2>
+	{
+		direct.length === 0 ? (
+			<p class="human">
+				Aucune règle d’axe-core {axeVersion} ne vérifie directement ce critère : vérification humaine indispensable,
+				en suivant la méthodologie de chaque test.
+			</p>
+		) : (
+			<>
+				<h3>Règles qui vérifient directement ce critère</h3>
+				<p>
+					Ces règles d’axe-core {axeVersion} citent un test de ce critère. Elles repèrent une partie des erreurs ; le
+					reste du critère demande une vérification humaine.
+				</p>
+				<ul class="rules">
+					{direct.map((r) => (
+						<li>
+							<code>{r.ruleId}</code> : <span lang="en">{r.description}</span>
+							<span class="level">
+								{r.tests.length > 1 ? "Tests" : "Test"} {r.tests.join(", ")}.{flags(r)}
+							</span>
+						</li>
+					))}
+				</ul>
+			</>
+		)
+	}
+	{
+		indirect.length > 0 && (
+			<>
+				<h3>Règles liées indirectement (via WCAG {indirectSc}) — signal faible</h3>
+				<p>
+					Ces règles ne citent aucun test de ce critère : elles vérifient un critère WCAG qu’il partage avec d’autres
+					critères RGAA. Une erreur qu’elles signalent peut relever d’un autre critère, et leur silence ne prouve rien
+					ici.
+				</p>
+				<ul class="rules">
+					{indirect.map((r) => (
+						<li>
+							<code>{r.ruleId}</code> : <span lang="en">{r.description}</span>
+							<span class="level">
+								Via WCAG {r.wcag.join(", ")}.{flags(r)}
+							</span>
+						</li>
+					))}
+				</ul>
+			</>
+		)
+	}
+
+	<nav aria-label="Critères voisins" class="pager">
+		{prev && <a href={url(`referentiel/${slug(prev.id)}/`)} rel="prev">Critère précédent : {prev.id}</a>}
+		{next && <a href={url(`referentiel/${slug(next.id)}/`)} rel="next">Critère suivant : {next.id}</a>}
+	</nav>
+
+	<RgaaSource />
+</Base>
+
+<style>
+	.crumbs {
+		font-size: 0.875rem;
+		color: var(--muted);
+	}
+	h1 .num {
+		display: block;
+		font-size: 1rem;
+		color: var(--muted);
+	}
+	.official {
+		color: var(--muted);
+		font-size: 0.9375rem;
+	}
+	.test {
+		margin-bottom: 1.5rem;
+	}
+	details {
+		margin-top: 0.5rem;
+		padding: 0.5rem 1rem;
+		border: 1px solid var(--line);
+		border-radius: 6px;
+		background: var(--surface);
+	}
+	summary {
+		cursor: pointer;
+		font-weight: 600;
+	}
+	.rules li {
+		margin-bottom: 0.5rem;
+	}
+	.level {
+		display: block;
+		color: var(--muted);
+		font-size: 0.875rem;
+	}
+	.human {
+		padding: 0.75rem 1rem;
+		border-left: 4px solid var(--warn);
+		background: var(--surface);
+	}
+	.pager {
+		display: flex;
+		justify-content: space-between;
+		gap: 1rem;
+		flex-wrap: wrap;
+		margin-top: 3rem;
+	}
+	.pager a[rel="next"] {
+		margin-left: auto;
+	}
+</style>

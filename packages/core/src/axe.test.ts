@@ -3,7 +3,7 @@ import { describe, expect, it } from "vitest";
 import { classifyAxeRule, getCriterion } from "./index.ts";
 
 const rules = axe.getRules();
-const noFlags = { unknownRgaaTags: [], bestPractice: false, experimental: false };
+const noFlags = { unknownRgaaTags: [], bestPractice: false, experimental: false, deprecated: false };
 
 describe("classifyAxeRule", () => {
 	it("rattache aux tests RGAA quand la règle porte des étiquettes RGAA", () => {
@@ -70,6 +70,13 @@ describe("classifyAxeRule", () => {
 		});
 	});
 
+	it("signale les règles dépréciées sans changer le niveau", () => {
+		expect(classifyAxeRule(["deprecated", "wcag2a-obsolete", "wcag411"])).toMatchObject({
+			level: "wcag",
+			deprecated: true,
+		});
+	});
+
 	it("trie dans l'ordre naturel, sans doublons", () => {
 		expect(classifyAxeRule(["RGAA-11.13.1", "RGAA-11.2.1", "RGAA-11.9.1", "RGAA-11.2.1", "RGAA-1.1.1"])).toMatchObject({
 			level: "rgaa",
@@ -122,17 +129,33 @@ describe(`règles réelles d'axe-core ${axe.version}`, () => {
 			"13.3",
 			"13.4",
 		];
-		const wcag = (sc: string, criteria: string[]) => ({ level: "wcag", wcag: [sc], criteria, ...noFlags });
+		const wcag = (sc: string, criteria: string[], deprecated = false) => ({
+			level: "wcag",
+			wcag: [sc],
+			criteria,
+			...noFlags,
+			deprecated,
+		});
 		expect(Object.fromEntries(classified.filter(({ m }) => m.level === "wcag").map(({ id, m }) => [id, m]))).toEqual({
 			"aria-braille-equivalent": wcag("4.1.2", sc412),
-			"aria-roledescription": wcag("4.1.2", sc412),
+			"aria-roledescription": wcag("4.1.2", sc412, true),
 			"aria-tooltip-name": wcag("4.1.2", sc412),
-			"audio-caption": wcag("1.2.1", ["4.1", "4.2"]),
+			"audio-caption": wcag("1.2.1", ["4.1", "4.2"], true),
 			"avoid-inline-spacing": wcag("1.4.12", ["10.12"]),
-			"duplicate-id-active": wcag("4.1.1", ["8.1", "8.2"]),
-			"duplicate-id": wcag("4.1.1", ["8.1", "8.2"]),
+			"duplicate-id-active": wcag("4.1.1", ["8.1", "8.2"], true),
+			"duplicate-id": wcag("4.1.1", ["8.1", "8.2"], true),
 			"summary-name": wcag("4.1.2", sc412),
 		});
+	});
+
+	it("photographie : règles dépréciées", () => {
+		expect(classified.filter(({ m }) => m.deprecated).map(({ id }) => id)).toEqual([
+			"aria-roledescription",
+			"audio-caption",
+			"duplicate-id-active",
+			"duplicate-id",
+			"landmark-complementary-is-top-level",
+		]);
 	});
 
 	it("photographie : bonnes pratiques d'axe rattachées au niveau rgaa", () => {
