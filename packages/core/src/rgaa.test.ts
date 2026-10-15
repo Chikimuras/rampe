@@ -1,4 +1,8 @@
 import { describe, expect, it } from "vitest";
+import criteres from "../data/rgaa/criteres.json" with { type: "json" };
+import glossaire from "../data/rgaa/glossaire.json" with { type: "json" };
+import methodologies from "../data/rgaa/methodologies.json" with { type: "json" };
+import source from "../data/rgaa/source.json" with { type: "json" };
 import { getCriterion, getGlossaryEntry, parseWcagRef, rgaa } from "./index.ts";
 
 // Liens markdown internes `[texte](#ancre)`.
@@ -10,9 +14,10 @@ const anchorsIn = (texts: string[]) =>
 const KNOWN_DANGLING_ANCHORS = ["table-descriptions-techniques"];
 
 describe("référentiel RGAA", () => {
-	it("est le RGAA 4.1.2 basé sur WCAG 2.1, importé d'un commit identifié", () => {
-		expect(rgaa.version).toBe("4.1.2");
-		expect(rgaa.wcagVersion).toBe("2.1");
+	it("reprend les versions et le commit de source.json", () => {
+		expect(rgaa.version).toBe(source.rgaaVersion);
+		expect(rgaa.wcagVersion).toBe(source.wcagVersion);
+		expect(rgaa.wcagVersion).toBe(String(criteres.wcag.version));
 		expect(rgaa.source.commit).toMatch(/^[0-9a-f]{40}$/);
 	});
 
@@ -22,18 +27,24 @@ describe("référentiel RGAA", () => {
 		expect(rgaa.criteria).toHaveLength(106);
 	});
 
-	it("a des identifiants de critères et de tests uniques et bien formés", () => {
-		const criterionIds = rgaa.criteria.map((c) => c.id);
-		expect(new Set(criterionIds).size).toBe(criterionIds.length);
-		for (const c of rgaa.criteria) {
-			expect(c.id).toMatch(/^\d{1,2}\.\d{1,2}$/);
-			expect(c.id.startsWith(`${c.topic}.`)).toBe(true);
-			expect(c.tests.length).toBeGreaterThan(0);
-			for (const t of c.tests) expect(t.id.startsWith(`${c.id}.`)).toBe(true);
+	it("numérote critères et tests de façon contiguë dans les données brutes", () => {
+		const range = (n: number) => Array.from({ length: n }, (_, i) => i + 1);
+		for (const t of criteres.topics) {
+			expect(
+				t.criteria.map((c) => c.criterium.number),
+				`thématique ${t.number}`,
+			).toEqual(range(t.criteria.length));
+			for (const { criterium: c } of t.criteria) {
+				const tests = Object.keys(c.tests).map(Number);
+				expect(tests, `critère ${t.number}.${c.number}`).toEqual(range(tests.length));
+			}
 		}
+	});
+
+	it("associe exactement une méthodologie à chaque test", () => {
 		const testIds = rgaa.criteria.flatMap((c) => c.tests.map((t) => t.id));
-		expect(new Set(testIds).size).toBe(testIds.length);
-		for (const id of testIds) expect(id).toMatch(/^\d{1,2}\.\d{1,2}\.\d{1,2}$/);
+		expect(testIds).toHaveLength(258);
+		expect(new Set(Object.keys(methodologies))).toEqual(new Set(testIds));
 	});
 
 	it("donne à chaque test un énoncé et une méthodologie non vides", () => {
@@ -72,6 +83,14 @@ describe("référentiel RGAA", () => {
 		);
 		const dangling = [...new Set(anchorsIn(notes).filter((a) => !getGlossaryEntry(a)))];
 		expect(dangling).toEqual(KNOWN_DANGLING_ANCHORS);
+	});
+
+	it("résout chaque lien interne des définitions du glossaire", () => {
+		const hrefs = glossaire.glossary.flatMap((e) =>
+			[...e.body.matchAll(/href="#([^"]*)"/g)].map((m) => m[1] as string),
+		);
+		expect(hrefs.length).toBeGreaterThan(0);
+		expect(hrefs.filter((a) => !getGlossaryEntry(a))).toEqual([]);
 	});
 
 	it("indexe le glossaire par ancre unique", () => {

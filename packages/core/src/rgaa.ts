@@ -79,14 +79,15 @@ export function parseWcagRef(ref: string): WcagRef {
 }
 
 /**
- * Ancre d'une entrée du glossaire, dérivée de son titre comme sur accessibilite.numerique.gouv.fr :
- * accents retirés, minuscules, toute suite de caractères non alphanumériques remplacée par un tiret.
+ * Ancre d'une entrée du glossaire, dérivée de son titre : accents retirés, minuscules,
+ * toute suite de caractères non alphanumériques remplacée par un tiret.
+ * Règle vérifiée par les tests : tous les liens du référentiel résolvent.
  * Ex. "Image porteuse d’information" → "image-porteuse-d-information".
  */
 function slugify(title: string): string {
 	return title
 		.normalize("NFD")
-		.replace(/[̀-ͯ]/g, "")
+		.replace(/\p{M}/gu, "")
 		.toLowerCase()
 		.replace(/[^a-z0-9]+/g, "-")
 		.replace(/^-|-$/g, "");
