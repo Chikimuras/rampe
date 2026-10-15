@@ -58,6 +58,8 @@ export interface AuditSession {
 export interface Count {
 	/** Évaluations encore « non testé ». */
 	remaining: number;
+	/** Évaluations posées par un import (source `auto`) que l'humain n'a pas encore confirmées. */
+	toConfirm: number;
 	total: number;
 }
 
@@ -66,6 +68,7 @@ const now = () => new Date().toISOString();
 
 /** Ids de page : UUID (crypto.randomUUID). Jamais un nom hérité d'Object.prototype (`toString`, `__proto__`…). */
 const PAGE_ID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/;
+export const isPageId = (id: string) => PAGE_ID.test(id);
 /**
  * Forme d'un numéro de critère RGAA (« 1.1 » … « 13.12 »). Le modèle ne connaît pas le référentiel (il doit rester
  * sans données pour l'îlot) : il refuse tout ce qui n'a pas cette forme, l'appelant ne passe que des critères réels.
@@ -139,7 +142,8 @@ export function getFindings(session: AuditSession, criterionId: string, pageId: 
 
 /**
  * Évaluation saisie par l'humain : la source devient `humain` (ADR-0014 §1), même si seule la note change.
- * `source` n'est fixé à `auto` que par l'import (audit-report.ts).
+ * Un patch vide confirme une évaluation automatique telle quelle. Changer le statut d'une évaluation encore
+ * automatique vide sa note générée (jamais éditée : éditer la note l'aurait rendue humaine).
  */
 export function setEvaluation(
 	session: AuditSession,
@@ -150,7 +154,10 @@ export function setEvaluation(
 ): AuditSession {
 	if (!CRITERION_ID.test(criterionId)) throw new Error(`Évaluation sur un critère inconnu : ${criterionId}`);
 	if (!session.pages.some((p) => p.id === pageId)) throw new Error(`Évaluation sur une page inconnue : ${pageId}`);
-	const next: Evaluation = { ...getEvaluation(session, criterionId, pageId), source: "humain", ...patch };
+	const current = getEvaluation(session, criterionId, pageId);
+	const next: Evaluation = { ...current, source: "humain", ...patch };
+	if (current.source === "auto" && patch.status !== undefined && patch.status !== current.status && !("note" in patch))
+		next.note = "";
 	next.note = stripBidi(next.note);
 	return {
 		...session,
@@ -162,24 +169,31 @@ export function setEvaluation(
 	};
 }
 
-/** Avancement : évaluations « non testé » restantes, par critère, par thématique et au total. */
+/** Avancement : évaluations « non testé » restantes et évaluations automatiques à confirmer. */
 export function progress(
 	session: AuditSession,
 	criteria: readonly { id: string; topic: number }[],
 ): { total: Count; byTopic: Record<number, Count>; byCriterion: Record<string, Count> } {
-	const total: Count = { remaining: 0, total: 0 };
+	const empty = (): Count => ({ remaining: 0, toConfirm: 0, total: 0 });
+	const total = empty();
 	const byTopic: Record<number, Count> = {};
 	const byCriterion: Record<string, Count> = {};
 	for (const c of criteria) {
-		const remaining = session.pages.filter((p) => getEvaluation(session, c.id, p.id).status === "NT").length;
-		const count = { remaining, total: session.pages.length };
+		const count = empty();
+		for (const p of session.pages) {
+			const e = getEvaluation(session, c.id, p.id);
+			if (e.status === "NT") count.remaining++;
+			if (e.source === "auto") count.toConfirm++;
+			count.total++;
+		}
 		byCriterion[c.id] = count;
-		const topic = byTopic[c.topic] ?? { remaining: 0, total: 0 };
+		const topic = byTopic[c.topic] ?? empty();
 		byTopic[c.topic] = topic;
-		topic.remaining += remaining;
-		topic.total += count.total;
-		total.remaining += remaining;
-		total.total += count.total;
+		for (const t of [topic, total]) {
+			t.remaining += count.remaining;
+			t.toConfirm += count.toConfirm;
+			t.total += count.total;
+		}
 	}
 	return { total, byTopic, byCriterion };
 }
@@ -209,6 +223,13 @@ function validMap(byCriterion: unknown, ids: Set<string>, valid: (v: unknown) =>
 	}
 	return true;
 }
+
+/**
+ * Session écrite par une version plus récente de Rampe (onglet resté sur l'ancienne version pendant un
+ * déploiement) : ni lisible ni corrompue, elle ne doit surtout pas être écrasée.
+ */
+export const isFutureSession = (value: unknown): boolean =>
+	isObject(value) && typeof value.schemaVersion === "number" && value.schemaVersion > SCHEMA_VERSION;
 
 /**
  * Relit une session venue du stockage local : forme et `schemaVersion` vérifiées, `null` sinon.

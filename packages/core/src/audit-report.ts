@@ -4,18 +4,16 @@
 
 import {
 	type AuditSession,
-	addPage,
+	type Evaluation,
 	type Finding,
-	getEvaluation,
-	getFindings,
 	isObject,
+	isPageId,
 	own,
 	RESULT_KINDS,
 	type ResultKind,
-	setEvaluation,
 } from "./audit-session.ts";
 import type { AxeRuleMapping } from "./axe.ts";
-import { parseAuditUrl, plural, stripControl, urlKey } from "./sample-file.ts";
+import { parseAuditUrl, plural, stripBidi, stripControl, truncate, urlKey } from "./sample-file.ts";
 
 export type { ResultKind } from "./audit-session.ts";
 
@@ -77,21 +75,36 @@ export interface ImportableReport {
 }
 
 // Bornes (ADR-0014 §4, OWASP Input Validation Cheat Sheet : type, forme et bornes en liste blanche).
+// La structure, les adresses, les critères, les classes et les nombres font rejeter le fichier ; les textes
+// seulement affichés (titre, erreur de page, description de règle) sont tronqués.
 const MAX_PAGES = 1000;
 const MAX_RESULTS = 1000;
 const MAX_CRITERIA = 200;
+/** Total d'indices d'un rapport : au-delà, l'audit ne tiendrait plus dans le stockage du navigateur. */
+export const MAX_FINDINGS = 50_000;
 const MAX_URL = 2048;
-const MAX_TITLE = 2000;
-const MAX_ERROR = 2000;
-const MAX_HELP = 1000;
+const MAX_TITLE = 300;
+const MAX_ERROR = 500;
+const MAX_HELP = 300;
 const MAX_DEPTH = 64;
 const RULE_ID = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
 const IMPACTS = ["minor", "moderate", "serious", "critical"];
 const FORBIDDEN_KEYS = ["__proto__", "constructor", "prototype"];
 
-class InvalidReport extends Error {}
+/** Refus d'import : `message` est une phrase claire pour un non-expert, `detail` le premier défaut technique. */
+export class ReportError extends Error {
+	// Pas de propriété de paramètre : la CLI exécute ce fichier par simple suppression des types (Node ≥ 22.18).
+	readonly detail?: string;
+	constructor(message: string, detail?: string) {
+		super(message);
+		this.detail = detail;
+	}
+}
+export const INVALID_REPORT =
+	"Ce fichier n’est pas un rapport de la CLI Rampe, ou il a été modifié. Rien n’a été importé.";
+// Détail borné : jamais de texte importé non borné dans un message.
 const fail = (path: string, problem: string): never => {
-	throw new InvalidReport(`Fichier refusé, rien n’a été importé. ${path} : ${problem}.`);
+	throw new ReportError(INVALID_REPORT, `${path} : ${problem}.`.slice(0, 500));
 };
 
 /** Refuse les clés dangereuses partout dans le fichier, et une imbrication anormale (pile bornée). */
@@ -110,102 +123,96 @@ const array = (v: unknown, path: string, max: number) => {
 	if (!Array.isArray(v)) return fail(path, "liste attendue");
 	return v.length > max ? fail(path, `plus de ${max} éléments`) : v;
 };
-const text = (v: unknown, path: string, max: number) => {
-	if (typeof v !== "string") return fail(path, "texte attendu");
-	return v.length > max ? fail(path, `texte de plus de ${max} caractères`) : stripControl(v);
-};
-const textOrNull = (v: unknown, path: string, max: number) => (v === null ? null : text(v, path, max));
+const string = (v: unknown, path: string) => (typeof v === "string" ? v : fail(path, "texte attendu"));
+/** Texte affiché : nettoyé puis tronqué, jamais rejeté pour sa longueur. */
+const display = (v: unknown, path: string, max: number) => truncate(stripControl(string(v, path)).trim(), max);
+const displayOrNull = (v: unknown, path: string, max: number) => (v === null ? null : display(v, path, max));
 
 /**
  * Valide un rapport JSON de la CLI (ADR-0014 §4), déjà désérialisé par `JSON.parse` seul.
- * Tout ou rien : lève une erreur dont le message nomme le premier défaut trouvé. Propriétés inconnues ignorées.
+ * Tout ou rien : lève une `ReportError` dont `detail` nomme le premier défaut trouvé. Propriétés inconnues ignorées.
  * `knownCriteria` : critères du référentiel (le modèle n'embarque pas les données RGAA).
  */
 export function parseAuditReport(json: unknown, knownCriteria: ReadonlySet<string>): ImportableReport {
-	try {
-		checkKeys(json, "fichier", 0);
-		const root = object(json, "fichier");
-		const version = field(root, "schemaVersion");
-		if (version !== REPORT_SCHEMA_VERSION)
-			fail("schemaVersion", `version ${JSON.stringify(version) ?? "absente"} non prise en charge (attendu : 2)`);
-		const name = field(object(field(root, "tool"), "tool"), "name");
-		if (name !== REPORT_TOOL_NAME) fail("tool.name", `ce fichier n’a pas été produit par la CLI Rampe`);
-		let site = "";
-		const pages = array(field(root, "pages"), "pages", MAX_PAGES).map((rawPage, i) => {
-			const at = `pages[${i}]`;
-			const page = object(rawPage, at);
-			const rawUrl = text(field(page, "url"), `${at}.url`, MAX_URL);
-			let url: URL;
-			try {
-				url = parseAuditUrl(rawUrl);
-			} catch (e) {
-				return fail(`${at}.url`, (e as Error).message.replace(/\.$/, ""));
-			}
-			if (!site) site = url.origin;
-			else if (url.origin !== site) fail(`${at}.url`, `autre site que ${site} : un rapport porte sur un seul site`);
-			const results = array(field(page, "results"), `${at}.results`, MAX_RESULTS).map((rawResult, j) => {
-				const rat = `${at}.results[${j}]`;
-				const result = object(rawResult, rat);
-				const ruleId = text(field(result, "ruleId"), `${rat}.ruleId`, 100);
-				if (!RULE_ID.test(ruleId)) fail(`${rat}.ruleId`, "identifiant de règle mal formé");
-				const kind = field(result, "kind");
-				if (!RESULT_KINDS.includes(kind as ResultKind)) fail(`${rat}.kind`, `classe inconnue ${JSON.stringify(kind)}`);
-				const impact = field(result, "impact");
-				if (impact !== undefined && impact !== null && !IMPACTS.includes(impact as string))
-					fail(`${rat}.impact`, "impact inconnu");
-				const help = field(result, "help");
-				const criteria = array(field(result, "criteria"), `${rat}.criteria`, MAX_CRITERIA).map((c, k) => {
-					if (typeof c !== "string" || !knownCriteria.has(c))
-						fail(`${rat}.criteria[${k}]`, `critère ${JSON.stringify(c)} inexistant dans le référentiel`);
-					return c as string;
-				});
-				return {
-					ruleId,
-					kind: kind as ResultKind,
-					nodes: array(field(result, "nodes"), `${rat}.nodes`, Number.MAX_SAFE_INTEGER).length,
-					criteria,
-					...(typeof impact === "string" && { impact }),
-					...(help !== undefined && { help: text(help, `${rat}.help`, MAX_HELP) }),
-				};
+	checkKeys(json, "fichier", 0);
+	const root = object(json, "fichier");
+	const version = field(root, "schemaVersion");
+	if (version !== REPORT_SCHEMA_VERSION)
+		fail("schemaVersion", `version ${JSON.stringify(version) ?? "absente"} non prise en charge (attendu : 2)`);
+	const name = field(object(field(root, "tool"), "tool"), "name");
+	if (name !== REPORT_TOOL_NAME) fail("tool.name", `ce fichier n’a pas été produit par la CLI Rampe`);
+	let site = "";
+	let findings = 0;
+	const pages = array(field(root, "pages"), "pages", MAX_PAGES).map((rawPage, i) => {
+		const at = `pages[${i}]`;
+		const page = object(rawPage, at);
+		const rawUrl = string(field(page, "url"), `${at}.url`);
+		if (rawUrl.length > MAX_URL) fail(`${at}.url`, `adresse de plus de ${MAX_URL} caractères`);
+		let url: URL;
+		try {
+			url = parseAuditUrl(rawUrl);
+		} catch (e) {
+			return fail(`${at}.url`, (e as Error).message.replace(/\.$/, ""));
+		}
+		if (!site) site = url.origin;
+		else if (url.origin !== site) fail(`${at}.url`, `autre site que ${site} : un rapport porte sur un seul site`);
+		const results = array(field(page, "results"), `${at}.results`, MAX_RESULTS).map((rawResult, j) => {
+			const rat = `${at}.results[${j}]`;
+			const result = object(rawResult, rat);
+			const ruleId = string(field(result, "ruleId"), `${rat}.ruleId`);
+			if (ruleId.length > 100 || !RULE_ID.test(ruleId)) fail(`${rat}.ruleId`, "identifiant de règle mal formé");
+			const kind = field(result, "kind");
+			if (!RESULT_KINDS.includes(kind as ResultKind)) fail(`${rat}.kind`, `classe inconnue ${JSON.stringify(kind)}`);
+			const impact = field(result, "impact");
+			if (impact !== undefined && impact !== null && !IMPACTS.includes(impact as string))
+				fail(`${rat}.impact`, "impact inconnu");
+			const help = field(result, "help");
+			const criteria = array(field(result, "criteria"), `${rat}.criteria`, MAX_CRITERIA).map((c, k) => {
+				if (typeof c !== "string" || !knownCriteria.has(c))
+					fail(`${rat}.criteria[${k}]`, `critère ${JSON.stringify(c)} inexistant dans le référentiel`);
+				return c as string;
 			});
+			findings += criteria.length;
+			if (findings > MAX_FINDINGS)
+				fail(`${rat}.criteria`, `plus de ${MAX_FINDINGS.toLocaleString("fr-FR")} indices dans le rapport`);
 			return {
-				url: urlKey(url),
-				title: textOrNull(field(page, "title"), `${at}.title`, MAX_TITLE)?.trim() ?? "",
-				error: textOrNull(field(page, "error"), `${at}.error`, MAX_ERROR),
-				results,
+				ruleId,
+				kind: kind as ResultKind,
+				nodes: array(field(result, "nodes"), `${rat}.nodes`, Number.MAX_SAFE_INTEGER).length,
+				criteria,
+				...(typeof impact === "string" && { impact }),
+				...(help !== undefined && { help: display(help, `${rat}.help`, MAX_HELP) }),
 			};
 		});
-		if (pages.length === 0) fail("pages", "le rapport ne contient aucune page");
-		return { site, pages };
-	} catch (e) {
-		// Message court même face à une valeur hostile : jamais de texte importé non borné dans l'erreur.
-		if (e instanceof InvalidReport) throw new Error(e.message.slice(0, 500));
-		throw e;
-	}
+		return {
+			url: urlKey(url),
+			title: displayOrNull(field(page, "title"), `${at}.title`, MAX_TITLE) ?? "",
+			error: displayOrNull(field(page, "error"), `${at}.error`, MAX_ERROR),
+			results,
+		};
+	});
+	if (pages.length === 0) fail("pages", "le rapport ne contient aucune page");
+	return { site, pages };
 }
 
 export interface ImportSummary {
 	pagesAdded: number;
-	/** Statuts « Non conforme » posés sur des évaluations encore « non testé ». */
+	/** Statuts « Non conforme » posés là où aucune évaluation n'existait. */
 	statusesSet: number;
+	/** Indices nouveaux (absents avant l'import pour la même page, le même critère, la même règle et la même classe). */
 	findingsAdded: number;
 	/** Pages du rapport en erreur : rien n'en est importé. */
 	pagesSkipped: { url: string; reason: string }[];
 }
 
-const sameKey = (a: string, b: string) => {
-	try {
-		return urlKey(new URL(a)) === b;
-	} catch {
-		return false;
-	}
-};
-
 /**
  * Importe un rapport validé (ADR-0014 §1-3), sans modifier la session reçue. Réimporter le même rapport ne change rien.
- * - non-conformité : statut NC (source `auto`, note générée) seulement si l'évaluation est encore « non testé » ;
- * - chaque résultat est aussi rangé comme indice sous ses critères, pour la page : une non-conformité trouvée sur un
- *   critère déjà évalué par l'humain reste ainsi visible, sans toucher à son évaluation ;
+ * - non-conformité : statut NC (source `auto`, note générée) seulement si AUCUNE évaluation n'est enregistrée pour ce
+ *   critère et cette page (un « non testé » remis par l'humain est un choix humain) ;
+ * - chaque résultat est rangé comme indice sous ses critères, pour la page : une non-conformité trouvée sur un critère
+ *   déjà évalué par l'humain reste ainsi visible, sans toucher à son évaluation ;
+ * - les indices d'une page du rapport REMPLACENT ceux qu'elle avait : un rapport plus récent ne laisse pas d'indice
+ *   périmé ; les pages absentes du rapport gardent les leurs ;
  * - pages rapprochées par adresse normalisée ; une page absente est ajoutée ; un autre site est refusé.
  */
 export function importAutomaticResults(
@@ -215,27 +222,58 @@ export function importAutomaticResults(
 	newId: () => string = () => crypto.randomUUID(),
 ): { session: AuditSession; summary: ImportSummary } {
 	if (session.site && session.site !== report.site)
-		throw new Error(
-			`Ce rapport porte sur ${report.site}, mais l’audit en cours porte sur ${session.site}. Un audit porte sur un seul site : rien n’a été importé.`,
+		throw new ReportError(
+			`Ce rapport porte sur un autre site (${report.site}) que l’audit en cours (${session.site}). Un audit porte sur un seul site : rien n’a été importé.`,
 		);
 	const summary: ImportSummary = { pagesAdded: 0, statusesSet: 0, findingsAdded: 0, pagesSkipped: [] };
-	let next = session;
+	// Copies faites une seule fois, puis modifiées sur place : la session reçue n'est jamais touchée.
+	const pages = [...session.pages];
+	const evaluations = { ...session.evaluations };
+	const findings = { ...session.findings };
+	const copied = { evaluations: new Set<string>(), findings: new Set<string>() };
+	function writable<T>(map: Record<string, Record<string, T>>, which: keyof typeof copied, criterionId: string) {
+		if (!copied[which].has(criterionId)) {
+			map[criterionId] = { ...own(map, criterionId) };
+			copied[which].add(criterionId);
+		}
+		return map[criterionId] as Record<string, T>;
+	}
+	const byUrl = new Map<string, string>();
+	for (const p of pages) {
+		try {
+			const key = urlKey(new URL(p.url));
+			if (!byUrl.has(key)) byUrl.set(key, p.id);
+		} catch {}
+	}
+	/** Pages dont les anciens indices ont été retirés, avec leurs clés `critère|classe|règle` d'avant l'import. */
+	const previous = new Map<string, Set<string>>();
 	/** Non-conformités par critère puis page, pour une seule note générée par évaluation. */
 	const detected = new Map<string, Map<string, string[]>>();
+
 	for (const page of report.pages) {
 		if (page.error !== null) {
 			summary.pagesSkipped.push({ url: page.url, reason: page.error });
 			continue;
 		}
-		// ponytail: recherche linéaire (pages × pages, 1000 × 1000 au pire) ; un index par clé si ça devient lent.
-		let target = next.pages.find((p) => sameKey(p.url, page.url));
-		if (!target) {
-			next = addPage(next, { url: page.url, title: page.title }, at, newId());
-			target = next.pages[next.pages.length - 1];
+		let pageId = byUrl.get(page.url);
+		if (!pageId) {
+			pageId = newId();
+			if (!isPageId(pageId) || pages.some((p) => p.id === pageId)) throw new Error(`Id de page invalide : ${pageId}`);
+			pages.push({ id: pageId, url: page.url, title: stripBidi(page.title) });
+			byUrl.set(page.url, pageId);
 			summary.pagesAdded++;
 		}
-		if (!target) continue;
-		const pageId = target.id;
+		let before = previous.get(pageId);
+		if (!before) {
+			before = new Set();
+			previous.set(pageId, before);
+			for (const criterionId of Object.keys(findings)) {
+				const list = own(findings[criterionId] ?? {}, pageId);
+				if (!list) continue;
+				for (const f of list) before.add(`${criterionId}|${f.kind}|${f.ruleId}`);
+				delete writable(findings, "findings", criterionId)[pageId];
+			}
+		}
 		for (const r of page.results) {
 			const finding: Finding = {
 				ruleId: r.ruleId,
@@ -245,30 +283,38 @@ export function importAutomaticResults(
 				...(r.help && { help: r.help }),
 			};
 			for (const criterionId of r.criteria) {
-				const list = getFindings(next, criterionId, pageId);
+				const byPage = writable(findings, "findings", criterionId);
+				const list = own(byPage, pageId) ?? [];
+				byPage[pageId] = list; // liste créée par cet import : la modifier ne touche pas la session reçue
 				const same = list.findIndex((f) => f.ruleId === r.ruleId && f.kind === r.kind);
-				if (same === -1) summary.findingsAdded++;
-				const findings = same === -1 ? [...list, finding] : list.map((f, k) => (k === same ? finding : f));
-				next = {
-					...next,
-					findings: { ...next.findings, [criterionId]: { ...own(next.findings, criterionId), [pageId]: findings } },
-				};
+				if (same !== -1) list[same] = finding;
+				else {
+					list.push(finding);
+					if (!before.has(`${criterionId}|${r.kind}|${r.ruleId}`)) summary.findingsAdded++;
+				}
 				if (r.kind !== "non-conformite") continue;
-				const byPage = detected.get(criterionId) ?? new Map<string, string[]>();
-				detected.set(criterionId, byPage);
-				byPage.set(pageId, [...(byPage.get(pageId) ?? []), `${r.ruleId} (${plural(r.nodes, "élément")})`]);
+				const nc = detected.get(criterionId) ?? new Map<string, string[]>();
+				detected.set(criterionId, nc);
+				nc.set(pageId, [...(nc.get(pageId) ?? []), `${r.ruleId} (${plural(r.nodes, "élément")})`]);
 			}
 		}
 	}
 	for (const [criterionId, byPage] of detected)
 		for (const [pageId, rules] of byPage) {
-			// La machine ne remplace jamais une évaluation : ni humaine, ni automatique d'un import précédent.
-			// Une note saisie sur un critère « non testé » est un travail humain : elle n'est pas remplacée non plus.
-			const current = getEvaluation(next, criterionId, pageId);
-			if (current.status !== "NT" || current.note.trim() !== "") continue;
-			const note = `Détecté automatiquement : ${[...new Set(rules)].join(", ")}`;
-			next = setEvaluation(next, criterionId, pageId, { status: "NC", note, source: "auto" }, at);
+			// La machine ne remplace jamais une évaluation enregistrée : humaine (même « non testé »), ni automatique.
+			const stored = own(evaluations, criterionId);
+			if (stored && own(stored, pageId)) continue;
+			const evaluation: Evaluation = {
+				status: "NC",
+				note: `Détecté automatiquement : ${[...new Set(rules)].join(", ")}`,
+				source: "auto",
+			};
+			writable(evaluations, "evaluations", criterionId)[pageId] = evaluation;
 			summary.statusesSet++;
 		}
-	return { session: { ...next, updatedAt: at }, summary };
+	// Critères vidés par le remplacement des indices : retirés, comme removePage le fait.
+	for (const criterionId of copied.findings)
+		if (Object.keys(findings[criterionId] ?? {}).length === 0) delete findings[criterionId];
+	const site = session.site || (pages.length > 0 ? report.site : "");
+	return { session: { ...session, site, updatedAt: at, pages, evaluations, findings }, summary };
 }

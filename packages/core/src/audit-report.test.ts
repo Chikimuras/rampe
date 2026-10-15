@@ -2,9 +2,12 @@ import { describe, expect, it } from "vitest";
 import {
 	type AuditReport,
 	type AuditResult,
+	INVALID_REPORT,
 	importAutomaticResults,
+	MAX_FINDINGS,
 	parseAuditReport,
 	REPORT_TOOL_NAME,
+	ReportError,
 } from "./audit-report.ts";
 import { addPage, createSession, getEvaluation, getFindings, setEvaluation } from "./audit-session.ts";
 import { rgaa } from "./rgaa.ts";
@@ -71,6 +74,17 @@ const parse = (value: unknown) => parseAuditReport(JSON.parse(JSON.stringify(val
 const run = (session = createSession(NOW), value: unknown = sample) =>
 	importAutomaticResults(session, parse(value), LATER, ids());
 
+/** Erreur levée : phrase claire pour l'utilisateur, premier défaut dans `detail`. */
+const refusal = (run: () => unknown) => {
+	try {
+		run();
+	} catch (e) {
+		expect(e).toBeInstanceOf(ReportError);
+		return e as ReportError;
+	}
+	throw new Error("aucune erreur levée");
+};
+
 describe("parseAuditReport : validation stricte (ADR-0014 §4)", () => {
 	it("accepte un rapport valide et n'en garde que les champs utiles, adresses normalisées", () => {
 		const r = parse(sample);
@@ -104,12 +118,24 @@ describe("parseAuditReport : validation stricte (ADR-0014 §4)", () => {
 	});
 
 	const tenMegabytes = "x".repeat(10 * 1024 * 1024);
+	it("tronque les textes seulement affichés au lieu de rejeter le fichier (titre, erreur, description)", () => {
+		const r = parse(
+			report([
+				{ title: tenMegabytes, results: [{ ...result("x", "incertain", []), help: tenMegabytes }] },
+				{ url: "https://exemple.fr/b", error: tenMegabytes },
+			]),
+		);
+		expect(r.pages[0]?.title).toBe(`${"x".repeat(300)}… (tronqué)`);
+		expect(r.pages[0]?.results[0]?.help).toBe(`${"x".repeat(300)}… (tronqué)`);
+		expect(r.pages[1]?.error).toBe(`${"x".repeat(500)}… (tronqué)`);
+	});
+
 	it.each([
-		["une racine qui n'est pas un objet", [], /fichier : objet attendu/],
-		["schemaVersion 1", { ...sample, schemaVersion: 1 }, /schemaVersion : version 1 non prise en charge/],
-		["schemaVersion 3", { ...sample, schemaVersion: 3 }, /schemaVersion : version 3/],
+		["une racine qui n'est pas un objet", [], /^fichier : objet attendu/],
+		["schemaVersion 1", { ...sample, schemaVersion: 1 }, /^schemaVersion : version 1 non prise en charge/],
+		["schemaVersion 3", { ...sample, schemaVersion: 3 }, /^schemaVersion : version 3/],
 		["schemaVersion absent", { ...sample, schemaVersion: undefined }, /version absente/],
-		["un autre outil", { ...sample, tool: { name: "autre", version: "1" } }, /tool\.name : .*CLI Rampe/],
+		["un autre outil", { ...sample, tool: { name: "rampe", version: "1" } }, /^tool\.name : .*CLI Rampe/],
 		[
 			"un critère inexistant 99.1",
 			report([{ results: [result("x", "incertain", ["99.1"])] }]),
@@ -120,18 +146,13 @@ describe("parseAuditReport : validation stricte (ADR-0014 §4)", () => {
 			report([{ results: [{ ...result("x", "incertain", []), criteria: [1.1] }] }]),
 			/critère 1\.1 inexistant/,
 		],
-		["une URL javascript:", report([{ url: "javascript:alert(1)" }]), /pages\[0\]\.url : Seules les adresses http/],
-		["une URL file:", report([{ url: "file:///etc/passwd" }]), /pages\[0\]\.url/],
+		["une URL javascript:", report([{ url: "javascript:alert(1)" }]), /^pages\[0\]\.url : Seules les adresses http/],
+		["une URL file:", report([{ url: "file:///etc/passwd" }]), /^pages\[0\]\.url/],
+		["une URL de 10 Mo", report([{ url: `https://exemple.fr/${tenMegabytes}` }]), /url : adresse de plus de 2048/],
 		[
 			"une classe inconnue",
 			report([{ results: [result("x", "certain" as never, ["1.1"])] }]),
 			/kind : classe inconnue "certain"/,
-		],
-		["un titre de 10 Mo", report([{ title: tenMegabytes }]), /pages\[0\]\.title : texte de plus de 2000 caractères/],
-		[
-			"un help de 10 Mo",
-			report([{ results: [{ ...result("x", "incertain", []), help: tenMegabytes }] }]),
-			/help : texte de plus/,
 		],
 		[
 			"un identifiant de règle mal formé",
@@ -151,13 +172,20 @@ describe("parseAuditReport : validation stricte (ADR-0014 §4)", () => {
 		[
 			"deux sites",
 			report([{}, { url: "https://autre.fr/" }]),
-			/pages\[1\]\.url : autre site que https:\/\/exemple\.fr/,
+			/^pages\[1\]\.url : autre site que https:\/\/exemple\.fr/,
 		],
 		["aucune page", report([]), /aucune page/],
 		["un titre qui n'est pas un texte", report([{ title: 42 as never }]), /title : texte attendu/],
-	])("rejette %s, avec le premier défaut dans le message", (_, value, message) => {
-		expect(() => parse(value)).toThrow(message);
-		expect(() => parse(value)).toThrow(/^Fichier refusé, rien n’a été importé\./);
+	])("rejette %s : phrase claire, premier défaut dans le détail", (_, value, detail) => {
+		const e = refusal(() => parse(value));
+		expect(e.message).toBe(INVALID_REPORT);
+		expect(e.detail).toMatch(detail);
+	});
+
+	it(`rejette un rapport de plus de ${MAX_FINDINGS} indices`, () => {
+		const results = Array.from({ length: 1000 }, (_, i) => result(`r${i}`, "incertain", ["1.1", "1.2", "1.3"], 0));
+		const pages = Array.from({ length: 17 }, (_, i) => ({ url: `https://exemple.fr/${i}`, results }));
+		expect(refusal(() => parse(report(pages))).detail).toMatch(/^pages\[16\]\.results\[666\]\.criteria : plus de 50/);
 	});
 
 	it.each([
@@ -165,23 +193,17 @@ describe("parseAuditReport : validation stricte (ADR-0014 §4)", () => {
 		["constructor", `{"constructor":{"prototype":{}},"schemaVersion":2}`],
 		["prototype", `{"schemaVersion":2,"tool":{"name":"@rampe/cli","prototype":1},"pages":[]}`],
 	])("rejette une clé %s, où qu'elle soit", (key, json) => {
-		expect(() => parseAuditReport(JSON.parse(json), known)).toThrow(`clé interdite « ${key} »`);
+		expect(refusal(() => parseAuditReport(JSON.parse(json), known)).detail).toContain(`clé interdite « ${key} »`);
 	});
 
 	it("rejette une imbrication anormale sans épuiser la pile", () => {
-		expect(() => parseAuditReport(JSON.parse(`${"[".repeat(5000)}${"]".repeat(5000)}`), known)).toThrow(
-			/structure trop profonde/,
-		);
+		const json = JSON.parse(`${"[".repeat(5000)}${"]".repeat(5000)}`);
+		expect(refusal(() => parseAuditReport(json, known)).detail).toMatch(/structure trop profonde/);
 	});
 
-	it("le message d'erreur reste borné, même face à une valeur énorme", () => {
+	it("le détail reste borné, même face à une valeur énorme", () => {
 		const huge = report([{ results: [result("x", "a-verifier", [tenMegabytes.slice(0, 1_000_000)])] }]);
-		expect(() => parse(huge)).toThrow();
-		try {
-			parse(huge);
-		} catch (e) {
-			expect((e as Error).message.length).toBeLessThanOrEqual(500);
-		}
+		expect(refusal(() => parse(huge)).detail?.length).toBeLessThanOrEqual(500);
 	});
 });
 
@@ -264,8 +286,8 @@ describe("importAutomaticResults (ADR-0014 §1-3)", () => {
 	it("refuse un rapport d'un autre site, sans modifier la session", () => {
 		const s = addPage(createSession(NOW), { url: "https://autre.fr/", title: "" }, NOW, A);
 		const frozen = JSON.stringify(s);
-		expect(() => run(s)).toThrow(
-			/porte sur https:\/\/exemple\.fr, mais l’audit en cours porte sur https:\/\/autre\.fr/,
+		expect(refusal(() => run(s)).message).toBe(
+			"Ce rapport porte sur un autre site (https://exemple.fr) que l’audit en cours (https://autre.fr). Un audit porte sur un seul site : rien n’a été importé.",
 		);
 		expect(JSON.stringify(s)).toBe(frozen);
 	});
@@ -285,5 +307,45 @@ describe("importAutomaticResults (ADR-0014 §1-3)", () => {
 		expect(summary.findingsAdded).toBe(0);
 		expect(session.findings).toEqual({});
 		expect(summary.pagesAdded).toBe(1);
+	});
+
+	it("relecture : un « non testé » enregistré par l'humain n'est jamais remplacé (note effacée, NC auto remise à NT)", () => {
+		// Scénario 1 : l'humain a écrit une note puis l'a effacée ; l'évaluation existe, vide.
+		let s = addPage(createSession(NOW), { url: "https://exemple.fr/", title: "" }, NOW, A);
+		s = setEvaluation(s, "1.1", A, { note: "x" }, NOW);
+		s = setEvaluation(s, "1.1", A, { note: "" }, NOW);
+		expect(getEvaluation(run(s).session, "1.1", A)).toEqual({ status: "NT", note: "", source: "humain" });
+		// Scénario 2 : NC posé par l'import, que l'humain remet à « non testé » ; un réimport ne le repose pas.
+		const first = run(addPage(createSession(NOW), { url: "https://exemple.fr/", title: "" }, NOW, A)).session;
+		const reset = setEvaluation(first, "3.2", A, { status: "NT" }, LATER);
+		expect(getEvaluation(reset, "3.2", A)).toEqual({ status: "NT", note: "", source: "humain" });
+		const again = importAutomaticResults(reset, parse(sample), LATER, ids());
+		expect(getEvaluation(again.session, "3.2", A)).toEqual({ status: "NT", note: "", source: "humain" });
+		expect(again.summary.statusesSet).toBe(0);
+	});
+
+	it("un rapport plus récent remplace les indices des pages qu'il contient, et seulement celles-là", () => {
+		const first = run().session;
+		const [home, contact] = first.pages.map((p) => p.id) as [string, string];
+		// Nouveau rapport : sur l'accueil, seul color-contrast reste (2 → 1 élément) ; le contact n'y figure pas.
+		const newer = report([
+			{ url: "https://exemple.fr/", results: [result("color-contrast", "non-conformite", ["3.2"], 1)] },
+		]);
+		const { session, summary } = run(first, newer);
+		expect(getFindings(session, "3.2", home)).toEqual([
+			{
+				ruleId: "color-contrast",
+				kind: "non-conformite",
+				nodes: 1,
+				impact: "serious",
+				help: "Help for color-contrast",
+			},
+		]);
+		for (const c of ["1.1", "9.2", "7.1", "10.8"]) expect(getFindings(session, c, home), c).toEqual([]);
+		expect(Object.keys(session.findings).sort()).toEqual(["11.1", "3.2"]);
+		expect(getFindings(session, "11.1", contact).map((f) => f.ruleId)).toEqual(["label"]);
+		expect(summary.findingsAdded).toBe(0);
+		// Les évaluations ne bougent pas : un statut automatique attend toujours sa confirmation humaine.
+		expect(getEvaluation(session, "1.1", home)).toMatchObject({ status: "NC", source: "auto" });
 	});
 });
