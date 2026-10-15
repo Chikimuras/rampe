@@ -3,3 +3,6 @@ dist/
 .astro/
 *.log
 .DS_Store
+# Fichiers locaux de Claude Code (permissions personnelles, verrou de /loop)
+.claude/settings.local.json
+.claude/scheduled_tasks.lock
