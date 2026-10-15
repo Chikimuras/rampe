@@ -30,15 +30,18 @@ export interface AuditResult {
 export interface AuditPage {
 	/** Identifiants éventuels masqués (`***`). */
 	url: string;
-	finalUrl: string;
-	title: string;
+	/** Nul si la page est en erreur. */
+	finalUrl: string | null;
+	title: string | null;
 	/** Avertissements sur l'audit de la page (ex. redirection vers une autre origine). */
 	warnings: string[];
 	results: AuditResult[];
+	/** Message d'erreur si la page n'a pas pu être auditée (échantillon) ; nul sinon. */
+	error: string | null;
 }
 
 export interface AuditReport {
-	schemaVersion: 1;
+	schemaVersion: 2;
 	tool: { name: string; version: string };
 	engine: { axe: string; browser: string };
 	startedAt: string;
@@ -106,7 +109,7 @@ export function buildReport(input: {
 	pages: AuditPage[];
 }): AuditReport {
 	return {
-		schemaVersion: 1,
+		schemaVersion: 2,
 		tool: { name: pkg.name, version: pkg.version },
 		engine: { axe: input.axeVersion, browser: input.browserVersion },
 		startedAt: input.startedAt.toISOString(),
@@ -149,12 +152,25 @@ function byCriterion(results: AuditResult[], note: (r: AuditResult) => string = 
 }
 
 /** Rapport console d'une page, en français. `uncovered` : critères sans aucune vérification automatique directe. */
-export function formatReport(page: AuditPage, uncovered: number): string {
+export const formatReport = (page: AuditPage, uncovered: number): string =>
+	`${formatPage(page)}\n${reminder(uncovered)}`;
+
+/** Rappel d'honnêteté de chaque rapport (ADR-0002 §4). */
+const reminder = (uncovered: number) =>
+	[
+		`Les ${rgaa.criteria.length} critères demandent une vérification humaine. ${uncovered} d’entre eux n’ont même aucune vérification automatique directe.`,
+		"Ce résultat automatique ne mesure pas la conformité et ne la certifie pas.",
+	].join("\n");
+
+/** Résultats d'une page, sans le rappel final. */
+export function formatPage(page: AuditPage): string {
+	if (page.error !== null)
+		return `Page en erreur : ${stripControl(redact(page.url))}\n${stripControl(redact(page.error))}\n`;
 	const of = (kind: ResultKind) => page.results.filter((r) => r.kind === kind);
 	const nonConformities = of("non-conformite");
 	const out = [
-		`Audit automatique de ${stripControl(redact(page.finalUrl))}`,
-		`Titre : ${stripControl(page.title) || "(aucun)"}`,
+		`Audit automatique de ${stripControl(redact(page.finalUrl ?? page.url))}`,
+		`Titre : ${stripControl(page.title ?? "") || "(aucun)"}`,
 		"",
 	];
 
@@ -188,9 +204,36 @@ export function formatReport(page: AuditPage, uncovered: number): string {
 		r.criteria.length > 0 ? ` (critère${r.criteria.length > 1 ? "s" : ""} ${r.criteria.join(", ")})` : "",
 	);
 
-	out.push(
-		`Les ${rgaa.criteria.length} critères demandent une vérification humaine. ${uncovered} d’entre eux n’ont même aucune vérification automatique directe.`,
-		"Ce résultat automatique ne mesure pas la conformité et ne la certifie pas.",
-	);
+	return out.join("\n");
+}
+
+/** Synthèse d'un échantillon : critères en non-conformité sur au moins une page, pages en erreur, rappel. */
+export function formatSynthesis(pages: AuditPage[], uncovered: number): string {
+	const where = (p: AuditPage) => stripControl(redact(p.finalUrl ?? p.url));
+	const failed = pages.filter((p) => p.error !== null);
+	const out = [`Synthèse de l’échantillon : ${plural(pages.length, "page")}`, ""];
+	const byCrit = new Map<string, Set<string>>();
+	for (const p of pages)
+		for (const r of p.results.filter((x) => x.kind === "non-conformite"))
+			for (const c of r.criteria) byCrit.set(c, (byCrit.get(c) ?? new Set()).add(where(p)));
+	if (byCrit.size === 0) out.push("Aucune non-conformité détectée automatiquement sur les pages auditées.");
+	else {
+		out.push("Critères avec une non-conformité détectée sur au moins une page :");
+		for (const id of [...byCrit.keys()].sort(byNumber)) {
+			const urls = [...(byCrit.get(id) ?? [])];
+			out.push(
+				`  Critère ${id} — ${plainTitle(id)} : ${plural(urls.length, "page")}`,
+				...urls.map((u) => `    - ${u}`),
+			);
+		}
+	}
+	out.push("");
+	if (failed.length > 0)
+		out.push(
+			`${plural(failed.length, "page")} en erreur, non auditée${failed.length > 1 ? "s" : ""} :`,
+			...failed.map((p) => `  - ${where(p)}`),
+			"",
+		);
+	out.push(reminder(uncovered));
 	return out.join("\n");
 }

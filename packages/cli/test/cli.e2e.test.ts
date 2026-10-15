@@ -65,7 +65,8 @@ describe("rampe audit (bout en bout)", { timeout: 60_000 }, () => {
 		expect(code, stderr).toBe(1);
 
 		const report = await readReport();
-		expect(report.schemaVersion).toBe(1);
+		expect(report.schemaVersion).toBe(2);
+		expect(report.pages[0]?.error).toBeNull();
 		const [page] = report.pages;
 		expect(page?.finalUrl).toBe(`${base}/defauts`);
 		const nc = page?.results.filter((r) => r.kind === "non-conformite") ?? [];
