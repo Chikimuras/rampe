@@ -25,7 +25,12 @@ import {
 
 export { isObject, MAX_PAGES, MAX_SESSION_BYTES, MAX_URL, SESSION_TOOL_NAME } from "./strict.ts";
 
-export const SCHEMA_VERSION = 2;
+/**
+ * 3 : champs de la déclaration d'accessibilité (ADR-0017). Une session v1 ou v2 est migrée sans perte (elle n'en a
+ * pas) ; un onglet resté sur une version précédente voit une session v3 comme « future » et ne l'écrase pas, au lieu
+ * de la relire en perdant la déclaration.
+ */
+export const SCHEMA_VERSION = 3;
 
 /** C : conforme, NC : non conforme, NA : non applicable, NT : non testé (état initial). */
 export type Status = "C" | "NC" | "NA" | "NT";
@@ -80,7 +85,54 @@ export interface AuditSession {
 	evaluations: Record<string, Record<string, Evaluation>>;
 	/** `findings[critère][pageId]` : indices des imports automatiques. */
 	findings: Record<string, Record<string, Finding[]>>;
+	/** Champs de la déclaration d'accessibilité saisis par l'utilisateur (ADR-0017 §3) ; absent : aucun saisi. */
+	declaration?: DeclarationFields;
 }
+
+/**
+ * Champs que Rampe ne remplit jamais à la place de l'utilisateur (ADR-0017 §3), et leur nature :
+ * - `text` : une ligne ; `lines` : un élément de liste par ligne ; `url` : adresse http(s) ou `mailto:` (une adresse
+ *   e-mail seule vaut `mailto:`), vérifiée au RENDU, pas à la saisie : un texte en cours de frappe est gardé tel quel,
+ *   et un audit produit par l'interface se réimporte toujours ;
+ * - `date` : `AAAA-MM-JJ` (champ date du navigateur) ; `auditBy` : `interne` ou `prestataire`.
+ */
+export const DECLARATION_FIELDS = {
+	organization: "text",
+	commitment: "text",
+	schemeUrl: "url",
+	actionPlanUrl: "url",
+	serviceName: "text",
+	auditBy: "auditBy",
+	auditCompany: "text",
+	reportUrl: "url",
+	nonConformities: "lines",
+	derogations: "lines",
+	exemptions: "lines",
+	establishedOn: "date",
+	updatedOn: "date",
+	technologies: "lines",
+	testEnvironment: "lines",
+	tools: "lines",
+	contactFormUrl: "url",
+	contactEntity: "text",
+	contactPageUrl: "url",
+} as const;
+export type DeclarationField = keyof typeof DECLARATION_FIELDS;
+/** Valeurs saisies ; un champ vide est absent. */
+export type DeclarationFields = Partial<Record<DeclarationField, string>>;
+export const AUDIT_BY = ["interne", "prestataire"] as const;
+/** Bornes des champs de la déclaration, mêmes règles que les autres textes (ADR-0016). */
+export const MAX_DECLARATION_TEXT = 1000;
+export const MAX_DECLARATION_LINES = 10_000;
+const DAY = /^\d{4}-\d{2}-\d{2}$/;
+/** Date `AAAA-MM-JJ` qui existe au calendrier (pas de 31 février). */
+export const isDay = (value: string) => {
+	const date = new Date(`${value}T00:00:00Z`);
+	return DAY.test(value) && !Number.isNaN(date.getTime()) && date.toISOString().startsWith(value);
+};
+const isDeclarationField = (key: string): key is DeclarationField => Object.hasOwn(DECLARATION_FIELDS, key);
+const declarationMax = (kind: string) =>
+	kind === "lines" ? MAX_DECLARATION_LINES : kind === "url" ? MAX_URL : MAX_DECLARATION_TEXT;
 
 export interface Count {
 	/** Évaluations encore « non testé ». */
@@ -229,6 +281,32 @@ export function setEvaluation(
 	};
 }
 
+/**
+ * Saisie d'un champ de la déclaration (ADR-0017 §3). Nettoyée comme le reste à l'écriture (contrôles et bidi retirés,
+ * sauts de ligne gardés dans un champ `lines`), bornée (ADR-0016) ; une valeur vide retire le champ. Pas de `trim` :
+ * l'espace en cours de frappe reste, le rendu ignore les espaces de bord.
+ */
+export function setDeclarationField(
+	session: AuditSession,
+	field: DeclarationField,
+	value: string,
+	at = now(),
+): AuditSession {
+	if (!isDeclarationField(field)) throw new Error(`Champ de déclaration inconnu : ${field}`);
+	const kind = DECLARATION_FIELDS[field];
+	const current = session.declaration ?? {};
+	const clean = kind === "lines" ? cleanNote(value) : stripControl(value);
+	if (kind === "date" && clean !== "" && !isDay(clean)) throw new Error(`Date invalide : ${clean}`);
+	if (kind === "auditBy" && clean !== "" && !(AUDIT_BY as readonly string[]).includes(clean))
+		throw new Error(`Réalisation de l’audit inconnue : ${clean}`);
+	const max = declarationMax(kind);
+	if (!fits(clean, max, own(current, field))) throw new Error(`Champ de plus de ${max} caractères`);
+	const { [field]: _old, ...rest } = current;
+	const declaration: DeclarationFields = clean === "" ? rest : { ...rest, [field]: clean };
+	const { declaration: _previous, ...base } = session;
+	return { ...base, updatedAt: at, ...(Object.keys(declaration).length > 0 && { declaration }) };
+}
+
 /** Avancement : évaluations « non testé » restantes et évaluations automatiques à confirmer. */
 export function progress(
 	session: AuditSession,
@@ -279,15 +357,18 @@ export function serializeSession(session: AuditSession): string {
 	return JSON.stringify({ schemaVersion, tool: { name: SESSION_TOOL_NAME }, ...rest });
 }
 
-/** `audit-<hôte>-<AAAA-MM-JJ>.json`, date locale ; caractères hors [a-z0-9.-] remplacés (IPv6, port). */
-export function sessionFileName(session: AuditSession, date: Date): string {
+/** `<hôte>-<AAAA-MM-JJ>`, date locale ; caractères hors [a-z0-9.-] remplacés (IPv6, port). */
+export function siteAndDay(session: AuditSession, date: Date): string {
 	let host = "sans-site";
 	try {
 		host = new URL(session.site).hostname.replace(/[^a-z0-9.-]+/gi, "-").replace(/^-|-$/g, "") || host;
 	} catch {}
 	const pad = (n: number) => String(n).padStart(2, "0");
-	return `audit-${host}-${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}.json`;
+	return `${host}-${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}`;
 }
+
+/** `audit-<hôte>-<AAAA-MM-JJ>.json`. */
+export const sessionFileName = (session: AuditSession, date: Date) => `audit-${siteAndDay(session, date)}.json`;
 
 // Bornes des textes saisis par l'humain (ADR-0016 §2, en cohérence avec ADR-0014 §4) : un texte seulement affiché
 // (titre, note, description de règle) est tronqué, jamais rejeté ; le processus, qui entre dans le calcul du taux
@@ -337,7 +418,7 @@ function parseSessionWith(json: unknown, known: ReadonlySet<string>, bounded: bo
 	if (field(root, "tool") !== undefined && name !== SESSION_TOOL_NAME)
 		fail("tool.name", "ce fichier n’a pas été produit par l’audit guidé de Rampe");
 	const version = field(root, "schemaVersion");
-	if (version !== 1 && version !== SCHEMA_VERSION)
+	if (version !== 1 && version !== 2 && version !== SCHEMA_VERSION)
 		fail("schemaVersion", `version ${JSON.stringify(version) ?? "absente"} non prise en charge`);
 	const v1 = version === 1;
 	const limit = (max: number) => (bounded ? max : Number.POSITIVE_INFINITY);
@@ -445,6 +526,30 @@ function parseSessionWith(json: unknown, known: ReadonlySet<string>, bounded: bo
 				}),
 			);
 
+	// Déclaration (ADR-0017), absente avant la v3. Import : textes nettoyés et tronqués, adresse rejetée au-delà de
+	// sa borne (comme une adresse de page) ; relecture : types seulement. Date et réalisation : forme vérifiée partout.
+	const rawDeclaration = version === SCHEMA_VERSION ? field(root, "declaration") : undefined;
+	let declaration: DeclarationFields | undefined;
+	if (rawDeclaration !== undefined) {
+		const d = object(rawDeclaration, "declaration");
+		declaration = {};
+		for (const [key, kind] of Object.entries(DECLARATION_FIELDS)) {
+			const raw = field(d, key);
+			if (raw === undefined) continue;
+			const at = `declaration.${key}`;
+			let value = string(raw, at);
+			if (bounded && kind === "lines") value = truncate(cleanNote(value), MAX_DECLARATION_LINES);
+			else if (bounded && kind === "text") value = truncate(stripControl(value), MAX_DECLARATION_TEXT);
+			else if (bounded) value = stripControl(value);
+			if (kind === "url" && value.length > limit(MAX_URL)) fail(at, `adresse de plus de ${MAX_URL} caractères`);
+			if (kind === "date" && value !== "" && !isDay(value)) fail(at, "date invalide (attendu : AAAA-MM-JJ)");
+			if (kind === "auditBy" && value !== "" && !(AUDIT_BY as readonly string[]).includes(value))
+				fail(at, `valeur inconnue ${JSON.stringify(value)}`);
+			if (value !== "" || !bounded) declaration[key as DeclarationField] = value;
+		}
+		if (bounded && Object.keys(declaration).length === 0) declaration = undefined;
+	}
+
 	return {
 		schemaVersion: SCHEMA_VERSION,
 		site,
@@ -454,5 +559,6 @@ function parseSessionWith(json: unknown, known: ReadonlySet<string>, bounded: bo
 		pages,
 		evaluations,
 		findings,
+		...(declaration !== undefined && { declaration }),
 	};
 }
