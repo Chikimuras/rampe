@@ -28,7 +28,7 @@ const runCli = (...args: string[]) =>
 		});
 	});
 
-const FIXTURES = new Set(["propre", "defauts", "region", "boucle", "quitte", "csp"]);
+const FIXTURES = new Set(["propre", "defauts", "region", "boucle", "quitte", "csp", "titre-long"]);
 const json = join(tmpdir(), `rampe-e2e-${process.pid}.json`);
 const html = join(tmpdir(), `rampe-e2e-${process.pid}.html`);
 let server: Server;
@@ -102,6 +102,12 @@ describe("rampe audit (bout en bout)", { timeout: 60_000 }, () => {
 		expect(stdout).toContain(
 			"Les 106 critères demandent une vérification humaine. 79 d’entre eux n’ont même aucune vérification automatique directe.",
 		);
+	});
+
+	it("borne le titre de la page à 300 caractères dans le JSON", async () => {
+		const { code, stderr } = await run("audit", `${base}/titre-long`, "--json", json);
+		expect(code, stderr).toBe(0);
+		expect((await readReport()).pages[0]?.title).toBe(`${"T".repeat(300)}… (tronqué)`);
 	});
 
 	it("sort en 0 sur une page sans non-conformité détectée", async () => {

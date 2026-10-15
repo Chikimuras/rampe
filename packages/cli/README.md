@@ -181,12 +181,13 @@ pnpm exec rampe audit --echantillon echantillon.txt --json rapport.json     # 2.
 ```
 
 - Les pages du rapport absentes de l’audit sont ajoutées. Elles sont rapprochées par adresse, sans fragment ni identifiants. Les pages en erreur ne sont pas importées et sont listées dans le bilan.
-- Une **non-conformité** passe le critère à « Non conforme » **seulement s’il est encore « non testé »** sur la page. L’évaluation est alors marquée « Détecté automatiquement, à confirmer », avec une note générée (« Détecté automatiquement : image-alt (3 éléments) »). Dès que la personne change le statut ou la note, l’évaluation devient la sienne.
-- Les autres résultats (rattachement incertain, à vérifier) deviennent des **indices** sous le critère et la page. Ils ne valent ni conformité ni non-conformité. Une non-conformité trouvée sur un critère déjà évalué y figure aussi, sans toucher à l’évaluation.
+- Une **non-conformité** passe le critère à « Non conforme » **seulement si rien n’a encore été saisi** pour ce critère sur la page. L’évaluation est alors marquée « Détecté automatiquement, à confirmer », avec une note générée (« Détecté automatiquement : image-alt (3 éléments) ») et un bouton « Confirmer ». Dès que la personne confirme, change le statut ou la note, l’évaluation devient la sienne.
+- Les autres résultats (rattachement incertain, à vérifier) deviennent des **indices** sous le critère et la page. Ils ne valent ni conformité ni non-conformité. Une non-conformité trouvée sur un critère déjà évalué y figure aussi, sans toucher à l’évaluation ; si la personne l’avait jugé « Conforme », un avertissement l’invite à vérifier.
+- Réimporter un rapport plus récent remplace les indices des pages qu’il contient : un défaut corrigé disparaît des indices.
 - Une évaluation saisie par une personne n’est jamais modifiée. Réimporter le même fichier ne change rien. « Annuler cet import » restaure l’état précédent tant que rien d’autre n’a été modifié.
 - Le fichier vient de l’extérieur de l’application : il est validé strictement, tout ou rien (`parseAuditReport` de `@rampe/core`). Un fichier refusé ne modifie pas l’audit, et le message nomme le premier défaut trouvé.
 
-Le champ `help` est apparu après la première version du format 2. Il reste facultatif à l’import, donc un fichier plus ancien s’importe aussi, sans les descriptions.
+Le titre de page est borné à 300 caractères dans le JSON (« … (tronqué) »). Le champ `help` est apparu après la première version du format 2. Il reste facultatif à l’import, donc un fichier plus ancien s’importe aussi, sans les descriptions.
 
 ## Tests
 

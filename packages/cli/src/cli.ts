@@ -18,6 +18,8 @@ import {
 	parseAuditUrl,
 	redact,
 	stripControl,
+	TITLE_MAX,
+	truncate,
 	uncoveredCriteria,
 } from "./audit.ts";
 import {
@@ -179,7 +181,7 @@ async function inspect(page: Page, url: URL, timeout: number): Promise<AuditPage
 	return {
 		url: redact(url.href),
 		finalUrl: redact(finalUrl),
-		title: await page.title(),
+		title: truncate(await page.title(), TITLE_MAX),
 		warnings: originWarning(url, finalUrl),
 		results: classifyResults(raw.violations as AxeRawResult[], raw.incomplete as AxeRawResult[]),
 		error: null,

@@ -14,11 +14,12 @@ import {
 	redact,
 	rgaa,
 	stripControl,
+	truncate,
 } from "@rampe/core";
 import axe from "axe-core";
 
 // Fonctions partagées avec le site (lecture d'échantillon dans le navigateur) : elles vivent dans @rampe/core.
-export { parseAuditUrl, plural, redact, stripBidi, stripControl } from "@rampe/core";
+export { parseAuditUrl, plural, redact, stripBidi, stripControl, truncate } from "@rampe/core";
 
 import pkg from "../package.json" with { type: "json" };
 
@@ -36,17 +37,12 @@ export interface AxeRawResult {
 export type { AuditPage, AuditReport, AuditResult, ResultKind } from "@rampe/core";
 
 const HTML_MAX = 500;
+/** Titre de page : borné à l'écriture, comme dans le rapport HTML. */
+export const TITLE_MAX = 300;
 
 /** Critères sans aucune vérification automatique directe (même décompte que le site). */
 export const uncoveredCriteria = () =>
 	rgaa.criteria.length - criteriaWithDirectRule(axe.getRules().map((r) => r.tags)).size;
-
-/** Tronque à `max` unités UTF-16 sans couper une paire de substitution, avec une marque visible. */
-export function truncate(text: string, max: number): string {
-	if (text.length <= max) return text;
-	const cut = text.slice(0, max);
-	return `${/[\ud800-\udbff]$/.test(cut) ? cut.slice(0, -1) : cut}… (tronqué)`;
-}
 
 // ADR-0011 §3 : seule une vérification directe (ni bonne pratique ni expérimentale) est une non-conformité.
 function kindOf(m: AxeRuleMapping, incomplete: boolean): ResultKind {
