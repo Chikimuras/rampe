@@ -127,7 +127,18 @@ describe("rampe echantillon puis audit --echantillon (bout en bout)", { timeout:
 		const json = join(dir, "erreur.json");
 		await writeFile(file, `# test\n${base}/\n${base}/boucle\n\n${base}/inexistante\n${base}/a-propos\n`);
 		const t0 = Date.now();
-		const { code, stdout, stderr } = await run("audit", "--echantillon", file, "--json", json, "--timeout", "4000");
+		const html = join(dir, "erreur.html");
+		const { code, stdout, stderr } = await run(
+			"audit",
+			"--echantillon",
+			file,
+			"--json",
+			json,
+			"--html",
+			html,
+			"--timeout",
+			"4000",
+		);
 		expect(code).toBe(2);
 		expect(Date.now() - t0).toBeLessThan(40_000);
 		expect(stderr).toContain(`Erreur sur ${base}/boucle : audit interrompu après 4000 ms`);
@@ -142,6 +153,12 @@ describe("rampe echantillon puis audit --echantillon (bout en bout)", { timeout:
 			[`${base}/a-propos`, true],
 		]);
 		expect(pages[3]?.title).toBe("Page du mini-site");
+		const report = await readFile(html, "utf8");
+		expect(report).toContain("2 pages en erreur, non auditées");
+		expect(report).toContain(
+			`<strong>Non auditée :</strong> <a href="${base}/inexistante"><bdi>${base}/inexistante</bdi></a>. La page n’a pas pu être chargée : le serveur a répondu HTTP 404.`,
+		);
+		expect(report).toContain("La page n’a pas pu être chargée : délai dépassé.");
 	});
 
 	it("refuse un échantillon mêlant deux origines, sans rien auditer", async () => {
@@ -161,6 +178,9 @@ describe("rampe echantillon puis audit --echantillon (bout en bout)", { timeout:
 			[["audit", "--echantillon", file, "--json", file.replace("court", "./court")], "--json désigne le fichier"],
 			[["audit", "--echantillon", file, "--json", join(dir, "absent", "r.json")], "n’existe pas (--json)"],
 			[["audit", `${base}/a-propos`, "--json", file], "existe déjà (--json)"],
+			[["audit", "--echantillon", file, "--html", file], "--html désigne le fichier d’échantillon lui-même"],
+			[["audit", `${base}/a-propos`, "--html", join(dir, "absent", "r.html")], "n’existe pas (--html)"],
+			[["audit", `${base}/a-propos`, "--html", file], "existe déjà (--html)"],
 			[["echantillon", `${base}/`, "--sortie", join(dir, "absent", "e.txt")], "n’existe pas (--sortie)"],
 		] as const;
 		for (const [args, message] of cases) {

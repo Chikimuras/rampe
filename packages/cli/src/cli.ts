@@ -5,7 +5,6 @@ import { existsSync } from "node:fs";
 import { readFile, writeFile } from "node:fs/promises";
 import { dirname, resolve } from "node:path";
 import { parseArgs } from "node:util";
-import { criteriaWithDirectRule, rgaa } from "@rampe/core";
 import axe from "axe-core";
 import { type Browser, chromium, type Page } from "playwright";
 import {
@@ -19,6 +18,7 @@ import {
 	parseAuditUrl,
 	redact,
 	stripControl,
+	uncoveredCriteria,
 } from "./audit.ts";
 import {
 	type Collected,
@@ -29,16 +29,18 @@ import {
 	type RawLink,
 	type RawSearch,
 } from "./echantillon.ts";
+import { renderHtmlReport } from "./rapport.ts";
 
 const USAGE = `Usage :
-  rampe audit <url> [--json <fichier>] [--timeout <ms>]
-  rampe audit --echantillon <fichier> [--json <fichier>] [--timeout <ms>]
+  rampe audit <url> [--json <fichier>] [--html <fichier>] [--timeout <ms>]
+  rampe audit --echantillon <fichier> [--json <fichier>] [--html <fichier>] [--timeout <ms>]
   rampe echantillon <url> [--sortie <fichier>] [--max <n>] [--graine <n>] [--timeout <ms>]
 
 audit
   <url>                  page à auditer (http:// ou https://)
   --echantillon <fich.>  audite une à une les pages d’un fichier d’échantillon (voir rampe echantillon)
   --json <fichier>       écrit aussi le résultat détaillé en JSON
+  --html <fichier>       écrit aussi un rapport HTML lisible par un non-expert
   --timeout <ms>         durée maximale de l’audit d’une page : chargement, injection et analyse (défaut : 60000)
 
 echantillon : propose un échantillon de pages selon la méthode RGAA, à relire et modifier
@@ -64,6 +66,7 @@ function parseCli(argv: string[]) {
 		allowPositionals: true,
 		options: {
 			json: { type: "string" },
+			html: { type: "string" },
 			timeout: { type: "string" },
 			echantillon: { type: "string" },
 			sortie: { type: "string" },
@@ -84,7 +87,7 @@ function parseCli(argv: string[]) {
 	};
 	if (command === "echantillon") {
 		if (!target || rest.length > 0) throw new Error("Commande attendue : rampe echantillon <url>");
-		refuse(["json", "echantillon"]);
+		refuse(["json", "html", "echantillon"]);
 		return {
 			command,
 			url: parseAuditUrl(target),
@@ -102,14 +105,12 @@ function parseCli(argv: string[]) {
 		url: target ? parseAuditUrl(target) : null,
 		file: values.echantillon,
 		json: values.json,
+		html: values.html,
 		timeout,
 	} as const;
 }
 
 const isHttp = (href: string) => /^https?:$/.test(new URL(href).protocol);
-
-/** Critères sans aucune vérification automatique directe (même décompte que le site). */
-const uncovered = () => rgaa.criteria.length - criteriaWithDirectRule(axe.getRules().map((r) => r.tags)).size;
 
 /** Bac à sable de Chromium conservé : Playwright le désactive par défaut, on le réactive (ADR-0011 §6). */
 async function withBrowser<T>(fn: (browser: Browser) => Promise<T>): Promise<T> {
@@ -282,19 +283,24 @@ const clean = (e: unknown) =>
 		.map(stripControl)
 		.join("\n");
 
-async function auditOne(url: URL, json: string | undefined, timeout: number): Promise<number> {
+interface Outputs {
+	json: string | undefined;
+	html: string | undefined;
+}
+
+async function auditOne(url: URL, out: Outputs, timeout: number): Promise<number> {
 	const startedAt = new Date();
 	return withBrowser(async (browser) => {
 		const auditPage = await onFreshPage(browser, timeout, "audit", (page) => inspect(page, url, timeout));
 		for (const w of auditPage.warnings) console.error(`Avertissement : ${stripControl(w)}`);
-		console.log(formatReport(auditPage, uncovered()));
-		await writeJson(json, startedAt, browser, [auditPage]);
+		console.log(formatReport(auditPage, uncoveredCriteria()));
+		await writeOutputs(out, startedAt, browser, [auditPage]);
 		return auditPage.results.some((r) => r.kind === "non-conformite") ? 1 : 0;
 	});
 }
 
 /** Audite les pages une à une dans un seul navigateur, chacune dans un contexte neuf (ADR-0012 §3 et §4). */
-async function auditSample(file: string, json: string | undefined, timeout: number): Promise<number> {
+async function auditSample(file: string, out: Outputs, timeout: number): Promise<number> {
 	const { urls, warnings } = parseSampleFile(await readFile(file, "utf8"));
 	for (const w of warnings) console.error(`Avertissement : ${w}`);
 	const startedAt = new Date();
@@ -314,18 +320,24 @@ async function auditSample(file: string, json: string | undefined, timeout: numb
 			pages.push(auditPage);
 			console.log(formatPage(auditPage).trimEnd());
 		}
-		console.log(`\n${formatSynthesis(pages, uncovered())}`);
-		await writeJson(json, startedAt, browser, pages);
+		console.log(`\n${formatSynthesis(pages, uncoveredCriteria())}`);
+		await writeOutputs(out, startedAt, browser, pages);
 		if (pages.some((p) => p.error !== null)) return 2;
 		return pages.some((p) => p.results.some((r) => r.kind === "non-conformite")) ? 1 : 0;
 	});
 }
 
-async function writeJson(json: string | undefined, startedAt: Date, browser: Browser, pages: AuditPage[]) {
-	if (!json) return;
+/** JSON v2 et rapport HTML, tous deux tirés du même rapport ; jamais d'écrasement (`wx`). */
+async function writeOutputs({ json, html }: Outputs, startedAt: Date, browser: Browser, pages: AuditPage[]) {
 	const report = buildReport({ startedAt, axeVersion: axe.version, browserVersion: browser.version(), pages });
-	await writeFile(json, `${JSON.stringify(report, null, 2)}\n`, { flag: "wx" });
-	console.log(`\nRésultat JSON écrit dans ${json}`);
+	if (json) {
+		await writeFile(json, `${JSON.stringify(report, null, 2)}\n`, { flag: "wx" });
+		console.log(`\nRésultat JSON écrit dans ${json}`);
+	}
+	if (html) {
+		await writeFile(html, renderHtmlReport(report), { flag: "wx" });
+		console.log(`\nRapport HTML écrit dans ${html}`);
+	}
 }
 
 async function sample(url: URL, sortie: string, max: number, seed: number, timeout: number): Promise<number> {
@@ -352,17 +364,25 @@ try {
 }
 try {
 	const o = options;
-	if (o.command === "audit" && o.json) {
-		if (o.file && resolve(o.json) === resolve(o.file))
-			throw new Error("--json désigne le fichier d’échantillon lui-même : choisissez un autre fichier.");
-		assertWritable(o.json, "--json");
+	if (o.command === "audit") {
+		for (const [option, file] of [
+			["--json", o.json],
+			["--html", o.html],
+		] as const) {
+			if (!file) continue;
+			if (o.file && resolve(file) === resolve(o.file))
+				throw new Error(`${option} désigne le fichier d’échantillon lui-même : choisissez un autre fichier.`);
+			assertWritable(file, option);
+		}
+		if (o.json && o.html && resolve(o.json) === resolve(o.html))
+			throw new Error("--json et --html désignent le même fichier : choisissez deux noms différents.");
 	}
 	process.exitCode =
 		o.command === "echantillon"
 			? await sample(o.url, o.sortie, o.max, o.seed, o.timeout)
 			: o.url
-				? await auditOne(o.url, o.json, o.timeout)
-				: await auditSample(o.file as string, o.json, o.timeout);
+				? await auditOne(o.url, o, o.timeout)
+				: await auditSample(o.file as string, o, o.timeout);
 } catch (e) {
 	console.error(`Erreur : ${clean(e)}`);
 	process.exitCode = 2;

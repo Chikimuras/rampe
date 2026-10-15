@@ -24,7 +24,7 @@ Chaque case cochée correspond à du code mergé sur `main` avec la CI verte. Le
 
 - [x] `rampe audit <url>` : Playwright + axe-core, résultats par critère RGAA
 - [x] Échantillon de pages (pages types exigées par la méthode RGAA)
-- [ ] Rapport HTML lisible par un non-expert + export JSON
+- [x] Rapport HTML lisible par un non-expert + export JSON
 - [ ] Publication npm ⛔ compte npm (gratuit) à créer par Alexandre
 
 ## Phase 3 — Audit guidé (web)

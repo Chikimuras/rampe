@@ -9,7 +9,7 @@ Le paquet n’est pas encore publié sur npm. Depuis la racine du dépôt, aprè
 ```sh
 pnpm --filter @rampe/cli exec playwright install chromium   # une fois
 pnpm exec rampe audit https://exemple.fr/
-pnpm exec rampe audit https://exemple.fr/ --json rapport.json --timeout 60000
+pnpm exec rampe audit https://exemple.fr/ --json rapport.json --html rapport.html --timeout 60000
 ```
 
 `pnpm --filter @rampe/cli exec rampe audit https://…` fonctionne aussi, mais un chemin `--json` relatif part alors de `packages/cli`.
@@ -19,6 +19,7 @@ Le binaire est `src/cli.ts`, exécuté tel quel par Node ≥ 22.18 (suppression 
 | Option | Effet |
 |---|---|
 | `--json <fichier>` | écrit le résultat détaillé en JSON (voir plus bas) ; un fichier existant n’est jamais écrasé, et l’absence du dossier est signalée avant l’audit |
+| `--html <fichier>` | écrit un rapport HTML lisible par un non-expert (voir plus bas) ; mêmes règles que `--json` : jamais d’écrasement, dossier vérifié avant l’audit, ni le fichier d’échantillon ni le fichier `--json` |
 | `--timeout <ms>` | durée maximale de tout l’audit d’une page : chargement, injection et analyse (défaut : 60 000) ; au-delà, la page est fermée et la CLI sort en 2 |
 | `--echantillon <fichier>` | audite les pages d’un fichier d’échantillon au lieu d’une seule URL (voir plus bas) |
 
@@ -90,7 +91,45 @@ Les règles dépréciées par axe sont exclues. Seule une `non-conformite` fait 
 
 - **Aucun score ni taux de conformité** (ADR-0002) : un audit automatique ne vérifie directement qu’une minorité des critères. Chaque rapport le rappelle : « Les 106 critères demandent une vérification humaine. 79 d’entre eux n’ont même aucune vérification automatique directe. » (axe-core 4.14.0 ; même décompte que le site, via `criteriaWithDirectRule`).
 - **Aucune certification**, et aucune modification du site audité.
-- Le rapport HTML viendra ensuite.
+
+## Rapport HTML (`--html`)
+
+Pour la personne qui, dans la PME, reçoit le résultat sans être experte. Il fonctionne avec une page seule comme avec `--echantillon`, seul ou avec `--json`, et il est produit à partir du même JSON v2 (`renderHtmlReport` de `src/rapport.ts`, fonction pure).
+
+- **Un seul fichier, autonome** : CSS dans une balise `<style>`, aucune ressource externe, **aucun JavaScript**. Il s’ouvre hors ligne, se joint à un courriel, s’imprime (les blocs repliés s’ouvrent à l’impression).
+- **Accessible** (ADR-0011 §4) : `lang="fr"`, titres hiérarchisés, repères `header`/`main`/`footer`, lien d’évitement, longues listes repliées dans `<details>`, diagnostics d’axe en anglais marqués `lang="en"`, couleurs du site Rampe en clair et en sombre (`prefers-color-scheme`), lisible sur mobile. Un test de bout en bout lance axe-core 4.14.0 sur le rapport lui-même, en clair et en sombre, blocs ouverts : 0 violation attendue.
+- **Échappé** (ADR-0011 §6) : titre, adresses, sélecteurs, extraits HTML, messages d’axe et avertissements passent tous par `escapeHtml` (OWASP *Cross Site Scripting Prevention Cheat Sheet*, « Output Encoding » pour le contexte HTML). Seules les adresses `http(s)` deviennent des liens. Les contrôles de direction bidirectionnelle (U+202A–202E, U+2066–2069) sont retirés, partout dans le rapport comme en console, et chaque donnée est isolée du texte de Rampe (`<bdi>`, `unicode-bidi: isolate`) : un titre piégé ne peut pas retourner le verdict qui le suit. Titre et sélecteur sont bornés à 300 caractères. Une page hostile (titre `<script>`, sélecteur `"><img onerror>`, U+202E…) ne peut pas piéger son rapport : c’est testé.
+- **Honnête** (ADR-0002) : ni score ni taux. Un encadré, en tête, rappelle que ce n’est pas un audit de conformité et combien de critères n’ont aucune vérification automatique directe (même décompte que la console et le site).
+
+Structure :
+
+```text
+Rapport d’audit automatique — exemple.fr
+  Date · Pages auditées · Pages en erreur · Moteur (axe-core, Chromium)
+  [Encadré] Ce rapport n’est pas un audit de conformité.
+            Les 106 critères demandent une vérification humaine ; 79 n’ont aucune vérification automatique directe.
+  Avertissements            (pages en erreur, redirection vers une autre origine…), s’il y en a
+  Synthèse
+    Non-conformités détectées   Critère 1.1 — titre officiel : 2 pages   (lien vers le détail)
+    Rattachement incertain      règle, rattachement à confirmer, nombre de pages
+    À vérifier par un humain
+    Bonnes pratiques
+  Non-conformités, critère par critère
+    Critère 1.1 — titre officiel
+      Explication Rampe — non normative (intro de la thématique, la même que sur le site)
+      Lien vers la fiche du critère sur le site Rampe
+      Règle image-alt « Images must have alternative text », test 1.1.1 : N éléments
+        [replié] Voir les N éléments concernés par image-alt sur <page> : sélecteur, extrait HTML, diagnostic d’axe (en anglais)
+  Autres résultats          détail : rattachement incertain, à vérifier, bonnes pratiques ; par règle
+  Pages de l’audit          statut de chaque page (non-conformités ; points à vérifier) et pages en erreur
+  Ce qui reste à faire      corriger (s’il y a lieu), audit humain des 106 critères, déclaration d’accessibilité
+                            si l’organisation y est soumise (lien vers les obligations officielles)
+  Pied : version de Rampe ; référentiel RGAA © DINUM, Licence Ouverte 2.0
+```
+
+Une page en erreur n’est jamais comptée comme « sans défaut » : elle est listée à part, avec la raison en clair (délai dépassé, adresse injoignable, HTTP 404…) et le message technique replié. Si aucune page n’a pu être auditée, la synthèse le dit en une phrase.
+
+En mode URL unique (`rampe audit <url>`), une page en erreur arrête la CLI en 2 **sans écrire ni JSON ni HTML** : il n’y a rien à rapporter. Avec `--echantillon`, les autres pages sont auditées et les deux fichiers sont écrits.
 
 ## Format JSON (`schemaVersion: 2`)
 
@@ -126,7 +165,7 @@ Les règles dépréciées par axe sont exclues. Seule une `non-conformite` fait 
 }
 ```
 
-`html` est tronqué à 500 caractères. `pages` contient une entrée par page auditée, dans l’ordre du fichier d’échantillon.
+`html` est tronqué à 500 caractères, marqué « … (tronqué) », sans couper un caractère en deux. `pages` contient une entrée par page auditée, dans l’ordre du fichier d’échantillon.
 
 Version 2 : ajout de `error` par page, et `finalUrl`/`title` à `null` pour une page en erreur. Sans ce changement, un lecteur de la version 1 aurait pris une page en erreur, sans résultats, pour une page sans défaut.
 

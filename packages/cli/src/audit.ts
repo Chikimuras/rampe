@@ -1,5 +1,13 @@
 // Logique pure de l'audit : validation d'URL, classement des résultats axe (ADR-0011 §3), JSON et texte.
-import { type AxeRuleMapping, classifyAxeRule, getCriterion, isDirectCheck, rgaa } from "@rampe/core";
+import {
+	type AxeRuleMapping,
+	classifyAxeRule,
+	criteriaWithDirectRule,
+	getCriterion,
+	isDirectCheck,
+	rgaa,
+} from "@rampe/core";
+import axe from "axe-core";
 import pkg from "../package.json" with { type: "json" };
 
 /** Sous-ensemble d'un résultat `axe.run` (violation ou incomplete) utilisé ici. */
@@ -50,6 +58,10 @@ export interface AuditReport {
 
 const HTML_MAX = 500;
 
+/** Critères sans aucune vérification automatique directe (même décompte que le site). */
+export const uncoveredCriteria = () =>
+	rgaa.criteria.length - criteriaWithDirectRule(axe.getRules().map((r) => r.tags)).size;
+
 /** N'accepte que http: et https: (ADR-0011 §6). Lève une erreur au message lisible sinon. */
 export function parseAuditUrl(input: string): URL {
 	let url: URL;
@@ -66,9 +78,22 @@ export function parseAuditUrl(input: string): URL {
 /** Masque identifiant et mot de passe de toute URL http(s) du texte (audits de préproduction derrière authentification). */
 export const redact = (text: string): string => text.replace(/\b(https?:\/\/)[^\s/?#@]+@/gi, "$1***:***@");
 
-/** Retire les caractères de contrôle (séquences d'échappement de terminal venues de la page auditée). */
+/**
+ * Contrôles de direction bidirectionnelle (U+202A–202E, U+2066–2069) : un titre de page qui en contient pourrait
+ * retourner visuellement le texte de Rampe qui le suit (attaque dite « Trojan Source »).
+ */
+export const stripBidi = (text: string): string => text.replace(/[\u202a-\u202e\u2066-\u2069]/g, "");
+
+/** Retire les caractères de contrôle (séquences d'échappement de terminal, contrôles bidi) venus de la page auditée. */
 // biome-ignore lint/suspicious/noControlCharactersInRegex: c'est précisément ce qu'on retire.
-export const stripControl = (text: string): string => text.replace(/[\x00-\x1f\x7f-\x9f]/g, "");
+export const stripControl = (text: string): string => stripBidi(text).replace(/[\x00-\x1f\x7f-\x9f]/g, "");
+
+/** Tronque à `max` unités UTF-16 sans couper une paire de substitution, avec une marque visible. */
+export function truncate(text: string, max: number): string {
+	if (text.length <= max) return text;
+	const cut = text.slice(0, max);
+	return `${/[\ud800-\udbff]$/.test(cut) ? cut.slice(0, -1) : cut}… (tronqué)`;
+}
 
 // ADR-0011 §3 : seule une vérification directe (ni bonne pratique ni expérimentale) est une non-conformité.
 function kindOf(m: AxeRuleMapping, incomplete: boolean): ResultKind {
@@ -91,7 +116,7 @@ function toResult(r: AxeRawResult, incomplete: boolean): AuditResult | [] {
 		impact: r.impact ?? null,
 		nodes: r.nodes.map((n) => ({
 			target: n.target,
-			html: n.html.slice(0, HTML_MAX),
+			html: truncate(n.html, HTML_MAX),
 			failureSummary: n.failureSummary ?? null,
 		})),
 	};
@@ -120,18 +145,18 @@ export function buildReport(input: {
 // --- Sortie console ---
 
 /** Titre officiel sans les liens markdown vers le glossaire. */
-const plainTitle = (id: string) => (getCriterion(id)?.title ?? "").replace(/\[([^\]]+)\]\([^)]*\)/g, "$1");
+export const plainTitle = (id: string) => (getCriterion(id)?.title ?? "").replace(/\[([^\]]+)\]\([^)]*\)/g, "$1");
 
 // Cible axe : un sélecteur par niveau de cadre ; un niveau peut être un tableau (Shadow DOM).
-const selector = (target: unknown[]) =>
+export const selector = (target: unknown[]) =>
 	stripControl(target.map((t) => (Array.isArray(t) ? t.join(" >>> ") : String(t))).join(" | "));
 
 export const plural = (n: number, word: string) => `${n} ${word}${n > 1 ? "s" : ""}`;
-const byNumber = (a: string, b: string) => a.localeCompare(b, "en", { numeric: true });
+export const byNumber = (a: string, b: string) => a.localeCompare(b, "en", { numeric: true });
 
 function ruleLine(r: AuditResult, detail: string, showFlags = true): string {
 	const first = r.nodes[0] ? `, ex. ${selector(r.nodes[0].target)}` : "";
-	const flags = [r.flags.bestPractice && "bonne pratique d’axe", r.flags.experimental && "expérimentale"].filter(
+	const flags = [r.flags.bestPractice && "règle indicative d’axe", r.flags.experimental && "expérimentale"].filter(
 		Boolean,
 	);
 	const suffix = showFlags && flags.length > 0 ? ` [${flags.join(", ")}]` : "";
@@ -184,8 +209,7 @@ export function formatPage(page: AuditPage): string {
 		out.push(
 			...byCriterion(
 				uncertain.filter((r) => r.level === "rgaa"),
-				(r) =>
-					` ; règle ${r.flags.bestPractice ? "de bonne pratique" : "expérimentale"} d’axe : à confirmer par un humain`,
+				(r) => ` ; règle ${r.flags.bestPractice ? "indicative" : "expérimentale"} d’axe : à confirmer par une personne`,
 			),
 		);
 		for (const r of uncertain.filter((x) => x.level === "wcag"))

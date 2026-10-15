@@ -1,4 +1,4 @@
-// Introductions « en langage simple » des 13 thématiques (ADR-0010 §3).
+// Introductions « en langage simple » des 13 thématiques (ADR-0010 §3), partagées par le site et le rapport HTML de la CLI.
 // Texte rédigé par Rampe, NON NORMATIF : il aide à entrer dans la thématique, il ne remplace jamais les critères.
 export const topicIntros: Record<number, string> = {
 	1: "Les images doivent avoir un équivalent en texte quand elles transmettent une information, et être ignorées des technologies d’assistance quand elles sont décoratives. Une personne aveugle, qui écoute la page avec un lecteur d’écran, ne perçoit l’image qu’à travers ce texte. Exemple : un pictogramme « panier » sans texte associé peut être annoncé comme « image », sans plus de précision.",

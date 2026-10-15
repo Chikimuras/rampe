@@ -89,9 +89,13 @@ describe("classifyResults", () => {
 		expect(byId["audio-caption"]).toBeUndefined();
 	});
 
-	it("tronque l'extrait HTML à 500 caractères", () => {
+	it("tronque l'extrait HTML à 500 caractères, avec une marque, sans couper une paire de substitution", () => {
 		const [r] = classifyResults([raw("image-alt", ["RGAA-1.1.1"], [node("img", "a".repeat(2000))])], []);
-		expect(r?.nodes[0]?.html).toHaveLength(500);
+		expect(r?.nodes[0]?.html).toBe(`${"a".repeat(500)}… (tronqué)`);
+		const [e] = classifyResults([raw("image-alt", ["RGAA-1.1.1"], [node("img", `${"a".repeat(499)}😀😀`)])], []);
+		expect(e?.nodes[0]?.html).toBe(`${"a".repeat(499)}… (tronqué)`);
+		const [s] = classifyResults([raw("image-alt", ["RGAA-1.1.1"], [node("img", "court")])], []);
+		expect(s?.nodes[0]?.html).toBe("court");
 	});
 });
 
@@ -149,6 +153,10 @@ describe("stripControl", () => {
 	it("retire les caractères de contrôle C0 et C1", () => {
 		expect(stripControl("a\u001b[31mb\u0007c\u009bd\ne\u007f")).toBe("a[31mbcde");
 	});
+
+	it("retire les contrôles de direction bidirectionnelle (U+202A–202E, U+2066–2069)", () => {
+		expect(stripControl("a\u202ab\u202ec\u2066d\u2069e")).toBe("abcde");
+	});
 });
 
 describe("formatReport", () => {
@@ -177,7 +185,7 @@ describe("formatReport", () => {
 
 	it("range une bonne pratique d'axe rattachée au RGAA sous son critère, à confirmer", () => {
 		expect(text).toMatch(
-			/rattachement RGAA incertain :\n {2}Critère 9\.2 — .*\n {4}- region \(test 9\.2\.1 ; règle de bonne pratique d’axe : à confirmer par un humain\)/,
+			/rattachement RGAA incertain :\n {2}Critère 9\.2 — .*\n {4}- region \(test 9\.2\.1 ; règle indicative d’axe : à confirmer par une personne\)/,
 		);
 	});
 

@@ -24,7 +24,9 @@ Outil open source d’accompagnement à la conformité RGAA pour les PME. Vision
 
 ## Pièges connus
 
-- Le proxy **rtk** de la machine d’Alexandre réécrit `pnpm lint` en `eslint`, ce qui casse la commande ici (le repo utilise Biome). En session Claude, lancer `rtk proxy pnpm check`. La CI et le hook Stop ne sont pas concernés.
+- Le proxy **rtk** de la machine d’Alexandre réécrit `pnpm lint` en `eslint`, ce qui casse la commande ici (le repo utilise Biome). En session Claude, lancer `rtk proxy pnpm check`. La CI et le hook Stop ne sont pas concernés. Même chose pour Biome : `rtk proxy npx biome check --write`.
+- Serveurs locaux de test : toujours un **port libre attribué dynamiquement**, et vérifier le titre de la page servie (plusieurs agents tournent en parallèle).
+- `cp` et `rm` sont des alias interactifs sur la machine : utiliser `command cp` / `command rm`.
 
 ## Conventions
 
