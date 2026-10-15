@@ -52,14 +52,14 @@ import { computeConformity, formatRate } from "@rampe/core/conformity";
 
 const r = computeConformity(session, rgaa.criteria.map((c) => c.id));
 if (!r.complete) r.remaining, r.toConfirm; // « non testé » restants, statuts automatiques à confirmer : aucun taux
-else formatRate(r.globalRate ?? 0); // « 33,33 % » (espace insécable)
+else formatRate(r.globalRate ?? 0); // taux en centièmes entiers (3333) → « 33,33 % » (espace fine insécable)
 ```
 
 - **Incomplet** tant qu’il reste un « non testé », un statut automatique à confirmer (ADR-0014), ou sans aucune page : aucun taux n’est calculé.
 - **Par page** : critères validés, non validés et non applicables ; taux = validés ÷ (validés + non validés). Une page où tout est non applicable a un taux `null` et n’entre pas dans la moyenne.
-- **Processus** (pages au même `process`, comparé sans espaces autour ni casse) : un critère conforme sur une page n’est validé que s’il n’est non conforme sur aucune page du processus. Interprétation retenue : une page « non applicable » du processus n’invalide pas les autres et reste non applicable.
+- **Processus** (pages au même `process`, comparé par `processKey` : NFC, espaces réduits, minuscules) : un critère conforme sur une page n’est validé que s’il n’est non conforme sur aucune page du processus. Interprétation retenue : une page « non applicable » du processus n’invalide pas les autres et reste non applicable.
 - **Échantillon** : un critère est validé s’il est conforme sur au moins une page et non conforme sur aucune, non applicable s’il l’est partout. **Taux global** = validés ÷ applicables (`null` si aucun applicable) ; **taux moyen** = moyenne des taux des pages.
-- Aucun arrondi dans le calcul. `formatRate` tronque à deux décimales vers le bas (99,996 → « 99,99 % », jamais « 100 % »).
+- Arrondi **exact**, sans flottant : les taux sont des centièmes de point entiers, plancher de `10000 × v ÷ a` en entiers, et le taux moyen est le plancher de la somme exacte des fractions des pages (BigInt). `formatRate` ne fait que les écrire : 99,996 → « 99,99 % », jamais « 100 % ».
 - `setPageProcess(session, pageId, nom)` (dans `audit-session.ts`) nomme le processus d’une page ; une chaîne vide le retire.
 
 ## Données
