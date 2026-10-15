@@ -1,5 +1,8 @@
 // Logique pure de l'échantillon (ADR-0012) : repérage des pages types, tirage reproductible, fichier modifiable.
-import { parseAuditUrl, plural, redact, stripControl } from "./audit.ts";
+import { MAX_SAMPLE_URLS, parseSampleFile, quote } from "@rampe/core";
+import { plural, redact, stripControl } from "./audit.ts";
+
+export { MAX_SAMPLE_URLS, parseSampleFile };
 
 /** Lien collecté sur la page d'accueil, tel que vu par le navigateur. */
 export interface RawLink {
@@ -174,11 +177,6 @@ const segments = (href: string): string[] =>
 		});
 
 const ZONE_LABEL = { "en-tete": "en-tête", "pied-de-page": "pied de page", contenu: null } as const;
-
-const quote = (text: string) => {
-	const clean = stripControl(text.replace(/\s+/g, " ")).trim();
-	return `« ${clean.length > 80 ? `${clean.slice(0, 79)}…` : clean} »`;
-};
 
 /**
  * Repère la page d'un type parmi les liens déjà normalisés. Indices : texte reconnu (3), adresse reconnue (2),
@@ -366,69 +364,6 @@ export function formatSampleFile(sample: Sample): string {
 	for (const e of sample.entries) out.push(...e.notes.map((n) => `# ${n}`), e.url, "");
 	out.push("# À COMPLÉTER PAR VOUS :", ...sample.todo.map((t) => `#   ${t}`), "");
 	return out.join("\n");
-}
-
-export const MAX_SAMPLE_URLS = 1000;
-const MAX_LINE = 2048;
-
-/** Clé de dédoublonnage : adresse sans fragment ni identifiants. */
-const sampleKey = (url: URL) => {
-	const u = new URL(url.href);
-	u.hash = "";
-	u.username = "";
-	u.password = "";
-	return u.href;
-};
-
-/**
- * Lit un fichier d'échantillon : http(s) uniquement, même origine que la première adresse, doublons retirés.
- * Avertit si les pages notées « hasard » font moins de 10 % de l'échantillon (r ≥ n / 9).
- */
-export function parseSampleFile(text: string): { urls: URL[]; warnings: string[] } {
-	const urls: URL[] = [];
-	const keys = new Set<string>();
-	let random = 0;
-	let isRandom = false;
-	for (const [i, raw] of text.split(/\r?\n/).entries()) {
-		const line = raw.trim();
-		const where = `Échantillon, ligne ${i + 1}`;
-		if (line.length > MAX_LINE)
-			throw new Error(`${where} : ligne trop longue (plus de ${MAX_LINE} caractères) : ${quote(line.slice(0, 80))}`);
-		if (line.startsWith("# hasard — ")) isRandom = true;
-		if (line === "" || line.startsWith("#")) continue;
-		let url: URL;
-		try {
-			url = parseAuditUrl(line);
-		} catch (e) {
-			throw new Error(`${where} : ${(e as Error).message}`);
-		}
-		const first = urls[0];
-		if (first && url.origin !== first.origin)
-			throw new Error(
-				`${where} : ${redact(url.href)} n’est pas sur la même origine que la première adresse (${first.origin}). Un échantillon porte sur un seul site.`,
-			);
-		const key = sampleKey(url);
-		if (!keys.has(key)) {
-			if (urls.length === MAX_SAMPLE_URLS)
-				throw new Error(
-					`${where} : plus de ${MAX_SAMPLE_URLS} adresses ; découpez l’échantillon en plusieurs fichiers.`,
-				);
-			keys.add(key);
-			urls.push(url);
-			if (isRandom) random++;
-		}
-		isRandom = false;
-	}
-	if (urls.length === 0) throw new Error("Échantillon vide : aucune adresse trouvée dans le fichier.");
-	const others = urls.length - random;
-	const needed = Math.ceil(others / 9);
-	const warnings =
-		random < needed
-			? [
-					`Seulement ${plural(random, "page")} notée${random > 1 ? "s" : ""} « hasard » pour ${others} autre${others > 1 ? "s" : ""} : il en faut au moins ${needed} pour que le tirage au hasard fasse 10 % de l’échantillon (méthode RGAA).`,
-				]
-			: [];
-	return { urls, warnings };
 }
 
 /** Résumé console de l'échantillon proposé. */
