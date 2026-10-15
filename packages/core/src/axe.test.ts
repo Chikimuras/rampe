@@ -1,6 +1,6 @@
 import axe from "axe-core";
 import { describe, expect, it } from "vitest";
-import { classifyAxeRule, getCriterion } from "./index.ts";
+import { classifyAxeRule, criteriaWithDirectRule, getCriterion } from "./index.ts";
 
 const rules = axe.getRules();
 const noFlags = { unknownRgaaTags: [], bestPractice: false, experimental: false, deprecated: false };
@@ -161,5 +161,25 @@ describe(`règles réelles d'axe-core ${axe.version}`, () => {
 	it("photographie : bonnes pratiques d'axe rattachées au niveau rgaa", () => {
 		const ids = classified.filter(({ m }) => m.level === "rgaa" && m.bestPractice).map(({ id }) => id);
 		expect(ids).toEqual(["focus-order-semantics", "region", "skip-link", "table-duplicate-name"]);
+	});
+});
+
+describe("criteriaWithDirectRule", () => {
+	it("ne compte que les rattachements directs, sans les règles dépréciées", () => {
+		const covered = criteriaWithDirectRule([
+			["RGAA-1.1.1"],
+			["RGAA-8.3.1", "RGAA-8.4.1"],
+			["deprecated", "RGAA-11.1.1"],
+			["wcag143"],
+			["best-practice"],
+		]);
+		expect([...covered]).toEqual(["1.1", "8.3", "8.4"]);
+	});
+
+	it("photographie : critères couverts directement par axe-core 4.14.0", () => {
+		const tags = rules.map((r) => r.tags);
+		expect(criteriaWithDirectRule(tags).size).toBe(33);
+		// Configuration par défaut d'axe.run : sans les règles expérimentales.
+		expect(criteriaWithDirectRule(tags.filter((t) => !t.includes("experimental"))).size).toBe(29);
 	});
 });

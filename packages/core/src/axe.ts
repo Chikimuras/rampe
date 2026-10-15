@@ -82,3 +82,16 @@ export function classifyAxeRule(tags: readonly string[]): AxeRuleMapping {
 
 	return { level: "hors-rgaa", wcag, ...flags };
 }
+
+/**
+ * Critères RGAA qu'au moins une de ces règles vérifie directement (étiquette `RGAA-x.y.z`).
+ * Les règles dépréciées ne comptent pas : on ne les présente plus comme une vérification.
+ */
+export function criteriaWithDirectRule(rulesTags: Iterable<readonly string[]>): Set<string> {
+	const covered: string[] = [];
+	for (const tags of rulesTags) {
+		const m = classifyAxeRule(tags);
+		if (m.level === "rgaa" && !m.deprecated) covered.push(...m.criteria);
+	}
+	return new Set(sortIds(covered));
+}
