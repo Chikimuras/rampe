@@ -107,6 +107,23 @@ export function addPage(
 	return { ...session, site, updatedAt: at, pages: [...session.pages, { ...page, title: stripBidi(page.title), id }] };
 }
 
+/**
+ * Processus de la page (ADR-0015 §5). La valeur est gardée telle que saisie (espaces compris, pour ne pas manger
+ * l'espace en cours de frappe) ; le calcul du taux compare les noms sans espaces autour ni casse. Vide : aucun.
+ */
+export function setPageProcess(session: AuditSession, pageId: string, process: string, at = now()): AuditSession {
+	if (!session.pages.some((p) => p.id === pageId)) throw new Error(`Page inconnue : ${pageId}`);
+	return {
+		...session,
+		updatedAt: at,
+		pages: session.pages.map((p) => {
+			if (p.id !== pageId) return p;
+			const { process: _old, ...rest } = p;
+			return process ? { ...rest, process: stripBidi(process) } : rest;
+		}),
+	};
+}
+
 /** Copie de `byCriterion` sans les entrées de `pageId` (critères vidés retirés). */
 function withoutPage<T>(byCriterion: Record<string, Record<string, T>>, pageId: string) {
 	const out: Record<string, Record<string, T>> = {};

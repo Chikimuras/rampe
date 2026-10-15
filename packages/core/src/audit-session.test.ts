@@ -10,6 +10,7 @@ import {
 	removePage,
 	SCHEMA_VERSION,
 	setEvaluation,
+	setPageProcess,
 } from "./audit-session.ts";
 
 const NOW = "2026-10-15T10:00:00.000Z";
@@ -74,6 +75,18 @@ describe("addPage / removePage", () => {
 		expect(s.pages.map((p) => p.id)).toEqual([B]);
 		expect(s.evaluations).toEqual({ "1.1": { [B]: { status: "C", note: "", source: "humain" } } });
 		expect(s.updatedAt).toBe(LATER);
+	});
+});
+
+describe("setPageProcess", () => {
+	it("nomme le processus d'une page, retire les contrôles bidi, et l'efface si vide", () => {
+		let s = setPageProcess(withTwoPages(), A, "Commande \u202e", LATER);
+		expect(s.pages[0]?.process).toBe("Commande ");
+		expect(s.pages[1]?.process).toBeUndefined();
+		expect(s.updatedAt).toBe(LATER);
+		s = setPageProcess(s, A, "");
+		expect(s.pages[0]).not.toHaveProperty("process");
+		expect(() => setPageProcess(s, "inconnue", "x")).toThrow("Page inconnue");
 	});
 });
 

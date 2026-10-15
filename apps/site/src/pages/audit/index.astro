@@ -127,6 +127,49 @@ const criteria: AuditCriterion[] = rgaa.criteria.map((c) => ({
 		margin-right: 0.75rem;
 		overflow-wrap: anywhere;
 	}
+	.audit-page-list .audit-process {
+		display: inline-flex;
+		flex-wrap: wrap;
+		gap: 0.25rem 0.5rem;
+		align-items: baseline;
+	}
+	.audit .audit-process input[type="text"] {
+		width: 12rem;
+		max-width: 100%;
+	}
+	.audit-rates dt {
+		font-weight: 700;
+		margin-top: 1rem;
+	}
+	.audit-rates dd {
+		margin-left: 0;
+	}
+	.audit-rate {
+		font-size: 1.75rem;
+	}
+	.audit-rates dd p {
+		margin-top: 0.25rem;
+	}
+	.audit-result-actions button {
+		margin: 0 0.5rem 0.5rem 0;
+	}
+	.audit-table {
+		overflow-x: auto;
+		margin: 1rem 0;
+	}
+	.audit-table:focus-visible {
+		outline: 3px solid var(--accent);
+		outline-offset: 2px;
+	}
+	/* Le style global rend les tableaux `display: block` ; ici, c'est l'enveloppe qui défile. */
+	.audit-table table {
+		display: table;
+	}
+	.audit-result caption {
+		text-align: left;
+		font-weight: 700;
+		padding-bottom: 0.4rem;
+	}
 	.audit-add,
 	.audit-paste,
 	.audit-import {

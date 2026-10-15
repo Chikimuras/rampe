@@ -6,3 +6,5 @@ dist/
 # Fichiers locaux de Claude Code (permissions personnelles, verrou de /loop)
 .claude/settings.local.json
 .claude/scheduled_tasks.lock
+# Rapports JSON de vitest écrits par le proxy rtk
+.vitest/
