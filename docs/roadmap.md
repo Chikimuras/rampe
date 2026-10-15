@@ -30,7 +30,7 @@ Chaque case cochée correspond à du code mergé sur `main` avec la CI verte. Le
 ## Phase 3 — Audit guidé (web)
 
 - [x] Parcours critère par critère pour les tests manuels
-- [ ] Import des résultats automatiques
+- [x] Import des résultats automatiques
 - [ ] Taux de conformité selon la méthode RGAA
 - [ ] Données 100 % locales, export / import JSON
 
