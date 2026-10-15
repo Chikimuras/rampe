@@ -128,15 +128,69 @@ const criteria: AuditCriterion[] = rgaa.criteria.map((c) => ({
 		overflow-wrap: anywhere;
 	}
 	.audit-add,
-	.audit-paste {
+	.audit-paste,
+	.audit-import {
 		margin-top: 1.5rem;
 		padding: 1rem;
 		border: 1px solid var(--line);
 		border-radius: 6px;
 		background: var(--surface);
 	}
-	.audit-add h3 {
+	.audit-add h3,
+	.audit-import h3 {
 		margin-top: 0;
+	}
+	.audit-import label {
+		display: block;
+		font-weight: 600;
+		margin-bottom: 0.25rem;
+	}
+	.audit input[type="file"] {
+		font: inherit;
+		color: var(--text);
+		max-width: 100%;
+	}
+	.audit input[type="file"]::file-selector-button {
+		font: inherit;
+		color: var(--bg);
+		background: var(--accent);
+		border: 1px solid var(--accent);
+		border-radius: 6px;
+		padding: 0.4rem 0.9rem;
+		margin-right: 0.75rem;
+		font-weight: 600;
+		cursor: pointer;
+	}
+	.audit input[type="file"]:focus-visible {
+		outline: 3px solid var(--accent);
+		outline-offset: 2px;
+	}
+	.audit-import-summary {
+		margin-top: 1rem;
+		padding-top: 0.75rem;
+		border-top: 1px solid var(--line);
+	}
+	.audit-import-summary li {
+		overflow-wrap: anywhere;
+	}
+	/* Évaluation posée par un import : bordure pointillée et texte, pas seulement une couleur. */
+	.audit-auto {
+		margin: 0.5rem 0 0;
+		padding: 0.4rem 0.75rem;
+		border: 2px dashed var(--nc);
+		border-radius: 6px;
+		font-size: 0.9375rem;
+	}
+	.audit-criterion details.audit-findings {
+		margin: 0.75rem 0 0;
+		background: var(--bg);
+	}
+	.audit-findings ul {
+		padding-left: 1.25rem;
+	}
+	.audit-findings li {
+		margin: 0.25rem 0;
+		overflow-wrap: anywhere;
 	}
 	.audit-field {
 		margin-bottom: 1rem;

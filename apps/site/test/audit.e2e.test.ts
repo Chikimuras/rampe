@@ -1,12 +1,13 @@
 // Bout en bout de l'audit guidé (ADR-0013) : build réel du site, servi en local, piloté dans un vrai Chromium.
 // Preuves : axe sans violation (clair, sombre, mobile) après interactions, parcours au clavier seul,
-// reprise de la session, stockage indisponible ou corrompu, et aucune autre page avec du JavaScript.
+// reprise de la session, stockage indisponible ou corrompu, aucune autre page avec du JavaScript, et import d'un
+// rapport produit par la VRAIE CLI (ADR-0014) sur sa page de test à défauts connus.
 import { execFile } from "node:child_process";
 import { mkdir, mkdtemp, readdir, readFile, rm } from "node:fs/promises";
 import { createServer, type Server } from "node:http";
 import type { AddressInfo } from "node:net";
 import { tmpdir } from "node:os";
-import { extname, join, normalize } from "node:path";
+import { dirname, extname, join, normalize } from "node:path";
 import { fileURLToPath } from "node:url";
 import axe from "axe-core";
 import { type Browser, chromium, type Page } from "playwright";
@@ -14,6 +15,8 @@ import { afterAll, beforeAll, describe, expect, it } from "vitest";
 
 const root = fileURLToPath(new URL("..", import.meta.url));
 const astro = fileURLToPath(new URL("../node_modules/astro/bin/astro.mjs", import.meta.url));
+const cli = fileURLToPath(new URL("../../../packages/cli/src/cli.ts", import.meta.url));
+const defauts = fileURLToPath(new URL("../../../packages/cli/test/fixtures/defauts.html", import.meta.url));
 // Captures d'écran facultatives, pour la relecture humaine : RAMPE_CAPTURES=<dossier>.
 const captures = process.env.RAMPE_CAPTURES;
 const TYPES: Record<string, string> = {
@@ -26,6 +29,10 @@ let out: string;
 let server: Server;
 let base: string;
 let browser: Browser;
+/** Rapport JSON écrit par la CLI sur la page à défauts, servie à `fixtureUrl`. */
+let reportPath: string;
+let fixtureUrl: string;
+let report: { pages: { results: { kind: string; criteria: string[] }[] }[] };
 
 beforeAll(async () => {
 	out = await mkdtemp(join(tmpdir(), "rampe-site-"));
@@ -36,6 +43,8 @@ beforeAll(async () => {
 	);
 	server = createServer(async (req, res) => {
 		const path = decodeURIComponent(new URL(req.url ?? "/", "http://x").pathname);
+		if (path === "/fixture/defauts")
+			return res.writeHead(200, { "content-type": "text/html; charset=utf-8" }).end(await readFile(defauts));
 		if (!path.startsWith("/rampe/")) return res.writeHead(404).end();
 		// normalize + préfixe : aucune requête ne sort du dossier de build.
 		let file = normalize(join(out, path.slice("/rampe/".length)));
@@ -52,12 +61,23 @@ beforeAll(async () => {
 	base = `http://127.0.0.1:${(server.address() as AddressInfo).port}/rampe`;
 	browser = await chromium.launch({ chromiumSandbox: true });
 	if (captures) await mkdir(captures, { recursive: true });
-}, 120_000);
+
+	// La vraie CLI audite la page à défauts (1.1, 3.2, 8.3, 11.1) : elle sort en 1 puisqu'elle trouve des non-conformités.
+	fixtureUrl = `${base.replace(/\/rampe$/, "")}/fixture/defauts`;
+	reportPath = join(await mkdtemp(join(tmpdir(), "rampe-rapport-")), "rapport.json");
+	await new Promise<void>((resolve, reject) =>
+		execFile(process.execPath, [cli, "audit", fixtureUrl, "--json", reportPath], (error, _o, stderr) =>
+			error && error.code !== 1 ? reject(new Error(stderr)) : resolve(),
+		),
+	);
+	report = JSON.parse(await readFile(reportPath, "utf8"));
+}, 180_000);
 
 afterAll(async () => {
 	await browser?.close();
 	await new Promise<void>((resolve) => (server ? server.close(() => resolve()) : resolve()));
 	if (out) await rm(out, { recursive: true, force: true });
+	if (reportPath) await rm(dirname(reportPath), { recursive: true, force: true });
 });
 
 /** Ouvre /audit/ et attend l'hydratation de l'îlot (Astro retire alors l'attribut `ssr`). */
@@ -459,5 +479,208 @@ describe("audit guidé (bout en bout)", { timeout: 60_000 }, () => {
 		await page.getByRole("button", { name: "Effacer cet audit et recommencer" }).click();
 		await expect(page.locator(".audit-page-list li").count()).resolves.toBe(0);
 		await page.close();
+	});
+
+	describe("import d'un rapport de la CLI (ADR-0014)", () => {
+		const IMPORT_LABEL = "Importer un rapport de la CLI (JSON)";
+		const live = (page: Page) => page.locator("[aria-live=polite]").textContent();
+		const stored = (page: Page) => page.evaluate(() => localStorage.getItem("rampe.audit.session"));
+		const group = (page: Page, criterion: string) =>
+			page.getByRole("group", { name: new RegExp(`^Critère ${criterion.replace(".", "\\.")}, page Défauts`) });
+		const showCriterion = async (page: Page, id: string) => {
+			const topic = id.split(".")[0];
+			await page.getByRole("button", { name: new RegExp(`^${topic}\\. `) }).click();
+			await page.getByRole("button", { name: new RegExp(`^${id.replace(".", "\\.")}(?!\\d)`) }).click();
+		};
+		/** Critères en non-conformité dans le rapport réel, hors 1.1 que l'humain a déjà évalué. */
+		const autoCriteria = () =>
+			[
+				...new Set(
+					report.pages[0]?.results.filter((r) => r.kind === "non-conformite").flatMap((r) => r.criteria) ?? [],
+				),
+			].filter((c) => c !== "1.1");
+
+		/** Page à défauts ajoutée, critère 1.1 évalué « Conforme » par l'humain, puis import du rapport. */
+		async function importScenario(page: Page) {
+			await openAudit(page);
+			await addPage(page, fixtureUrl, "Défauts");
+			await group(page, "1.1").getByLabel("Conforme", { exact: true }).check();
+			await page.getByLabel(IMPORT_LABEL).setInputFiles(reportPath);
+			await page.locator(".audit-import-summary").waitFor();
+			await page.waitForFunction(() => localStorage.getItem("rampe.audit.session")?.includes('"auto"'));
+		}
+
+		it("NC à confirmer sur les bons critères, évaluation humaine intacte, indices visibles", async () => {
+			expect(autoCriteria()).toEqual(expect.arrayContaining(["3.2", "8.3", "11.1"]));
+			const page = await browser.newPage();
+			await importScenario(page);
+			const n = autoCriteria().length;
+			await expect(live(page)).resolves.toMatch(
+				new RegExp(`^Import terminé : 0 page ajoutée, ${n} statuts « Non conforme » à confirmer, \\d+ indices\\.`),
+			);
+			await expect(page.locator(".audit-page-list li").count()).resolves.toBe(1);
+
+			// 1.1 : l'humain avait dit « Conforme » ; l'import n'y touche pas, mais l'indice image-alt est visible.
+			const g11 = group(page, "1.1");
+			await expect(g11.getByLabel("Conforme", { exact: true }).isChecked()).resolves.toBe(true);
+			await expect(g11.locator(".audit-auto").count()).resolves.toBe(0);
+			await g11.getByText(/^Indices de l’audit automatique pour Défauts/).click();
+			await expect(g11.locator(".audit-findings li").first().textContent()).resolves.toMatch(
+				/^Non-conformité détectée : règle image-alt « Images must have alternative text », 1 élément concerné$/,
+			);
+			await expect(g11.locator('.audit-findings [lang="en"]').first().textContent()).resolves.toBe(
+				"Images must have alternative text",
+			);
+
+			for (const id of autoCriteria()) {
+				await showCriterion(page, id);
+				const g = group(page, id);
+				await expect(g.getByLabel("Non conforme", { exact: true }).isChecked(), id).resolves.toBe(true);
+				await expect(g.locator(".audit-auto").textContent()).resolves.toMatch(
+					/^Détecté automatiquement, à confirmer\./,
+				);
+				await expect(g.getByLabel("Note sur Défauts (facultative)").inputValue()).resolves.toMatch(
+					/^Détecté automatiquement : [a-z-]+ \(\d+ éléments?\)/,
+				);
+			}
+			// Un critère sans résultat reste « non testé » : l'automatique ne conclut jamais à la conformité.
+			await showCriterion(page, "1.2");
+			await expect(group(page, "1.2").getByLabel("Non testé").isChecked()).resolves.toBe(true);
+
+			// La confirmation humaine (même une note) fait disparaître la mention « à confirmer ».
+			await showCriterion(page, "3.2");
+			await group(page, "3.2").getByLabel("Note sur Défauts (facultative)").fill("Contraste vérifié : 2,0:1");
+			await expect(group(page, "3.2").locator(".audit-auto").count()).resolves.toBe(0);
+			await page.waitForFunction(() => localStorage.getItem("rampe.audit.session")?.includes("2,0:1"));
+			const saved = JSON.parse((await stored(page)) ?? "{}");
+			expect(saved.schemaVersion).toBe(2);
+			const [pageId] = saved.pages.map((p: { id: string }) => p.id);
+			expect(saved.evaluations["1.1"][pageId]).toMatchObject({ status: "C", source: "humain" });
+			expect(saved.evaluations["3.2"][pageId]).toMatchObject({ status: "NC", source: "humain" });
+			expect(saved.evaluations["8.3"][pageId]).toMatchObject({ status: "NC", source: "auto" });
+			// Plus d'annulation possible après une autre modification.
+			await expect(page.getByRole("button", { name: "Annuler cet import" }).count()).resolves.toBe(0);
+			await page.close();
+		});
+
+		it("réimporter le même fichier ne duplique rien", async () => {
+			const page = await browser.newPage();
+			await importScenario(page);
+			const once = JSON.parse((await stored(page)) ?? "{}");
+			await page.getByLabel(IMPORT_LABEL).setInputFiles(reportPath);
+			await page.waitForFunction(() =>
+				document
+					.querySelector("[aria-live=polite]")
+					?.textContent?.startsWith("Import terminé : 0 page ajoutée, 0 statut"),
+			);
+			await expect(live(page)).resolves.toMatch(/, 0 indice\./);
+			await page.waitForTimeout(600);
+			const twice = JSON.parse((await stored(page)) ?? "{}");
+			expect({ ...twice, updatedAt: "" }).toEqual({ ...once, updatedAt: "" });
+			await page.close();
+		});
+
+		for (const colorScheme of ["light", "dark"] as const) {
+			it(`axe : aucune violation après import, indices ouverts (${colorScheme === "light" ? "clair" : "sombre"})`, async () => {
+				const page = await browser.newPage({ colorScheme });
+				await importScenario(page);
+				await showCriterion(page, "3.2");
+				await page.locator(".audit-findings summary").click();
+				if (captures) {
+					await page.locator(".audit-import").screenshot({ path: join(captures, `import-bilan-${colorScheme}.png`) });
+					await page.locator(".audit-page").screenshot({ path: join(captures, `import-critere-${colorScheme}.png`) });
+				}
+				for (const d of await page.locator("details").all())
+					await d.evaluate((el) => ((el as HTMLDetailsElement).open = true));
+				expect(await axeViolations(page)).toEqual([]);
+				await page.close();
+			});
+		}
+
+		it("« Annuler cet import » restaure l'état précédent", async () => {
+			const page = await browser.newPage();
+			await importScenario(page);
+			await page.getByRole("button", { name: "Annuler cet import" }).click();
+			await expect(live(page)).resolves.toBe("Import annulé : l’audit est revenu à son état d’avant l’import.");
+			expect(await page.evaluate(() => document.activeElement?.id)).toBe("audit-rapport");
+			await expect(group(page, "1.1").getByLabel("Conforme", { exact: true }).isChecked()).resolves.toBe(true);
+			await expect(page.locator(".audit-findings").count()).resolves.toBe(0);
+			await showCriterion(page, "3.2");
+			await expect(group(page, "3.2").getByLabel("Non testé").isChecked()).resolves.toBe(true);
+			await page.waitForFunction(() => {
+				const saved = localStorage.getItem("rampe.audit.session");
+				return saved?.includes("Défauts") && !saved.includes('"auto"');
+			});
+			const saved = JSON.parse((await stored(page)) ?? "{}");
+			expect(saved.findings).toEqual({});
+			await page.close();
+		});
+
+		it("fichier hostile, trop gros ou d'un autre site : refusé, message relié au champ, session intacte", async () => {
+			const page = await browser.newPage();
+			await openAudit(page);
+			await addPage(page, fixtureUrl, "Défauts");
+			await group(page, "1.1").getByLabel("Non applicable").check();
+			await page.waitForFunction(() => localStorage.getItem("rampe.audit.session")?.includes('"NA"'));
+			const before = await stored(page);
+			const input = page.getByLabel(IMPORT_LABEL);
+			const hostile = JSON.parse(await readFile(reportPath, "utf8"));
+			const cases: [string, Buffer, RegExp][] = [
+				[
+					"proto.json",
+					Buffer.from(JSON.stringify(hostile).replace('"pages":', '"__proto__":{"polluted":true},"pages":')),
+					/clé interdite « __proto__ »/,
+				],
+				[
+					"critere.json",
+					Buffer.from(JSON.stringify(hostile).replace('"criteria":["1.1"]', '"criteria":["99.1"]')),
+					/critère "99\.1" inexistant/,
+				],
+				["casse.json", Buffer.from("{ pas du JSON"), /pas un fichier JSON lisible/],
+				["enorme.json", Buffer.alloc(21 * 1024 * 1024, " "), /trop volumineux \(21 Mo\)/],
+			];
+			for (const [name, buffer, message] of cases) {
+				await input.setInputFiles({ name, mimeType: "application/json", buffer });
+				await expect
+					.poll(() => page.locator("#audit-rapport-erreur").textContent(), { message: name })
+					.toMatch(message);
+				await expect(input.getAttribute("aria-describedby")).resolves.toContain("audit-rapport-erreur");
+				await expect(input.getAttribute("aria-invalid")).resolves.toBe("true");
+				await expect(live(page)).resolves.toMatch(message);
+			}
+			expect(await page.evaluate(() => "polluted" in {})).toBe(false);
+			await page.waitForTimeout(600);
+			expect(await stored(page)).toBe(before);
+			await expect(page.locator(".audit-import-summary").count()).resolves.toBe(0);
+			await page.close();
+
+			// Autre site : l'audit en cours porte sur exemple.fr.
+			const other = await browser.newPage();
+			await openAudit(other);
+			await addPage(other, "https://exemple.fr/", "Accueil");
+			await other.getByLabel(IMPORT_LABEL).setInputFiles(reportPath);
+			await expect(other.locator("#audit-rapport-erreur").textContent()).resolves.toMatch(
+				/^Ce rapport porte sur http:\/\/127\.0\.0\.1:\d+, mais l’audit en cours porte sur https:\/\/exemple\.fr\./,
+			);
+			await expect(other.locator(".audit-page-list li").count()).resolves.toBe(1);
+			await other.close();
+		});
+
+		it("au clavier seul : choisir le fichier, puis annuler l'import", async () => {
+			const page = await browser.newPage();
+			await openAudit(page);
+			await addPage(page, fixtureUrl, "Défauts");
+			await page.focus("body");
+			await tabUntil(page, "el.id === 'audit-rapport'");
+			const [chooser] = await Promise.all([page.waitForEvent("filechooser"), page.keyboard.press("Space")]);
+			await chooser.setFiles(reportPath);
+			await page.locator(".audit-import-summary").waitFor();
+			await tabUntil(page, "el.textContent === 'Annuler cet import'");
+			await page.keyboard.press("Enter");
+			await expect(live(page)).resolves.toBe("Import annulé : l’audit est revenu à son état d’avant l’import.");
+			expect(await page.evaluate(() => document.activeElement?.id)).toBe("audit-rapport");
+			await expect(group(page, "1.1").getByLabel("Non testé").isChecked()).resolves.toBe(true);
+			await page.close();
+		});
 	});
 });
