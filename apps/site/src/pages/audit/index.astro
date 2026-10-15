@@ -1,0 +1,336 @@
+---
+import { rgaa, topicIntros } from "@rampe/core";
+import AuditApp, { type AuditCriterion, type AuditTopic } from "../../components/AuditApp";
+import Base from "../../layouts/Base.astro";
+import { renderMarkdown } from "../../lib/render";
+import { url } from "../../lib/url";
+
+// Données de l'îlot, préparées au build : le texte officiel est rendu et assaini ici (ADR-0010 §5), jamais dans
+// le navigateur (ADR-0013 §2). L'îlot ne reçoit que ces chaînes, sans le JSON brut du référentiel.
+const md = (s: string) => renderMarkdown(s, { inline: true });
+const topics: AuditTopic[] = rgaa.topics.map((t) => ({
+	number: t.number,
+	title: t.title,
+	intro: topicIntros[t.number] ?? "",
+}));
+const criteria: AuditCriterion[] = rgaa.criteria.map((c) => ({
+	id: c.id,
+	topic: c.topic,
+	titleHtml: md(c.title),
+	titleTextHtml: renderMarkdown(c.title, { inline: true, stripLinks: true }),
+	tests: c.tests.map((t) => {
+		const [statement = "", ...conditions] = t.text;
+		return {
+			id: t.id,
+			statementHtml: md(statement),
+			conditionsHtml: conditions.map(md),
+			methodologyHtml: t.methodology ? renderMarkdown(t.methodology) : "",
+		};
+	}),
+	href: url(`referentiel/${c.id.replace(".", "-")}/`),
+}));
+---
+
+<Base
+	title="Audit guidé"
+	description={`Évaluer à la main les ${rgaa.criteria.length} critères du RGAA ${rgaa.version}, page par page, avec le texte officiel sous les yeux.`}
+>
+	<h1>Audit guidé</h1>
+	<p>
+		Pour chaque critère du RGAA {rgaa.version} et chaque page de votre échantillon, indiquez si la page est
+		conforme, non conforme ou si le critère ne s’applique pas. Le texte officiel, ses tests et leur méthodologie
+		sont affichés à chaque étape.
+	</p>
+	<p>
+		Rampe vous guide mais ne certifie rien : c’est votre évaluation qui fait foi. Votre travail est enregistré
+		automatiquement dans ce navigateur, et nulle part ailleurs.
+	</p>
+	<noscript>
+		<p class="audit-banner">
+			L’audit guidé a besoin de JavaScript pour enregistrer vos réponses. Sans JavaScript, vous pouvez consulter
+			le <a href={url("referentiel/")}>référentiel</a>.
+		</p>
+	</noscript>
+
+	{/* client:load : l'outil est tout le contenu de la page, visible dès l'arrivée ; client:visible ne ferait que retarder. */}
+	<AuditApp client:load topics={topics} criteria={criteria} />
+</Base>
+
+<style is:global>
+	/* Styles de l'îlot : ses éléments sont rendus par Preact, hors de portée des styles à portée d'Astro. */
+	.visually-hidden {
+		position: absolute;
+		width: 1px;
+		height: 1px;
+		overflow: hidden;
+		clip-path: inset(50%);
+		white-space: nowrap;
+	}
+	.audit-banner {
+		padding: 0.75rem 1rem;
+		border: 2px solid var(--warn);
+		border-radius: 6px;
+		background: var(--surface);
+	}
+	.audit h2 {
+		margin-top: 2.5rem;
+	}
+	.audit button {
+		font: inherit;
+		color: var(--text);
+		background: var(--surface);
+		border: 1px solid var(--muted);
+		border-radius: 6px;
+		padding: 0.4rem 0.9rem;
+		cursor: pointer;
+	}
+	.audit button[type="submit"],
+	.audit-paste button,
+	.audit-next {
+		background: var(--accent);
+		border-color: var(--accent);
+		color: var(--bg);
+		font-weight: 600;
+	}
+	.audit input[type="url"],
+	.audit input[type="text"],
+	.audit textarea {
+		font: inherit;
+		color: var(--text);
+		background: var(--surface);
+		border: 1px solid var(--muted);
+		border-radius: 6px;
+		padding: 0.4rem 0.6rem;
+		width: 100%;
+	}
+	.audit [aria-invalid="true"] {
+		border: 2px solid var(--warn);
+	}
+	.audit-error {
+		color: var(--warn);
+		font-weight: 600;
+		margin: 0.25rem 0 0;
+	}
+	.audit-url {
+		color: var(--muted);
+		font-size: 0.875rem;
+		overflow-wrap: anywhere;
+	}
+	.audit-page-list {
+		padding-left: 1.5rem;
+	}
+	.audit-page-list li {
+		padding: 0.4rem 0;
+		border-bottom: 1px solid var(--line);
+	}
+	.audit-page-list li > span {
+		margin-right: 0.75rem;
+		overflow-wrap: anywhere;
+	}
+	.audit-add,
+	.audit-paste {
+		margin-top: 1.5rem;
+		padding: 1rem;
+		border: 1px solid var(--line);
+		border-radius: 6px;
+		background: var(--surface);
+	}
+	.audit-add h3 {
+		margin-top: 0;
+	}
+	.audit-field {
+		margin-bottom: 1rem;
+	}
+	.audit-field label,
+	.audit-paste label,
+	.audit-page > label {
+		display: block;
+		font-weight: 600;
+		margin-bottom: 0.25rem;
+	}
+	.audit-paste summary {
+		cursor: pointer;
+		font-weight: 600;
+	}
+	.audit-paste textarea {
+		margin-bottom: 0.75rem;
+	}
+	.audit-progress label {
+		display: block;
+	}
+	.audit-progress progress {
+		width: 100%;
+		height: 0.75rem;
+		accent-color: var(--accent);
+	}
+	.audit-filter,
+	.audit-page {
+		border: 1px solid var(--line);
+		border-radius: 6px;
+		margin: 1rem 0;
+		padding: 0.5rem 1rem 1rem;
+	}
+	.audit-filter legend,
+	.audit-page legend {
+		font-weight: 600;
+		padding: 0 0.25rem;
+		overflow-wrap: anywhere;
+	}
+	.audit-filter label {
+		display: block;
+		padding: 0.15rem 0;
+	}
+	.audit input[type="radio"] {
+		accent-color: var(--accent);
+		width: 1.1rem;
+		height: 1.1rem;
+		vertical-align: -0.15rem;
+	}
+	.audit-topics ul,
+	.audit-list ul {
+		list-style: none;
+		padding: 0;
+		margin: 0;
+	}
+	.audit-topics ul {
+		display: grid;
+		grid-template-columns: repeat(auto-fill, minmax(15rem, 1fr));
+		gap: 0.4rem;
+	}
+	.audit-topics button,
+	.audit-list button {
+		width: 100%;
+		text-align: left;
+		border-color: var(--line);
+	}
+	.audit-topics button[aria-current],
+	.audit-list button[aria-current] {
+		border: 2px solid var(--accent);
+		background: var(--accent-soft);
+		font-weight: 600;
+	}
+	.audit-list li + li {
+		margin-top: 0.4rem;
+	}
+	.audit-count {
+		display: block;
+		color: var(--muted);
+		font-size: 0.875rem;
+		font-weight: 400;
+	}
+	.audit-num {
+		font-weight: 700;
+		margin-right: 0.5rem;
+	}
+	.audit-criterion {
+		margin-top: 2rem;
+		padding-top: 1rem;
+		border-top: 3px solid var(--accent);
+	}
+	.audit-criterion h3 .audit-num {
+		display: block;
+		font-size: 1rem;
+		color: var(--muted);
+	}
+	.audit-official {
+		color: var(--muted);
+		font-size: 0.9375rem;
+	}
+	.audit-criterion details {
+		margin: 0.75rem 0;
+		padding: 0.5rem 1rem;
+		border: 1px solid var(--line);
+		border-radius: 6px;
+		background: var(--surface);
+	}
+	.audit-criterion summary {
+		cursor: pointer;
+		font-weight: 600;
+	}
+	.audit-test h4 {
+		margin-bottom: 0.25rem;
+	}
+	.rampe-note {
+		margin: 1rem 0;
+		padding: 0.75rem 1rem;
+		background: var(--accent-soft);
+		border-left: 4px solid var(--accent);
+		border-radius: 0 6px 6px 0;
+	}
+	.rampe-note p {
+		margin: 0;
+	}
+	.rampe-note .label {
+		font-size: 0.875rem;
+		font-weight: 600;
+		margin-bottom: 0.25rem;
+	}
+	/* Sélecteur de statut : radios natives, une forme de bordure par statut pour ne pas dépendre de la couleur. */
+	.audit-statuses {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 0.5rem;
+		margin: 0.5rem 0 1rem;
+	}
+	.audit-status {
+		display: inline-flex;
+		align-items: center;
+		gap: 0.4rem;
+		padding: 0.35rem 0.75rem;
+		border: 2px solid var(--line);
+		border-radius: 999px;
+		cursor: pointer;
+	}
+	.audit-status:has(:checked) {
+		font-weight: 600;
+	}
+	.audit-status-C:has(:checked) {
+		border-color: var(--accent);
+		background: var(--accent-soft);
+	}
+	.audit-status-NC:has(:checked) {
+		border-color: var(--nc);
+		border-width: 3px;
+		background: var(--nc-soft);
+	}
+	.audit-status-NA:has(:checked) {
+		border-color: var(--muted);
+		border-style: double;
+		border-width: 4px;
+	}
+	.audit-status-NT:has(:checked) {
+		border-color: var(--muted);
+		border-style: dashed;
+	}
+	.audit-status:has(:focus-visible) {
+		outline: 3px solid var(--accent);
+		outline-offset: 2px;
+	}
+	.audit-status input:focus-visible {
+		outline: none;
+	}
+	.audit-pager {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 1rem;
+		margin-top: 2rem;
+	}
+	.audit-pager .audit-next {
+		margin-left: auto;
+	}
+	.audit-live {
+		min-height: 1.6em;
+		color: var(--muted);
+		font-size: 0.875rem;
+	}
+	:root {
+		--nc: #a3361b;
+		--nc-soft: #fbe9e4;
+	}
+	@media (prefers-color-scheme: dark) {
+		:root {
+			--nc: #ff9b85;
+			--nc-soft: #3d1f18;
+		}
+	}
+</style>
