@@ -23,7 +23,7 @@ import {
 	toolName,
 } from "./strict.ts";
 
-export { isObject, SESSION_TOOL_NAME } from "./strict.ts";
+export { isObject, MAX_PAGES, MAX_URL, SESSION_TOOL_NAME } from "./strict.ts";
 
 export const SCHEMA_VERSION = 2;
 
@@ -124,14 +124,19 @@ export function addPage(
 ): AuditSession {
 	if (!PAGE_ID.test(id)) throw new Error(`Id de page invalide : ${id}`);
 	if (session.pages.some((p) => p.id === id)) throw new Error(`Id de page déjà utilisé : ${id}`);
+	// Bornes à l'écriture (ADR-0016) : l'appelant les vérifie avant ; tout ce que le modèle produit se réimporte.
+	if (session.pages.length >= MAX_PAGES) throw new Error(`Plus de ${MAX_PAGES} pages dans l’échantillon`);
+	if (page.url.length > MAX_URL) throw new Error(`Adresse de plus de ${MAX_URL} caractères`);
+	// Même nettoyage que l'import (`display`) : contrôles et bidi retirés (Trojan Source), espaces de bord retirés.
+	const title = stripControl(page.title).trim();
+	if (title.length > MAX_TITLE) throw new Error(`Nom de page de plus de ${MAX_TITLE} caractères`);
 	let site = session.site;
 	if (!site) {
 		try {
 			site = new URL(page.url).origin;
 		} catch {}
 	}
-	// Contrôles bidi retirés : un nom de page ne doit pas pouvoir retourner le texte affiché à côté (Trojan Source).
-	return { ...session, site, updatedAt: at, pages: [...session.pages, { ...page, title: stripBidi(page.title), id }] };
+	return { ...session, site, updatedAt: at, pages: [...session.pages, { ...page, title, id }] };
 }
 
 /**
@@ -139,17 +144,26 @@ export function addPage(
  * l'espace en cours de frappe) ; le calcul du taux compare les noms sans espaces autour ni casse. Vide : aucun.
  */
 export function setPageProcess(session: AuditSession, pageId: string, process: string, at = now()): AuditSession {
-	if (!session.pages.some((p) => p.id === pageId)) throw new Error(`Page inconnue : ${pageId}`);
+	const page = session.pages.find((p) => p.id === pageId);
+	if (!page) throw new Error(`Page inconnue : ${pageId}`);
+	const clean = stripControl(process);
+	if (!fits(clean, MAX_PROCESS, page.process)) throw new Error(`Processus de plus de ${MAX_PROCESS} caractères`);
 	return {
 		...session,
 		updatedAt: at,
 		pages: session.pages.map((p) => {
 			if (p.id !== pageId) return p;
 			const { process: _old, ...rest } = p;
-			return process ? { ...rest, process: stripBidi(process) } : rest;
+			return clean ? { ...rest, process: clean } : rest;
 		}),
 	};
 }
+
+/**
+ * Texte dans sa borne. Un texte plus long écrit par une version précédente (relu sans borne) peut être corrigé, pas
+ * allongé : l'interface pose `maxLength` au maximum de la borne et de la longueur actuelle.
+ */
+const fits = (text: string, max: number, previous = "") => text.length <= Math.max(max, previous.length);
 
 /** Copie de `byCriterion` sans les entrées de `pageId` (critères vidés retirés). */
 function withoutPage<T>(byCriterion: Record<string, Record<string, T>>, pageId: string) {
@@ -202,7 +216,9 @@ export function setEvaluation(
 	const next: Evaluation = { ...current, source: "humain", ...patch };
 	if (current.source === "auto" && patch.status !== undefined && patch.status !== current.status && !("note" in patch))
 		next.note = "";
-	next.note = stripBidi(next.note);
+	next.note = cleanNote(next.note);
+	if ("note" in patch && !fits(next.note, MAX_NOTE, current.note))
+		throw new Error(`Note de plus de ${MAX_NOTE} caractères`);
 	return {
 		...session,
 		updatedAt: at,
@@ -278,42 +294,57 @@ export function sessionFileName(session: AuditSession, date: Date): string {
 // (ADR-0015), est rejeté au-delà de sa borne plutôt que modifié. Les bornes dépassent celles de l'interface
 // (maxLength) et des textes déjà tronqués par l'import de la CLI (300 + « … (tronqué) »), pour qu'un aller-retour
 // export → import ne change rien.
-const MAX_TITLE = 1000;
-const MAX_NOTE = 10_000;
+export const MAX_TITLE = 1000;
+export const MAX_NOTE = 10_000;
 const MAX_HELP = 1000;
 export const MAX_PROCESS = 200;
-const MAX_DATE = 40;
+/** Dates écrites par `toISOString()` : seule forme acceptée à l'import d'un fichier. */
+const ISO_DATE = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{3}Z$/;
 
 /** Note sur plusieurs lignes : contrôles et bidi retirés, sauts de ligne et tabulations gardés. */
 // biome-ignore lint/suspicious/noControlCharactersInRegex: c'est précisément ce qu'on retire.
-const cleanNote = (text: string) => stripBidi(text).replace(/[\x00-\x08\x0b-\x1f\x7f-\x9f]/g, "");
+export const cleanNote = (text: string) => stripBidi(text).replace(/[\x00-\x08\x0b-\x1f\x7f-\x9f]/g, "");
 
 /**
- * Valide une session (ADR-0016 §2), déjà désérialisée par `JSON.parse` seul : fichier importé ET relecture du stockage
- * local. Liste blanche, tout ou rien : lève une `ReportError` dont `detail` nomme le premier défaut. Propriétés
- * inconnues ignorées, objets reconstruits. `knownCriteria` : critères du référentiel (le modèle n'embarque pas les
- * données RGAA). Une session v1 (sans `source` ni `findings`) est migrée sans perte : ses évaluations sont humaines.
- * `tool` est facultatif : le stockage local des versions précédentes n'en avait pas.
+ * Valide une session importée d'un fichier (ADR-0016 §2), déjà désérialisée par `JSON.parse` seul. Liste blanche,
+ * tout ou rien : lève une `ReportError` dont `detail` nomme le premier défaut. Propriétés inconnues ignorées, objets
+ * reconstruits. `knownCriteria` : critères du référentiel (le modèle n'embarque pas les données RGAA). Une session v1
+ * (sans `source` ni `findings`) est migrée sans perte : ses évaluations sont humaines. `tool` est facultatif : le
+ * stockage local des versions précédentes n'en avait pas. Bornes de longueur et de nombre appliquées, textes
+ * d'affichage nettoyés et tronqués.
  */
 export function parseSessionStrict(json: unknown, knownCriteria: ReadonlySet<string>): AuditSession {
-	return strictly(INVALID_SESSION, () => parseStrict(json, knownCriteria));
+	return strictly(INVALID_SESSION, () => parseSessionWith(json, knownCriteria, true));
 }
 
-function parseStrict(json: unknown, known: ReadonlySet<string>): AuditSession {
-	checkKeys(json, "fichier");
+/**
+ * Relit le stockage local (ADR-0016) : mêmes contrôles de structure et de type que `parseSessionStrict`, mais SANS
+ * borne de longueur ni de nombre et SANS rien modifier. Une session écrite par une version précédente, aux textes
+ * plus longs que les bornes d'aujourd'hui, est relue telle quelle : la relecture ne perd jamais rien.
+ */
+export function parseStoredSession(json: unknown, knownCriteria: ReadonlySet<string>): AuditSession {
+	return strictly(INVALID_SESSION, () => parseSessionWith(json, knownCriteria, false));
+}
+
+/** `bounded` : import d'un fichier (bornes, nettoyage, troncature) ; sinon relecture du stockage (structure et types). */
+function parseSessionWith(json: unknown, known: ReadonlySet<string>, bounded: boolean): AuditSession {
 	const root = object(json, "fichier");
+	// Avant tout autre contrôle : une session d'une version future n'est jamais traitée comme abîmée.
+	if (isFutureSession(root)) throw new ReportError(FUTURE_SESSION);
+	checkKeys(json, "fichier");
 	const name = toolName(root);
 	if (name === REPORT_TOOL_NAME) throw new ReportError(REPORT_GIVEN_AS_SESSION);
 	if (field(root, "tool") !== undefined && name !== SESSION_TOOL_NAME)
 		fail("tool.name", "ce fichier n’a pas été produit par l’audit guidé de Rampe");
-	if (isFutureSession(root)) throw new ReportError(FUTURE_SESSION);
 	const version = field(root, "schemaVersion");
 	if (version !== 1 && version !== SCHEMA_VERSION)
 		fail("schemaVersion", `version ${JSON.stringify(version) ?? "absente"} non prise en charge`);
 	const v1 = version === 1;
+	const limit = (max: number) => (bounded ? max : Number.POSITIVE_INFINITY);
 	const date = (key: string) => {
 		const value = string(field(root, key), key);
-		if (value.length > MAX_DATE || Number.isNaN(Date.parse(value))) fail(key, "date invalide");
+		if (Number.isNaN(Date.parse(value)) || (bounded && !ISO_DATE.test(value)))
+			fail(key, "date invalide (attendu : AAAA-MM-JJTHH:MM:SS.sssZ)");
 		return value;
 	};
 	const createdAt = date("createdAt");
@@ -327,9 +358,11 @@ function parseStrict(json: unknown, known: ReadonlySet<string>): AuditSession {
 		} catch {}
 		if (origin !== site) fail("site", "origine http(s) attendue");
 	}
+	/** Texte affiché : nettoyé et tronqué à l'import ; tel quel à la relecture. */
+	const text = (v: unknown, path: string, max: number) => (bounded ? display(v, path, max) : string(v, path));
 
 	const ids = new Set<string>();
-	const pages = array(field(root, "pages"), "pages", MAX_PAGES).map((raw, i): SessionPage => {
+	const pages = array(field(root, "pages"), "pages", limit(MAX_PAGES)).map((raw, i): SessionPage => {
 		const at = `pages[${i}]`;
 		const page = object(raw, at);
 		const id = string(field(page, "id"), `${at}.id`);
@@ -337,7 +370,7 @@ function parseStrict(json: unknown, known: ReadonlySet<string>): AuditSession {
 		if (ids.has(id)) fail(`${at}.id`, "identifiant de page en double");
 		ids.add(id);
 		const url = string(field(page, "url"), `${at}.url`);
-		if (url.length > MAX_URL) fail(`${at}.url`, `adresse de plus de ${MAX_URL} caractères`);
+		if (url.length > limit(MAX_URL)) fail(`${at}.url`, `adresse de plus de ${MAX_URL} caractères`);
 		let parsed: URL;
 		try {
 			parsed = parseAuditUrl(url);
@@ -347,9 +380,10 @@ function parseStrict(json: unknown, known: ReadonlySet<string>): AuditSession {
 		if (parsed.origin !== site) fail(`${at}.url`, `autre site que « ${site} » : un audit porte sur un seul site`);
 		if (parsed.username || parsed.password) fail(`${at}.url`, "identifiants dans l’adresse");
 		const rawProcess = field(page, "process");
-		const process = rawProcess === undefined ? "" : stripControl(string(rawProcess, `${at}.process`));
-		if (process.length > MAX_PROCESS) fail(`${at}.process`, `processus de plus de ${MAX_PROCESS} caractères`);
-		return { id, url, title: display(field(page, "title"), `${at}.title`, MAX_TITLE), ...(process && { process }) };
+		const rawText = rawProcess === undefined ? "" : string(rawProcess, `${at}.process`);
+		const process = bounded ? stripControl(rawText) : rawText;
+		if (process.length > limit(MAX_PROCESS)) fail(`${at}.process`, `processus de plus de ${MAX_PROCESS} caractères`);
+		return { id, url, title: text(field(page, "title"), `${at}.title`, MAX_TITLE), ...(process && { process }) };
 	});
 
 	/** `byCriterion[critère][pageId]` : critères du référentiel et pages de l'audit seulement. */
@@ -373,7 +407,8 @@ function parseStrict(json: unknown, known: ReadonlySet<string>): AuditSession {
 		if (!STATUSES.includes(status as Status)) fail(`${at}.status`, `statut inconnu ${JSON.stringify(status)}`);
 		const source = v1 ? "humain" : field(e, "source");
 		if (source !== "auto" && source !== "humain") fail(`${at}.source`, `source inconnue ${JSON.stringify(source)}`);
-		const note = truncate(cleanNote(string(field(e, "note"), `${at}.note`)), MAX_NOTE);
+		const raw = string(field(e, "note"), `${at}.note`);
+		const note = bounded ? truncate(cleanNote(raw), MAX_NOTE) : raw;
 		return { status: status as Status, note, source: source as Source };
 	});
 
@@ -381,12 +416,14 @@ function parseStrict(json: unknown, known: ReadonlySet<string>): AuditSession {
 	const findings = v1
 		? {}
 		: byCriterion("findings", (v, at) =>
-				array(v, at, MAX_FINDINGS).map((raw, k): Finding => {
+				array(v, at, limit(MAX_FINDINGS)).map((raw, k): Finding => {
 					const fat = `${at}[${k}]`;
-					if (++count > MAX_FINDINGS) fail(fat, `plus de ${MAX_FINDINGS.toLocaleString("fr-FR")} indices dans l’audit`);
+					if (++count > limit(MAX_FINDINGS))
+						fail(fat, `plus de ${MAX_FINDINGS.toLocaleString("fr-FR")} indices dans l’audit`);
 					const f = object(raw, fat);
 					const ruleId = string(field(f, "ruleId"), `${fat}.ruleId`);
-					if (ruleId.length > 100 || !RULE_ID.test(ruleId)) fail(`${fat}.ruleId`, "identifiant de règle mal formé");
+					if (ruleId.length > limit(100) || !RULE_ID.test(ruleId))
+						fail(`${fat}.ruleId`, "identifiant de règle mal formé");
 					const kind = field(f, "kind");
 					if (!RESULT_KINDS.includes(kind as ResultKind))
 						fail(`${fat}.kind`, `classe inconnue ${JSON.stringify(kind)}`);
@@ -401,7 +438,7 @@ function parseStrict(json: unknown, known: ReadonlySet<string>): AuditSession {
 						kind: kind as ResultKind,
 						nodes: nodes as number,
 						...(impact !== undefined && { impact: impact as string }),
-						...(help !== undefined && { help: display(help, `${fat}.help`, MAX_HELP) }),
+						...(help !== undefined && { help: text(help, `${fat}.help`, MAX_HELP) }),
 					};
 				}),
 			);

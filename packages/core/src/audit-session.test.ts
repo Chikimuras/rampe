@@ -1,4 +1,6 @@
 import { describe, expect, it } from "vitest";
+import mainV2 from "../test/fixtures/session-main-v2-limites.json" with { type: "json" };
+import v1Limits from "../test/fixtures/session-v1-limites.json" with { type: "json" };
 import {
 	type AuditSession,
 	addPage,
@@ -9,6 +11,7 @@ import {
 	INVALID_SESSION,
 	isFutureSession,
 	parseSessionStrict,
+	parseStoredSession,
 	progress,
 	REPORT_GIVEN_AS_SESSION,
 	removePage,
@@ -426,6 +429,172 @@ describe("export et import d'un audit (ADR-0016)", () => {
 		const base = `"schemaVersion":1,"site":"","createdAt":"${NOW}","updatedAt":"${NOW}","pages":[]`;
 		expect(refusal(JSON.parse(`{${base},"evaluations":{"__proto__":{}}}`)).detail).toMatch(/__proto__/);
 		expect(refusal(JSON.parse(`{${base},"evaluations":{"toString":{}}}`)).detail).toMatch(/"toString" inexistant/);
+	});
+});
+
+// Sessions écrites par le code de origin/main (58a7058) et de la v1 (3591df6), aux valeurs limites d'avant les
+// bornes : adresse de 3 018 caractères, titre de 1 997 (tabulation et espace en bord), note de 12 017 (sauts de ligne),
+// processus de 501 (espace final), indices d'un import CLI. Générées par test/fixtures/generer-sessions-limites.mjs.
+/** Copie profonde, non typée : les tests y glissent des valeurs abîmées. */
+const fixture = (name: "main-v2" | "v1") => JSON.parse(JSON.stringify(name === "v1" ? v1Limits : mainV2));
+/** Ids de page des fixtures. */
+const FA = "11111111-1111-4111-8111-111111111111";
+const stored = (value: unknown) => parseStoredSession(value, known);
+
+describe("relecture du stockage local : structure et types, sans borne ni modification (ADR-0016)", () => {
+	it("relit sans perte une session v2 écrite par main aux valeurs limites", () => {
+		const raw = fixture("main-v2");
+		expect(raw.pages[0].url.length).toBeGreaterThan(3000);
+		expect(raw.pages[0].process.length).toBeGreaterThan(500);
+		expect(stored(raw)).toEqual(raw);
+		// Le même fichier importé est borné : le relire au stockage ne passe donc pas par parseSessionStrict.
+		expect(refusal(raw).detail).toMatch(/^pages\[0\]\.url : adresse de plus de 2048/);
+	});
+
+	it("relit sans perte une session v1 aux valeurs limites (migrée, textes inchangés)", () => {
+		const raw = fixture("v1");
+		const s = stored(raw);
+		expect(s.pages).toEqual(raw.pages);
+		expect(s.evaluations["1.1"]?.[FA]).toEqual({ ...raw.evaluations["1.1"][FA], source: "humain" });
+		expect(getEvaluation(s, "1.1", FA).note.length).toBeGreaterThan(12_000);
+		expect(s.findings).toEqual({});
+	});
+
+	it("relit 1 001 pages et 60 000 indices (deux imports CLI de 30 000)", () => {
+		let s = createSession(NOW);
+		const ids = Array.from({ length: 1001 }, (_, i) => `00000000-0000-4000-8000-${String(i).padStart(12, "0")}`);
+		s = {
+			...s,
+			site: "https://exemple.fr",
+			pages: ids.map((id, i) => ({ id, url: `https://exemple.fr/${i}`, title: "" })),
+			findings: {
+				"1.1": Object.fromEntries(
+					ids
+						.slice(0, 2)
+						.map((id) => [
+							id,
+							Array.from({ length: 30_000 }, () => ({ ruleId: "x", kind: "incertain" as const, nodes: 1 })),
+						]),
+				),
+			},
+		};
+		expect(stored(JSON.parse(JSON.stringify(s)))).toEqual(s);
+	});
+
+	it("garde les contrôles de structure et de type", () => {
+		const raw = fixture("main-v2");
+		for (const [broken, detail] of [
+			[{ ...raw, pages: [{ ...raw.pages[0], id: "toString" }] }, /UUID/],
+			[{ ...raw, pages: [{ ...raw.pages[0], url: "javascript:alert(1)" }] }, /http/],
+			[{ ...raw, evaluations: { "99.1": {} } }, /99\.1/],
+			[{ ...raw, evaluations: { "1.1": { [FA]: { status: "OK", note: "", source: "humain" } } } }, /statut inconnu/],
+			[JSON.parse(JSON.stringify(raw).replace('"pages":', '"__proto__":{},"pages":')), /__proto__/],
+		] as const) {
+			expect(() => stored(broken), String(detail)).toThrow(ReportError);
+			try {
+				stored(broken);
+			} catch (e) {
+				expect((e as ReportError).detail).toMatch(detail);
+			}
+		}
+	});
+
+	it("C2 : une version future est protégée avant tout autre contrôle, même avec un autre tool.name ou une clé interdite", () => {
+		const future = JSON.parse(`{"__proto__":{},"schemaVersion":3,"tool":{"name":"autre"},"pages":"?"}`);
+		expect(isFutureSession(future)).toBe(true);
+		for (const parseAny of [stored, parse]) {
+			expect(() => parseAny(future)).toThrow(FUTURE_SESSION);
+			expect(() => parseAny({ ...exported(), schemaVersion: 3, tool: { name: "@rampe/cli" } })).toThrow(FUTURE_SESSION);
+		}
+	});
+});
+
+describe("bornes à l'écriture : tout ce que l'interface produit se réimporte (ADR-0016)", () => {
+	const roundTrip = (s: AuditSession) => {
+		expect(parse(JSON.parse(serializeSession(s)))).toEqual(s);
+		expect(stored(JSON.parse(serializeSession(s)))).toEqual(s);
+	};
+
+	it("aux bornes exactes : 1 000 pages, adresse de 2 048, titre de 1 000, note de 10 000, processus de 200", () => {
+		let s = createSession(NOW);
+		const url = `https://exemple.fr/${"u".repeat(2048 - "https://exemple.fr/".length)}`;
+		expect(url.length).toBe(2048);
+		s = addPage(s, { url, title: "t".repeat(1000) }, NOW, A);
+		for (let i = 1; i < 1000; i++)
+			s = addPage(
+				s,
+				{ url: `https://exemple.fr/${i}`, title: "" },
+				NOW,
+				`00000000-0000-4000-8000-${String(i).padStart(12, "0")}`,
+			);
+		s = setPageProcess(s, A, "p".repeat(200), NOW);
+		s = setEvaluation(s, "1.1", A, { status: "NC", note: "n".repeat(10_000) }, NOW);
+		roundTrip(s);
+		// Au-delà : refusé à l'écriture.
+		expect(() => addPage(s, { url: "https://exemple.fr/x", title: "" }, NOW, B)).toThrow(/Plus de 1000 pages/);
+		const one = createSession(NOW);
+		expect(() => addPage(one, { url: `${url}u`, title: "" }, NOW, A)).toThrow(/Adresse de plus de 2048/);
+		expect(() => addPage(one, { url, title: "t".repeat(1001) }, NOW, A)).toThrow(/Nom de page de plus de 1000/);
+		expect(() => setPageProcess(s, A, "p".repeat(201), NOW)).toThrow(/Processus de plus de 200/);
+		expect(() => setEvaluation(s, "1.1", A, { note: "n".repeat(10_001) }, NOW)).toThrow(/Note de plus de 10000/);
+	});
+
+	it("un texte trop long hérité d'une version précédente peut être raccourci, pas allongé", () => {
+		const s = stored(fixture("main-v2"));
+		const note = getEvaluation(s, "1.1", FA).note;
+		expect(() => setEvaluation(s, "1.1", FA, { status: "C" }, LATER)).not.toThrow();
+		expect(() => setEvaluation(s, "1.1", FA, { note: note.slice(1) }, LATER)).not.toThrow();
+		expect(() => setEvaluation(s, "1.1", FA, { note: `${note}x` }, LATER)).toThrow(/Note de plus de/);
+		const process = s.pages[0]?.process ?? "";
+		expect(() => setPageProcess(s, FA, process.slice(1), LATER)).not.toThrow();
+		expect(() => setPageProcess(s, FA, `${process}x`, LATER)).toThrow(/Processus de plus de/);
+	});
+
+	it("aléatoire : sessions produites par les opérations du modèle, textes réalistes (tabulation, bidi en bord, emoji)", () => {
+		let seed = 42;
+		const rand = (n: number) => {
+			seed = (seed * 1_103_515_245 + 12_345) % 2 ** 31;
+			return seed % n;
+		};
+		const alphabet = ["a", "É", " ", "\t", "\n", "‮", "⁦", "‏", "😀", "«", "\u0007", "\r", "-"];
+		const text = (max: number) => Array.from({ length: rand(max) }, () => alphabet[rand(alphabet.length)]).join("");
+		for (let run = 0; run < 200; run++) {
+			let s = createSession(NOW);
+			const ids: string[] = [];
+			for (let i = 0; i < 1 + rand(4); i++) {
+				const id = `00000000-0000-4000-8000-${String(run * 10 + i).padStart(12, "0")}`;
+				s = addPage(s, { url: `https://exemple.fr/${i}#${text(5)}`, title: text(30) }, NOW, id);
+				ids.push(id);
+			}
+			for (let k = 0; k < 6; k++) {
+				const id = ids[rand(ids.length)] as string;
+				if (rand(2)) s = setPageProcess(s, id, text(20), LATER);
+				else
+					s = setEvaluation(
+						s,
+						["1.1", "3.2", "8.3"][rand(3)] as string,
+						id,
+						{
+							status: (["C", "NC", "NA", "NT"] as const)[rand(4)],
+							note: text(40),
+						},
+						LATER,
+					);
+			}
+			roundTrip(s);
+		}
+	});
+
+	it("M1 : un nom avec tabulation et bidi en bord est nettoyé dès l'écriture, comme à l'import", () => {
+		const s = addPage(createSession(NOW), { url: "https://exemple.fr/", title: "\t‮ Accueil ⁦" }, NOW, A);
+		expect(s.pages[0]?.title).toBe("Accueil");
+		roundTrip(s);
+	});
+
+	it("M2 : à l'import d'un fichier, dates au format toISOString() seulement ; la relecture reste tolérante", () => {
+		const f = { ...exported(), createdAt: "2026-10-15" };
+		expect(refusal(f).detail).toMatch(/^createdAt : date invalide/);
+		expect(stored(f).createdAt).toBe("2026-10-15");
 	});
 });
 

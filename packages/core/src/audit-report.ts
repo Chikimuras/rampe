@@ -7,12 +7,13 @@ import {
 	type Evaluation,
 	type Finding,
 	isPageId,
+	MAX_NOTE,
 	own,
 	RESULT_KINDS,
 	type ResultKind,
 } from "./audit-session.ts";
 import type { AxeRuleMapping } from "./axe.ts";
-import { parseAuditUrl, plural, stripBidi, urlKey } from "./sample-file.ts";
+import { parseAuditUrl, plural, stripBidi, TRUNCATED, truncate, urlKey } from "./sample-file.ts";
 import {
 	array,
 	checkKeys,
@@ -136,6 +137,8 @@ function parseReport(json: unknown, knownCriteria: ReadonlySet<string>): Importa
 		} catch (e) {
 			return fail(`${at}.url`, (e as Error).message.replace(/\.$/, ""));
 		}
+		// Borne sur l'adresse telle qu'elle sera gardée (normalisée, donc encodée) : elle se réimporte (ADR-0016).
+		if (urlKey(url).length > MAX_URL) fail(`${at}.url`, `adresse normalisée de plus de ${MAX_URL} caractères`);
 		if (!site) site = url.origin;
 		else if (url.origin !== site) fail(`${at}.url`, `autre site que ${site} : un rapport porte sur un seul site`);
 		const results = array(field(page, "results"), `${at}.results`, MAX_RESULTS).map((rawResult, j) => {
@@ -288,12 +291,23 @@ export function importAutomaticResults(
 			if (stored && own(stored, pageId)) continue;
 			const evaluation: Evaluation = {
 				status: "NC",
-				note: `Détecté automatiquement : ${[...new Set(rules)].join(", ")}`,
+				note: truncate(`Détecté automatiquement : ${[...new Set(rules)].join(", ")}`, MAX_NOTE - TRUNCATED.length),
 				source: "auto",
 			};
 			writable(evaluations, "evaluations", criterionId)[pageId] = evaluation;
 			summary.statusesSet++;
 		}
+	// Bornes de la session entière (ADR-0016) : ce que l'import produit doit pouvoir être exporté puis réimporté.
+	if (pages.length > MAX_PAGES)
+		throw new ReportError(
+			`Cet import porterait l’échantillon à ${pages.length} pages : ${MAX_PAGES} au plus. Rien n’a été importé.`,
+		);
+	let total = 0;
+	for (const byPage of Object.values(findings)) for (const list of Object.values(byPage)) total += list.length;
+	if (total > MAX_FINDINGS)
+		throw new ReportError(
+			`Cet import porterait l’audit à ${total.toLocaleString("fr-FR")} indices : ${MAX_FINDINGS.toLocaleString("fr-FR")} au plus, au-delà l’audit ne tiendrait plus dans le navigateur. Rien n’a été importé.`,
+		);
 	// Critères vidés par le remplacement des indices : retirés, comme removePage le fait.
 	for (const criterionId of copied.findings)
 		if (Object.keys(findings[criterionId] ?? {}).length === 0) delete findings[criterionId];

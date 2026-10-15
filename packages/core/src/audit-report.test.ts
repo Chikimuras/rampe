@@ -308,6 +308,37 @@ describe("importAutomaticResults (ADR-0014 §1-3)", () => {
 		expect(JSON.stringify(s)).toBe(frozen);
 	});
 
+	it("refuse un import qui porterait la session au-delà de 1 000 pages ou de 50 000 indices au total (ADR-0016)", () => {
+		const pages = (from: number, n: number, findings = 0) =>
+			Array.from({ length: n }, (_, i) => ({
+				url: `https://exemple.fr/${from + i}`,
+				// `findings` indices par page : 2 règles × `findings / 2` critères distincts.
+				results: findings ? ["r-a", "r-b"].map((r) => result(r, "incertain", [...known].slice(0, findings / 2))) : [],
+			}));
+		const gen = ids();
+		const run = (session: ReturnType<typeof createSession>, value: unknown) =>
+			importAutomaticResults(session, parse(value), LATER, gen);
+		const first = run(createSession(NOW), report(pages(0, 600))).session;
+		const e = refusal(() => run(first, report(pages(600, 401))));
+		expect(e.message).toMatch(
+			/^Cet import porterait l’échantillon à 1001 pages : 1000 au plus\. Rien n’a été importé\.$/,
+		);
+		expect(run(first, report(pages(600, 400))).session.pages).toHaveLength(1000);
+		// Deux rapports de 30 000 indices chacun, sur des pages différentes : le second est refusé.
+		const a = run(createSession(NOW), report(pages(0, 150, 200))).session;
+		expect(refusal(() => run(a, report(pages(150, 150, 200)))).message).toMatch(
+			/^Cet import porterait l’audit à 60.000 indices/,
+		);
+		// Réimporter le même rapport remplace ses indices : pas de dépassement.
+		expect(() => run(a, report(pages(0, 150, 200)))).not.toThrow();
+	});
+
+	it("refuse une adresse dont la forme normalisée (encodée) dépasse 2 048 caractères", () => {
+		const url = `https://exemple.fr/${"é".repeat(1000)}`;
+		expect(url.length).toBeLessThan(2048);
+		expect(refusal(() => parse(report([{ url }]))).detail).toMatch(/adresse normalisée de plus de 2048 caractères/);
+	});
+
 	it("ne modifie jamais la session reçue", () => {
 		const s = addPage(createSession(NOW), { url: "https://exemple.fr/", title: "" }, NOW, A);
 		const frozen = JSON.stringify(s);
