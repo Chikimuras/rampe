@@ -13,8 +13,17 @@ import { getCriterion, getGlossaryEntry, rgaa } from "@rampe/core";
 Ces fichiers ne se modifient jamais à la main (ADR-0007). Pour les remplacer :
 
 ```sh
-pnpm --filter @rampe/core sync-rgaa          # dernier commit de main
-pnpm --filter @rampe/core sync-rgaa <sha>    # commit précis
+pnpm --filter @rampe/core sync-rgaa main <version>   # dernier commit de main, ex. version 4.1.2
+pnpm --filter @rampe/core sync-rgaa <sha> <version>  # commit précis
 ```
 
-Puis `pnpm check` : les tests verrouillent les invariants du référentiel (13 thématiques, 106 critères, liens du glossaire…).
+La version du RGAA n’est pas dans le JSON officiel : elle est obligatoire dès que le commit change (sinon le script ne fait rien). La version WCAG est lue dans `criteres.json`. Le script télécharge et valide les trois fichiers avant d’en écrire un seul ; `GITHUB_TOKEN`, s’il est défini, sert à l’appel à l’API GitHub.
+
+Ensuite :
+
+1. relire `git diff packages/core/data` : c’est là qu’on voit ce que la DINUM a changé ;
+2. lancer `pnpm check` : les tests verrouillent les invariants du référentiel (13 thématiques, 106 critères, numérotation contiguë, une méthodologie par test, liens du glossaire…).
+
+## Exception connue
+
+La note technique du critère 5.1 contient un lien `#table-descriptions-techniques` qui ne mène à aucune entrée du glossaire : c’est une ancre de la spécification HTML du WHATWG, laissée en lien relatif dans la source. Elle est listée explicitement dans les tests (`KNOWN_DANGLING_ANCHORS`) ; tout autre lien non résolu les fait échouer.
