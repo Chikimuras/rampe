@@ -1,5 +1,5 @@
 ---
-import { type CollectionEntry, getCollection, render } from "astro:content";
+import { type CollectionEntry, getCollection } from "astro:content";
 import Base from "../../../layouts/Base.astro";
 import { url } from "../../../lib/url";
 
@@ -15,7 +15,17 @@ export async function getStaticPaths() {
 }
 
 const { entry } = Astro.props as { entry: Entry };
-const { Content } = await render(entry);
+// Les listes de tâches Markdown produisent des cases à cocher désactivées sans étiquette
+// (violation axe « label », critère RGAA 11.1) : on les remplace par un statut textuel.
+if (!entry.rendered) throw new Error(`${entry.id} : rendu Markdown absent`);
+const html = entry.rendered.html
+	.replace(/<input type="checkbox" checked disabled>/g, '<span class="task done">Fait</span>')
+	.replace(/<input type="checkbox" disabled>/g, '<span class="task todo">À faire</span>');
+// Garde-fou : on contourne render() d'Astro, qui traite aussi les images locales.
+// Une case restée sans étiquette ou une image non traitée doit casser le build, pas la page.
+if (html.includes("<input") || html.includes("__ASTRO_IMAGE_")) {
+	throw new Error(`${entry.id} : case à cocher ou image Markdown non prise en charge par le cockpit`);
+}
 const meta =
 	entry.collection === "adr"
 		? `${entry.data.status} · ${entry.data.date.toLocaleDateString("fr-FR")} · ${entry.data.deciders}`
@@ -29,12 +39,27 @@ const source = `${entry.collection === "docs" ? "" : `${entry.collection}/`}${en
 	<p><a href={url("cockpit/")}>← Cockpit</a></p>
 	<h1>{entry.data.title}</h1>
 	{meta && <p class="meta">{meta}</p>}
-	<article><Content /></article>
+	<article set:html={html} />
 	<p><a href={`https://github.com/Chikimuras/rampe/blob/main/docs/${source}`}>Voir la source sur GitHub</a></p>
 </Base>
 
 <style>
 	.meta {
 		color: var(--muted);
+	}
+	article :global(.task-list-item) {
+		list-style: none;
+	}
+	article :global(.task) {
+		display: inline-block;
+		min-width: 4.5rem;
+		margin-right: 0.5rem;
+		font-size: 0.8rem;
+		text-align: center;
+		border-radius: 999px;
+		border: 1px solid var(--accent);
+	}
+	article :global(.task.done) {
+		background: var(--accent-soft);
 	}
 </style>
