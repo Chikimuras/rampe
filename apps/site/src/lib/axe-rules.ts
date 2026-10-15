@@ -1,37 +1,63 @@
 // Règles axe-core rattachées à chaque critère RGAA (ADR-0008), calculées au build.
 // Module serveur : axe-core n'est jamais envoyé au navigateur (ADR-0010 §4).
-import { classifyAxeRule } from "@rampe/core";
+import { classifyAxeRule, getCriterion } from "@rampe/core";
 import axe from "axe-core";
 
-export interface CriterionRule {
+interface RuleBase {
 	ruleId: string;
 	description: string;
-	/** `rgaa` : étiquette RGAA native ; `wcag` : rattachement indirect via WCAG. */
-	level: "rgaa" | "wcag";
 	bestPractice: boolean;
 	experimental: boolean;
+}
+/** Règle qui cite un test de ce critère (étiquette `RGAA-x.y.z`) : seule à compter comme « couverture ». */
+export interface DirectRule extends RuleBase {
+	tests: string[];
+}
+/** Règle liée au critère seulement via un critère de succès WCAG commun : signal faible. */
+export interface IndirectRule extends RuleBase {
+	wcag: string[];
+}
+export interface CriterionRules {
+	direct: DirectRule[];
+	indirect: IndirectRule[];
 }
 
 export const axeVersion = axe.version;
 
-const byCriterion = new Map<string, CriterionRule[]>();
+const byCriterion = new Map<string, CriterionRules>();
+const entry = (id: string) => {
+	let e = byCriterion.get(id);
+	if (!e) {
+		e = { direct: [], indirect: [] };
+		byCriterion.set(id, e);
+	}
+	return e;
+};
+
 for (const rule of axe.getRules()) {
 	const m = classifyAxeRule(rule.tags);
-	if (m.level === "hors-rgaa") continue;
+	// Règle dépréciée : vouée à disparaître, on ne la présente pas comme une vérification.
+	if (m.level === "hors-rgaa" || m.deprecated) continue;
+	const base = {
+		ruleId: rule.ruleId,
+		description: rule.description,
+		bestPractice: m.bestPractice,
+		experimental: m.experimental,
+	};
 	for (const id of m.criteria) {
-		const list = byCriterion.get(id) ?? [];
-		list.push({
-			ruleId: rule.ruleId,
-			description: rule.description,
-			level: m.level,
-			bestPractice: m.bestPractice,
-			experimental: m.experimental,
-		});
-		byCriterion.set(id, list);
+		if (m.level === "rgaa") entry(id).direct.push({ ...base, tests: m.tests.filter((t) => t.startsWith(`${id}.`)) });
+		else {
+			const own = new Set(getCriterion(id)?.wcag.map((w) => w.sc));
+			entry(id).indirect.push({ ...base, wcag: m.wcag.filter((sc) => own.has(sc)) });
+		}
 	}
 }
-for (const list of byCriterion.values())
-	list.sort((a, b) => a.level.localeCompare(b.level) || a.ruleId.localeCompare(b.ruleId));
 
-/** Règles du critère, rattachements directs (`rgaa`) d'abord. */
-export const rulesFor = (criterionId: string): CriterionRule[] => byCriterion.get(criterionId) ?? [];
+const byId = (a: RuleBase, b: RuleBase) => a.ruleId.localeCompare(b.ruleId);
+for (const e of byCriterion.values()) {
+	e.direct.sort(byId);
+	e.indirect.sort(byId);
+}
+
+export const rulesFor = (criterionId: string): CriterionRules =>
+	byCriterion.get(criterionId) ?? { direct: [], indirect: [] };

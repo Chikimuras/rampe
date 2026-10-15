@@ -9,16 +9,26 @@ import { renderMarkdown } from "../../lib/render";
 import { url } from "../../lib/url";
 
 const plural = (n: number, word: string) => `${n} ${word}${n > 1 ? "s" : ""}`;
+// Seules les règles directes comptent comme couverture ; les indirectes sont un signal faible (ADR-0002).
 const axeSummary = (id: string) => {
-	const rules = rulesFor(id);
-	if (rules.length === 0) return "aucune règle axe-core : vérification humaine";
-	const direct = rules.filter((r) => r.level === "rgaa").length;
-	const parts = [
-		direct && plural(direct, "directe"),
-		rules.length - direct && plural(rules.length - direct, "indirecte"),
-	];
-	return `${plural(rules.length, "règle")} axe-core (${parts.filter(Boolean).join(", ")})`;
+	const { direct, indirect } = rulesFor(id);
+	const all = [...direct, ...indirect];
+	const flags = [
+		all.some((r) => r.bestPractice) && "bonne pratique d’axe",
+		all.some((r) => r.experimental) && "règle expérimentale",
+	].filter(Boolean);
+	return [
+		direct.length > 0
+			? `${plural(direct.length, "règle")} axe-core directe${direct.length > 1 ? "s" : ""}`
+			: "Aucune règle directe : vérification humaine indispensable",
+		indirect.length > 0 &&
+			`${plural(indirect.length, "règle")} indirecte${indirect.length > 1 ? "s" : ""} (signal faible)`,
+		flags.length > 0 && `dont ${flags.join(", ")}`,
+	]
+		.filter(Boolean)
+		.join(" ; ");
 };
+const covered = rgaa.criteria.filter((c) => rulesFor(c.id).direct.length > 0).length;
 const topics = rgaa.topics.map((t) => ({ ...t, criteria: rgaa.criteria.filter((c) => c.topic === t.number) }));
 ---
 
@@ -33,9 +43,10 @@ const topics = rgaa.topics.map((t) => ({ ...t, criteria: rgaa.criteria.filter((c
 		<a href={url("referentiel/glossaire/")}>glossaire du RGAA</a>.
 	</p>
 	<p>
-		Pour chaque critère, on indique combien de règles d’axe-core {axeVersion} lui sont rattachées : « directe » quand
-		la règle cite le test RGAA, « indirecte » quand le lien passe par un critère WCAG. Une règle rattachée aide à
-		repérer des erreurs ; elle ne suffit jamais à déclarer un critère conforme.
+		Pour chaque critère, on indique combien de règles d’axe-core {axeVersion} lui sont rattachées. Une règle
+		« directe » cite un test RGAA du critère : {covered} critères sur {rgaa.criteria.length} en ont au moins une. Une
+		règle « indirecte » ne partage avec le critère qu’un critère WCAG : c’est un signal faible, pas une vérification.
+		Même directe, une règle repère seulement certaines erreurs ; elle ne suffit jamais à déclarer un critère conforme.
 	</p>
 
 	<nav aria-labelledby="sommaire">

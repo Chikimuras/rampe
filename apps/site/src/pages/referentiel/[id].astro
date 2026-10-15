@@ -22,7 +22,10 @@ interface Props {
 }
 const { criterion: c, prev, next } = Astro.props;
 const topic = rgaa.topics.find((t) => t.number === c.topic);
-const rules = rulesFor(c.id);
+const { direct, indirect } = rulesFor(c.id);
+const indirectSc = [...new Set(indirect.flatMap((r) => r.wcag))].join(", ");
+const flags = (r: { bestPractice: boolean; experimental: boolean }) =>
+	`${r.bestPractice ? " Bonne pratique selon axe." : ""}${r.experimental ? " Règle expérimentale." : ""}`;
 const md = (s: string) => renderMarkdown(s, { inline: true });
 const notes: [string, Note[] | undefined][] = [
 	["Cas particuliers", c.particularCases],
@@ -32,7 +35,7 @@ const notes: [string, Note[] | undefined][] = [
 const officialUrl = `https://accessibilite.numerique.gouv.fr/methode/criteres-et-tests/#${c.id}`;
 ---
 
-<Base title={`Critère ${c.id}`} description={`Critère ${c.id} du RGAA ${rgaa.version} : texte officiel, tests et méthodologie.`}>
+<Base title={`Critère RGAA ${c.id}`} description={`Critère ${c.id} du RGAA ${rgaa.version} : texte officiel, tests et méthodologie.`}>
 	<nav aria-label="Fil d’Ariane" class="crumbs">
 		<a href={url("referentiel/")}>Référentiel</a> ›{" "}
 		<a href={url(`referentiel/#thematique-${c.topic}`)}>Thématique {c.topic} : {topic?.title}</a>
@@ -115,29 +118,46 @@ const officialUrl = `https://accessibilite.numerique.gouv.fr/methode/criteres-et
 
 	<h2>Ce que l’audit automatique peut détecter</h2>
 	{
-		rules.length === 0 ? (
+		direct.length === 0 ? (
 			<p class="human">
-				Aucune règle d’axe-core {axeVersion} n’est rattachée à ce critère. Il demande une vérification humaine,
+				Aucune règle d’axe-core {axeVersion} ne vérifie directement ce critère : vérification humaine indispensable,
 				en suivant la méthodologie de chaque test.
 			</p>
 		) : (
 			<>
+				<h3>Règles qui vérifient directement ce critère</h3>
 				<p>
-					{rules.length} règle{rules.length > 1 ? "s" : ""} d’axe-core {axeVersion}{" "}
-					{rules.length > 1 ? "sont rattachées" : "est rattachée"} à ce critère. Elles repèrent une partie des
-					erreurs ; le reste du critère demande une vérification humaine.
+					Ces règles d’axe-core {axeVersion} citent un test de ce critère. Elles repèrent une partie des erreurs ; le
+					reste du critère demande une vérification humaine.
 				</p>
 				<ul class="rules">
-					{rules.map((r) => (
+					{direct.map((r) => (
 						<li>
-							<code>{r.ruleId}</code> :{" "}
-							<span lang="en">{r.description}</span>
+							<code>{r.ruleId}</code> : <span lang="en">{r.description}</span>
 							<span class="level">
-								{r.level === "rgaa"
-									? "Rattachement direct : la règle cite un test de ce critère."
-									: "Rattachement indirect, via un critère WCAG : à confirmer par une vérification humaine."}
-								{r.bestPractice && " Bonne pratique selon axe."}
-								{r.experimental && " Règle expérimentale."}
+								{r.tests.length > 1 ? "Tests" : "Test"} {r.tests.join(", ")}.{flags(r)}
+							</span>
+						</li>
+					))}
+				</ul>
+			</>
+		)
+	}
+	{
+		indirect.length > 0 && (
+			<>
+				<h3>Règles liées indirectement (via WCAG {indirectSc}) — signal faible</h3>
+				<p>
+					Ces règles ne citent aucun test de ce critère : elles vérifient un critère WCAG qu’il partage avec d’autres
+					critères RGAA. Une erreur qu’elles signalent peut relever d’un autre critère, et leur silence ne prouve rien
+					ici.
+				</p>
+				<ul class="rules">
+					{indirect.map((r) => (
+						<li>
+							<code>{r.ruleId}</code> : <span lang="en">{r.description}</span>
+							<span class="level">
+								Via WCAG {r.wcag.join(", ")}.{flags(r)}
 							</span>
 						</li>
 					))}
