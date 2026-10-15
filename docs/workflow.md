@@ -11,7 +11,7 @@ Comment Claude construit Rampe sans intervention humaine, et où l’humain gard
 |---|---|---|---|
 | **Orchestrateur** | Session Claude principale | Choisit la prochaine tâche de la roadmap, écrit les ADR, découpe, délègue, merge | N’écrit pas le gros du code |
 | **Implémenteur** | Sous-agent, worktree git isolé | TDD : test qui échoue → code → `pnpm check` vert → PR | Ne merge jamais |
-| **Relecteur** | Sous-agent neuf, sans le contexte de l’implémenteur | Relecture adversariale du diff : bugs, écarts aux ADR, sécurité | Ne corrige pas lui-même |
+| **Relecteur** | Sous-agent neuf, sans le contexte de l’implémenteur | Relecture adversariale du diff : bugs, écarts aux ADR, sécurité. **Doit avoir un shell** pour exécuter tests et scripts : ce qui n’est pas exécuté reste une hypothèse | Ne corrige pas lui-même |
 
 Un relecteur qui n’a pas écrit le code n’a pas ses angles morts : c’est l’intérêt de le lancer sans contexte.
 

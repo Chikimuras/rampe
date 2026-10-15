@@ -18,7 +18,7 @@ Le contenu est sous Licence Ouverte 2.0.
 1. Les trois fichiers officiels (`criteres.json`, `methodologies.json`, `glossaire.json`) sont **copiés tels quels** dans `packages/core/data/rgaa/`, avec un `source.json` qui indique le dépôt, le **SHA du commit** source (`ca4019f95073b6cbd2482a16e9f12b52d8de678d`), la version du RGAA et la date d’import.
 2. On ne modifie jamais ces fichiers à la main. Un script (`pnpm --filter @rampe/core sync-rgaa`) les remplace depuis un commit donné, ce qui permet de rejouer l’import et de lire les écarts dans un diff.
 3. `packages/core` expose un **modèle normalisé et typé** construit à partir de ces fichiers : thématiques, critères `"1.1"`, tests `"1.1.1"` avec leur méthodologie, références WCAG analysées (`{ sc: "1.1.1", level: "A" }`), glossaire indexé par ancre. Le reste du code ne lit jamais le JSON brut.
-4. Des tests verrouillent les invariants du référentiel : 13 thématiques, 106 critères, identifiants uniques, chaque test a une méthodologie, chaque lien de glossaire mène à une entrée.
+4. Des tests verrouillent les invariants du référentiel : 13 thématiques, 106 critères, identifiants uniques, chaque test a une méthodologie, chaque lien de glossaire mène à une entrée, à **une exception documentée près** : `#table-descriptions-techniques` dans la note technique du critère 5.1, qui renvoie en réalité à la spécification HTML du WHATWG. Le test liste cette exception de façon exacte : il casse si elle disparaît ou si une autre apparaît.
 
 ## Conséquences
 
