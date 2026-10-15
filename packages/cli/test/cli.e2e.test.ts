@@ -43,8 +43,8 @@ afterAll(() => new Promise<void>((resolve) => server.close(() => resolve())));
 describe("rampe audit (bout en bout)", { timeout: 60_000 }, () => {
 	it("détecte les défauts connus, rangés par critère RGAA, et sort en 1", async () => {
 		const json = join(tmpdir(), `rampe-e2e-${process.pid}.json`);
-		const { code, stdout } = await run("audit", `${base}/defauts`, "--json", json);
-		expect(code).toBe(1);
+		const { code, stdout, stderr } = await run("audit", `${base}/defauts`, "--json", json);
+		expect(code, stderr).toBe(1);
 
 		const report: AuditReport = JSON.parse(await readFile(json, "utf8"));
 		expect(report.schemaVersion).toBe(1);
@@ -70,8 +70,8 @@ describe("rampe audit (bout en bout)", { timeout: 60_000 }, () => {
 	});
 
 	it("sort en 0 sur une page sans non-conformité détectée", async () => {
-		const { code, stdout } = await run("audit", `${base}/propre`);
-		expect(code).toBe(0);
+		const { code, stdout, stderr } = await run("audit", `${base}/propre`);
+		expect(code, stderr).toBe(0);
 		expect(stdout).toContain("Aucune non-conformité détectée automatiquement");
 	});
 
