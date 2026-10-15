@@ -8,8 +8,16 @@ import {
 	parseAuditReport,
 	REPORT_TOOL_NAME,
 	ReportError,
+	SESSION_GIVEN_AS_REPORT,
 } from "./audit-report.ts";
-import { addPage, createSession, getEvaluation, getFindings, setEvaluation } from "./audit-session.ts";
+import {
+	addPage,
+	createSession,
+	getEvaluation,
+	getFindings,
+	serializeSession,
+	setEvaluation,
+} from "./audit-session.ts";
 import { rgaa } from "./rgaa.ts";
 
 const NOW = "2026-10-15T10:00:00.000Z";
@@ -196,6 +204,14 @@ describe("parseAuditReport : validation stricte (ADR-0014 §4)", () => {
 		expect(refusal(() => parseAuditReport(JSON.parse(json), known)).detail).toContain(`clé interdite « ${key} »`);
 	});
 
+	it("audit complet (export de l'audit guidé) donné au champ du rapport : message qui oriente vers le bon champ", () => {
+		const file = JSON.parse(
+			serializeSession(addPage(createSession(NOW), { url: "https://exemple.fr/", title: "" }, NOW, A)),
+		);
+		expect(() => parseAuditReport(file, known)).toThrow(SESSION_GIVEN_AS_REPORT);
+		expect(SESSION_GIVEN_AS_REPORT).toMatch(/« Importer un audit \(JSON\) »/);
+	});
+
 	it("rejette une imbrication anormale sans épuiser la pile", () => {
 		const json = JSON.parse(`${"[".repeat(5000)}${"]".repeat(5000)}`);
 		expect(refusal(() => parseAuditReport(json, known)).detail).toMatch(/structure trop profonde/);
@@ -290,6 +306,62 @@ describe("importAutomaticResults (ADR-0014 §1-3)", () => {
 			"Ce rapport porte sur un autre site (https://exemple.fr) que l’audit en cours (https://autre.fr). Un audit porte sur un seul site : rien n’a été importé.",
 		);
 		expect(JSON.stringify(s)).toBe(frozen);
+	});
+
+	it("refuse un import qui porterait la session au-delà de 1 000 pages ou de 50 000 indices au total (ADR-0016)", () => {
+		const pages = (from: number, n: number, findings = 0) =>
+			Array.from({ length: n }, (_, i) => ({
+				url: `https://exemple.fr/${from + i}`,
+				// `findings` indices par page : 2 règles × `findings / 2` critères distincts.
+				results: findings ? ["r-a", "r-b"].map((r) => result(r, "incertain", [...known].slice(0, findings / 2))) : [],
+			}));
+		const gen = ids();
+		const run = (session: ReturnType<typeof createSession>, value: unknown) =>
+			importAutomaticResults(session, parse(value), LATER, gen);
+		const first = run(createSession(NOW), report(pages(0, 600))).session;
+		const e = refusal(() => run(first, report(pages(600, 401))));
+		expect(e.message).toBe(
+			"Cet import ajouterait 401 pages à l’échantillon, qui en compte déjà 600 : 1000 au plus. Rien n’a été importé.",
+		);
+		expect(run(first, report(pages(600, 400))).session.pages).toHaveLength(1000);
+		// Deux rapports de 30 000 indices chacun, sur des pages différentes : le second est refusé.
+		const a = run(createSession(NOW), report(pages(0, 150, 200))).session;
+		expect(refusal(() => run(a, report(pages(150, 150, 200)))).message).toMatch(
+			/^Cet import porterait l’audit à 60.000 indices/,
+		);
+		// Réimporter le même rapport remplace ses indices : pas de dépassement.
+		expect(() => run(a, report(pages(0, 150, 200)))).not.toThrow();
+	});
+
+	it("audit hérité de plus de 1 000 pages : seules les pages NOUVELLES comptent", () => {
+		const gen = ids();
+		const legacy = {
+			...createSession(NOW),
+			site: "https://exemple.fr",
+			pages: Array.from({ length: 1001 }, () => gen()).map((id, i) => ({
+				id,
+				url: `https://exemple.fr/${i}`,
+				title: "",
+			})),
+		};
+		const page = (i: number) => ({
+			url: `https://exemple.fr/${i}`,
+			results: [result("image-alt", "non-conformite", ["1.1"])],
+		});
+		const r = importAutomaticResults(legacy, parse(report([page(0), page(1000)])), LATER, gen);
+		expect(r.summary.pagesAdded).toBe(0);
+		expect(r.summary.statusesSet).toBe(2);
+		expect(
+			refusal(() => importAutomaticResults(legacy, parse(report([page(0), page(5000)])), LATER, gen)).message,
+		).toBe(
+			"Cet import ajouterait 1 page à l’échantillon, qui en compte déjà 1001 : 1000 au plus. Rien n’a été importé.",
+		);
+	});
+
+	it("refuse une adresse dont la forme normalisée (encodée) dépasse 2 048 caractères", () => {
+		const url = `https://exemple.fr/${"é".repeat(1000)}`;
+		expect(url.length).toBeLessThan(2048);
+		expect(refusal(() => parse(report([{ url }]))).detail).toMatch(/adresse normalisée de plus de 2048 caractères/);
 	});
 
 	it("ne modifie jamais la session reçue", () => {

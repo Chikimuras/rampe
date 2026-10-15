@@ -1,17 +1,32 @@
 import { describe, expect, it } from "vitest";
+import mainV2 from "../test/fixtures/session-main-v2-limites.json" with { type: "json" };
+import v1Limits from "../test/fixtures/session-v1-limites.json" with { type: "json" };
+import { importAutomaticResults, MAX_REPORT_BYTES, parseAuditReport } from "./audit-report.ts";
 import {
+	type AuditSession,
 	addPage,
 	createSession,
+	FUTURE_SESSION,
 	getEvaluation,
 	getFindings,
+	INVALID_SESSION,
 	isFutureSession,
-	parseSession,
+	MAX_SESSION_BYTES,
+	parseSessionStrict,
+	parseStoredSession,
 	progress,
+	REPORT_GIVEN_AS_SESSION,
 	removePage,
 	SCHEMA_VERSION,
+	SESSION_TOOL_NAME,
+	serializeSession,
+	sessionFileName,
 	setEvaluation,
 	setPageProcess,
 } from "./audit-session.ts";
+import { rgaa } from "./rgaa.ts";
+import { truncate } from "./sample-file.ts";
+import { ReportError } from "./strict.ts";
 
 const NOW = "2026-10-15T10:00:00.000Z";
 const A = "00000000-0000-4000-8000-00000000000a";
@@ -182,65 +197,218 @@ describe("revue : robustesse du modèle", () => {
 	});
 });
 
-describe("parseSession (relecture du stockage local)", () => {
-	it("relit une session valide", () => {
-		const s = setEvaluation(withTwoPages(), "1.1", A, { status: "C", note: "ok" }, NOW);
-		expect(parseSession(JSON.parse(JSON.stringify(s)))).toEqual(s);
-	});
-
-	it.each([
-		["null", null],
-		["un tableau", []],
-		["une autre version", { ...createSession(NOW), schemaVersion: 99 }],
-		["une version 3", { ...createSession(NOW), schemaVersion: 3 }],
-		[
-			"une source inconnue",
-			{ ...withTwoPages(), evaluations: { "1.1": { [A]: { status: "C", note: "", source: "robot" } } } },
-		],
-		["des indices absents (v2)", { ...withTwoPages(), findings: undefined }],
-		[
-			"un indice de classe inconnue",
-			{ ...withTwoPages(), findings: { "1.1": { [A]: [{ ruleId: "image-alt", kind: "inconnu", nodes: 1 }] } } },
-		],
-		[
-			"un indice sur une page absente",
-			{
-				...withTwoPages(),
-				findings: { "1.1": { [B.replace("b", "c")]: [{ ruleId: "x", kind: "incertain", nodes: 1 }] } },
-			},
-		],
-		["des pages mal formées", { ...createSession(NOW), pages: [{ id: 1, url: "x", title: "" }] }],
-		["un statut inconnu", { ...withTwoPages(), evaluations: { "1.1": { [A]: { status: "OK", note: "" } } } }],
-		[
-			"une évaluation sur une page absente",
-			{ ...withTwoPages(), evaluations: { "1.1": { [B.replace("b", "c")]: { status: "C", note: "" } } } },
-		],
-		[
-			"des ids de page en double",
-			{
-				...createSession(NOW),
-				pages: [
-					{ id: A, url: "u", title: "" },
-					{ id: A, url: "v", title: "" },
+const known = new Set(rgaa.criteria.map((c) => c.id));
+const parse = (value: unknown) => parseSessionStrict(value, known);
+/** Erreur levée par `parse`, pour en vérifier le message et le détail. */
+function refusal(value: unknown): ReportError {
+	try {
+		parse(value);
+	} catch (e) {
+		if (e instanceof ReportError) return e;
+		throw e;
+	}
+	throw new Error("session acceptée");
+}
+/** Une session v2 complète : processus, évaluation automatique, note sur plusieurs lignes, indices. */
+const full = (): AuditSession => {
+	let s = setPageProcess(withTwoPages(), B, "Commande", NOW);
+	s = setEvaluation(s, "1.1", A, { status: "C", note: "Logo :\n\talternative « Rampe »" }, NOW);
+	s = setEvaluation(s, "3.2", B, { status: "NC", note: "Détecté automatiquement : x", source: "auto" }, NOW);
+	return {
+		...s,
+		exportedAt: LATER,
+		findings: {
+			"1.1": {
+				[A]: [
+					{ ruleId: "image-alt", kind: "non-conformite", nodes: 3, impact: "critical", help: "Images must have alt" },
+					{ ruleId: "region", kind: "bonne-pratique", nodes: 1 },
 				],
 			},
-		],
-		[
-			"un id de page qui n'est pas un UUID",
-			{ ...createSession(NOW), pages: [{ id: "toString", url: "u", title: "" }] },
-		],
-		[
-			"une clé __proto__ dans les évaluations",
-			JSON.parse(
-				`{"schemaVersion":2,"site":"","createdAt":"","updatedAt":"","pages":[],"evaluations":{"__proto__":{}},"findings":{}}`,
-			),
-		],
-		["un critère mal formé", { ...withTwoPages(), evaluations: { toString: { [A]: { status: "C", note: "" } } } }],
-	])("rejette %s", (_, value) => {
-		expect(parseSession(value)).toBeNull();
+		},
+	};
+};
+/** Fichier exporté puis relu comme le ferait le navigateur. */
+const exported = (s: AuditSession = full()) => JSON.parse(serializeSession(s));
+
+describe("export et import d'un audit (ADR-0016)", () => {
+	it("aller-retour export → import : session identique", () => {
+		const s = full();
+		const file = exported(s);
+		expect(file.schemaVersion).toBe(SCHEMA_VERSION);
+		expect(file.tool).toEqual({ name: SESSION_TOOL_NAME });
+		expect(parse(file)).toEqual(s);
+		// Session vide, et relecture du stockage local écrit par une version précédente (sans `tool`).
+		expect(parse(exported(createSession(NOW)))).toEqual(createSession(NOW));
+		const { tool: _tool, ...stored } = file;
+		expect(parse(stored)).toEqual(s);
 	});
 
-	it("migre une session v1 sans perte : évaluations humaines, aucun indice", () => {
+	it("idempotent sur les textes déjà tronqués par l'import de la CLI", () => {
+		const title = `${"x".repeat(300)}… (tronqué)`;
+		const s = { ...full(), pages: full().pages.map((p) => ({ ...p, title })) };
+		expect(parse(exported(s))).toEqual(s);
+	});
+
+	it("nom de fichier : audit-<hôte>-<AAAA-MM-JJ>.json, date locale", () => {
+		const date = new Date(2026, 9, 5, 23, 59);
+		expect(sessionFileName(full(), date)).toBe("audit-exemple.fr-2026-10-05.json");
+		expect(sessionFileName({ ...full(), site: "http://127.0.0.1:4321" }, date)).toBe("audit-127.0.0.1-2026-10-05.json");
+		expect(sessionFileName({ ...full(), site: "http://[::1]:80" }, date)).toBe("audit-1-2026-10-05.json");
+		expect(sessionFileName(createSession(NOW), date)).toBe("audit-sans-site-2026-10-05.json");
+	});
+
+	// Chaque cas : fichier exporté puis abîmé ; le message est clair, le détail nomme le premier défaut.
+	const page = (patch: Record<string, unknown>) => {
+		const f = exported();
+		f.pages[0] = { ...f.pages[0], ...patch };
+		return f;
+	};
+	const evaluation = (patch: Record<string, unknown>) => {
+		const f = exported();
+		f.evaluations["1.1"][A] = { ...f.evaluations["1.1"][A], ...patch };
+		return f;
+	};
+	const finding = (patch: Record<string, unknown>) => {
+		const f = exported();
+		f.findings["1.1"][A][0] = { ...f.findings["1.1"][A][0], ...patch };
+		return f;
+	};
+	const deep = (key: string) =>
+		JSON.parse(serializeSession(full()).replace('"ruleId":"region"', `"${key}":{"polluted":true},"ruleId":"region"`));
+	it.each<[string, unknown, RegExp]>([
+		[
+			"__proto__ à la racine",
+			JSON.parse(`{"__proto__":{"x":1},${serializeSession(full()).slice(1)}`),
+			/^fichier : clé interdite « __proto__ »/,
+		],
+		["__proto__ dans un indice", deep("__proto__"), /^fichier\.findings\.1\.1\..+\.1 : clé interdite « __proto__ »/],
+		["constructor en profondeur", deep("constructor"), /clé interdite « constructor »/],
+		["prototype en profondeur", deep("prototype"), /clé interdite « prototype »/],
+		[
+			"un critère inexistant",
+			(() => {
+				const f = exported();
+				f.evaluations["99.1"] = f.evaluations["1.1"];
+				return f;
+			})(),
+			/^evaluations : critère "99\.1" inexistant dans le référentiel/,
+		],
+		[
+			"un indice sous un critère inexistant",
+			(() => {
+				const f = exported();
+				f.findings["14.1"] = f.findings["1.1"];
+				return f;
+			})(),
+			/^findings : critère "14\.1" inexistant/,
+		],
+		["un id de page non UUID", page({ id: "toString" }), /^pages\[0\]\.id : identifiant de page qui n’est pas un UUID/],
+		["un id de page en double", page({ id: B }), /^pages\[1\]\.id : identifiant de page en double/],
+		["une URL javascript:", page({ url: "javascript:alert(1)" }), /^pages\[0\]\.url : Seules les adresses http/],
+		["une URL d'un autre site", page({ url: "https://autre.fr/" }), /^pages\[0\]\.url : autre site/],
+		["une URL avec identifiants", page({ url: "https://moi:secret@exemple.fr/" }), /identifiants dans l’adresse/],
+		["une URL démesurée", page({ url: `https://exemple.fr/${"a".repeat(3000)}` }), /plus de 2048 caractères/],
+		["un processus démesuré", page({ process: "p".repeat(201) }), /^pages\[0\]\.process : processus de plus de 200/],
+		["un titre qui n'est pas un texte", page({ title: 42 }), /^pages\[0\]\.title : texte attendu/],
+		[
+			"un site qui n'est pas une origine",
+			{ ...exported(), site: "javascript:alert(1)" },
+			/^site : origine http\(s\) attendue/,
+		],
+		["un statut inconnu", evaluation({ status: "OK" }), /\.status : statut inconnu "OK"/],
+		["une source inconnue", evaluation({ source: "robot" }), /\.source : source inconnue "robot"/],
+		["une évaluation sans note", evaluation({ note: undefined }), /\.note : texte attendu/],
+		[
+			"une évaluation sur une page absente",
+			(() => {
+				const f = exported();
+				f.evaluations["2.1"] = { [B.replace("b", "c")]: { status: "C", note: "", source: "humain" } };
+				return f;
+			})(),
+			/^evaluations\.2\.1 : page ".+" absente de l’audit/,
+		],
+		["un indice de classe inconnue", finding({ kind: "inconnu" }), /\.kind : classe inconnue "inconnu"/],
+		["un indice sans nombre d'éléments", finding({ nodes: -1 }), /\.nodes : nombre entier positif attendu/],
+		["un indice à l'impact inconnu", finding({ impact: "énorme" }), /\.impact : impact inconnu/],
+		["un indice à la règle mal formée", finding({ ruleId: "<img>" }), /\.ruleId : identifiant de règle mal formé/],
+		[
+			"des indices qui ne sont pas une liste",
+			(() => {
+				const f = exported();
+				f.findings["1.1"][A] = { ruleId: "x" };
+				return f;
+			})(),
+			/liste attendue/,
+		],
+		["des indices absents (v2)", { ...exported(), findings: undefined }, /^findings : objet attendu/],
+		["une date invalide", { ...exported(), createdAt: "hier" }, /^createdAt : date invalide/],
+		["un schemaVersion absent", { ...exported(), schemaVersion: undefined }, /^schemaVersion : version absente/],
+		["un schemaVersion texte", { ...exported(), schemaVersion: "2" }, /^schemaVersion : version "2"/],
+		[
+			"un outil étranger",
+			{ ...exported(), tool: { name: "autre-outil" } },
+			/^tool\.name : ce fichier n’a pas été produit par l’audit guidé/,
+		],
+		["un outil sans nom", { ...exported(), tool: {} }, /^tool\.name/],
+		[
+			"une structure trop profonde",
+			{ ...exported(), x: JSON.parse(`${"[".repeat(80)}${"]".repeat(80)}`) },
+			/structure trop profonde/,
+		],
+		["null", null, /^fichier : objet attendu/],
+		["un tableau", [], /^fichier : objet attendu/],
+	])("refuse %s, tout ou rien", (_, value, detail) => {
+		const e = refusal(value);
+		expect(e.message).toBe(INVALID_SESSION);
+		expect(e.detail).toMatch(detail);
+		expect(e.detail?.length).toBeLessThanOrEqual(500);
+		expect("polluted" in {}).toBe(false);
+	});
+
+	it("au-delà de 50 000 indices : refusé", () => {
+		const f = exported();
+		const list = Array.from({ length: 25_001 }, () => ({ ruleId: "x", kind: "incertain", nodes: 1 }));
+		f.findings = { "1.1": { [A]: list, [B]: list } };
+		expect(refusal(f).detail).toMatch(/plus de 50.000 indices/);
+	});
+
+	it("textes seulement affichés : contrôles et bidi retirés, tronqués plutôt que rejetés", () => {
+		const f = exported();
+		f.pages[0].title = `‮Accueil\u0007 ${"t".repeat(2000)}`;
+		f.evaluations["1.1"][A].note = `ligne 1\n\tligne 2‮\u0000${"n".repeat(20_000)}`;
+		f.findings["1.1"][A][0].help = "h".repeat(5000);
+		const s = parse(f);
+		expect(s.pages[0]?.title).toMatch(/^Accueil t+… \(tronqué\)$/);
+		expect(s.pages[0]?.title.length).toBe(1000 + "… (tronqué)".length);
+		const note = getEvaluation(s, "1.1", A).note;
+		expect(note.startsWith("ligne 1\n\tligne 2n")).toBe(true);
+		expect(note.length).toBe(10_000 + "… (tronqué)".length);
+		expect(getFindings(s, "1.1", A)[0]?.help).toMatch(/^h{1000}… \(tronqué\)$/);
+	});
+
+	it("propriétés inconnues ignorées, objets reconstruits", () => {
+		const f = { ...exported(), extra: "x" };
+		f.pages[0].extra = 1;
+		f.evaluations["1.1"][A].extra = 1;
+		expect(parse(f)).toEqual(full());
+	});
+
+	it("version future : refus spécifique, distinct d'un fichier abîmé", () => {
+		const e = refusal({ ...exported(), schemaVersion: SCHEMA_VERSION + 1 });
+		expect(e.message).toBe(FUTURE_SESSION);
+		expect(e.message).toMatch(/créé par une version plus récente de Rampe/);
+		expect(isFutureSession({ ...exported(), schemaVersion: 99 })).toBe(true);
+		for (const corrupt of [null, [], { schemaVersion: "3" }, { schemaVersion: 0 }, { ...createSession(NOW), pages: 1 }])
+			expect(isFutureSession(corrupt)).toBe(false);
+	});
+
+	it("rapport de la CLI donné au champ de l'audit : message qui oriente vers le bon champ", () => {
+		const e = refusal({ schemaVersion: 2, tool: { name: "@rampe/cli", version: "0.0.0" }, pages: [] });
+		expect(e.message).toBe(REPORT_GIVEN_AS_SESSION);
+		expect(e.message).toMatch(/« Importer un rapport de la CLI \(JSON\) »/);
+	});
+
+	it("migre une session v1 (stockage d'une ancienne version) sans perte : évaluations humaines, aucun indice", () => {
 		const v1 = {
 			schemaVersion: 1,
 			site: "https://exemple.fr",
@@ -249,7 +417,7 @@ describe("parseSession (relecture du stockage local)", () => {
 			pages: [{ id: A, url: "https://exemple.fr/", title: "Accueil", process: "Commande" }],
 			evaluations: { "1.1": { [A]: { status: "NC", note: "logo" } }, "2.1": { [A]: { status: "NT", note: "à voir" } } },
 		};
-		expect(parseSession(JSON.parse(JSON.stringify(v1)))).toEqual({
+		expect(parse(JSON.parse(JSON.stringify(v1)))).toEqual({
 			...v1,
 			schemaVersion: 2,
 			evaluations: {
@@ -260,18 +428,235 @@ describe("parseSession (relecture du stockage local)", () => {
 		});
 	});
 
-	it("distingue une session d'une version future (à ne pas écraser) d'une session corrompue", () => {
-		const future = { ...createSession(NOW), schemaVersion: SCHEMA_VERSION + 1 };
-		expect(parseSession(future)).toBeNull();
-		expect(isFutureSession(future)).toBe(true);
-		for (const corrupt of [null, [], { schemaVersion: "3" }, { schemaVersion: 0 }, { ...createSession(NOW), pages: 1 }])
-			expect(isFutureSession(corrupt)).toBe(false);
+	it("rejette une session v1 abîmée (clé __proto__, critère mal formé)", () => {
+		const base = `"schemaVersion":1,"site":"","createdAt":"${NOW}","updatedAt":"${NOW}","pages":[]`;
+		expect(refusal(JSON.parse(`{${base},"evaluations":{"__proto__":{}}}`)).detail).toMatch(/__proto__/);
+		expect(refusal(JSON.parse(`{${base},"evaluations":{"toString":{}}}`)).detail).toMatch(/"toString" inexistant/);
+	});
+});
+
+// Sessions écrites par le code de origin/main (58a7058) et de la v1 (3591df6), aux valeurs limites d'avant les
+// bornes : adresse de 3 018 caractères, titre de 1 997 (tabulation et espace en bord), note de 12 017 (sauts de ligne),
+// processus de 501 (espace final), indices d'un import CLI. Générées par test/fixtures/generer-sessions-limites.mjs.
+/** Copie profonde, non typée : les tests y glissent des valeurs abîmées. */
+const fixture = (name: "main-v2" | "v1") => JSON.parse(JSON.stringify(name === "v1" ? v1Limits : mainV2));
+/** Ids de page des fixtures. */
+const FA = "11111111-1111-4111-8111-111111111111";
+const stored = (value: unknown) => parseStoredSession(value, known);
+
+describe("relecture du stockage local : structure et types, sans borne ni modification (ADR-0016)", () => {
+	it("relit sans perte une session v2 écrite par main aux valeurs limites", () => {
+		const raw = fixture("main-v2");
+		expect(raw.pages[0].url.length).toBeGreaterThan(3000);
+		expect(raw.pages[0].process.length).toBeGreaterThan(500);
+		expect(stored(raw)).toEqual(raw);
+		// Le même fichier importé est borné : le relire au stockage ne passe donc pas par parseSessionStrict.
+		expect(refusal(raw).detail).toMatch(/^pages\[0\]\.url : adresse de plus de 2048/);
 	});
 
-	it("rejette une session v1 abîmée (clé __proto__, critère mal formé)", () => {
-		const base = `"schemaVersion":1,"site":"","createdAt":"","updatedAt":"","pages":[]`;
-		expect(parseSession(JSON.parse(`{${base},"evaluations":{"__proto__":{}}}`))).toBeNull();
-		expect(parseSession(JSON.parse(`{${base},"evaluations":{"toString":{}}}`))).toBeNull();
+	it("relit sans perte une session v1 aux valeurs limites (migrée, textes inchangés)", () => {
+		const raw = fixture("v1");
+		const s = stored(raw);
+		expect(s.pages).toEqual(raw.pages);
+		expect(s.evaluations["1.1"]?.[FA]).toEqual({ ...raw.evaluations["1.1"][FA], source: "humain" });
+		expect(getEvaluation(s, "1.1", FA).note.length).toBeGreaterThan(12_000);
+		expect(s.findings).toEqual({});
+	});
+
+	it("relit 1 001 pages et 60 000 indices (deux imports CLI de 30 000)", () => {
+		let s = createSession(NOW);
+		const ids = Array.from({ length: 1001 }, (_, i) => `00000000-0000-4000-8000-${String(i).padStart(12, "0")}`);
+		s = {
+			...s,
+			site: "https://exemple.fr",
+			pages: ids.map((id, i) => ({ id, url: `https://exemple.fr/${i}`, title: "" })),
+			findings: {
+				"1.1": Object.fromEntries(
+					ids
+						.slice(0, 2)
+						.map((id) => [
+							id,
+							Array.from({ length: 30_000 }, () => ({ ruleId: "x", kind: "incertain" as const, nodes: 1 })),
+						]),
+				),
+			},
+		};
+		expect(stored(JSON.parse(JSON.stringify(s)))).toEqual(s);
+	});
+
+	it("garde les contrôles de structure et de type", () => {
+		const raw = fixture("main-v2");
+		for (const [broken, detail] of [
+			[{ ...raw, pages: [{ ...raw.pages[0], id: "toString" }] }, /UUID/],
+			[{ ...raw, pages: [{ ...raw.pages[0], url: "javascript:alert(1)" }] }, /http/],
+			[{ ...raw, evaluations: { "99.1": {} } }, /99\.1/],
+			[{ ...raw, evaluations: { "1.1": { [FA]: { status: "OK", note: "", source: "humain" } } } }, /statut inconnu/],
+			[JSON.parse(JSON.stringify(raw).replace('"pages":', '"__proto__":{},"pages":')), /__proto__/],
+		] as const) {
+			expect(() => stored(broken), String(detail)).toThrow(ReportError);
+			try {
+				stored(broken);
+			} catch (e) {
+				expect((e as ReportError).detail).toMatch(detail);
+			}
+		}
+	});
+
+	it("C2 : une version future est protégée avant tout autre contrôle, même avec un autre tool.name ou une clé interdite", () => {
+		const future = JSON.parse(`{"__proto__":{},"schemaVersion":3,"tool":{"name":"autre"},"pages":"?"}`);
+		expect(isFutureSession(future)).toBe(true);
+		for (const parseAny of [stored, parse]) {
+			expect(() => parseAny(future)).toThrow(FUTURE_SESSION);
+			expect(() => parseAny({ ...exported(), schemaVersion: 3, tool: { name: "@rampe/cli" } })).toThrow(FUTURE_SESSION);
+		}
+	});
+});
+
+describe("bornes à l'écriture : tout ce que l'interface produit se réimporte (ADR-0016)", () => {
+	const roundTrip = (s: AuditSession) => {
+		expect(parse(JSON.parse(serializeSession(s)))).toEqual(s);
+		expect(stored(JSON.parse(serializeSession(s)))).toEqual(s);
+	};
+
+	it("aux bornes exactes : 1 000 pages, adresse de 2 048, titre de 1 000, note de 10 000, processus de 200", () => {
+		let s = createSession(NOW);
+		const url = `https://exemple.fr/${"u".repeat(2048 - "https://exemple.fr/".length)}`;
+		expect(url.length).toBe(2048);
+		s = addPage(s, { url, title: "t".repeat(1000) }, NOW, A);
+		for (let i = 1; i < 1000; i++)
+			s = addPage(
+				s,
+				{ url: `https://exemple.fr/${i}`, title: "" },
+				NOW,
+				`00000000-0000-4000-8000-${String(i).padStart(12, "0")}`,
+			);
+		s = setPageProcess(s, A, "p".repeat(200), NOW);
+		s = setEvaluation(s, "1.1", A, { status: "NC", note: "n".repeat(10_000) }, NOW);
+		roundTrip(s);
+		// Au-delà : refusé à l'écriture.
+		expect(() => addPage(s, { url: "https://exemple.fr/x", title: "" }, NOW, B)).toThrow(/Plus de 1000 pages/);
+		const one = createSession(NOW);
+		expect(() => addPage(one, { url: `${url}u`, title: "" }, NOW, A)).toThrow(/Adresse de plus de 2048/);
+		expect(() => addPage(one, { url, title: "t".repeat(1001) }, NOW, A)).toThrow(/Nom de page de plus de 1000/);
+		expect(() => setPageProcess(s, A, "p".repeat(201), NOW)).toThrow(/Processus de plus de 200/);
+		expect(() => setEvaluation(s, "1.1", A, { note: "n".repeat(10_001) }, NOW)).toThrow(/Note de plus de 10000/);
+	});
+
+	it("un texte trop long hérité d'une version précédente peut être raccourci, pas allongé", () => {
+		const s = stored(fixture("main-v2"));
+		const note = getEvaluation(s, "1.1", FA).note;
+		expect(() => setEvaluation(s, "1.1", FA, { status: "C" }, LATER)).not.toThrow();
+		expect(() => setEvaluation(s, "1.1", FA, { note: note.slice(1) }, LATER)).not.toThrow();
+		expect(() => setEvaluation(s, "1.1", FA, { note: `${note}x` }, LATER)).toThrow(/Note de plus de/);
+		const process = s.pages[0]?.process ?? "";
+		expect(() => setPageProcess(s, FA, process.slice(1), LATER)).not.toThrow();
+		expect(() => setPageProcess(s, FA, `${process}x`, LATER)).toThrow(/Processus de plus de/);
+	});
+
+	it("aléatoire : sessions produites par les opérations du modèle, textes réalistes (tabulation, bidi en bord, emoji)", () => {
+		let seed = 42;
+		const rand = (n: number) => {
+			seed = (seed * 1_103_515_245 + 12_345) % 2 ** 31;
+			return seed % n;
+		};
+		const alphabet = ["a", "É", " ", "\t", "\n", "‮", "⁦", "‏", "😀", "«", "\u0007", "\r", "-"];
+		const text = (max: number) => Array.from({ length: rand(max) }, () => alphabet[rand(alphabet.length)]).join("");
+		for (let run = 0; run < 200; run++) {
+			let s = createSession(NOW);
+			const ids: string[] = [];
+			for (let i = 0; i < 1 + rand(4); i++) {
+				const id = `00000000-0000-4000-8000-${String(run * 10 + i).padStart(12, "0")}`;
+				s = addPage(s, { url: `https://exemple.fr/${i}#${text(5)}`, title: text(30) }, NOW, id);
+				ids.push(id);
+			}
+			for (let k = 0; k < 6; k++) {
+				const id = ids[rand(ids.length)] as string;
+				if (rand(2)) s = setPageProcess(s, id, text(20), LATER);
+				else
+					s = setEvaluation(
+						s,
+						["1.1", "3.2", "8.3"][rand(3)] as string,
+						id,
+						{
+							status: (["C", "NC", "NA", "NT"] as const)[rand(4)],
+							note: text(40),
+						},
+						LATER,
+					);
+			}
+			roundTrip(s);
+		}
+	});
+
+	it("M1 : un nom avec tabulation et bidi en bord est nettoyé dès l'écriture, comme à l'import", () => {
+		const s = addPage(createSession(NOW), { url: "https://exemple.fr/", title: "\t‮ Accueil ⁦" }, NOW, A);
+		expect(s.pages[0]?.title).toBe("Accueil");
+		roundTrip(s);
+	});
+
+	it("M2 : à l'import d'un fichier, dates au format toISOString() seulement ; la relecture reste tolérante", () => {
+		const f = { ...exported(), createdAt: "2026-10-15" };
+		expect(refusal(f).detail).toMatch(/^createdAt : date invalide/);
+		expect(stored(f).createdAt).toBe("2026-10-15");
+	});
+});
+
+describe("contre-relecture de la PR #18", () => {
+	it('4 : la relecture du stockage garde `process: ""` tel quel ; l\'import de fichier le retire', () => {
+		const raw = fixture("main-v2");
+		raw.pages[1].process = "";
+		expect(stored(raw)).toEqual(raw);
+		const file = { ...exported(), pages: [{ ...exported().pages[0], process: "" }], evaluations: {}, findings: {} };
+		expect(parse(file).pages[0]).not.toHaveProperty("process");
+	});
+
+	it("5 : troncature idempotente, coupée sur un point de code ; double import identique", () => {
+		const f = exported();
+		f.evaluations["1.1"][A].note = `${"n".repeat(9_999)}😀${"x".repeat(50)}`;
+		f.pages[0].title = `${"t".repeat(999)}😀 fin`;
+		const once = parse(f);
+		const note = getEvaluation(once, "1.1", A).note;
+		expect(note).toBe(`${"n".repeat(9_999)}… (tronqué)`); // l'emoji n'est pas coupé en deux
+		expect(once.pages[0]?.title).toBe(`${"t".repeat(999)}… (tronqué)`);
+		expect(parse(JSON.parse(serializeSession(once)))).toEqual(once);
+		expect(truncate(note, 10_000)).toBe(note);
+	});
+
+	it("6 : invariant aux bornes, 50 imports CLI aux descriptions CJK : le fichier tient dans 64 Mo et se réimporte", () => {
+		let n = 0;
+		const newId = () => `00000000-0000-4000-8000-${String(++n).padStart(12, "0")}`;
+		const criteriaIds = [...known].slice(0, 10);
+		const help = "無障礙".repeat(140); // 420 caractères CJK : tronqué à 300 par l'import
+		let s = createSession(NOW);
+		for (let k = 0; k < 50; k++) {
+			const pages = Array.from({ length: 20 }, (_, i) => ({
+				url: `https://exemple.fr/${k}-${i}`,
+				finalUrl: null,
+				title: "頁".repeat(400),
+				warnings: [],
+				error: null,
+				results: ["image-alt", "label", "region", "link-name", "list"].map((ruleId) => ({
+					ruleId,
+					help,
+					kind: "incertain",
+					level: "rgaa",
+					tests: [],
+					criteria: criteriaIds,
+					wcag: [],
+					flags: { bestPractice: false, experimental: false },
+					impact: "serious",
+					nodes: [],
+				})),
+			}));
+			const r = parseAuditReport({ schemaVersion: 2, tool: { name: "@rampe/cli", version: "0" }, pages }, known);
+			s = importAutomaticResults(s, r, NOW, newId).session;
+		}
+		expect(s.pages).toHaveLength(1000);
+		const text = serializeSession(s);
+		const bytes = new TextEncoder().encode(text).length;
+		expect(bytes).toBeGreaterThan(MAX_REPORT_BYTES);
+		expect(bytes).toBeLessThanOrEqual(MAX_SESSION_BYTES);
+		expect(parse(JSON.parse(text))).toEqual(s);
 	});
 });
 
@@ -325,6 +710,6 @@ describe("source et indices (ADR-0014)", () => {
 		expect(removePage(s, A).findings).toEqual({ "1.1": { [B]: s.findings["1.1"][B] } });
 		expect(getFindings(s, "1.1", B)).toHaveLength(1);
 		expect(getFindings(s, "toString", B)).toEqual([]);
-		expect(parseSession(JSON.parse(JSON.stringify(s)))).toEqual(s);
+		expect(parse(JSON.parse(serializeSession(s)))).toEqual(s);
 	});
 });

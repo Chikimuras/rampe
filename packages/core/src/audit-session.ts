@@ -1,7 +1,29 @@
 // Modèle d'une session d'audit manuel (ADR-0013 §1) : données et opérations pures, sans dépendance.
 // Volontairement indépendant du référentiel (rgaa.ts) : l'îlot de /audit/ l'importe sans embarquer les données RGAA.
 // Statuts et règles : méthode RGAA, src/obligations/evaluation-conformite.md.
-import { stripBidi } from "./sample-file.ts";
+import { parseAuditUrl, stripBidi, stripControl, truncate } from "./sample-file.ts";
+import {
+	array,
+	checkKeys,
+	display,
+	fail,
+	field,
+	IMPACTS,
+	isObject,
+	MAX_FINDINGS,
+	MAX_PAGES,
+	MAX_URL,
+	object,
+	REPORT_TOOL_NAME,
+	ReportError,
+	RULE_ID,
+	SESSION_TOOL_NAME,
+	strictly,
+	string,
+	toolName,
+} from "./strict.ts";
+
+export { isObject, MAX_PAGES, MAX_SESSION_BYTES, MAX_URL, SESSION_TOOL_NAME } from "./strict.ts";
 
 export const SCHEMA_VERSION = 2;
 
@@ -48,6 +70,11 @@ export interface AuditSession {
 	site: string;
 	createdAt: string;
 	updatedAt: string;
+	/**
+	 * Date du dernier téléchargement de l'audit (ADR-0016 §4) ; absente : jamais téléchargé. Dans la session plutôt
+	 * qu'à côté : elle suit l'audit qu'elle décrit (synchro des onglets, « Annuler cet import », « Recommencer »).
+	 */
+	exportedAt?: string;
 	pages: SessionPage[];
 	/** `evaluations[critère][pageId]`. Une évaluation absente vaut « non testé ». */
 	evaluations: Record<string, Record<string, Evaluation>>;
@@ -97,14 +124,19 @@ export function addPage(
 ): AuditSession {
 	if (!PAGE_ID.test(id)) throw new Error(`Id de page invalide : ${id}`);
 	if (session.pages.some((p) => p.id === id)) throw new Error(`Id de page déjà utilisé : ${id}`);
+	// Bornes à l'écriture (ADR-0016) : l'appelant les vérifie avant ; tout ce que le modèle produit se réimporte.
+	if (session.pages.length >= MAX_PAGES) throw new Error(`Plus de ${MAX_PAGES} pages dans l’échantillon`);
+	if (page.url.length > MAX_URL) throw new Error(`Adresse de plus de ${MAX_URL} caractères`);
+	// Même nettoyage que l'import (`display`) : contrôles et bidi retirés (Trojan Source), espaces de bord retirés.
+	const title = stripControl(page.title).trim();
+	if (title.length > MAX_TITLE) throw new Error(`Nom de page de plus de ${MAX_TITLE} caractères`);
 	let site = session.site;
 	if (!site) {
 		try {
 			site = new URL(page.url).origin;
 		} catch {}
 	}
-	// Contrôles bidi retirés : un nom de page ne doit pas pouvoir retourner le texte affiché à côté (Trojan Source).
-	return { ...session, site, updatedAt: at, pages: [...session.pages, { ...page, title: stripBidi(page.title), id }] };
+	return { ...session, site, updatedAt: at, pages: [...session.pages, { ...page, title, id }] };
 }
 
 /**
@@ -112,17 +144,26 @@ export function addPage(
  * l'espace en cours de frappe) ; le calcul du taux compare les noms sans espaces autour ni casse. Vide : aucun.
  */
 export function setPageProcess(session: AuditSession, pageId: string, process: string, at = now()): AuditSession {
-	if (!session.pages.some((p) => p.id === pageId)) throw new Error(`Page inconnue : ${pageId}`);
+	const page = session.pages.find((p) => p.id === pageId);
+	if (!page) throw new Error(`Page inconnue : ${pageId}`);
+	const clean = stripControl(process);
+	if (!fits(clean, MAX_PROCESS, page.process)) throw new Error(`Processus de plus de ${MAX_PROCESS} caractères`);
 	return {
 		...session,
 		updatedAt: at,
 		pages: session.pages.map((p) => {
 			if (p.id !== pageId) return p;
 			const { process: _old, ...rest } = p;
-			return process ? { ...rest, process: stripBidi(process) } : rest;
+			return clean ? { ...rest, process: clean } : rest;
 		}),
 	};
 }
+
+/**
+ * Texte dans sa borne. Un texte plus long écrit par une version précédente (relu sans borne) peut être corrigé, pas
+ * allongé : l'interface pose `maxLength` au maximum de la borne et de la longueur actuelle.
+ */
+const fits = (text: string, max: number, previous = "") => text.length <= Math.max(max, previous.length);
 
 /** Copie de `byCriterion` sans les entrées de `pageId` (critères vidés retirés). */
 function withoutPage<T>(byCriterion: Record<string, Record<string, T>>, pageId: string) {
@@ -175,7 +216,9 @@ export function setEvaluation(
 	const next: Evaluation = { ...current, source: "humain", ...patch };
 	if (current.source === "auto" && patch.status !== undefined && patch.status !== current.status && !("note" in patch))
 		next.note = "";
-	next.note = stripBidi(next.note);
+	next.note = cleanNote(next.note);
+	if ("note" in patch && !fits(next.note, MAX_NOTE, current.note))
+		throw new Error(`Note de plus de ${MAX_NOTE} caractères`);
 	return {
 		...session,
 		updatedAt: at,
@@ -215,31 +258,13 @@ export function progress(
 	return { total, byTopic, byCriterion };
 }
 
-export const isObject = (v: unknown): v is Record<string, unknown> =>
-	typeof v === "object" && v !== null && !Array.isArray(v);
-const isString = (v: unknown): v is string => typeof v === "string";
-
-function isFinding(f: unknown): f is Finding {
-	return (
-		isObject(f) &&
-		isString(f.ruleId) &&
-		RESULT_KINDS.includes(f.kind as ResultKind) &&
-		Number.isSafeInteger(f.nodes) &&
-		(f.nodes as number) >= 0 &&
-		(f.impact === undefined || isString(f.impact)) &&
-		(f.help === undefined || isString(f.help))
-	);
-}
-
-/** Vrai si `byCriterion` n'a que des critères bien formés, des pages connues et des valeurs acceptées par `valid`. */
-function validMap(byCriterion: unknown, ids: Set<string>, valid: (v: unknown) => boolean): boolean {
-	if (!isObject(byCriterion)) return false;
-	for (const [criterionId, byPage] of Object.entries(byCriterion)) {
-		if (!CRITERION_ID.test(criterionId) || !isObject(byPage)) return false;
-		for (const [pageId, v] of Object.entries(byPage)) if (!ids.has(pageId) || !valid(v)) return false;
-	}
-	return true;
-}
+/** Message d'un fichier refusé à l'import d'un audit (ADR-0016 §2) ; le détail technique suit, replié. */
+export const INVALID_SESSION = "Ce fichier n’est pas un audit Rampe, ou il a été modifié. Rien n’a été importé.";
+export const FUTURE_SESSION =
+	"Cet audit a été créé par une version plus récente de Rampe : rechargez la page, puis importez-le à nouveau. Rien n’a été importé.";
+/** Rapport de la CLI donné au champ de l'audit : on oriente vers le bon champ. */
+export const REPORT_GIVEN_AS_SESSION =
+	"Ce fichier est un rapport de la CLI Rampe, pas un audit complet : importez-le avec le champ « Importer un rapport de la CLI (JSON) », section « 1. Pages de l’échantillon ». Rien n’a été importé.";
 
 /**
  * Session écrite par une version plus récente de Rampe (onglet resté sur l'ancienne version pendant un
@@ -248,38 +273,186 @@ function validMap(byCriterion: unknown, ids: Set<string>, valid: (v: unknown) =>
 export const isFutureSession = (value: unknown): boolean =>
 	isObject(value) && typeof value.schemaVersion === "number" && value.schemaVersion > SCHEMA_VERSION;
 
+/** Fichier d'export (ADR-0016 §1) : la session complète, marquée par l'outil qui l'a écrite. */
+export function serializeSession(session: AuditSession): string {
+	const { schemaVersion, ...rest } = session;
+	return JSON.stringify({ schemaVersion, tool: { name: SESSION_TOOL_NAME }, ...rest });
+}
+
+/** `audit-<hôte>-<AAAA-MM-JJ>.json`, date locale ; caractères hors [a-z0-9.-] remplacés (IPv6, port). */
+export function sessionFileName(session: AuditSession, date: Date): string {
+	let host = "sans-site";
+	try {
+		host = new URL(session.site).hostname.replace(/[^a-z0-9.-]+/gi, "-").replace(/^-|-$/g, "") || host;
+	} catch {}
+	const pad = (n: number) => String(n).padStart(2, "0");
+	return `audit-${host}-${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}.json`;
+}
+
+// Bornes des textes saisis par l'humain (ADR-0016 §2, en cohérence avec ADR-0014 §4) : un texte seulement affiché
+// (titre, note, description de règle) est tronqué, jamais rejeté ; le processus, qui entre dans le calcul du taux
+// (ADR-0015), est rejeté au-delà de sa borne plutôt que modifié. Les bornes dépassent celles de l'interface
+// (maxLength) et des textes déjà tronqués par l'import de la CLI (300 + « … (tronqué) »), pour qu'un aller-retour
+// export → import ne change rien.
+export const MAX_TITLE = 1000;
+export const MAX_NOTE = 10_000;
+const MAX_HELP = 1000;
+export const MAX_PROCESS = 200;
+/** Dates écrites par `toISOString()` : seule forme acceptée à l'import d'un fichier. */
+const ISO_DATE = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{3}Z$/;
+
+/** Note sur plusieurs lignes : contrôles et bidi retirés, sauts de ligne et tabulations gardés. */
+// biome-ignore lint/suspicious/noControlCharactersInRegex: c'est précisément ce qu'on retire.
+export const cleanNote = (text: string) => stripBidi(text).replace(/[\x00-\x08\x0b-\x1f\x7f-\x9f]/g, "");
+
 /**
- * Relit une session venue du stockage local : forme et `schemaVersion` vérifiées, `null` sinon.
- * Une session v1 (sans `source` ni `findings`) est migrée sans perte : ses évaluations sont humaines (ADR-0014).
- * Contrôle minimal pour ne pas planter l'interface ; un fichier venu de l'extérieur passe par une validation stricte.
+ * Valide une session importée d'un fichier (ADR-0016 §2), déjà désérialisée par `JSON.parse` seul. Liste blanche,
+ * tout ou rien : lève une `ReportError` dont `detail` nomme le premier défaut. Propriétés inconnues ignorées, objets
+ * reconstruits. `knownCriteria` : critères du référentiel (le modèle n'embarque pas les données RGAA). Une session v1
+ * (sans `source` ni `findings`) est migrée sans perte : ses évaluations sont humaines. `tool` est facultatif : le
+ * stockage local des versions précédentes n'en avait pas. Bornes de longueur et de nombre appliquées, textes
+ * d'affichage nettoyés et tronqués.
  */
-export function parseSession(value: unknown): AuditSession | null {
-	if (!isObject(value) || (value.schemaVersion !== 1 && value.schemaVersion !== SCHEMA_VERSION)) return null;
-	const v1 = value.schemaVersion === 1;
-	const { site, createdAt, updatedAt, pages, evaluations } = value;
-	if (![site, createdAt, updatedAt].every(isString) || !Array.isArray(pages)) return null;
+export function parseSessionStrict(json: unknown, knownCriteria: ReadonlySet<string>): AuditSession {
+	return strictly(INVALID_SESSION, () => parseSessionWith(json, knownCriteria, true));
+}
+
+/**
+ * Relit le stockage local (ADR-0016) : mêmes contrôles de structure et de type que `parseSessionStrict`, mais SANS
+ * borne de longueur ni de nombre et SANS rien modifier. Une session écrite par une version précédente, aux textes
+ * plus longs que les bornes d'aujourd'hui, est relue telle quelle : la relecture ne perd jamais rien.
+ */
+export function parseStoredSession(json: unknown, knownCriteria: ReadonlySet<string>): AuditSession {
+	return strictly(INVALID_SESSION, () => parseSessionWith(json, knownCriteria, false));
+}
+
+/** `bounded` : import d'un fichier (bornes, nettoyage, troncature) ; sinon relecture du stockage (structure et types). */
+function parseSessionWith(json: unknown, known: ReadonlySet<string>, bounded: boolean): AuditSession {
+	const root = object(json, "fichier");
+	// Avant tout autre contrôle : une session d'une version future n'est jamais traitée comme abîmée.
+	if (isFutureSession(root)) throw new ReportError(FUTURE_SESSION);
+	checkKeys(json, "fichier");
+	const name = toolName(root);
+	if (name === REPORT_TOOL_NAME) throw new ReportError(REPORT_GIVEN_AS_SESSION);
+	if (field(root, "tool") !== undefined && name !== SESSION_TOOL_NAME)
+		fail("tool.name", "ce fichier n’a pas été produit par l’audit guidé de Rampe");
+	const version = field(root, "schemaVersion");
+	if (version !== 1 && version !== SCHEMA_VERSION)
+		fail("schemaVersion", `version ${JSON.stringify(version) ?? "absente"} non prise en charge`);
+	const v1 = version === 1;
+	const limit = (max: number) => (bounded ? max : Number.POSITIVE_INFINITY);
+	const date = (key: string) => {
+		const value = string(field(root, key), key);
+		if (Number.isNaN(Date.parse(value)) || (bounded && !ISO_DATE.test(value)))
+			fail(key, "date invalide (attendu : AAAA-MM-JJTHH:MM:SS.sssZ)");
+		return value;
+	};
+	const createdAt = date("createdAt");
+	const updatedAt = date("updatedAt");
+	const exportedAt = field(root, "exportedAt") === undefined ? undefined : date("exportedAt");
+	const site = string(field(root, "site"), "site");
+	if (site !== "") {
+		let origin = "";
+		try {
+			origin = parseAuditUrl(site).origin;
+		} catch {}
+		if (origin !== site) fail("site", "origine http(s) attendue");
+	}
+	/** Texte affiché : nettoyé et tronqué à l'import ; tel quel à la relecture. */
+	const text = (v: unknown, path: string, max: number) => (bounded ? display(v, path, max) : string(v, path));
+
 	const ids = new Set<string>();
-	for (const p of pages) {
-		if (!isObject(p) || !isString(p.id) || !PAGE_ID.test(p.id) || !isString(p.url) || !isString(p.title)) return null;
-		if (ids.has(p.id)) return null;
-		if (p.process !== undefined && !isString(p.process)) return null;
-		ids.add(p.id);
+	const pages = array(field(root, "pages"), "pages", limit(MAX_PAGES)).map((raw, i): SessionPage => {
+		const at = `pages[${i}]`;
+		const page = object(raw, at);
+		const id = string(field(page, "id"), `${at}.id`);
+		if (!PAGE_ID.test(id)) fail(`${at}.id`, "identifiant de page qui n’est pas un UUID");
+		if (ids.has(id)) fail(`${at}.id`, "identifiant de page en double");
+		ids.add(id);
+		const url = string(field(page, "url"), `${at}.url`);
+		if (url.length > limit(MAX_URL)) fail(`${at}.url`, `adresse de plus de ${MAX_URL} caractères`);
+		let parsed: URL;
+		try {
+			parsed = parseAuditUrl(url);
+		} catch (e) {
+			return fail(`${at}.url`, (e as Error).message.replace(/\.$/, ""));
+		}
+		if (parsed.origin !== site) fail(`${at}.url`, `autre site que « ${site} » : un audit porte sur un seul site`);
+		if (parsed.username || parsed.password) fail(`${at}.url`, "identifiants dans l’adresse");
+		const rawProcess = field(page, "process");
+		const rawText = rawProcess === undefined ? "" : string(rawProcess, `${at}.process`);
+		const process = bounded ? stripControl(rawText) : rawText;
+		if (process.length > limit(MAX_PROCESS)) fail(`${at}.process`, `processus de plus de ${MAX_PROCESS} caractères`);
+		// Relecture : `process` gardé tel quel, même vide ; import : un processus vide n'en est pas un.
+		const keep = bounded ? process !== "" : rawProcess !== undefined;
+		return { id, url, title: text(field(page, "title"), `${at}.title`, MAX_TITLE), ...(keep && { process }) };
+	});
+
+	/** `byCriterion[critère][pageId]` : critères du référentiel et pages de l'audit seulement. */
+	function byCriterion<T>(path: string, parse: (v: unknown, at: string) => T) {
+		const out: Record<string, Record<string, T>> = {};
+		for (const [criterionId, raw] of Object.entries(object(field(root, path), path))) {
+			if (!known.has(criterionId)) fail(path, `critère ${JSON.stringify(criterionId)} inexistant dans le référentiel`);
+			const byPage: Record<string, T> = {};
+			for (const [pageId, v] of Object.entries(object(raw, `${path}.${criterionId}`))) {
+				if (!ids.has(pageId)) fail(`${path}.${criterionId}`, `page ${JSON.stringify(pageId)} absente de l’audit`);
+				byPage[pageId] = parse(v, `${path}.${criterionId}.${pageId}`);
+			}
+			out[criterionId] = byPage;
+		}
+		return out;
 	}
-	const isEvaluation = (e: unknown) =>
-		isObject(e) &&
-		STATUSES.includes(e.status as Status) &&
-		isString(e.note) &&
-		(v1 || e.source === "auto" || e.source === "humain");
-	if (!validMap(evaluations, ids, isEvaluation)) return null;
-	if (!v1) {
-		const findings = value.findings;
-		if (!validMap(findings, ids, (list) => Array.isArray(list) && list.every(isFinding))) return null;
-		return value as unknown as AuditSession;
-	}
-	const migrated: AuditSession["evaluations"] = {};
-	for (const [criterionId, byPage] of Object.entries(evaluations as AuditSession["evaluations"])) {
-		migrated[criterionId] = {};
-		for (const [pageId, e] of Object.entries(byPage)) migrated[criterionId][pageId] = { ...e, source: "humain" };
-	}
-	return { ...(value as unknown as AuditSession), schemaVersion: SCHEMA_VERSION, evaluations: migrated, findings: {} };
+
+	const evaluations = byCriterion("evaluations", (v, at): Evaluation => {
+		const e = object(v, at);
+		const status = field(e, "status");
+		if (!STATUSES.includes(status as Status)) fail(`${at}.status`, `statut inconnu ${JSON.stringify(status)}`);
+		const source = v1 ? "humain" : field(e, "source");
+		if (source !== "auto" && source !== "humain") fail(`${at}.source`, `source inconnue ${JSON.stringify(source)}`);
+		const raw = string(field(e, "note"), `${at}.note`);
+		const note = bounded ? truncate(cleanNote(raw), MAX_NOTE) : raw;
+		return { status: status as Status, note, source: source as Source };
+	});
+
+	let count = 0;
+	const findings = v1
+		? {}
+		: byCriterion("findings", (v, at) =>
+				array(v, at, limit(MAX_FINDINGS)).map((raw, k): Finding => {
+					const fat = `${at}[${k}]`;
+					if (++count > limit(MAX_FINDINGS))
+						fail(fat, `plus de ${MAX_FINDINGS.toLocaleString("fr-FR")} indices dans l’audit`);
+					const f = object(raw, fat);
+					const ruleId = string(field(f, "ruleId"), `${fat}.ruleId`);
+					if (ruleId.length > limit(100) || !RULE_ID.test(ruleId))
+						fail(`${fat}.ruleId`, "identifiant de règle mal formé");
+					const kind = field(f, "kind");
+					if (!RESULT_KINDS.includes(kind as ResultKind))
+						fail(`${fat}.kind`, `classe inconnue ${JSON.stringify(kind)}`);
+					const nodes = field(f, "nodes");
+					if (!Number.isSafeInteger(nodes) || (nodes as number) < 0)
+						fail(`${fat}.nodes`, "nombre entier positif attendu");
+					const impact = field(f, "impact");
+					if (impact !== undefined && !IMPACTS.includes(impact as string)) fail(`${fat}.impact`, "impact inconnu");
+					const help = field(f, "help");
+					return {
+						ruleId,
+						kind: kind as ResultKind,
+						nodes: nodes as number,
+						...(impact !== undefined && { impact: impact as string }),
+						...(help !== undefined && { help: text(help, `${fat}.help`, MAX_HELP) }),
+					};
+				}),
+			);
+
+	return {
+		schemaVersion: SCHEMA_VERSION,
+		site,
+		createdAt,
+		updatedAt,
+		...(exportedAt !== undefined && { exportedAt }),
+		pages,
+		evaluations,
+		findings,
+	};
 }

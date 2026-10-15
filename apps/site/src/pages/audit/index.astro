@@ -172,7 +172,8 @@ const criteria: AuditCriterion[] = rgaa.criteria.map((c) => ({
 	}
 	.audit-add,
 	.audit-paste,
-	.audit-import {
+	.audit-import,
+	.audit-session-import {
 		margin-top: 1.5rem;
 		padding: 1rem;
 		border: 1px solid var(--line);
@@ -180,10 +181,12 @@ const criteria: AuditCriterion[] = rgaa.criteria.map((c) => ({
 		background: var(--surface);
 	}
 	.audit-add h3,
-	.audit-import h3 {
+	.audit-import h3,
+	.audit-session-import h3 {
 		margin-top: 0;
 	}
-	.audit-import label {
+	.audit-import label,
+	.audit-session-import label {
 		display: block;
 		font-weight: 600;
 		margin-bottom: 0.25rem;
@@ -208,6 +211,7 @@ const criteria: AuditCriterion[] = rgaa.criteria.map((c) => ({
 		outline: 3px solid var(--accent);
 		outline-offset: 2px;
 	}
+	.audit-session-summary,
 	.audit-import-summary {
 		margin-top: 1rem;
 		padding-top: 0.75rem;
@@ -217,6 +221,35 @@ const criteria: AuditCriterion[] = rgaa.criteria.map((c) => ({
 		overflow-wrap: anywhere;
 	}
 	/* Évaluation posée par un import : bordure pointillée et texte, pas seulement une couleur. */
+	/* Sauvegarde (ADR-0016) : rappel sobre, en texte, sans couleur d'alerte. */
+	.audit-backup h2 {
+		margin-top: 1.5rem;
+	}
+	.audit-dialog {
+		max-width: min(36rem, calc(100vw - 2rem));
+		padding: 1.25rem;
+		color: var(--text);
+		background: var(--surface);
+		border: 2px solid var(--muted);
+		border-radius: 8px;
+	}
+	.audit-dialog::backdrop {
+		background: rgb(0 0 0 / 0.55);
+	}
+	.audit .audit-dialog h2 {
+		margin-top: 0;
+	}
+	.audit-dialog-actions {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 0.5rem;
+	}
+	.audit button.audit-replace {
+		background: var(--accent);
+		border-color: var(--accent);
+		color: var(--bg);
+		font-weight: 600;
+	}
 	.audit-auto,
 	.audit-conflict {
 		margin: 0.5rem 0 0;

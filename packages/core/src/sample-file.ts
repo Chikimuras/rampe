@@ -24,11 +24,13 @@ export const redact = (text: string): string => text.replace(/\b(https?:\/\/)[^\
  */
 export const stripBidi = (text: string): string => text.replace(/[\u202a-\u202e\u2066-\u2069\u200e\u200f\u061c]/g, "");
 
+export const TRUNCATED = "… (tronqué)";
 /** Tronque à `max` unités UTF-16 sans couper une paire de substitution, avec une marque visible. */
 export function truncate(text: string, max: number): string {
-	if (text.length <= max) return text;
+	// Idempotente : un texte déjà tronqué (marque comprise) qui tient dans la borne n'est pas tronqué une seconde fois.
+	if (text.length <= max || (text.endsWith(TRUNCATED) && text.length <= max + TRUNCATED.length)) return text;
 	const cut = text.slice(0, max);
-	return `${/[\ud800-\udbff]$/.test(cut) ? cut.slice(0, -1) : cut}… (tronqué)`;
+	return `${/[\ud800-\udbff]$/.test(cut) ? cut.slice(0, -1) : cut}${TRUNCATED}`;
 }
 
 /** Retire les caractères de contrôle (séquences d'échappement de terminal, contrôles bidi) venus de la page auditée. */

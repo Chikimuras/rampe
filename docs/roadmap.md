@@ -32,7 +32,7 @@ Chaque case cochée correspond à du code mergé sur `main` avec la CI verte. Le
 - [x] Parcours critère par critère pour les tests manuels
 - [x] Import des résultats automatiques
 - [x] Taux de conformité selon la méthode RGAA
-- [ ] Données 100 % locales, export / import JSON
+- [x] Données 100 % locales, export / import JSON
 
 ## Phase 4 — Livrables légaux
 
