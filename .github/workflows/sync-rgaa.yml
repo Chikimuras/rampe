@@ -1,10 +1,10 @@
 # Synchro hebdomadaire du référentiel RGAA par PR automatique (ADR-0009).
-# La PR n'est jamais mergée ici : elle suit le flux normal (CI verte, relecture, ADR-0006).
+# La PR n'est jamais mergée ici : ce workflow n'appelle jamais `gh pr merge` (ADR-0006).
 name: Synchro RGAA
 
 on:
   schedule:
-    - cron: "0 6 * * 1" # chaque lundi, 06:00 UTC
+    - cron: "17 6 * * 1" # chaque lundi, 06:17 UTC (décalé de l'heure pile, saturée chez GitHub)
   workflow_dispatch:
     inputs:
       ref:
@@ -21,11 +21,13 @@ concurrency:
 
 jobs:
   sync:
+    # Seule la définition du workflow sur main tourne avec ces droits, pas celle d'une autre branche.
+    if: github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
     permissions:
       contents: write # pousser la branche chore/sync-rgaa-*
       pull-requests: write # ouvrir la PR
-      actions: write # déclencher ci.yml sur la branche (workflow_dispatch)
+      actions: write # déclencher ci.yml sur la branche (workflow_dispatch) et lister ses exécutions
     steps:
       # Actions épinglées par SHA — OWASP Top 10 CI/CD, CICD-SEC-3.
       # persist-credentials: false : le jeton n'est pas écrit dans .git/config pour tout le job ;
@@ -50,6 +52,9 @@ jobs:
           GITHUB_TOKEN: ${{ github.token }}
         run: node packages/core/scripts/sync-rgaa.mjs "${REF:-main}" --if-changed
 
+      # Idempotent : chaque étape (branche, PR, CI) n'est faite que si elle manque, pour reprendre
+      # proprement après un échec partiel. `set -euo pipefail` : toute commande gh/git en échec fait
+      # échouer le job (jamais de vert silencieux).
       - if: steps.sync.outputs.changed == 'true'
         env:
           GH_TOKEN: ${{ github.token }}
@@ -59,34 +64,38 @@ jobs:
           set -euo pipefail
           short="${SHA:0:7}"
           branch="chore/sync-rgaa-${short}"
+          title="chore(core): synchro du référentiel RGAA (DINUM ${short})"
           auth="$(printf 'x-access-token:%s' "$GH_TOKEN" | base64 -w0)"
           echo "::add-mask::${auth}"
           git_auth() { git -c "http.https://github.com/.extraheader=AUTHORIZATION: basic ${auth}" "$@"; }
 
-          # Une branche par commit DINUM : si elle existe déjà, la PR a déjà été proposée.
-          status=0
-          git_auth ls-remote --exit-code --heads origin "refs/heads/${branch}" >/dev/null || status=$?
-          if [ "$status" -eq 0 ]; then
-            echo "La branche ${branch} existe déjà : aucune nouvelle PR."
-            exit 0
-          elif [ "$status" -ne 2 ]; then
-            echo "::error::ls-remote a échoué (code ${status})."
-            exit "$status"
+          # 1. Branche : une par commit DINUM, poussée seulement si elle n'existe pas encore.
+          head="$(git_auth ls-remote origin "refs/heads/${branch}" | cut -f1)"
+          if [ -z "$head" ]; then
+            git config user.name "github-actions[bot]"
+            git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+            git switch -c "$branch"
+            git add packages/core/data/rgaa
+            git commit -m "$title"
+            git_auth push origin "HEAD:refs/heads/${branch}"
+            head="$(git rev-parse HEAD)"
+          else
+            echo "La branche ${branch} existe déjà (${head}) : reprise."
           fi
 
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git switch -c "$branch"
-          git add packages/core/data/rgaa
-          git commit -m "chore(core): synchro du référentiel RGAA (DINUM ${short})"
-          git_auth push origin "HEAD:refs/heads/${branch}"
-
-          repo="https://github.com/DISIC/accessibilite.numerique.gouv.fr"
-          cat > "$RUNNER_TEMP/pr-body.md" <<EOF
+          # 2. PR : créée seulement s'il n'en existe aucune (ouverte, fermée ou mergée) pour cette branche.
+          prs="$(gh pr list --head "$branch" --state all --json number --jq length)"
+          if [ "$prs" -eq 0 ]; then
+            repo="https://github.com/DISIC/accessibilite.numerique.gouv.fr"
+            diff_line="- Diff DINUM : premier import, pas de commit précédent."
+            if [ -n "$PREVIOUS" ]; then
+              diff_line="- Diff DINUM depuis l'import précédent : ${repo}/compare/${PREVIOUS}...${SHA}"
+            fi
+            cat > "$RUNNER_TEMP/pr-body.md" <<EOF
           Synchro automatique du référentiel RGAA (ADR-0009).
 
           - Commit DINUM source : [\`${SHA}\`](${repo}/commit/${SHA})
-          - Diff DINUM depuis l'import précédent : ${repo}/compare/${PREVIOUS}...${SHA}
+          ${diff_line}
 
           ## À faire par le relecteur
 
@@ -94,10 +103,18 @@ jobs:
           - [ ] Relire \`git diff packages/core/data\` : c'est là qu'on voit ce que la DINUM a changé.
           - [ ] La CI (check \`check\`) doit passer avant tout merge ; elle a été déclenchée sur cette branche par \`workflow_dispatch\`.
           EOF
-          gh pr create --base main --head "$branch" \
-            --title "chore(core): synchro du référentiel RGAA (DINUM ${short})" \
-            --body-file "$RUNNER_TEMP/pr-body.md"
+            gh pr create --base main --head "$branch" --title "$title" --body-file "$RUNNER_TEMP/pr-body.md"
+          else
+            echo "Une PR existe déjà pour ${branch}."
+          fi
 
-          # Une PR ouverte avec le GITHUB_TOKEN ne déclenche pas `pull_request` : on lance la CI
-          # explicitement pour que le check requis s'attache au commit de tête (ADR-0009).
-          gh workflow run ci.yml --ref "$branch"
+          # 3. CI : une PR ouverte avec le GITHUB_TOKEN ne déclenche pas `pull_request` ; on lance ci.yml
+          # pour que le check requis `check` s'attache au commit de tête (ADR-0009), sauf si une exécution
+          # de ci.yml existe déjà sur ce commit. On interroge les exécutions (actions: read) plutôt que les
+          # check runs, qui demanderaient en plus `checks: read`.
+          runs="$(gh run list --workflow ci.yml --commit "$head" --json databaseId --jq length)"
+          if [ "$runs" -eq 0 ]; then
+            gh workflow run ci.yml --ref "$branch"
+          else
+            echo "ci.yml a déjà tourné sur ${head}."
+          fi
