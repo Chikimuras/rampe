@@ -9,6 +9,7 @@ import type { AddressInfo } from "node:net";
 import { tmpdir } from "node:os";
 import { dirname, extname, join, normalize } from "node:path";
 import { fileURLToPath } from "node:url";
+import { gzipSync } from "node:zlib";
 import { rgaa } from "@rampe/core";
 import axe from "axe-core";
 import { type Browser, chromium, type Page } from "playwright";
@@ -150,25 +151,27 @@ describe("audit guidé (bout en bout)", { timeout: 60_000 }, () => {
 		expect(withScript).toEqual(["/audit/index.html"]);
 
 		const page = await browser.newPage();
-		const bodies: Promise<number>[] = [];
+		const bodies: Promise<[raw: number, gzip: number]>[] = [];
 		page.on("response", (r) => {
-			if (r.url().endsWith(".js")) bodies.push(r.body().then((b) => b.length));
+			if (r.url().endsWith(".js")) bodies.push(r.body().then((b) => [b.length, gzipSync(b, { level: 9 }).length]));
 		});
 		await openAudit(page);
 		await page.waitForLoadState("networkidle");
 		const files = bodies.length;
-		const js = (await Promise.all(bodies)).reduce((a, b) => a + b, 0);
+		const sizes = await Promise.all(bodies);
+		const js = sizes.reduce((a, [raw]) => a + raw, 0);
+		const gzip = sizes.reduce((a, [, z]) => a + z, 0);
 		const inline = await page.evaluate(() =>
 			[...document.querySelectorAll("script:not([src])")].reduce((n, s) => n + (s.textContent?.length ?? 0), 0),
 		);
 		console.log(
-			`/audit/ : ${files} modules JS, ${js} octets non compressés ; scripts en ligne d'Astro : ${inline} octets`,
+			`/audit/ : ${files} modules JS, ${js} octets non compressés, ${gzip} octets en gzip ; scripts en ligne d'Astro : ${inline} octets`,
 		);
 		expect(js).toBeGreaterThan(0);
-		// Budget relevé de 60 000 à 70 000 avec l'écran « Résultat » (ADR-0015) : 62 299 octets à ce moment-là ;
-		// puis à 80 000 avec la sauvegarde et la validation stricte de session (ADR-0016) : 72 128 octets ;
-		// puis à 105 000 avec la déclaration d'accessibilité (ADR-0017 : gabarit officiel, formulaire, aperçu) : 99 345 octets.
-		expect(js).toBeLessThan(105_000);
+		// Budget mesuré en gzip, ce que le réseau transporte réellement : 40 Ko pour /audit/. Historique en octets
+		// bruts : 62 299 (« Résultat », ADR-0015), 72 128 (sauvegarde, ADR-0016), 99 345 (déclaration, ADR-0017),
+		// soit 32 683 octets en gzip à ce moment-là.
+		expect(gzip).toBeLessThan(40_000);
 		await page.close();
 	});
 
@@ -1066,14 +1069,14 @@ describe("audit guidé (bout en bout)", { timeout: 60_000 }, () => {
 			await typeProcess(page);
 			await expect(rates(page)).resolves.toEqual([`33,33${PCT}`, `61,11${PCT}`]);
 			const region = page.getByRole("region", { name: "Résultat par page" });
-			await expect(region.evaluate((el) => el.scrollWidth > el.clientWidth)).resolves.toBe(true);
+			await expect.poll(() => region.evaluate((el) => el.scrollWidth > el.clientWidth)).toBe(true);
 			await region.focus();
 			await page.keyboard.press("ArrowRight");
 			// Défilement éventuellement animé : on attend qu'il ait eu lieu.
 			await expect.poll(() => region.evaluate((el) => el.scrollLeft)).toBeGreaterThan(0);
 			if (captures) await page.locator(".audit-result").screenshot({ path: join(captures, "resultat-320.png") });
 			expect(await axeViolations(page)).toEqual([]);
-			expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBeLessThanOrEqual(320);
+			await expect.poll(() => page.evaluate(() => document.documentElement.scrollWidth)).toBeLessThanOrEqual(320);
 			await page.close();
 		});
 
@@ -1586,6 +1589,7 @@ describe("audit guidé (bout en bout)", { timeout: 60_000 }, () => {
 			await a.getByLabel("Dérogations pour charge disproportionnée, une par ligne").fill("Archives PDF\nVidéos 2015");
 			await a.getByLabel("Formulaire de contact ou adresse e-mail").fill("accessibilite@exemple.fr");
 			await a.getByLabel("Date de mise à jour (facultatif)").fill("2026-10-14");
+			await a.getByLabel("Date de mise à jour (facultatif)").blur(); // une date s'enregistre à la sortie du champ
 			await a.waitForFunction(() => localStorage.getItem("rampe.audit.session")?.includes("2026-10-14"));
 			const expected = {
 				organization: "Boulangerie Dupont",
@@ -1661,6 +1665,107 @@ describe("audit guidé (bout en bout)", { timeout: 60_000 }, () => {
 				await page.locator(".audit-declaration").screenshot({ path: join(captures, "declaration-incomplet-375.png") });
 			expect(await axeViolations(page)).toEqual([]);
 			expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBeLessThanOrEqual(375);
+			await page.close();
+		});
+
+		it("dates : saisie hors limites (10, 14, 27576) jamais enregistrée ni publiée, message relié, aucune exception", async () => {
+			const page = await browser.newPage();
+			const errors: string[] = [];
+			page.on("pageerror", (e) => errors.push(e.message));
+			await openWith(page, twoThirds());
+			const field = page.getByLabel("Date de mise à jour (facultatif)");
+			await expect(field.getAttribute("min")).resolves.toBe("1900-01-01");
+			await expect(field.getAttribute("max")).resolves.toBe("9999-12-31");
+			const stored = async () =>
+				JSON.parse((await page.evaluate(() => localStorage.getItem("rampe.audit.session"))) ?? "{}").declaration
+					?.updatedOn;
+			// Saisie du relecteur. Chromium garde 4 chiffres d'année : « 27576 » donne 7576 ; en route, le champ est passé
+			// par 0002, 0027, 0275 : aucun de ces états n'est enregistré ni publié avant la sortie du champ.
+			await field.focus();
+			for (const part of ["10", "14", "27576"]) await page.keyboard.type(part);
+			await expect.poll(() => field.inputValue()).toBe("7576-10-14");
+			await page.waitForTimeout(600);
+			expect(await stored()).toBeUndefined();
+			await expect(previewText(page)).resolves.toContain("Elle a été mise à jour le [JJ mois AAAA].");
+			await field.blur();
+			await expect.poll(stored).toBe("7576-10-14");
+			// Année hors limites (0010) : message relié au champ, valeur non enregistrée, la précédente reste.
+			await field.focus();
+			for (const part of ["10", "14", "0010"]) await page.keyboard.type(part);
+			await expect.poll(() => field.inputValue()).toBe("0010-10-14");
+			await field.blur();
+			await expect.poll(() => field.getAttribute("aria-invalid")).toBe("true");
+			await expect(page.locator("#declaration-updatedOn-erreur").textContent()).resolves.toBe(
+				"Date incomplète ou hors limites (années 1900 à 9999) : elle n’est pas enregistrée.",
+			);
+			await expect(field.getAttribute("aria-describedby")).resolves.toBe("declaration-updatedOn-erreur");
+			await page.waitForTimeout(600);
+			expect(await stored()).toBe("7576-10-14");
+			await expect(previewText(page)).resolves.not.toContain("0010");
+			// Corrigée, elle est enregistrée à la sortie du champ.
+			await field.focus();
+			await page.keyboard.type("10142026");
+			await field.blur();
+			await expect.poll(() => previewText(page)).toContain("Elle a été mise à jour le 14 octobre 2026.");
+			await expect.poll(() => field.getAttribute("aria-invalid")).toBe(null);
+			await expect.poll(stored).toBe("2026-10-14");
+			expect(errors).toEqual([]);
+			await page.close();
+		});
+
+		it("date d'établissement figée au premier téléchargement, gardée ensuite, modifiable", async () => {
+			const page = await browser.newPage();
+			await openWith(page, twoThirds());
+			const field = page.getByLabel("Date d’établissement (facultatif)");
+			await expect(field.inputValue()).resolves.toBe("");
+			await download(page, "Télécharger (Markdown)");
+			const d = new Date();
+			const today = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
+			await expect.poll(() => field.inputValue()).toBe(today);
+			await page.waitForFunction(
+				(t) => localStorage.getItem("rampe.audit.session")?.includes(`"establishedOn":"${t}"`),
+				today,
+			);
+			// Saisie par l'utilisateur : c'est elle qui fait foi, et un nouvel export ne la change pas.
+			await field.focus();
+			await page.keyboard.type("01022025");
+			await field.blur();
+			const md = await download(page, "Télécharger (Markdown)");
+			expect(md.content).toContain("Cette déclaration a été établie le 02 janvier 2025.");
+			await page.close();
+		});
+
+		it("relecture : une date de déclaration abîmée est retirée, signalée sobrement ; l'audit n'est pas mis de côté", async () => {
+			const page = await browser.newPage();
+			const json = JSON.parse(twoThirds());
+			json.schemaVersion = 3;
+			json.declaration = { organization: "Mairie", establishedOn: "0010-10-14" };
+			await openWith(page, JSON.stringify(json));
+			await expect
+				.poll(() => page.locator(".audit > p.audit-help").first().textContent())
+				.toBe(
+					"Déclaration d’accessibilité : 1 date illisible, retirée à la relecture (section 4). Le reste de l’audit est intact.",
+				);
+			await expect(page.getByLabel("Nom de l’organisme", { exact: true }).inputValue()).resolves.toBe("Mairie");
+			await expect.poll(() => page.locator(".audit-page-list li").count()).toBe(3);
+			const keys = await page.evaluate(() => Object.keys(localStorage).filter((k) => k.includes("ignoree")));
+			expect(keys).toEqual([]);
+			await page.close();
+		});
+
+		it("375 px : une adresse de page très longue ne fait pas défiler la page (libellés et légendes)", async () => {
+			const page = await browser.newPage({ viewport: { width: 375, height: 800 } });
+			await openAudit(page);
+			await page.getByLabel("Adresse de la page").fill(`https://exemple.fr/${"segment-sans-espace".repeat(20)}`);
+			await page.getByRole("button", { name: "Ajouter la page" }).click();
+			await expect.poll(() => page.locator(".audit-page-list li").count()).toBe(1);
+			await page.locator(".audit-page > label").first().waitFor();
+			await expect.poll(() => page.evaluate(() => document.documentElement.scrollWidth)).toBeLessThanOrEqual(375);
+			if (captures)
+				await page
+					.locator(".audit-page")
+					.first()
+					.screenshot({ path: join(captures, "note-url-longue-375.png") });
 			await page.close();
 		});
 

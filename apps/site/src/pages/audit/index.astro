@@ -299,6 +299,8 @@ const criteria: AuditCriterion[] = rgaa.criteria.map((c) => ({
 	.audit-field label,
 	.audit-paste label,
 	.audit-page > label {
+		/* Une adresse sans espace (« Note sur https://… ») ne doit pas élargir la page. */
+		overflow-wrap: anywhere;
 		display: block;
 		font-weight: 600;
 		margin-bottom: 0.25rem;

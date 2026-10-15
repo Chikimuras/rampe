@@ -16,6 +16,7 @@ import {
 	getEvaluation,
 	getFindings,
 	INVALID_SESSION,
+	isDay,
 	isFutureSession,
 	MAX_NOTE,
 	MAX_PAGES,
@@ -122,11 +123,15 @@ function storageAvailable(): boolean {
  * Relit une valeur du stockage : structure et types contrôlés, sans borne ni modification (ADR-0016), pour ne jamais
  * écarter un audit écrit par une version précédente ; `future` : écrite par une version plus récente de Rampe.
  */
-function readStored(raw: string, known: ReadonlySet<string>): { session: AuditSession | null; future: boolean } {
+function readStored(
+	raw: string,
+	known: ReadonlySet<string>,
+	dropped: DeclarationField[] = [],
+): { session: AuditSession | null; future: boolean } {
 	let value: unknown;
 	try {
 		value = JSON.parse(raw);
-		return { session: parseStoredSession(value, known), future: false };
+		return { session: parseStoredSession(value, known, dropped), future: false };
 	} catch {
 		return { session: null, future: isFutureSession(value) };
 	}
@@ -181,7 +186,10 @@ function keepAside(raw: string): boolean {
  * `ignored` : une valeur était présente mais illisible ; elle est mise de côté, jamais réutilisée ni écrasée.
  * `future` : une version plus récente l'a écrite ; on n'y touche pas (ni mise de côté, ni écrasement).
  */
-function loadSession(known: ReadonlySet<string>): {
+function loadSession(
+	known: ReadonlySet<string>,
+	dropped: DeclarationField[],
+): {
 	session: AuditSession | null;
 	ignored: Ignored | null;
 	future: boolean;
@@ -193,7 +201,7 @@ function loadSession(known: ReadonlySet<string>): {
 		return { session: null, ignored: null, future: false };
 	}
 	if (raw === null) return { session: null, ignored: null, future: false };
-	const { session, future } = readStored(raw, known);
+	const { session, future } = readStored(raw, known, dropped);
 	if (session) return { session, ignored: null, future: false };
 	if (future) return { session: null, ignored: null, future: true };
 	return { session: null, ignored: { raw, kept: keepAside(raw) }, future: false };
@@ -244,6 +252,8 @@ export default function AuditApp({
 	const [ignored, setIgnored] = useState<Ignored | null>(null);
 	/** Session d'une version plus récente dans le stockage : plus aucune écriture, pour ne pas l'écraser. */
 	const [future, setFuture] = useState(false);
+	/** Dates de déclaration illisibles retirées à la relecture : signalées sobrement, la session reste utilisée. */
+	const [droppedDates, setDroppedDates] = useState(0);
 	/** Plus aucune écriture : session d'une version future, ou session illisible qui n'a pas pu être copiée. */
 	const frozen = future || (ignored !== null && !ignored.kept);
 	/** `null` : aucun critère de la thématique ne correspond au filtre. */
@@ -263,7 +273,9 @@ export default function AuditApp({
 		const ok = storageAvailable();
 		setStorageOk(ok);
 		if (ok) {
-			const { session: stored, ignored: wasIgnored, future: isFuture } = loadSession(known);
+			const dropped: DeclarationField[] = [];
+			const { session: stored, ignored: wasIgnored, future: isFuture } = loadSession(known, dropped);
+			setDroppedDates(dropped.length);
 			if (stored) {
 				saved.current = stored;
 				setSession(stored);
@@ -464,6 +476,13 @@ export default function AuditApp({
 						</button>
 					)}
 				</div>
+			)}
+
+			{droppedDates > 0 && (
+				<p class="audit-help">
+					Déclaration d’accessibilité : {plural(droppedDates, "date")} illisible{droppedDates > 1 ? "s" : ""}, retirée
+					{droppedDates > 1 ? "s" : ""} à la relecture (section 4). Le reste de l’audit est intact.
+				</p>
 			)}
 
 			<Backup session={session} setSession={setSession} setAnnounce={setAnnounce} known={known} />
@@ -1566,7 +1585,7 @@ const DECLARATION_GROUPS: { legend: string; fields: DeclarationInput[] }[] = [
 			{
 				field: "establishedOn",
 				label: "Date d’établissement (facultatif)",
-				help: "Par défaut, la date du jour.",
+				help: "Fixée au premier téléchargement ou à la première copie ; modifiable.",
 				kind: "date",
 			},
 			{ field: "updatedOn", label: "Date de mise à jour (facultatif)", kind: "date" },
@@ -1659,23 +1678,44 @@ function Declaration({
 	rgaaVersion: string;
 }) {
 	const [touched, setTouched] = useState<ReadonlySet<DeclarationField>>(new Set());
+	/** Date en cours de saisie hors limites (« 0010-10-14 ») : affichée, jamais enregistrée ni publiée. */
+	const [drafts, setDrafts] = useState<Partial<Record<DeclarationField, string>>>({});
 	const fields = session.declaration ?? {};
 	const titles = useMemo(() => Object.fromEntries(criteria.map((c) => [c.id, c.titleText])), [criteria]);
 	const options = { date: new Date(), rgaaVersion, criterionTitles: titles };
 	const blocks = declarationBlocks(session, r, fields, options);
 	const state = conformityState(r);
 	const set = (field: DeclarationField, value: string) => setSession((s) => setDeclarationField(s, field, value));
+	/**
+	 * Date : la saisie reste un brouillon jusqu'à la sortie du champ (le navigateur émet chaque état intermédiaire,
+	 * « 0002-10-14 », « 2757-10-14 »…), puis n'est enregistrée que vide ou valide (1900 à 9999) ; sinon, message.
+	 */
+	const commitDate = (field: DeclarationField) => {
+		const value = drafts[field];
+		if (value === undefined || (value !== "" && !isDay(value))) return;
+		setDrafts(({ [field]: _old, ...rest }) => rest);
+		set(field, value);
+	};
+	/** Date d'établissement figée au premier export : une déclaration ne change pas de date à chaque téléchargement. */
+	const freezeDate = () => {
+		if (fields.establishedOn) return;
+		const d = new Date();
+		const pad = (n: number) => String(n).padStart(2, "0");
+		set("establishedOn", `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`);
+	};
 	const render = (format: "html" | "markdown", standalone = false) =>
 		renderDeclaration(session, r, fields, { ...options, format, standalone });
 	const download = (format: "html" | "markdown") => {
 		const ext = format === "html" ? "html" : "md";
 		const name = declarationFileName(session, new Date(), ext);
 		saveFile(name, render(format, true), format === "html" ? "text/html" : "text/markdown");
+		freezeDate();
 		setAnnounce(`Déclaration téléchargée : ${name}`);
 	};
 	const copy = async () => {
 		try {
 			await navigator.clipboard.writeText(render("html"));
+			freezeDate();
 			setAnnounce("Code HTML de la déclaration copié dans le presse-papiers.");
 		} catch {
 			setAnnounce("Copie impossible dans ce navigateur : utilisez « Télécharger (HTML) ».");
@@ -1721,16 +1761,28 @@ function Declaration({
 
 	const input = ({ field, label, help, kind }: DeclarationInput) => {
 		const id = `declaration-${field}`;
-		const value = fields[field] ?? "";
-		const invalid = kind === "url" && value.trim() !== "" && touched.has(field) && safeUrl(value) === null;
+		const value = drafts[field] ?? fields[field] ?? "";
+		const draft = drafts[field];
+		const invalid =
+			touched.has(field) &&
+			(kind === "url"
+				? value.trim() !== "" && safeUrl(value) === null
+				: draft !== undefined && draft !== "" && !isDay(draft));
 		const describedBy = [help && `${id}-aide`, invalid && `${id}-erreur`].filter(Boolean).join(" ") || undefined;
 		const common = {
 			id,
 			value,
 			"aria-describedby": describedBy,
 			"aria-invalid": invalid ? ("true" as const) : undefined,
-			onInput: (e: Event) => set(field, (e.currentTarget as HTMLInputElement).value),
-			onBlur: () => setTouched((t) => new Set(t).add(field)),
+			onInput: (e: Event) => {
+				const v = (e.currentTarget as HTMLInputElement).value;
+				if (kind === "date") setDrafts((d) => ({ ...d, [field]: v }));
+				else set(field, v);
+			},
+			onBlur: () => {
+				if (kind === "date") commitDate(field);
+				setTouched((t) => new Set(t).add(field));
+			},
 		};
 		return (
 			<div class="audit-field" key={field}>
@@ -1743,7 +1795,7 @@ function Declaration({
 				{kind === "lines" ? (
 					<textarea {...common} rows={3} maxLength={Math.max(LIMITS.lines, value.length)} />
 				) : kind === "date" ? (
-					<input {...common} type="date" />
+					<input {...common} type="date" min="1900-01-01" max="9999-12-31" />
 				) : (
 					<input
 						{...common}
@@ -1752,7 +1804,12 @@ function Declaration({
 						maxLength={Math.max(kind === "url" ? LIMITS.url : LIMITS.text, value.length)}
 					/>
 				)}
-				{invalid && (
+				{invalid && kind === "date" && (
+					<p id={`${id}-erreur`} class="audit-error">
+						Date incomplète ou hors limites (années 1900 à 9999) : elle n’est pas enregistrée.
+					</p>
+				)}
+				{invalid && kind === "url" && (
 					<p id={`${id}-erreur`} class="audit-error">
 						Adresse non reconnue : commencez par https:// ou saisissez une adresse e-mail. En attendant, elle reste « à
 						compléter » dans la déclaration.
@@ -1769,9 +1826,14 @@ function Declaration({
 			<p>
 				La déclaration reprend le résultat de votre audit dans le{" "}
 				<a href={DECLARATION_URL}>format imposé par la réglementation</a>. Rampe remplit ce qu’il calcule (état de
-				conformité, pourcentage, critères non conformes, pages vérifiées, date) ; vous complétez le reste ci-dessous. Ce
+				conformité, pourcentage de critères respectés, taux moyen, critères non conformes, pages vérifiées, date
+				d’établissement, et le motif d’un état « non conforme » sans mesure) ; vous complétez le reste ci-dessous. Ce
 				qui manque reste affiché [entre crochets]. Votre organisme est-il soumis à l’obligation ? Consultez le{" "}
 				<a href={SCOPE_URL}>champ d’application officiel</a>.
+			</p>
+			<p class="audit-help">
+				Choix imposés par Rampe, qui audite un site web : « site internet », « du site web », et le référentiel « RGAA,
+				version {rgaaVersion} » de votre audit.
 			</p>
 			<div class="audit-reminder">
 				<p>

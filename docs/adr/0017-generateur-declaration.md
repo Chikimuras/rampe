@@ -26,7 +26,15 @@ La déclaration d’accessibilité est un document **juridiquement engageant pou
    - le taux moyen, facultatif dans le modèle ;
    - la liste des pages vérifiées ;
    - la liste des critères non conformes, avec leur titre officiel et les pages concernées, en point de départ du paragraphe « Non conformité » ;
-   - la date d’établissement.
+   - la date d’établissement, **figée dans la session au premier téléchargement ou à la première copie** (modifiable par l’utilisateur) : une déclaration ne change pas de date à chaque export. La date de mise à jour reste saisie à la main.
+
+   Choix imposés parce que Rampe audite un **site web**, parmi les options entre crochets du gabarit :
+   - « site internet » (contact) et « du site web » (technologies) ;
+   - le référentiel « le référentiel général d’amélioration de l’accessibilité (RGAA), version x.y.z », version tirée du référentiel de l’audit ;
+   - le taux moyen, facultatif dans le modèle, est rempli dès qu’il est calculé (ADR-0015) ;
+   - le motif d’un état « non conforme » sans mesure (audit incomplet, aucun critère applicable) prend la place du passage « Détailler ici les résultats des tests ».
+
+   L’interface rappelle cette liste.
 
    **Si l’audit est incomplet** (ADR-0015 §2), aucune déclaration « totalement » ou « partiellement » n’est générée. L’état ne peut être que « non conforme », avec le motif « aucun résultat d’audit complet ». C’est exactement la règle officielle.
 3. **Ce que Rampe ne remplit jamais à la place de l’utilisateur** : nom de l’organisme, nom du service, réalisation de l’audit (en interne ou par un prestataire), dérogations et leurs motifs, contenus exemptés, technologies, environnement de test, outils, contacts, lien vers le schéma pluriannuel.
