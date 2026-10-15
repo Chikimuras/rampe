@@ -11,6 +11,8 @@ import {
 } from "./audit-session.ts";
 
 const NOW = "2026-10-15T10:00:00.000Z";
+const A = "00000000-0000-4000-8000-00000000000a";
+const B = "00000000-0000-4000-8000-00000000000b";
 const LATER = "2026-10-15T11:00:00.000Z";
 const criteria = [
 	{ id: "1.1", topic: 1 },
@@ -20,8 +22,8 @@ const criteria = [
 
 const withTwoPages = () => {
 	let s = createSession(NOW);
-	s = addPage(s, { url: "https://exemple.fr/", title: "Accueil" }, NOW, "a");
-	s = addPage(s, { url: "https://exemple.fr/contact", title: "Contact" }, NOW, "b");
+	s = addPage(s, { url: "https://exemple.fr/", title: "Accueil" }, NOW, A);
+	s = addPage(s, { url: "https://exemple.fr/contact", title: "Contact" }, NOW, B);
 	return s;
 };
 
@@ -42,7 +44,7 @@ describe("addPage / removePage", () => {
 	it("ajoute une page avec un id stable, et fixe le site sur l'origine de la première page", () => {
 		const s = withTwoPages();
 		expect(s.site).toBe("https://exemple.fr");
-		expect(s.pages.map((p) => p.id)).toEqual(["a", "b"]);
+		expect(s.pages.map((p) => p.id)).toEqual([A, B]);
 	});
 
 	it("génère un id unique par défaut", () => {
@@ -57,31 +59,31 @@ describe("addPage / removePage", () => {
 	it("ne modifie jamais la session reçue", () => {
 		const s = createSession(NOW);
 		const frozen = JSON.stringify(s);
-		addPage(s, { url: "https://exemple.fr/", title: "x" }, LATER, "a");
+		addPage(s, { url: "https://exemple.fr/", title: "x" }, LATER, A);
 		expect(JSON.stringify(s)).toBe(frozen);
 	});
 
 	it("retirer une page supprime ses évaluations, sans toucher aux autres ni décaler les ids", () => {
 		let s = withTwoPages();
-		s = setEvaluation(s, "1.1", "a", { status: "NC", note: "alt manquant" }, NOW);
-		s = setEvaluation(s, "1.1", "b", { status: "C" }, NOW);
-		s = removePage(s, "a", LATER);
-		expect(s.pages.map((p) => p.id)).toEqual(["b"]);
-		expect(s.evaluations).toEqual({ "1.1": { b: { status: "C", note: "" } } });
+		s = setEvaluation(s, "1.1", A, { status: "NC", note: "alt manquant" }, NOW);
+		s = setEvaluation(s, "1.1", B, { status: "C" }, NOW);
+		s = removePage(s, A, LATER);
+		expect(s.pages.map((p) => p.id)).toEqual([B]);
+		expect(s.evaluations).toEqual({ "1.1": { [B]: { status: "C", note: "" } } });
 		expect(s.updatedAt).toBe(LATER);
 	});
 });
 
 describe("setEvaluation / getEvaluation", () => {
 	it("une évaluation absente vaut « non testé » : jamais confondu avec conforme", () => {
-		expect(getEvaluation(withTwoPages(), "1.1", "a")).toEqual({ status: "NT", note: "" });
+		expect(getEvaluation(withTwoPages(), "1.1", A)).toEqual({ status: "NT", note: "" });
 	});
 
 	it("fixe le statut et la note séparément, et date la modification", () => {
 		let s = withTwoPages();
-		s = setEvaluation(s, "1.1", "a", { status: "NA" }, NOW);
-		s = setEvaluation(s, "1.1", "a", { note: "pas d'image" }, LATER);
-		expect(getEvaluation(s, "1.1", "a")).toEqual({ status: "NA", note: "pas d'image" });
+		s = setEvaluation(s, "1.1", A, { status: "NA" }, NOW);
+		s = setEvaluation(s, "1.1", A, { note: "pas d'image" }, LATER);
+		expect(getEvaluation(s, "1.1", A)).toEqual({ status: "NA", note: "pas d'image" });
 		expect(s.updatedAt).toBe(LATER);
 	});
 
@@ -93,10 +95,10 @@ describe("setEvaluation / getEvaluation", () => {
 describe("progress", () => {
 	it("compte les évaluations non testées restantes par critère, thématique et au total", () => {
 		let s = withTwoPages();
-		s = setEvaluation(s, "1.1", "a", { status: "C" }, NOW);
-		s = setEvaluation(s, "1.1", "b", { status: "NC" }, NOW);
-		s = setEvaluation(s, "2.1", "a", { status: "NA" }, NOW);
-		s = setEvaluation(s, "2.1", "b", { note: "à revoir" }, NOW); // note seule : reste non testé
+		s = setEvaluation(s, "1.1", A, { status: "C" }, NOW);
+		s = setEvaluation(s, "1.1", B, { status: "NC" }, NOW);
+		s = setEvaluation(s, "2.1", A, { status: "NA" }, NOW);
+		s = setEvaluation(s, "2.1", B, { note: "à revoir" }, NOW); // note seule : reste non testé
 		const p = progress(s, criteria);
 		expect(p.total).toEqual({ remaining: 3, total: 6 });
 		expect(p.byTopic).toEqual({ 1: { remaining: 2, total: 4 }, 2: { remaining: 1, total: 2 } });
@@ -109,9 +111,56 @@ describe("progress", () => {
 	});
 });
 
+describe("revue : robustesse du modèle", () => {
+	it("refuse une évaluation sur un critère qui n'a pas la forme d'un critère RGAA", () => {
+		for (const id of ["toString", "__proto__", "constructor", "1", "1.1.1", "0.1", "abc"])
+			expect(() => setEvaluation(withTwoPages(), id, A, { status: "C" }), id).toThrow(/critère inconnu/);
+	});
+
+	it("ne lit jamais une propriété héritée d'Object.prototype", () => {
+		const s = withTwoPages();
+		expect(getEvaluation(s, "toString", A)).toEqual({ status: "NT", note: "" });
+		expect(getEvaluation(s, "1.1", "toString")).toEqual({ status: "NT", note: "" });
+		expect(getEvaluation(s, "1.1", "__proto__")).toEqual({ status: "NT", note: "" });
+	});
+
+	it("n'accepte que des ids de page au format UUID", () => {
+		for (const id of ["toString", "__proto__", "a", ""])
+			expect(() => addPage(createSession(NOW), { url: "https://exemple.fr/", title: "" }, NOW, id), id).toThrow(
+				/Id de page invalide/,
+			);
+	});
+
+	it("retirer la dernière page remet le site à vide", () => {
+		let s = addPage(createSession(NOW), { url: "https://exemple.fr/", title: "" }, NOW, A);
+		s = removePage(s, A, LATER);
+		expect(s.site).toBe("");
+		expect(s.pages).toEqual([]);
+		s = addPage(s, { url: "https://autre.fr/", title: "" }, LATER, B);
+		expect(s.site).toBe("https://autre.fr");
+	});
+
+	it("l'avancement suit le retrait d'une page", () => {
+		let s = withTwoPages();
+		s = setEvaluation(s, "1.1", A, { status: "C" }, NOW);
+		s = removePage(s, B, LATER);
+		const p = progress(s, criteria);
+		expect(p.total).toEqual({ remaining: 2, total: 3 });
+		expect(p.byCriterion["1.1"]).toEqual({ remaining: 0, total: 1 });
+		expect(progress(removePage(s, A), criteria).total).toEqual({ remaining: 0, total: 0 });
+	});
+
+	it("retire les contrôles bidi du nom de page et de la note", () => {
+		let s = addPage(createSession(NOW), { url: "https://exemple.fr/", title: "Acc\u202eueil" }, NOW, A);
+		s = setEvaluation(s, "1.1", A, { note: "a\u2066b\u2069c" }, NOW);
+		expect(s.pages[0]?.title).toBe("Accueil");
+		expect(getEvaluation(s, "1.1", A).note).toBe("abc");
+	});
+});
+
 describe("parseSession (relecture du stockage local)", () => {
 	it("relit une session valide", () => {
-		const s = setEvaluation(withTwoPages(), "1.1", "a", { status: "C", note: "ok" }, NOW);
+		const s = setEvaluation(withTwoPages(), "1.1", A, { status: "C", note: "ok" }, NOW);
 		expect(parseSession(JSON.parse(JSON.stringify(s)))).toEqual(s);
 	});
 
@@ -120,21 +169,32 @@ describe("parseSession (relecture du stockage local)", () => {
 		["un tableau", []],
 		["une autre version", { ...createSession(NOW), schemaVersion: 99 }],
 		["des pages mal formées", { ...createSession(NOW), pages: [{ id: 1, url: "x", title: "" }] }],
-		["un statut inconnu", { ...withTwoPages(), evaluations: { "1.1": { a: { status: "OK", note: "" } } } }],
+		["un statut inconnu", { ...withTwoPages(), evaluations: { "1.1": { [A]: { status: "OK", note: "" } } } }],
 		[
 			"une évaluation sur une page absente",
-			{ ...withTwoPages(), evaluations: { "1.1": { z: { status: "C", note: "" } } } },
+			{ ...withTwoPages(), evaluations: { "1.1": { [B.replace("b", "c")]: { status: "C", note: "" } } } },
 		],
 		[
 			"des ids de page en double",
 			{
 				...createSession(NOW),
 				pages: [
-					{ id: "a", url: "u", title: "" },
-					{ id: "a", url: "v", title: "" },
+					{ id: A, url: "u", title: "" },
+					{ id: A, url: "v", title: "" },
 				],
 			},
 		],
+		[
+			"un id de page qui n'est pas un UUID",
+			{ ...createSession(NOW), pages: [{ id: "toString", url: "u", title: "" }] },
+		],
+		[
+			"une clé __proto__ dans les évaluations",
+			JSON.parse(
+				`{"schemaVersion":1,"site":"","createdAt":"","updatedAt":"","pages":[],"evaluations":{"__proto__":{}}}`,
+			),
+		],
+		["un critère mal formé", { ...withTwoPages(), evaluations: { toString: { [A]: { status: "C", note: "" } } } }],
 	])("rejette %s", (_, value) => {
 		expect(parseSession(value)).toBeNull();
 	});

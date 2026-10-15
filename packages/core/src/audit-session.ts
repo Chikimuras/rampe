@@ -1,6 +1,7 @@
 // Modèle d'une session d'audit manuel (ADR-0013 §1) : données et opérations pures, sans dépendance.
 // Volontairement indépendant du référentiel (rgaa.ts) : l'îlot de /audit/ l'importe sans embarquer les données RGAA.
 // Statuts et règles : méthode RGAA, src/obligations/evaluation-conformite.md.
+import { stripBidi } from "./sample-file.ts";
 
 export const SCHEMA_VERSION = 1;
 
@@ -42,6 +43,16 @@ export interface Count {
 const NOT_TESTED: Evaluation = { status: "NT", note: "" };
 const now = () => new Date().toISOString();
 
+/** Ids de page : UUID (crypto.randomUUID). Jamais un nom hérité d'Object.prototype (`toString`, `__proto__`…). */
+const PAGE_ID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/;
+/**
+ * Forme d'un numéro de critère RGAA (« 1.1 » … « 13.12 »). Le modèle ne connaît pas le référentiel (il doit rester
+ * sans données pour l'îlot) : il refuse tout ce qui n'a pas cette forme, l'appelant ne passe que des critères réels.
+ */
+const CRITERION_ID = /^[1-9]\d?\.[1-9]\d?$/;
+const own = <T>(record: Record<string, T>, key: string): T | undefined =>
+	Object.hasOwn(record, key) ? record[key] : undefined;
+
 export function createSession(at = now()): AuditSession {
 	return { schemaVersion: SCHEMA_VERSION, site: "", createdAt: at, updatedAt: at, pages: [], evaluations: {} };
 }
@@ -52,6 +63,7 @@ export function addPage(
 	at = now(),
 	id: string = crypto.randomUUID(),
 ): AuditSession {
+	if (!PAGE_ID.test(id)) throw new Error(`Id de page invalide : ${id}`);
 	if (session.pages.some((p) => p.id === id)) throw new Error(`Id de page déjà utilisé : ${id}`);
 	let site = session.site;
 	if (!site) {
@@ -59,21 +71,24 @@ export function addPage(
 			site = new URL(page.url).origin;
 		} catch {}
 	}
-	return { ...session, site, updatedAt: at, pages: [...session.pages, { ...page, id }] };
+	// Contrôles bidi retirés : un nom de page ne doit pas pouvoir retourner le texte affiché à côté (Trojan Source).
+	return { ...session, site, updatedAt: at, pages: [...session.pages, { ...page, title: stripBidi(page.title), id }] };
 }
 
-/** Retire la page et toutes ses évaluations. */
+/** Retire la page et toutes ses évaluations ; sans page, la session n'est plus rattachée à aucun site. */
 export function removePage(session: AuditSession, pageId: string, at = now()): AuditSession {
 	const evaluations: AuditSession["evaluations"] = {};
 	for (const [criterion, byPage] of Object.entries(session.evaluations)) {
 		const { [pageId]: _removed, ...rest } = byPage;
 		if (Object.keys(rest).length > 0) evaluations[criterion] = rest;
 	}
-	return { ...session, updatedAt: at, pages: session.pages.filter((p) => p.id !== pageId), evaluations };
+	const pages = session.pages.filter((p) => p.id !== pageId);
+	return { ...session, site: pages.length > 0 ? session.site : "", updatedAt: at, pages, evaluations };
 }
 
 export function getEvaluation(session: AuditSession, criterionId: string, pageId: string): Evaluation {
-	return session.evaluations[criterionId]?.[pageId] ?? NOT_TESTED;
+	const byPage = own(session.evaluations, criterionId);
+	return (byPage && own(byPage, pageId)) ?? NOT_TESTED;
 }
 
 export function setEvaluation(
@@ -83,14 +98,16 @@ export function setEvaluation(
 	patch: Partial<Evaluation>,
 	at = now(),
 ): AuditSession {
+	if (!CRITERION_ID.test(criterionId)) throw new Error(`Évaluation sur un critère inconnu : ${criterionId}`);
 	if (!session.pages.some((p) => p.id === pageId)) throw new Error(`Évaluation sur une page inconnue : ${pageId}`);
 	const next = { ...getEvaluation(session, criterionId, pageId), ...patch };
+	next.note = stripBidi(next.note);
 	return {
 		...session,
 		updatedAt: at,
 		evaluations: {
 			...session.evaluations,
-			[criterionId]: { ...session.evaluations[criterionId], [pageId]: next },
+			[criterionId]: { ...own(session.evaluations, criterionId), [pageId]: next },
 		},
 	};
 }
@@ -130,12 +147,13 @@ export function parseSession(value: unknown): AuditSession | null {
 	if (![site, createdAt, updatedAt].every(isString) || !Array.isArray(pages) || !isObject(evaluations)) return null;
 	const ids = new Set<string>();
 	for (const p of pages) {
-		if (!isObject(p) || !isString(p.id) || !isString(p.url) || !isString(p.title) || ids.has(p.id)) return null;
+		if (!isObject(p) || !isString(p.id) || !PAGE_ID.test(p.id) || !isString(p.url) || !isString(p.title)) return null;
+		if (ids.has(p.id)) return null;
 		if (p.process !== undefined && !isString(p.process)) return null;
 		ids.add(p.id);
 	}
-	for (const byPage of Object.values(evaluations)) {
-		if (!isObject(byPage)) return null;
+	for (const [criterionId, byPage] of Object.entries(evaluations)) {
+		if (!CRITERION_ID.test(criterionId) || !isObject(byPage)) return null;
 		for (const [pageId, e] of Object.entries(byPage)) {
 			if (!ids.has(pageId) || !isObject(e) || !STATUSES.includes(e.status as Status) || !isString(e.note)) return null;
 		}
