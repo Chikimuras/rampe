@@ -40,6 +40,20 @@ Ensuite :
 1. relire `git diff packages/core/data` : c’est là qu’on voit ce que la DINUM a changé ;
 2. lancer `pnpm check` : les tests verrouillent les invariants du référentiel (13 thématiques, 106 critères, numérotation contiguë, une méthodologie par test, liens du glossaire…).
 
+## Synchronisation automatique
+
+Le workflow `.github/workflows/sync-rgaa.yml` (ADR-0009) tourne chaque lundi à 06:00 UTC, et à la demande depuis l’onglet Actions avec un `ref` DINUM facultatif. Il lance :
+
+```sh
+node packages/core/scripts/sync-rgaa.mjs <ref> --if-changed
+```
+
+Avec `--if-changed`, le script compare les trois JSON téléchargés aux fichiers du dépôt. S’ils sont identiques octet pour octet, il n’écrit rien et affiche « Référentiel inchangé » : un commit DINUM qui ne touche que leur site ne produit pas de PR. La version du RGAA, si elle n’est pas donnée, est reprise de `source.json`. Sous GitHub Actions, il écrit `changed`, `sha` et `previous` dans `$GITHUB_OUTPUT`.
+
+Si le contenu a changé, le workflow pousse une branche `chore/sync-rgaa-<sha court>`, ouvre une PR, puis déclenche `ci.yml` sur cette branche pour que le check `check` s’y attache (une PR ouverte avec le `GITHUB_TOKEN` ne déclenche pas `pull_request`). Si la branche existe déjà, il s’arrête sans doublon. Le relecteur **confirme la version du RGAA** dans `source.json`, relit le diff des données, et la PR suit le flux normal : jamais de merge automatique.
+
+Dependabot (`.github/dependabot.yml`) surveille de son côté les dépendances npm et les actions GitHub chaque semaine ; axe-core a sa propre PR, puisque sa montée change la correspondance RGAA.
+
 ## Exception connue
 
 La note technique du critère 5.1 contient un lien `#table-descriptions-techniques` qui ne mène à aucune entrée du glossaire : c’est une ancre de la spécification HTML du WHATWG, laissée en lien relatif dans la source. Elle est listée explicitement dans les tests (`KNOWN_DANGLING_ANCHORS`) ; tout autre lien non résolu les fait échouer.
