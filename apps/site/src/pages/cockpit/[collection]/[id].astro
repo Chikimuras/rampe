@@ -17,9 +17,15 @@ export async function getStaticPaths() {
 const { entry } = Astro.props as { entry: Entry };
 // Les listes de tâches Markdown produisent des cases à cocher désactivées sans étiquette
 // (violation axe « label », critère RGAA 11.1) : on les remplace par un statut textuel.
-const html = (entry.rendered?.html ?? "")
-	.replaceAll(/<input type="checkbox" checked disabled>/g, '<span class="task done">Fait</span>')
-	.replaceAll(/<input type="checkbox" disabled>/g, '<span class="task todo">À faire</span>');
+if (!entry.rendered) throw new Error(`${entry.id} : rendu Markdown absent`);
+const html = entry.rendered.html
+	.replace(/<input type="checkbox" checked disabled>/g, '<span class="task done">Fait</span>')
+	.replace(/<input type="checkbox" disabled>/g, '<span class="task todo">À faire</span>');
+// Garde-fou : on contourne render() d'Astro, qui traite aussi les images locales.
+// Une case restée sans étiquette ou une image non traitée doit casser le build, pas la page.
+if (html.includes("<input") || html.includes("__ASTRO_IMAGE_")) {
+	throw new Error(`${entry.id} : case à cocher ou image Markdown non prise en charge par le cockpit`);
+}
 const meta =
 	entry.collection === "adr"
 		? `${entry.data.status} · ${entry.data.date.toLocaleDateString("fr-FR")} · ${entry.data.deciders}`
