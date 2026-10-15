@@ -1,0 +1,24 @@
+<!doctype html>
+<html>
+	<head>
+		<meta charset="utf-8" />
+		<title>Page avec défauts connus</title>
+		<style>
+			.pale { color: #bbb; background: #fff; }
+		</style>
+	</head>
+	<body>
+		<main>
+			<h1>Page avec défauts connus</h1>
+			<!-- 1.1 : image sans alternative -->
+			<img src="data:image/gif;base64,R0lGODlhAQABAAAAACw=" width="10" height="10" />
+			<!-- 11.1 : champ sans étiquette -->
+			<input type="text" />
+			<!-- 3.2 : contraste insuffisant (#bbb sur blanc) -->
+			<p class="pale">Texte trop pâle.</p>
+			<!-- 8.3 : pas d’attribut lang sur html -->
+			<!-- duplicate-id : règle dépréciée par axe, qui ne doit jamais apparaître -->
+			<span id="double"></span><span id="double"></span>
+		</main>
+	</body>
+</html>

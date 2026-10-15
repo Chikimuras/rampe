@@ -1,0 +1,25 @@
+{
+	"name": "@rampe/cli",
+	"version": "0.0.0",
+	"private": true,
+	"type": "module",
+	"bin": {
+		"rampe": "./src/cli.ts"
+	},
+	"engines": {
+		"node": ">=22.18"
+	},
+	"scripts": {
+		"test": "vitest run",
+		"typecheck": "tsc --noEmit"
+	},
+	"dependencies": {
+		"@rampe/core": "workspace:*",
+		"axe-core": "4.14.0",
+		"playwright": "1.64.0"
+	},
+	"devDependencies": {
+		"@types/node": "22.20.5",
+		"vitest": "5.0.4"
+	}
+}

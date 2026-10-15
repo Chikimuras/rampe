@@ -20,6 +20,8 @@ Le niveau qualifie la **précision du rattachement**, pas la certitude du défau
 classifyAxeRule(["wcag2a", "wcag111", "RGAA-1.1.1"]); // { level: "rgaa", tests: ["1.1.1"], criteria: ["1.1"], unknownRgaaTags: [], bestPractice: false, experimental: false, deprecated: false }
 ```
 
+`isDirectCheck(mapping)` dit si une règle **vérifie directement** un critère : niveau `rgaa`, et ni bonne pratique, ni expérimentale, ni dépréciée. C’est la seule source de vérité : seule une telle règle peut signaler une non-conformité dans la CLI, et seule elle compte comme couverture sur le site. `criteriaWithDirectRule(rulesTags)` renvoie les critères ainsi couverts : 27 avec axe-core 4.14.0, donc 79 critères sur 106 sans aucune vérification automatique directe.
+
 axe-core n’est qu’une dépendance de développement, épinglée : les tests vérifient sur toutes ses règles que chaque étiquette RGAA désigne un test existant, et figent le décompte par niveau (axe-core 4.14.0 : 67 `rgaa`, 8 `wcag`, 30 `hors-rgaa`). Une montée de version se lit donc dans le diff des tests.
 
 ## Données

@@ -1,0 +1,15 @@
+<!doctype html>
+<html lang="fr">
+	<head>
+		<meta charset="utf-8" />
+		<meta http-equiv="Content-Security-Policy" content="script-src 'none'" />
+		<title>CSP stricte</title>
+	</head>
+	<body>
+		<main>
+			<h1>CSP stricte</h1>
+			<!-- 1.1 : axe doit le trouver malgré script-src 'none' -->
+			<img src="data:image/gif;base64,R0lGODlhAQABAAAAACw=" width="10" height="10" />
+		</main>
+	</body>
+</html>

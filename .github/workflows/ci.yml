@@ -29,6 +29,17 @@ jobs:
           node-version: 22
           cache: pnpm
       - run: pnpm install --frozen-lockfile
+      # Chromium pour le test de bout en bout de la CLI (ADR-0011 §5).
+      - run: pnpm --filter @rampe/cli exec playwright install --with-deps chromium
+      # Ubuntu 24.04 interdit par AppArmor les espaces de noms utilisateur dont le bac à sable de Chromium a besoin.
+      # Profil ciblé sur les seuls binaires Playwright plutôt que --no-sandbox ou un sysctl global (ADR-0011 §6) :
+      # https://chromium.googlesource.com/chromium/src/+/main/docs/security/apparmor-userns-restrictions.md
+      - name: Autoriser le bac à sable de Chromium (AppArmor)
+        run: |
+          printf '%s\n' 'abi <abi/4.0>,' 'include <tunables/global>' \
+            'profile playwright-chromium /home/runner/.cache/ms-playwright/**/chrome* flags=(unconfined) {' \
+            '  userns,' '}' | sudo tee /etc/apparmor.d/playwright-chromium
+          sudo apparmor_parser -r /etc/apparmor.d/playwright-chromium
       - run: pnpm check
       - run: pnpm build
       - if: github.ref == 'refs/heads/main'
