@@ -16,8 +16,13 @@ import {
 	getFindings,
 	INVALID_SESSION,
 	isFutureSession,
+	MAX_NOTE,
+	MAX_PAGES,
 	MAX_PROCESS,
+	MAX_TITLE,
+	MAX_URL,
 	parseSessionStrict,
+	parseStoredSession,
 	progress,
 	type ResultKind,
 	removePage,
@@ -52,9 +57,9 @@ export interface AuditCriterion {
 type Filter = "all" | "NT" | "NC" | "auto";
 
 const STORAGE_KEY = "rampe.audit.session";
-/** Bornes de saisie, sous celles de la validation de session (core) : un aller-retour export → import ne tronque rien. */
-const MAX_TITLE_INPUT = 300;
-const MAX_NOTE_INPUT = 10_000;
+/** Copies d'une session illisible mises de côté, chacune sous sa clé horodatée : jamais écrasées (ADR-0016). */
+const IGNORED_PREFIX = `${STORAGE_KEY}.ignoree.`;
+const MAX_IGNORED = 3;
 const UNDONE = "Import annulé : l’audit est revenu à son état d’avant l’import.";
 const SAVE_DELAY = 400;
 const STATUS_LABELS: [Status, string][] = [
@@ -97,38 +102,68 @@ function storageAvailable(): boolean {
 }
 
 /**
- * Relit une valeur du stockage, avec la même validation stricte qu'un fichier importé (ADR-0016, Conséquences) ;
- * `future` : écrite par une version plus récente de Rampe.
+ * Relit une valeur du stockage : structure et types contrôlés, sans borne ni modification (ADR-0016), pour ne jamais
+ * écarter un audit écrit par une version précédente ; `future` : écrite par une version plus récente de Rampe.
  */
 function readStored(raw: string, known: ReadonlySet<string>): { session: AuditSession | null; future: boolean } {
 	let value: unknown;
 	try {
 		value = JSON.parse(raw);
-		return { session: parseSessionStrict(value, known), future: false };
+		return { session: parseStoredSession(value, known), future: false };
 	} catch {
 		return { session: null, future: isFutureSession(value) };
 	}
 }
 
+/** Valeur illisible du stockage ; `kept` : copiée sous une clé horodatée (sinon, seule la copie en mémoire reste). */
+type Ignored = { raw: string; kept: boolean };
+
+/** Met `raw` de côté sous une nouvelle clé ; au-delà de 3 copies, la plus ancienne seulement est retirée. */
+function keepAside(raw: string): boolean {
+	try {
+		localStorage.setItem(`${IGNORED_PREFIX}${new Date().toISOString()}`, raw);
+	} catch {
+		return false;
+	}
+	try {
+		const keys = Object.keys(localStorage)
+			.filter((k) => k.startsWith(IGNORED_PREFIX))
+			.sort();
+		for (const k of keys.slice(0, Math.max(0, keys.length - MAX_IGNORED))) localStorage.removeItem(k);
+	} catch {}
+	return true;
+}
+
 /**
- * `ignored` : une valeur était présente mais illisible ; elle est mise de côté, jamais réutilisée.
+ * `ignored` : une valeur était présente mais illisible ; elle est mise de côté, jamais réutilisée ni écrasée.
  * `future` : une version plus récente l'a écrite ; on n'y touche pas (ni mise de côté, ni écrasement).
  */
-function loadSession(known: ReadonlySet<string>): { session: AuditSession | null; ignored: boolean; future: boolean } {
+function loadSession(known: ReadonlySet<string>): {
+	session: AuditSession | null;
+	ignored: Ignored | null;
+	future: boolean;
+} {
 	let raw: string | null;
 	try {
 		raw = localStorage.getItem(STORAGE_KEY);
 	} catch {
-		return { session: null, ignored: false, future: false };
+		return { session: null, ignored: null, future: false };
 	}
-	if (raw === null) return { session: null, ignored: false, future: false };
+	if (raw === null) return { session: null, ignored: null, future: false };
 	const { session, future } = readStored(raw, known);
-	if (session) return { session, ignored: false, future: false };
-	if (future) return { session: null, ignored: false, future: true };
-	try {
-		localStorage.setItem(`${STORAGE_KEY}.ignoree`, raw);
-	} catch {}
-	return { session: null, ignored: true, future: false };
+	if (session) return { session, ignored: null, future: false };
+	if (future) return { session: null, ignored: null, future: true };
+	return { session: null, ignored: { raw, kept: keepAside(raw) }, future: false };
+}
+
+/** Fichier fabriqué dans le navigateur (Blob et lien) : rien ne part sur le réseau. */
+function saveFile(name: string, text: string) {
+	const a = document.createElement("a");
+	a.href = URL.createObjectURL(new Blob([text], { type: "application/json" }));
+	a.download = name;
+	a.click();
+	// Révocation différée : certains navigateurs lisent le Blob après le clic.
+	setTimeout(() => URL.revokeObjectURL(a.href), 1000);
 }
 
 function saveSession(session: AuditSession): boolean {
@@ -155,9 +190,11 @@ export default function AuditApp({ topics, criteria }: { topics: AuditTopic[]; c
 	const [ready, setReady] = useState(false);
 	const [storageOk, setStorageOk] = useState(true);
 	const [saveFailed, setSaveFailed] = useState(false);
-	const [ignored, setIgnored] = useState(false);
+	const [ignored, setIgnored] = useState<Ignored | null>(null);
 	/** Session d'une version plus récente dans le stockage : plus aucune écriture, pour ne pas l'écraser. */
 	const [future, setFuture] = useState(false);
+	/** Plus aucune écriture : session d'une version future, ou session illisible qui n'a pas pu être copiée. */
+	const frozen = future || (ignored !== null && !ignored.kept);
 	/** `null` : aucun critère de la thématique ne correspond au filtre. */
 	const [currentId, setCurrentId] = useState<string | null>(criteria[0]?.id ?? null);
 	const [topicNumber, setTopicNumber] = useState(criteria[0]?.topic ?? 1);
@@ -190,7 +227,7 @@ export default function AuditApp({ topics, criteria }: { topics: AuditTopic[]; c
 	// la modification suivante retente, et l'alerte disparaît dès qu'une écriture réussit.
 	const pending = useRef<AuditSession | null>(null);
 	useEffect(() => {
-		if (!ready || !storageOk || future || session === saved.current) return;
+		if (!ready || !storageOk || frozen || session === saved.current) return;
 		pending.current = session;
 		const timer = setTimeout(() => {
 			pending.current = null;
@@ -203,7 +240,7 @@ export default function AuditApp({ topics, criteria }: { topics: AuditTopic[]; c
 			}
 		}, SAVE_DELAY);
 		return () => clearTimeout(timer);
-	}, [session, ready, storageOk, future]);
+	}, [session, ready, storageOk, frozen]);
 	// Fermeture de l'onglet pendant le délai : on écrit tout de suite.
 	useEffect(() => {
 		const flush = () => {
@@ -331,10 +368,30 @@ export default function AuditApp({ topics, criteria }: { topics: AuditTopic[]; c
 				</p>
 			)}
 			{ignored && (
-				<p class="audit-banner">
-					Une session enregistrée n’a pas pu être relue (format inconnu ou abîmé) : elle a été mise de côté et un nouvel
-					audit commence.
-				</p>
+				<div class="audit-banner" role={ignored.kept ? undefined : "alert"}>
+					<p>
+						{ignored.kept ? (
+							"Une session enregistrée n’a pas pu être relue (format inconnu ou abîmé) : elle a été mise de côté dans ce navigateur, sans être effacée, et un nouvel audit commence."
+						) : (
+							<strong>
+								Une session enregistrée n’a pas pu être relue, ni mise de côté (stockage plein) : téléchargez-la avant
+								de continuer. Tant qu’elle n’est pas téléchargée, vos modifications ne sont pas enregistrées, pour ne
+								pas l’effacer.
+							</strong>
+						)}
+					</p>
+					<button
+						type="button"
+						onClick={() => {
+							const name = `session-mise-de-cote-${new Date().toISOString().slice(0, 10)}.json`;
+							saveFile(name, ignored.raw);
+							setIgnored({ ...ignored, kept: true });
+							setAnnounce(`Session mise de côté téléchargée : ${name}`);
+						}}
+					>
+						Télécharger la session mise de côté
+					</button>
+				</div>
 			)}
 
 			<Backup session={session} setSession={setSession} setAnnounce={setAnnounce} known={known} />
@@ -624,7 +681,7 @@ function PageEvaluation({
 			<textarea
 				id={noteId}
 				rows={2}
-				maxLength={MAX_NOTE_INPUT}
+				maxLength={Math.max(MAX_NOTE, evaluation.note.length)}
 				value={evaluation.note}
 				onInput={(e) => update({ note: e.currentTarget.value })}
 			/>
@@ -691,6 +748,11 @@ function Pages({
 
 	/** Contrôle commun à la saisie et au collage : http(s), un seul site, pas de doublon. */
 	const check = (s: AuditSession, u: URL): string | null => {
+		// Bornes à l'écriture (ADR-0016) : la même définition que l'import, pour que l'audit se réimporte.
+		if (u.href.length > MAX_URL)
+			return `Adresse trop longue (plus de ${MAX_URL.toLocaleString("fr-FR")} caractères une fois encodée) : Rampe ne peut pas la garder.`;
+		if (s.pages.length >= MAX_PAGES)
+			return `L’échantillon compte déjà ${MAX_PAGES.toLocaleString("fr-FR")} pages : c’est le maximum.`;
 		if (s.site && u.origin !== s.site)
 			return `Cette adresse n’est pas sur le site audité (${s.site}). Un audit porte sur un seul site.`;
 		if (s.pages.some((p) => sameUrl(p.url, u.href))) return "Cette page est déjà dans l’échantillon.";
@@ -780,7 +842,7 @@ function Pages({
 								<input
 									id={`processus-${p.id}`}
 									type="text"
-									maxLength={MAX_PROCESS}
+									maxLength={Math.max(MAX_PROCESS, p.process?.length ?? 0)}
 									value={p.process ?? ""}
 									aria-describedby="audit-processus-aide"
 									onInput={(e) => {
@@ -828,7 +890,7 @@ function Pages({
 					<input
 						id="audit-titre-page"
 						type="text"
-						maxLength={MAX_TITLE_INPUT}
+						maxLength={MAX_TITLE}
 						value={title}
 						onInput={(e) => setTitle(e.currentTarget.value)}
 					/>
@@ -1054,17 +1116,26 @@ function Backup({
 		if (pending && !dialogRef.current?.open) dialogRef.current?.showModal();
 	}, [pending]);
 
-	/** Fichier fabriqué dans le navigateur (Blob et lien) : rien ne part sur le réseau. */
+	/** Problème d'un audit hérité d'une version précédente, au-delà des bornes d'import (ADR-0016). */
+	const [legacy, setLegacy] = useState<ImportFailure | null>(null);
 	const download = () => {
 		const at = new Date();
 		const next = { ...latest.current, exportedAt: at.toISOString() };
 		const name = sessionFileName(next, at);
-		const a = document.createElement("a");
-		a.href = URL.createObjectURL(new Blob([serializeSession(next)], { type: "application/json" }));
-		a.download = name;
-		a.click();
-		setTimeout(() => URL.revokeObjectURL(a.href));
+		const text = serializeSession(next);
+		saveFile(name, text);
 		setSession(next);
+		// Un audit écrit par une version précédente peut dépasser les bornes d'import : on le dit, sans bloquer.
+		try {
+			parseSessionStrict(JSON.parse(text), known);
+			setLegacy(null);
+		} catch (err) {
+			setLegacy({
+				message:
+					"Attention : cet audit contient des textes, des adresses ou des indices plus longs ou plus nombreux que ce que Rampe accepte aujourd’hui (saisis avec une version précédente). Le fichier est complet, mais son import sera refusé ou ses textes tronqués : raccourcissez-les ici, puis téléchargez à nouveau.",
+				detail: err instanceof ReportError ? err.detail : (err as Error).message,
+			});
+		}
 		setAnnounce(`Audit téléchargé : ${name}`);
 		return name;
 	};
@@ -1102,7 +1173,8 @@ function Backup({
 		dialogRef.current?.close();
 		if (next) replace(latest.current, next);
 	};
-	const changedSince = session.exportedAt !== undefined && session.updatedAt > session.exportedAt;
+	const changedSince =
+		session.exportedAt !== undefined && Date.parse(session.updatedAt) > Date.parse(session.exportedAt);
 
 	return (
 		<section aria-labelledby="audit-sauvegarde" class="audit-backup">
@@ -1115,6 +1187,7 @@ function Backup({
 			<button type="button" onClick={download}>
 				Télécharger l’audit (JSON)
 			</button>
+			{legacy && <ImportError id="audit-telechargement-alerte" error={legacy} />}
 			<div class="audit-session-import">
 				<h3>Audit Rampe complet : reprendre un audit téléchargé</h3>
 				<p id="audit-session-aide">

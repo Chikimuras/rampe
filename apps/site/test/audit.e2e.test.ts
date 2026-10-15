@@ -453,21 +453,124 @@ describe("audit guidé (bout en bout)", { timeout: 60_000 }, () => {
 		await page.close();
 	});
 
-	it("session corrompue : avertissement, valeur mise de côté, nouvel audit sans plantage", async () => {
+	it("session corrompue : mise de côté sous une clé horodatée, jamais écrasée (3 copies au plus), téléchargeable", async () => {
+		const page = await browser.newPage();
+		await openAudit(page);
+		const asides = () =>
+			page.evaluate(() =>
+				Object.keys(localStorage)
+					.filter((k) => k.startsWith("rampe.audit.session.ignoree."))
+					.sort()
+					.map((k) => localStorage.getItem(k)),
+			);
+		// Copie unique laissée par une version précédente : jamais touchée.
+		await page.evaluate(() => localStorage.setItem("rampe.audit.session.ignoree", "ancienne copie"));
+		const broken = (n: number) => `{"schemaVersion":2,"pages":"abîmé ${n}"}`;
+		for (const n of [1, 2, 3, 4]) {
+			await page.evaluate((v) => localStorage.setItem("rampe.audit.session", v), broken(n));
+			await page.reload();
+			await page.waitForSelector("astro-island:not([ssr])");
+			await expect(page.getByText(/n’a pas pu être relue/).count()).resolves.toBe(1);
+			if (n === 1) {
+				const [file] = await Promise.all([
+					page.waitForEvent("download"),
+					page.getByRole("button", { name: "Télécharger la session mise de côté" }).click(),
+				]);
+				expect(await readFile(await file.path(), "utf8")).toBe(broken(1));
+				if (captures)
+					await page.locator(".audit-banner").screenshot({ path: join(captures, "session-mise-de-cote.png") });
+			}
+			// Horodatage à la milliseconde : deux chargements dans la même milliseconde sont impossibles ici.
+			await page.waitForTimeout(5);
+		}
+		// Les 3 dernières copies ; la plus ancienne n'est retirée qu'au-delà de 3.
+		await expect(asides()).resolves.toEqual([broken(2), broken(3), broken(4)]);
+		await expect(page.evaluate(() => localStorage.getItem("rampe.audit.session.ignoree"))).resolves.toBe(
+			"ancienne copie",
+		);
+		await addPage(page, "https://exemple.fr/", "Accueil");
+		await expect(page.locator(".audit-page-list li").count()).resolves.toBe(1);
+		await page.close();
+	});
+
+	it("session corrompue et stockage plein : rien n'est écrit tant qu'elle n'est pas téléchargée", async () => {
 		const page = await browser.newPage();
 		await page.addInitScript(() => {
 			if (!sessionStorage.getItem("seeded")) {
 				localStorage.setItem("rampe.audit.session", '{"schemaVersion":2,"pages":"abîmé"}');
 				sessionStorage.setItem("seeded", "1");
 			}
+			const set = Storage.prototype.setItem;
+			Storage.prototype.setItem = function (key: string, value: string) {
+				if (key.startsWith("rampe.audit.session.ignoree")) throw new DOMException("plein", "QuotaExceededError");
+				return set.call(this, key, value);
+			};
 		});
 		await openAudit(page);
-		await expect(page.getByText(/n’a pas pu être relue/).count()).resolves.toBe(1);
-		await expect(page.evaluate(() => localStorage.getItem("rampe.audit.session.ignoree"))).resolves.toBe(
+		await expect(page.getByRole("alert").textContent()).resolves.toMatch(/ni mise de côté \(stockage plein\)/);
+		await addPage(page, "https://exemple.fr/", "Accueil");
+		await page.waitForTimeout(600);
+		await expect(page.evaluate(() => localStorage.getItem("rampe.audit.session"))).resolves.toBe(
 			'{"schemaVersion":2,"pages":"abîmé"}',
 		);
-		await addPage(page, "https://exemple.fr/", "Accueil");
-		await expect(page.locator(".audit-page-list li").count()).resolves.toBe(1);
+		const [file] = await Promise.all([
+			page.waitForEvent("download"),
+			page.getByRole("button", { name: "Télécharger la session mise de côté" }).click(),
+		]);
+		expect(await readFile(await file.path(), "utf8")).toBe('{"schemaVersion":2,"pages":"abîmé"}');
+		// Téléchargée : l'écriture reprend.
+		await page.waitForFunction(() => localStorage.getItem("rampe.audit.session")?.includes("Accueil"));
+		await page.close();
+	});
+
+	it("session écrite par main aux valeurs limites : relue, affichée et gardée intacte ; export signalé", async () => {
+		const raw = await readFile(
+			fileURLToPath(new URL("../../../packages/core/test/fixtures/session-main-v2-limites.json", import.meta.url)),
+			"utf8",
+		);
+		const value = JSON.parse(raw);
+		const text = JSON.stringify(value);
+		const [FA] = value.pages.map((p: { id: string }) => p.id);
+		const page = await browser.newPage();
+		await page.addInitScript((v) => {
+			if (!sessionStorage.getItem("seeded")) {
+				localStorage.setItem("rampe.audit.session", v);
+				sessionStorage.setItem("seeded", "1");
+			}
+		}, text);
+		await openAudit(page);
+		await page.reload();
+		await page.waitForSelector("astro-island:not([ssr])");
+		await expect(page.getByText(/n’a pas pu être relue/).count()).resolves.toBe(0);
+		await expect(page.locator(".audit-page-list li").count()).resolves.toBe(2);
+		await expect(page.locator(`#processus-${FA}`).inputValue()).resolves.toBe(value.pages[0].process);
+		await expect(page.locator(`[id="note-1.1-${FA}"]`).inputValue()).resolves.toBe(value.evaluations["1.1"][FA].note);
+		await expect(page.locator(".audit-page-list li").first().textContent()).resolves.toContain(value.pages[0].url);
+		await page.waitForTimeout(600);
+		await expect(page.evaluate(() => localStorage.getItem("rampe.audit.session"))).resolves.toBe(text);
+		await expect(page.evaluate(() => Object.keys(localStorage).filter((k) => k.includes("ignoree")))).resolves.toEqual(
+			[],
+		);
+		// Export : fichier complet, mais l'utilisateur est prévenu que l'import le bornera.
+		await Promise.all([
+			page.waitForEvent("download"),
+			page.getByRole("button", { name: "Télécharger l’audit (JSON)" }).click(),
+		]);
+		await expect(page.locator("#audit-telechargement-alerte > p").textContent()).resolves.toMatch(
+			/^Attention : cet audit contient/,
+		);
+		await expect(page.locator("#audit-telechargement-alerte details > p").textContent()).resolves.toMatch(
+			/adresse de plus de 2048 caractères/,
+		);
+		await page.close();
+	});
+
+	it("bornes à l'écriture : adresse trop longue une fois encodée refusée, avec un message relié au champ", async () => {
+		const page = await browser.newPage();
+		await openAudit(page);
+		await addPage(page, `https://exemple.fr/${"é".repeat(700)}`, "");
+		await expect(page.locator("#audit-url-erreur").textContent()).resolves.toMatch(/^Adresse trop longue/);
+		await expect(page.locator(".audit-page-list li").count()).resolves.toBe(0);
 		await page.close();
 	});
 
