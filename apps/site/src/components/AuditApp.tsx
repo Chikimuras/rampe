@@ -12,6 +12,7 @@ import {
 	type AuditSession,
 	addPage,
 	createSession,
+	type DeclarationField,
 	getEvaluation,
 	getFindings,
 	INVALID_SESSION,
@@ -31,10 +32,23 @@ import {
 	type Status,
 	serializeSession,
 	sessionFileName,
+	setDeclarationField,
 	setEvaluation,
 	setPageProcess,
 } from "@rampe/core/audit-session";
-import { computeConformity, formatRate, processKey } from "@rampe/core/conformity";
+import { type Conformity, computeConformity, formatRate, processKey } from "@rampe/core/conformity";
+import {
+	type Block,
+	conformityState,
+	DECLARATION_URL,
+	declarationBlocks,
+	declarationFileName,
+	type Inline,
+	NON_CONFORMITY_REASONS,
+	renderDeclaration,
+	SCOPE_URL,
+	safeUrl,
+} from "@rampe/core/declaration";
 import { parseAuditUrl, parseSampleFile, plural } from "@rampe/core/sample-file";
 import type { ComponentChildren } from "preact";
 import { useEffect, useLayoutEffect, useMemo, useRef, useState } from "preact/hooks";
@@ -51,6 +65,8 @@ export interface AuditCriterion {
 	titleHtml: string;
 	/** Titre sans ses liens vers le glossaire, pour la liste (un lien ne peut pas être dans un bouton). */
 	titleTextHtml: string;
+	/** Titre officiel en texte brut, pour la déclaration d'accessibilité. */
+	titleText: string;
 	tests: { id: string; statementHtml: string; conditionsHtml: string[]; methodologyHtml: string }[];
 	href: string;
 }
@@ -184,9 +200,9 @@ function loadSession(known: ReadonlySet<string>): {
 }
 
 /** Fichier fabriqué dans le navigateur (Blob et lien) : rien ne part sur le réseau. */
-function saveFile(name: string, text: string) {
+function saveFile(name: string, text: string, type = "application/json") {
 	const a = document.createElement("a");
-	a.href = URL.createObjectURL(new Blob([text], { type: "application/json" }));
+	a.href = URL.createObjectURL(new Blob([text], { type }));
 	a.download = name;
 	a.click();
 	// Révocation différée : certains navigateurs lisent le Blob après le clic.
@@ -212,7 +228,15 @@ const cleanUrl = (input: string) => {
 const sameUrl = (a: string, b: string) => a.split("#")[0] === b.split("#")[0];
 const pageName = (p: SessionPage) => p.title.trim() || p.url;
 
-export default function AuditApp({ topics, criteria }: { topics: AuditTopic[]; criteria: AuditCriterion[] }) {
+export default function AuditApp({
+	topics,
+	criteria,
+	rgaaVersion,
+}: {
+	topics: AuditTopic[];
+	criteria: AuditCriterion[];
+	rgaaVersion: string;
+}) {
 	const [session, setSession] = useState<AuditSession>(() => createSession());
 	const [ready, setReady] = useState(false);
 	const [storageOk, setStorageOk] = useState(true);
@@ -303,6 +327,8 @@ export default function AuditApp({ topics, criteria }: { topics: AuditTopic[]; c
 	}, [currentId]);
 
 	const prog = useMemo(() => progress(session, criteria), [session, criteria]);
+	const ids = useMemo(() => criteria.map((c) => c.id), [criteria]);
+	const conformity = useMemo(() => computeConformity(session, ids), [session, ids]);
 	const matchesWith = (f: Filter) => (c: AuditCriterion) =>
 		f === "all" ||
 		session.pages.some((p) => {
@@ -351,12 +377,25 @@ export default function AuditApp({ topics, criteria }: { topics: AuditTopic[]; c
 		setAnnounce(message);
 	};
 	const restart = () => {
-		if (!confirm("Effacer toutes les pages et toutes les évaluations de cet audit ? Cette action est définitive."))
+		if (
+			!confirm(
+				"Effacer toutes les pages, toutes les évaluations et la déclaration de cet audit ? Cette action est définitive.",
+			)
+		)
 			return;
 		setSession(createSession());
 		const first = criteria[0];
 		if (first) show(first);
 		setAnnounce("Audit effacé : vous repartez de zéro.");
+	};
+
+	/** Raccourci depuis le résultat ou la déclaration : filtre, puis premier critère concerné. */
+	const showMissing = (f: "NT" | "auto") => {
+		setFilter(f);
+		const first = criteria.find(matchesWith(f));
+		if (first) goTo(first);
+		const n = criteria.filter(matchesWith(f)).length;
+		setAnnounce(`${plural(n, "critère")} affiché${n > 1 ? "s" : ""}${first ? ` ; critère ${first.id} affiché` : ""}`);
 	};
 
 	const criteriaList = (
@@ -587,18 +626,15 @@ export default function AuditApp({ topics, criteria }: { topics: AuditTopic[]; c
 				)}
 			</section>
 
-			<Result
+			<Result session={session} criteria={criteria} r={conformity} showMissing={showMissing} />
+
+			<Declaration
 				session={session}
+				setSession={setSession}
+				setAnnounce={setAnnounce}
 				criteria={criteria}
-				showMissing={(f) => {
-					setFilter(f);
-					const first = criteria.find(matchesWith(f));
-					if (first) goTo(first);
-					const n = criteria.filter(matchesWith(f)).length;
-					setAnnounce(
-						`${plural(n, "critère")} affiché${n > 1 ? "s" : ""}${first ? ` ; critère ${first.id} affiché` : ""}`,
-					);
-				}}
+				r={conformity}
+				rgaaVersion={rgaaVersion}
 			/>
 
 			<p aria-live="polite" class="audit-live">
@@ -1313,14 +1349,14 @@ const METHOD_URL = "https://accessibilite.numerique.gouv.fr/obligations/evaluati
 function Result({
 	session,
 	criteria,
+	r,
 	showMissing,
 }: {
 	session: AuditSession;
 	criteria: AuditCriterion[];
+	r: Conformity;
 	showMissing: (f: "NT" | "auto") => void;
 }) {
-	const ids = useMemo(() => criteria.map((c) => c.id), [criteria]);
-	const r = useMemo(() => computeConformity(session, ids), [session, ids]);
 	const rate = (value: number | null) => (value === null ? "sans objet (aucun critère applicable)" : formatRate(value));
 	let body: ComponentChildren;
 	if (session.pages.length === 0)
@@ -1441,6 +1477,366 @@ function Result({
 		<section aria-labelledby="audit-resultat" class="audit-result">
 			<h2 id="audit-resultat">3. Résultat</h2>
 			{body}
+		</section>
+	);
+}
+
+/** Champ de la déclaration : étiquette, aide courte, et nature (une ligne, une par ligne, adresse, date). */
+type DeclarationInput = { field: DeclarationField; label: string; help?: string; kind?: "lines" | "url" | "date" };
+const DECLARATION_GROUPS: { legend: string; fields: DeclarationInput[] }[] = [
+	{
+		legend: "Organisme et site",
+		fields: [
+			{ field: "organization", label: "Nom de l’organisme", help: "Tel qu’il figure dans vos mentions légales." },
+			{
+				field: "commitment",
+				label: "Ce que l’organisme s’engage à rendre accessible",
+				help: "Par exemple « son site internet » ou « ses sites internet et son application mobile ».",
+			},
+			{ field: "serviceName", label: "Nom du site", help: "Par exemple « exemple.fr » ou « Site de la boutique »." },
+			{
+				field: "schemeUrl",
+				label: "Adresse du schéma pluriannuel de mise en accessibilité",
+				help: "Document qui planifie la mise en accessibilité sur plusieurs années.",
+				kind: "url",
+			},
+			{
+				field: "actionPlanUrl",
+				label: "Adresse du plan d’action de l’année en cours",
+				help: "Avec le bilan des actions de l’année précédente.",
+				kind: "url",
+			},
+		],
+	},
+	{
+		legend: "Audit",
+		fields: [
+			{
+				field: "reportUrl",
+				label: "Adresse du rapport ou de la grille d’audit (facultatif)",
+				help: "Sinon, le détail des tests reste à compléter.",
+				kind: "url",
+			},
+			{
+				field: "testEnvironment",
+				label: "Environnement de test, une combinaison par ligne",
+				help: "Navigateur et technologie d’assistance, par exemple « Firefox et NVDA ».",
+				kind: "lines",
+			},
+			{
+				field: "tools",
+				label: "Outils utilisés, un par ligne",
+				help: "Par exemple « Rampe » ou « Colour Contrast Analyser ».",
+				kind: "lines",
+			},
+			{
+				field: "technologies",
+				label: "Technologies du site, une par ligne",
+				help: "Par exemple « HTML », « CSS », « JavaScript ».",
+				kind: "lines",
+			},
+		],
+	},
+	{
+		legend: "Contenus non accessibles",
+		fields: [
+			{
+				field: "nonConformities",
+				label: "Précisions sur les non-conformités, une par ligne",
+				help: "Rampe liste déjà les critères non conformes de l’audit. Ajoutez les contenus concernés et les alternatives proposées.",
+				kind: "lines",
+			},
+			{
+				field: "derogations",
+				label: "Dérogations pour charge disproportionnée, une par ligne",
+				help: "Chaque dérogation doit être expliquée et motivée, avec l’alternative proposée.",
+				kind: "lines",
+			},
+			{
+				field: "exemptions",
+				label: "Contenus non soumis à l’obligation, un par ligne",
+				help: "Contenus exemptés par le champ d’application officiel.",
+				kind: "lines",
+			},
+		],
+	},
+	{
+		legend: "Dates",
+		fields: [
+			{
+				field: "establishedOn",
+				label: "Date d’établissement (facultatif)",
+				help: "Par défaut, la date du jour.",
+				kind: "date",
+			},
+			{ field: "updatedOn", label: "Date de mise à jour (facultatif)", kind: "date" },
+		],
+	},
+	{
+		legend: "Contact",
+		fields: [
+			{
+				field: "contactFormUrl",
+				label: "Formulaire de contact ou adresse e-mail",
+				help: "Pour signaler un défaut d’accessibilité, par exemple https://exemple.fr/contact ou accessibilite@exemple.fr.",
+				kind: "url",
+			},
+			{ field: "contactEntity", label: "Service à contacter", help: "Par exemple « Service client »." },
+			{ field: "contactPageUrl", label: "Page web de ses coordonnées", kind: "url" },
+		],
+	},
+];
+const LIMITS = { lines: MAX_NOTE, url: MAX_URL, text: MAX_TITLE } as const;
+
+/** Aperçu rendu par Preact depuis le modèle : chaque saisie est du texte, échappé par Preact (jamais d'innerHTML). */
+function Inlines({ content }: { content: Inline[] }) {
+	return (
+		<>
+			{content.map((i, k) => {
+				if (i.kind === "text" || i.kind === "input") return i.text;
+				if (i.kind === "slot") return <mark key={k}>[{i.text}]</mark>;
+				if (i.kind === "link")
+					return (
+						<a key={k} href={i.href}>
+							<Inlines content={i.label} />
+						</a>
+					);
+				return <br key={k} />;
+			})}
+		</>
+	);
+}
+function Preview({ blocks }: { blocks: Block[] }) {
+	return (
+		<>
+			{blocks.map((b, k) => {
+				if (b.kind === "list")
+					return (
+						<ul key={k}>
+							{b.items.map((item, j) => (
+								<li key={j}>
+									<Inlines content={item} />
+								</li>
+							))}
+						</ul>
+					);
+				if (b.kind === "paragraph")
+					return (
+						<p key={k}>
+							<Inlines content={b.content} />
+						</p>
+					);
+				// Le titre de la déclaration est celui de l'aperçu ; les autres descendent sous lui (h4, h5).
+				if (b.level === 1) return null;
+				const H = b.level === 2 ? "h4" : "h5";
+				return (
+					<H key={k}>
+						<Inlines content={b.content} />
+					</H>
+				);
+			})}
+		</>
+	);
+}
+
+/**
+ * Déclaration d'accessibilité (ADR-0017) : Rampe remplit ce qu'il calcule depuis l'audit, l'utilisateur le reste.
+ * Saisies rangées dans la session (sauvegardées et exportées avec elle), exports fabriqués dans le navigateur.
+ */
+function Declaration({
+	session,
+	setSession,
+	setAnnounce,
+	criteria,
+	r,
+	rgaaVersion,
+}: {
+	session: AuditSession;
+	setSession: (update: (s: AuditSession) => AuditSession) => void;
+	setAnnounce: (message: string) => void;
+	criteria: AuditCriterion[];
+	r: Conformity;
+	rgaaVersion: string;
+}) {
+	const [touched, setTouched] = useState<ReadonlySet<DeclarationField>>(new Set());
+	const fields = session.declaration ?? {};
+	const titles = useMemo(() => Object.fromEntries(criteria.map((c) => [c.id, c.titleText])), [criteria]);
+	const options = { date: new Date(), rgaaVersion, criterionTitles: titles };
+	const blocks = declarationBlocks(session, r, fields, options);
+	const state = conformityState(r);
+	const set = (field: DeclarationField, value: string) => setSession((s) => setDeclarationField(s, field, value));
+	const render = (format: "html" | "markdown", standalone = false) =>
+		renderDeclaration(session, r, fields, { ...options, format, standalone });
+	const download = (format: "html" | "markdown") => {
+		const ext = format === "html" ? "html" : "md";
+		const name = declarationFileName(session, new Date(), ext);
+		saveFile(name, render(format, true), format === "html" ? "text/html" : "text/markdown");
+		setAnnounce(`Déclaration téléchargée : ${name}`);
+	};
+	const copy = async () => {
+		try {
+			await navigator.clipboard.writeText(render("html"));
+			setAnnounce("Code HTML de la déclaration copié dans le presse-papiers.");
+		} catch {
+			setAnnounce("Copie impossible dans ce navigateur : utilisez « Télécharger (HTML) ».");
+		}
+	};
+
+	const rate = r.complete && r.globalRate !== null ? formatRate(r.globalRate) : null;
+	let status: ComponentChildren;
+	if (state.state !== "non")
+		status = (
+			<p>
+				<strong>{state.state === "totalement" ? "Totalement conforme" : "Partiellement conforme"}</strong> : {rate} des
+				critères RGAA respectés (règle officielle : tous les critères pour « totalement », au moins 50 % pour «
+				partiellement »).
+			</p>
+		);
+	else if (state.reason !== "incomplete")
+		status = (
+			<p>
+				<strong>Non conforme</strong> : {NON_CONFORMITY_REASONS[state.reason]}
+				{rate && ` Pourcentage de critères respectés : ${rate}.`}
+			</p>
+		);
+	else
+		status = (
+			<p>
+				<strong>Non conforme : aucun résultat d’audit complet.</strong> La règle officielle classe « non conforme » tout
+				service sans résultat d’audit permettant de mesurer le respect des critères. Pour une déclaration « totalement »
+				ou « partiellement » conforme,{" "}
+				{session.pages.length === 0 ? (
+					<>
+						ajoutez des pages à l’échantillon (<a href="#audit-echantillon">section 1</a>), puis évaluez chaque critère.
+					</>
+				) : (
+					<>
+						terminez l’audit : {plural(!r.complete ? r.remaining : 0, "évaluation")} « non testé » et{" "}
+						{plural(!r.complete ? r.toConfirm : 0, "statut")} à confirmer.{" "}
+						<a href="#audit-resultat">Voir ce qui reste à faire (section 3)</a>.
+					</>
+				)}
+			</p>
+		);
+
+	const input = ({ field, label, help, kind }: DeclarationInput) => {
+		const id = `declaration-${field}`;
+		const value = fields[field] ?? "";
+		const invalid = kind === "url" && value.trim() !== "" && touched.has(field) && safeUrl(value) === null;
+		const describedBy = [help && `${id}-aide`, invalid && `${id}-erreur`].filter(Boolean).join(" ") || undefined;
+		const common = {
+			id,
+			value,
+			"aria-describedby": describedBy,
+			"aria-invalid": invalid ? ("true" as const) : undefined,
+			onInput: (e: Event) => set(field, (e.currentTarget as HTMLInputElement).value),
+			onBlur: () => setTouched((t) => new Set(t).add(field)),
+		};
+		return (
+			<div class="audit-field" key={field}>
+				<label for={id}>{label}</label>
+				{help && (
+					<p id={`${id}-aide`} class="audit-help">
+						{help}
+					</p>
+				)}
+				{kind === "lines" ? (
+					<textarea {...common} rows={3} maxLength={Math.max(LIMITS.lines, value.length)} />
+				) : kind === "date" ? (
+					<input {...common} type="date" />
+				) : (
+					<input
+						{...common}
+						type="text"
+						inputMode={kind === "url" ? "url" : undefined}
+						maxLength={Math.max(kind === "url" ? LIMITS.url : LIMITS.text, value.length)}
+					/>
+				)}
+				{invalid && (
+					<p id={`${id}-erreur`} class="audit-error">
+						Adresse non reconnue : commencez par https:// ou saisissez une adresse e-mail. En attendant, elle reste « à
+						compléter » dans la déclaration.
+					</p>
+				)}
+			</div>
+		);
+	};
+	const auditBy = fields.auditBy ?? "";
+
+	return (
+		<section aria-labelledby="audit-declaration" class="audit-declaration">
+			<h2 id="audit-declaration">4. Déclaration d’accessibilité</h2>
+			<p>
+				La déclaration reprend le résultat de votre audit dans le{" "}
+				<a href={DECLARATION_URL}>format imposé par la réglementation</a>. Rampe remplit ce qu’il calcule (état de
+				conformité, pourcentage, critères non conformes, pages vérifiées, date) ; vous complétez le reste ci-dessous. Ce
+				qui manque reste affiché [entre crochets]. Votre organisme est-il soumis à l’obligation ? Consultez le{" "}
+				<a href={SCOPE_URL}>champ d’application officiel</a>.
+			</p>
+			<div class="audit-reminder">
+				<p>
+					<strong>Cette déclaration engage votre organisme ; Rampe la met seulement en forme.</strong>
+				</p>
+				<p>
+					Validité : à mettre à jour lors d’une modification substantielle ou d’une refonte du site, 3 ans après sa
+					publication, ou 18 mois après la publication d’une nouvelle version du RGAA.
+				</p>
+			</div>
+
+			<h3>État de conformité</h3>
+			<div class="audit-state">{status}</div>
+
+			<h3>À compléter</h3>
+			<p class="audit-help">
+				Enregistré avec l’audit, dans ce navigateur, et inclus dans « Télécharger l’audit (JSON) ».
+			</p>
+			{DECLARATION_GROUPS.map((g) => (
+				<fieldset class="audit-declaration-group" key={g.legend}>
+					<legend>{g.legend}</legend>
+					{g.legend === "Audit" && (
+						<fieldset class="audit-auditby">
+							<legend>L’audit a été réalisé</legend>
+							{(
+								[
+									["interne", "En interne"],
+									["prestataire", "Par un prestataire"],
+								] as const
+							).map(([value, label]) => (
+								<label key={value}>
+									<input
+										type="radio"
+										name="declaration-auditBy"
+										value={value}
+										checked={auditBy === value}
+										onChange={() => set("auditBy", value)}
+									/>{" "}
+									{label}
+								</label>
+							))}
+						</fieldset>
+					)}
+					{g.legend === "Audit" &&
+						auditBy === "prestataire" &&
+						input({ field: "auditCompany", label: "Nom du prestataire" })}
+					{g.fields.map(input)}
+				</fieldset>
+			))}
+
+			<section aria-labelledby="audit-apercu" class="audit-preview">
+				<h3 id="audit-apercu">Aperçu de la déclaration</h3>
+				<Preview blocks={blocks} />
+			</section>
+			<p class="audit-declaration-actions">
+				<button type="button" onClick={copy}>
+					Copier le HTML
+				</button>
+				<button type="button" onClick={() => download("html")}>
+					Télécharger (HTML)
+				</button>
+				<button type="button" onClick={() => download("markdown")}>
+					Télécharger (Markdown)
+				</button>
+			</p>
 		</section>
 	);
 }
