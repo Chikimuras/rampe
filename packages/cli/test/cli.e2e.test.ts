@@ -1,6 +1,6 @@
 // Bout en bout : la vraie CLI (processus enfant, vrai Chromium) contre des pages servies en local.
 import { execFile } from "node:child_process";
-import { readFile } from "node:fs/promises";
+import { readFile, rm } from "node:fs/promises";
 import { createServer, type Server } from "node:http";
 import type { AddressInfo } from "node:net";
 import { tmpdir } from "node:os";
@@ -20,33 +20,51 @@ const run = (...args: string[]) =>
 		});
 	});
 
+const FIXTURES = new Set(["propre", "defauts", "region", "boucle", "quitte", "csp"]);
+const json = join(tmpdir(), `rampe-e2e-${process.pid}.json`);
 let server: Server;
+let port: number;
 let base: string;
 
 beforeAll(async () => {
 	server = createServer(async (req, res) => {
-		try {
-			// Noms de fichiers fixes : pas de chemin venu de la requête.
-			const name = req.url === "/propre" ? "propre.html" : req.url === "/defauts" ? "defauts.html" : null;
-			if (!name) throw new Error("introuvable");
-			res.writeHead(200, { "content-type": "text/html; charset=utf-8" }).end(await readFile(join(fixtures, name)));
-		} catch {
-			res.writeHead(404).end();
-		}
+		const name = req.url?.slice(1) ?? "";
+		// Redirection vers une autre origine (localhost au lieu de 127.0.0.1).
+		if (name === "redirige") return res.writeHead(302, { location: `http://localhost:${port}/propre` }).end();
+		// Noms de fichiers fixes : aucun chemin venu de la requête n'atteint le disque.
+		if (!FIXTURES.has(name)) return res.writeHead(404).end();
+		res
+			.writeHead(200, { "content-type": "text/html; charset=utf-8" })
+			.end(await readFile(join(fixtures, `${name}.html`)));
 	});
-	await new Promise<void>((resolve) => server.listen(0, "127.0.0.1", resolve));
-	base = `http://127.0.0.1:${(server.address() as AddressInfo).port}`;
+	// Toutes les interfaces : `localhost` peut se résoudre en ::1 ou en 127.0.0.1.
+	await new Promise<void>((resolve) => server.listen(0, resolve));
+	port = (server.address() as AddressInfo).port;
+	base = `http://127.0.0.1:${port}`;
 });
 
-afterAll(() => new Promise<void>((resolve) => server.close(() => resolve())));
+afterAll(async () => {
+	await rm(json, { force: true });
+	await new Promise<void>((resolve) => server.close(() => resolve()));
+});
+
+/** Port libre : ouvert puis refermé, donc personne n'y écoute. */
+const freePort = async () => {
+	const s = createServer();
+	await new Promise<void>((resolve) => s.listen(0, "127.0.0.1", resolve));
+	const { port } = s.address() as AddressInfo;
+	await new Promise<void>((resolve) => s.close(() => resolve()));
+	return port;
+};
+
+const readReport = async (): Promise<AuditReport> => JSON.parse(await readFile(json, "utf8"));
 
 describe("rampe audit (bout en bout)", { timeout: 60_000 }, () => {
 	it("détecte les défauts connus, rangés par critère RGAA, et sort en 1", async () => {
-		const json = join(tmpdir(), `rampe-e2e-${process.pid}.json`);
 		const { code, stdout, stderr } = await run("audit", `${base}/defauts`, "--json", json);
 		expect(code, stderr).toBe(1);
 
-		const report: AuditReport = JSON.parse(await readFile(json, "utf8"));
+		const report = await readReport();
 		expect(report.schemaVersion).toBe(1);
 		const [page] = report.pages;
 		expect(page?.finalUrl).toBe(`${base}/defauts`);
@@ -66,7 +84,9 @@ describe("rampe audit (bout en bout)", { timeout: 60_000 }, () => {
 		expect(page?.results.filter((r) => deprecated.has(r.ruleId))).toEqual([]);
 
 		for (const id of ["1.1", "3.2", "8.3", "11.1"]) expect(stdout).toContain(`Critère ${id} — `);
-		expect(stdout).toContain("n’ont aucune vérification automatique directe : audit humain indispensable");
+		expect(stdout).toContain(
+			"Les 106 critères demandent une vérification humaine. 79 d’entre eux n’ont même aucune vérification automatique directe.",
+		);
 	});
 
 	it("sort en 0 sur une page sans non-conformité détectée", async () => {
@@ -82,7 +102,54 @@ describe("rampe audit (bout en bout)", { timeout: 60_000 }, () => {
 	});
 
 	it("sort en 2 si la page est injoignable", async () => {
-		const { code } = await run("audit", "http://127.0.0.1:1/", "--timeout", "5000");
+		const { code } = await run("audit", `http://127.0.0.1:${await freePort()}/`, "--timeout", "5000");
 		expect(code).toBe(2);
+	});
+
+	it("bonne pratique d'axe rattachée au RGAA (region) : incertain, sort en 0", async () => {
+		const { code, stdout, stderr } = await run("audit", `${base}/region`, "--json", json);
+		expect(code, stderr).toBe(0);
+		const results = (await readReport()).pages[0]?.results ?? [];
+		expect(results.map((r) => [r.ruleId, r.kind])).toEqual([["region", "incertain"]]);
+		expect(stdout).toContain("Aucune non-conformité détectée automatiquement");
+		expect(stdout).toContain("règle de bonne pratique d’axe : à confirmer par un humain");
+	});
+
+	it("borne toute l'opération par --timeout, même si la page bloque son fil principal", async () => {
+		const t0 = Date.now();
+		const { code, stderr } = await run("audit", `${base}/boucle`, "--timeout", "4000");
+		expect(code).toBe(2);
+		expect(stderr).toContain("audit interrompu après 4000 ms");
+		expect(Date.now() - t0).toBeLessThan(20_000);
+	});
+
+	it("refuse une page qui quitte le web (about:blank) avec le code 2", async () => {
+		const { code, stderr } = await run("audit", `${base}/quitte`);
+		expect(code).toBe(2);
+		expect(stderr).toContain("about:blank");
+	});
+
+	it("injecte axe malgré une CSP script-src 'none'", async () => {
+		const { code, stdout, stderr } = await run("audit", `${base}/csp`);
+		expect(code, stderr).toBe(1);
+		expect(stdout).toContain("image-alt (test 1.1.1)");
+	});
+
+	it("avertit d'un changement d'origine et masque les identifiants partout", async () => {
+		const { code, stdout, stderr } = await run(
+			"audit",
+			`http://alice:secret@127.0.0.1:${port}/redirige`,
+			"--json",
+			json,
+		);
+		expect(code, stderr).toBe(0);
+		expect(stderr).toContain(
+			`Avertissement : La page finale est sur une autre origine que celle demandée : http://localhost:${port}/propre`,
+		);
+		const raw = await readFile(json, "utf8");
+		const [page] = JSON.parse(raw).pages;
+		expect(page.url).toBe(`http://***:***@127.0.0.1:${port}/redirige`);
+		expect(page.warnings).toHaveLength(1);
+		for (const out of [stdout, stderr, raw]) expect(out).not.toContain("secret");
 	});
 });

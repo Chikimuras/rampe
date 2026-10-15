@@ -1,5 +1,5 @@
 // Logique pure de l'audit : validation d'URL, classement des résultats axe (ADR-0011 §3), JSON et texte.
-import { type AxeRuleMapping, classifyAxeRule, getCriterion, rgaa } from "@rampe/core";
+import { type AxeRuleMapping, classifyAxeRule, getCriterion, isDirectCheck, rgaa } from "@rampe/core";
 import pkg from "../package.json" with { type: "json" };
 
 /** Sous-ensemble d'un résultat `axe.run` (violation ou incomplete) utilisé ici. */
@@ -28,9 +28,12 @@ export interface AuditResult {
 }
 
 export interface AuditPage {
+	/** Identifiants éventuels masqués (`***`). */
 	url: string;
 	finalUrl: string;
 	title: string;
+	/** Avertissements sur l'audit de la page (ex. redirection vers une autre origine). */
+	warnings: string[];
 	results: AuditResult[];
 }
 
@@ -57,14 +60,26 @@ export function parseAuditUrl(input: string): URL {
 	return url;
 }
 
-const KIND_BY_LEVEL = { rgaa: "non-conformite", wcag: "incertain", "hors-rgaa": "bonne-pratique" } as const;
+/** Masque identifiant et mot de passe de toute URL http(s) du texte (audits de préproduction derrière authentification). */
+export const redact = (text: string): string => text.replace(/\b(https?:\/\/)[^\s/?#@]+@/gi, "$1***:***@");
+
+/** Retire les caractères de contrôle (séquences d'échappement de terminal venues de la page auditée). */
+// biome-ignore lint/suspicious/noControlCharactersInRegex: c'est précisément ce qu'on retire.
+export const stripControl = (text: string): string => text.replace(/[\x00-\x1f\x7f-\x9f]/g, "");
+
+// ADR-0011 §3 : seule une vérification directe (ni bonne pratique ni expérimentale) est une non-conformité.
+function kindOf(m: AxeRuleMapping, incomplete: boolean): ResultKind {
+	if (incomplete) return "a-verifier";
+	if (isDirectCheck(m)) return "non-conformite";
+	return m.level === "hors-rgaa" ? "bonne-pratique" : "incertain";
+}
 
 function toResult(r: AxeRawResult, incomplete: boolean): AuditResult | [] {
 	const m = classifyAxeRule(r.tags);
 	if (m.deprecated) return [];
 	return {
 		ruleId: r.id,
-		kind: incomplete ? "a-verifier" : KIND_BY_LEVEL[m.level],
+		kind: kindOf(m, incomplete),
 		level: m.level,
 		tests: m.level === "rgaa" ? m.tests : [],
 		criteria: m.level === "hors-rgaa" ? [] : m.criteria,
@@ -105,38 +120,60 @@ export function buildReport(input: {
 const plainTitle = (id: string) => (getCriterion(id)?.title ?? "").replace(/\[([^\]]+)\]\([^)]*\)/g, "$1");
 
 // Cible axe : un sélecteur par niveau de cadre ; un niveau peut être un tableau (Shadow DOM).
-const selector = (target: unknown[]) => target.map((t) => (Array.isArray(t) ? t.join(" >>> ") : String(t))).join(" | ");
+const selector = (target: unknown[]) =>
+	stripControl(target.map((t) => (Array.isArray(t) ? t.join(" >>> ") : String(t))).join(" | "));
 
 const plural = (n: number, word: string) => `${n} ${word}${n > 1 ? "s" : ""}`;
+const byNumber = (a: string, b: string) => a.localeCompare(b, "en", { numeric: true });
 
-function ruleLine(r: AuditResult, detail: string): string {
+function ruleLine(r: AuditResult, detail: string, showFlags = true): string {
 	const first = r.nodes[0] ? `, ex. ${selector(r.nodes[0].target)}` : "";
 	const flags = [r.flags.bestPractice && "bonne pratique d’axe", r.flags.experimental && "expérimentale"].filter(
 		Boolean,
 	);
-	const suffix = flags.length > 0 ? ` [${flags.join(", ")}]` : "";
+	const suffix = showFlags && flags.length > 0 ? ` [${flags.join(", ")}]` : "";
 	return `    - ${r.ruleId}${detail} : ${plural(r.nodes.length, "élément")}${first}${suffix}`;
+}
+
+/** Lignes « Critère x.y — titre » suivies des règles qui citent un de ses tests. */
+function byCriterion(results: AuditResult[], note: (r: AuditResult) => string = () => ""): string[] {
+	const out: string[] = [];
+	for (const id of [...new Set(results.flatMap((r) => r.criteria))].sort(byNumber)) {
+		out.push(`  Critère ${id} — ${plainTitle(id)}`);
+		for (const r of results.filter((x) => x.criteria.includes(id))) {
+			const tests = r.tests.filter((t) => t.startsWith(`${id}.`));
+			out.push(ruleLine(r, ` (test${tests.length > 1 ? "s" : ""} ${tests.join(", ")}${note(r)})`, !note(r)));
+		}
+	}
+	return out;
 }
 
 /** Rapport console d'une page, en français. `uncovered` : critères sans aucune vérification automatique directe. */
 export function formatReport(page: AuditPage, uncovered: number): string {
 	const of = (kind: ResultKind) => page.results.filter((r) => r.kind === kind);
 	const nonConformities = of("non-conformite");
-	const out = [`Audit automatique de ${page.finalUrl}`, `Titre : ${page.title || "(aucun)"}`, ""];
+	const out = [
+		`Audit automatique de ${stripControl(redact(page.finalUrl))}`,
+		`Titre : ${stripControl(page.title) || "(aucun)"}`,
+		"",
+	];
 
 	if (nonConformities.length === 0) out.push("Aucune non-conformité détectée automatiquement.", "");
-	else {
-		out.push("Non-conformités détectées, par critère RGAA :");
-		const criteria = [...new Set(nonConformities.flatMap((r) => r.criteria))].sort((a, b) =>
-			a.localeCompare(b, "en", { numeric: true }),
+	else out.push("Non-conformités détectées, par critère RGAA :", ...byCriterion(nonConformities), "");
+
+	const uncertain = of("incertain");
+	if (uncertain.length > 0) {
+		out.push("Problèmes détectés, rattachement RGAA incertain :");
+		// Règles qui citent un test RGAA mais relèvent des bonnes pratiques ou règles expérimentales d'axe.
+		out.push(
+			...byCriterion(
+				uncertain.filter((r) => r.level === "rgaa"),
+				(r) =>
+					` ; règle ${r.flags.bestPractice ? "de bonne pratique" : "expérimentale"} d’axe : à confirmer par un humain`,
+			),
 		);
-		for (const id of criteria) {
-			out.push(`  Critère ${id} — ${plainTitle(id)}`);
-			for (const r of nonConformities.filter((x) => x.criteria.includes(id))) {
-				const tests = r.tests.filter((t) => t.startsWith(`${id}.`));
-				out.push(ruleLine(r, ` (test${tests.length > 1 ? "s" : ""} ${tests.join(", ")})`));
-			}
-		}
+		for (const r of uncertain.filter((x) => x.level === "wcag"))
+			out.push(ruleLine(r, ` (via WCAG ${r.wcag.join(", ")} ; critères possibles ${r.criteria.join(", ")})`));
 		out.push("");
 	}
 
@@ -146,18 +183,13 @@ export function formatReport(page: AuditPage, uncovered: number): string {
 		for (const r of results) out.push(ruleLine(r, detail(r)));
 		out.push("");
 	};
-	const criteriaOf = (r: AuditResult) =>
-		r.criteria.length > 0 ? ` (critère${r.criteria.length > 1 ? "s" : ""} ${r.criteria.join(", ")})` : "";
-	section(
-		"Problèmes détectés, rattachement RGAA incertain (via WCAG) :",
-		of("incertain"),
-		(r) => ` (WCAG ${r.wcag.join(", ")} ; critères possibles ${r.criteria.join(", ")})`,
-	);
 	section("Bonnes pratiques (hors conformité RGAA) :", of("bonne-pratique"), () => "");
-	section("À vérifier par un humain :", of("a-verifier"), criteriaOf);
+	section("À vérifier par un humain :", of("a-verifier"), (r) =>
+		r.criteria.length > 0 ? ` (critère${r.criteria.length > 1 ? "s" : ""} ${r.criteria.join(", ")})` : "",
+	);
 
 	out.push(
-		`${uncovered} critères sur ${rgaa.criteria.length} n’ont aucune vérification automatique directe : audit humain indispensable.`,
+		`Les ${rgaa.criteria.length} critères demandent une vérification humaine. ${uncovered} d’entre eux n’ont même aucune vérification automatique directe.`,
 		"Ce résultat automatique ne mesure pas la conformité et ne la certifie pas.",
 	);
 	return out.join("\n");

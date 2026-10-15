@@ -17,12 +17,14 @@ La phase 2 apporte l’audit automatique d’un site réel. axe-core doit tourne
 
    | Résultat axe | Rattachement | Présenté comme |
    |---|---|---|
-   | violation | direct (`rgaa`) | **Non-conformité détectée** au(x) test(s) cité(s) |
+   | violation | direct (`rgaa`), règle ni bonne pratique ni expérimentale | **Non-conformité détectée** au(x) test(s) cité(s) |
+   | violation | direct (`rgaa`), règle bonne pratique ou expérimentale | **Problème détecté, rattachement incertain** (« à confirmer par un humain ») |
    | violation | indirect (`wcag`) | **Problème détecté, rattachement RGAA incertain** |
    | violation | `hors-rgaa` | **Bonne pratique** (hors conformité) |
    | incomplete | tout niveau | **À vérifier par un humain** |
 
    - Les règles `deprecated` sont exclues.
+   - Une règle qu’axe classe bonne pratique ou expérimentale ne prouve pas une non-conformité, même quand elle cite un test RGAA (ex. `region` et le test 9.2.1, qui ne porte que sur le balisage `header`/`nav`/`main`/`footer`) : seul un résultat certain peut être présenté comme non-conformité (ADR-0002), et le niveau `rgaa` qualifie la précision du rattachement, pas la certitude du défaut (ADR-0008). Elle ne déclenche donc jamais le code de sortie non nul. `isDirectCheck` de `@rampe/core` porte cette règle ; le site l’applique aussi pour décompter les critères couverts.
    - Le drapeau `bestPractice` est affiché.
    - **Aucun taux de conformité n’est calculé** : un audit automatique ne peut pas le donner (ADR-0002).
    - Chaque rapport rappelle combien de critères restent à vérifier à la main.

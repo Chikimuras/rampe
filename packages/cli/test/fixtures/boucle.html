@@ -1,0 +1,14 @@
+<!doctype html>
+<html lang="fr">
+	<head>
+		<meta charset="utf-8" />
+		<title>Boucle infinie</title>
+		<!-- Bloque le fil principal après le chargement : axe.run ne peut jamais finir. -->
+		<script>
+			addEventListener("load", () => setTimeout(() => { for (;;) {} }, 0));
+		</script>
+	</head>
+	<body>
+		<main><h1>Boucle infinie</h1></main>
+	</body>
+</html>
