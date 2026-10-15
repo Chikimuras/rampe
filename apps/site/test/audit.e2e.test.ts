@@ -160,7 +160,7 @@ describe("audit guidé (bout en bout)", { timeout: 60_000 }, () => {
 		expect(await page.evaluate(() => document.activeElement?.id)).toBe("audit-url");
 		await tabUntil(page, "el.type === 'submit'");
 		await page.keyboard.press("Enter");
-		await expect(page.locator(".audit-page-list li").count()).resolves.toBe(1);
+		await expect.poll(() => page.locator(".audit-page-list li").count()).toBe(1);
 		expect(await page.evaluate(() => document.activeElement?.id)).toBe("audit-url");
 
 		// Groupe de radios : un seul arrêt de tabulation (la valeur cochée, « Non testé »), puis les flèches.
@@ -238,7 +238,7 @@ describe("audit guidé (bout en bout)", { timeout: 60_000 }, () => {
 		await addPage(page, "https://exemple.fr/", "Accueil");
 		await page.getByLabel("Critères non conformes sur au moins une page").check();
 		await expect(page.locator("[aria-live=polite]").textContent()).resolves.toBe("0 critère affiché");
-		await expect(page.locator("article").count()).resolves.toBe(0);
+		await expect.poll(() => page.locator("article").count()).toBe(0);
 		await expect(
 			page.getByText("Aucun critère ne correspond à ce filtre dans cette thématique.").count(),
 		).resolves.toBe(1);
@@ -284,7 +284,7 @@ describe("audit guidé (bout en bout)", { timeout: 60_000 }, () => {
 		await expect(
 			page.getByRole("group", { name: "Critère 1.1, page Contact (https://exemple.fr/contact)" }).count(),
 		).resolves.toBe(1);
-		await expect(page.getByLabel("Note sur Contact (facultative)").count()).resolves.toBe(1);
+		await expect.poll(() => page.getByLabel("Note sur Contact (facultative)").count()).toBe(1);
 		await expect(page.locator(".audit-pages-eval .audit-help").isVisible()).resolves.toBe(true);
 		await expect(page.locator(".audit-pages-eval .audit-help").textContent()).resolves.toContain(
 			"Non applicable : le contenu visé par ce critère n’existe pas sur la page.",
@@ -300,7 +300,7 @@ describe("audit guidé (bout en bout)", { timeout: 60_000 }, () => {
 			await addPage(page, "https://exemple.fr/", "Accueil");
 			await addPage(page, "https://exemple.fr/contact", "Contact");
 			const list = page.locator("details.audit-list");
-			await expect(list.count()).resolves.toBe(width < 700 ? 1 : 0);
+			await expect.poll(() => list.count()).toBe(width < 700 ? 1 : 0);
 			if (width < 700) await expect(list.evaluate((d) => (d as HTMLDetailsElement).open)).resolves.toBe(false);
 			for (const id of ["1.1", "1.6"]) {
 				if (id === "1.6") {
@@ -363,7 +363,7 @@ describe("audit guidé (bout en bout)", { timeout: 60_000 }, () => {
 		);
 		await page.getByLabel("Conforme", { exact: true }).check(); // nouvel essai : toujours plein
 		await page.waitForTimeout(600);
-		await expect(alert.count()).resolves.toBe(1);
+		await expect.poll(() => alert.count()).toBe(1);
 		await page.evaluate(() => {
 			(window as unknown as { plein: boolean }).plein = false;
 		});
@@ -417,7 +417,7 @@ describe("audit guidé (bout en bout)", { timeout: 60_000 }, () => {
 			.getByLabel(/^Contenu du fichier/)
 			.fill("# accueil\nhttps://exemple.fr/\n# hasard — x\nhttps://exemple.fr/a\n");
 		await page.getByRole("button", { name: "Ajouter ces pages" }).click();
-		await expect(page.locator(".audit-page-list li").count()).resolves.toBe(2);
+		await expect.poll(() => page.locator(".audit-page-list li").count()).toBe(2);
 		await page.close();
 	});
 
@@ -445,11 +445,11 @@ describe("audit guidé (bout en bout)", { timeout: 60_000 }, () => {
 			});
 		});
 		await openAudit(page);
-		await expect(page.getByText("Votre travail ne sera pas conservé si vous fermez cette page.").count()).resolves.toBe(
-			1,
-		);
+		await expect
+			.poll(() => page.getByText("Votre travail ne sera pas conservé si vous fermez cette page.").count())
+			.toBe(1);
 		await addPage(page, "https://exemple.fr/", "Accueil");
-		await expect(page.locator(".audit-page-list li").count()).resolves.toBe(1);
+		await expect.poll(() => page.locator(".audit-page-list li").count()).toBe(1);
 		await page.close();
 	});
 
@@ -474,7 +474,7 @@ describe("audit guidé (bout en bout)", { timeout: 60_000 }, () => {
 			await page.evaluate((v) => localStorage.setItem("rampe.audit.session", v), broken(n));
 			await page.reload();
 			await page.waitForSelector("astro-island:not([ssr])");
-			await expect(page.getByText(/n’a pas pu être relue/).count()).resolves.toBe(1);
+			await expect.poll(() => page.getByText(/n’a pas pu être relue/).count()).toBe(1);
 			if (n === 1) {
 				const [file] = await Promise.all([
 					page.waitForEvent("download"),
@@ -491,7 +491,7 @@ describe("audit guidé (bout en bout)", { timeout: 60_000 }, () => {
 			"ancienne copie",
 		);
 		await addPage(page, "https://exemple.fr/", "Accueil");
-		await expect(page.locator(".audit-page-list li").count()).resolves.toBe(1);
+		await expect.poll(() => page.locator(".audit-page-list li").count()).toBe(1);
 		await page.close();
 	});
 
@@ -558,7 +558,7 @@ describe("audit guidé (bout en bout)", { timeout: 60_000 }, () => {
 		await page.reload();
 		await page.waitForSelector("astro-island:not([ssr])");
 		// Copie gardée (pas d'alerte de stockage plein), la plus ancienne ÉCRITE retirée.
-		await expect(page.getByText(/ni mise de côté/).count()).resolves.toBe(0);
+		await expect.poll(() => page.getByText(/ni mise de côté/).count()).toBe(0);
 		await expect(copies(page)).resolves.toEqual(["copie 2", "copie 3", '{"schemaVersion":2,"pages":"Z"}']);
 		await page.close();
 	});
@@ -581,8 +581,8 @@ describe("audit guidé (bout en bout)", { timeout: 60_000 }, () => {
 		await openAudit(page);
 		await page.reload();
 		await page.waitForSelector("astro-island:not([ssr])");
-		await expect(page.getByText(/n’a pas pu être relue/).count()).resolves.toBe(0);
-		await expect(page.locator(".audit-page-list li").count()).resolves.toBe(2);
+		await expect.poll(() => page.getByText(/n’a pas pu être relue/).count()).toBe(0);
+		await expect.poll(() => page.locator(".audit-page-list li").count()).toBe(2);
 		await expect(page.locator(`#processus-${FA}`).inputValue()).resolves.toBe(value.pages[0].process);
 		await expect(page.locator(`[id="note-1.1-${FA}"]`).inputValue()).resolves.toBe(value.evaluations["1.1"][FA].note);
 		await expect(page.locator(".audit-page-list li").first().textContent()).resolves.toContain(value.pages[0].url);
@@ -610,7 +610,7 @@ describe("audit guidé (bout en bout)", { timeout: 60_000 }, () => {
 		await openAudit(page);
 		await addPage(page, `https://exemple.fr/${"é".repeat(700)}`, "");
 		await expect(page.locator("#audit-url-erreur").textContent()).resolves.toMatch(/^Adresse trop longue/);
-		await expect(page.locator(".audit-page-list li").count()).resolves.toBe(0);
+		await expect.poll(() => page.locator(".audit-page-list li").count()).toBe(0);
 		await page.close();
 	});
 
@@ -620,10 +620,10 @@ describe("audit guidé (bout en bout)", { timeout: 60_000 }, () => {
 		await addPage(page, "https://exemple.fr/", "Accueil");
 		page.once("dialog", (d) => d.dismiss());
 		await page.getByRole("button", { name: "Effacer cet audit et recommencer" }).click();
-		await expect(page.locator(".audit-page-list li").count()).resolves.toBe(1);
+		await expect.poll(() => page.locator(".audit-page-list li").count()).toBe(1);
 		page.once("dialog", (d) => d.accept());
 		await page.getByRole("button", { name: "Effacer cet audit et recommencer" }).click();
-		await expect(page.locator(".audit-page-list li").count()).resolves.toBe(0);
+		await expect.poll(() => page.locator(".audit-page-list li").count()).toBe(0);
 		await page.close();
 	});
 
@@ -664,12 +664,12 @@ describe("audit guidé (bout en bout)", { timeout: 60_000 }, () => {
 			await expect(live(page)).resolves.toMatch(
 				new RegExp(`^Import terminé : 0 page ajoutée, ${n} statuts « Non conforme » à confirmer, \\d+ indices\\.`),
 			);
-			await expect(page.locator(".audit-page-list li").count()).resolves.toBe(1);
+			await expect.poll(() => page.locator(".audit-page-list li").count()).toBe(1);
 
 			// 1.1 : l'humain avait dit « Conforme » ; l'import n'y touche pas, mais l'indice image-alt est visible.
 			const g11 = group(page, "1.1");
 			await expect(g11.getByLabel("Conforme", { exact: true }).isChecked()).resolves.toBe(true);
-			await expect(g11.locator(".audit-auto").count()).resolves.toBe(0);
+			await expect.poll(() => g11.locator(".audit-auto").count()).toBe(0);
 			// Conflit : l'outil a trouvé une non-conformité là où l'humain a dit « Conforme ».
 			await expect(g11.locator(".audit-conflict").textContent()).resolves.toBe(
 				"L’outil a détecté une non-conformité sur cette page : vérifiez votre évaluation.",
@@ -708,7 +708,7 @@ describe("audit guidé (bout en bout)", { timeout: 60_000 }, () => {
 			// La confirmation humaine (même une note) fait disparaître la mention « à confirmer ».
 			await showCriterion(page, "3.2");
 			await group(page, "3.2").getByLabel("Note sur Défauts (facultative)").fill("Contraste vérifié : 2,0:1");
-			await expect(group(page, "3.2").locator(".audit-auto").count()).resolves.toBe(0);
+			await expect.poll(() => group(page, "3.2").locator(".audit-auto").count()).toBe(0);
 			await page.waitForFunction(() => localStorage.getItem("rampe.audit.session")?.includes("2,0:1"));
 			const saved = JSON.parse((await stored(page)) ?? "{}");
 			expect(saved.schemaVersion).toBe(2);
@@ -717,7 +717,7 @@ describe("audit guidé (bout en bout)", { timeout: 60_000 }, () => {
 			expect(saved.evaluations["3.2"][pageId]).toMatchObject({ status: "NC", source: "humain" });
 			expect(saved.evaluations["8.3"][pageId]).toMatchObject({ status: "NC", source: "auto" });
 			// Plus d'annulation possible après une autre modification.
-			await expect(page.getByRole("button", { name: "Annuler cet import" }).count()).resolves.toBe(0);
+			await expect.poll(() => page.getByRole("button", { name: "Annuler cet import" }).count()).toBe(0);
 			await page.close();
 		});
 
@@ -727,7 +727,7 @@ describe("audit guidé (bout en bout)", { timeout: 60_000 }, () => {
 			await showCriterion(page, "8.3");
 			const g = group(page, "8.3");
 			await g.getByRole("button", { name: "Confirmer « Non conforme » pour Défauts" }).click();
-			await expect(g.locator(".audit-auto").count()).resolves.toBe(0);
+			await expect.poll(() => g.locator(".audit-auto").count()).toBe(0);
 			await expect(g.getByLabel("Non conforme", { exact: true }).isChecked()).resolves.toBe(true);
 			expect(await page.evaluate(() => (document.activeElement as HTMLInputElement).value)).toBe("NC");
 			await expect(live(page)).resolves.toBe("Statut « Non conforme » confirmé pour Défauts, critère 8.3");
@@ -793,7 +793,7 @@ describe("audit guidé (bout en bout)", { timeout: 60_000 }, () => {
 			await expect(live(page)).resolves.toBe("Import annulé : l’audit est revenu à son état d’avant l’import.");
 			expect(await page.evaluate(() => document.activeElement?.id)).toBe("audit-rapport");
 			await expect(group(page, "1.1").getByLabel("Conforme", { exact: true }).isChecked()).resolves.toBe(true);
-			await expect(page.locator(".audit-findings").count()).resolves.toBe(0);
+			await expect.poll(() => page.locator(".audit-findings").count()).toBe(0);
 			await showCriterion(page, "3.2");
 			await expect(group(page, "3.2").getByLabel("Non testé").isChecked()).resolves.toBe(true);
 			await page.waitForFunction(() => {
@@ -836,7 +836,7 @@ describe("audit guidé (bout en bout)", { timeout: 60_000 }, () => {
 				await input.setInputFiles({ name, mimeType: "application/json", buffer });
 				// Phrase claire d'abord ; le détail technique, s'il y en a un, est replié dessous.
 				await expect.poll(() => error.locator("> p").textContent(), { message: name }).toMatch(message);
-				await expect(error.locator("details").count()).resolves.toBe(detail ? 1 : 0);
+				await expect.poll(() => error.locator("details").count()).toBe(detail ? 1 : 0);
 				if (detail) {
 					await expect(error.locator("details").evaluate((d) => (d as HTMLDetailsElement).open)).resolves.toBe(false);
 					await expect(error.locator("summary").textContent()).resolves.toBe("Détail technique");
@@ -854,7 +854,7 @@ describe("audit guidé (bout en bout)", { timeout: 60_000 }, () => {
 			expect(await page.evaluate(() => "polluted" in {})).toBe(false);
 			await page.waitForTimeout(600);
 			expect(await stored(page)).toBe(before);
-			await expect(page.locator(".audit-import-summary").count()).resolves.toBe(0);
+			await expect.poll(() => page.locator(".audit-import-summary").count()).toBe(0);
 			await page.close();
 
 			// Autre site : l'audit en cours porte sur exemple.fr.
@@ -865,7 +865,7 @@ describe("audit guidé (bout en bout)", { timeout: 60_000 }, () => {
 			await expect(other.locator("#audit-rapport-erreur").textContent()).resolves.toMatch(
 				/^Ce rapport porte sur un autre site \(http:\/\/127\.0\.0\.1:\d+\) que l’audit en cours \(https:\/\/exemple\.fr\)\./,
 			);
-			await expect(other.locator(".audit-page-list li").count()).resolves.toBe(1);
+			await expect.poll(() => other.locator(".audit-page-list li").count()).toBe(1);
 			await other.close();
 		});
 
@@ -1170,7 +1170,7 @@ describe("audit guidé (bout en bout)", { timeout: 60_000 }, () => {
 				.getByLabel(SESSION_LABEL)
 				.setInputFiles({ name: file.name, mimeType: "application/json", buffer: Buffer.from(file.content) });
 			// Audit vide : aucune confirmation, import direct.
-			await expect(dialog(b).count()).resolves.toBe(0);
+			await expect.poll(() => dialog(b).count()).toBe(0);
 			await expect(live(b)).resolves.toBe(
 				"Audit importé : 3 pages, 318 évaluations enregistrées, 1 indice. L’audit précédent a été remplacé.",
 			);
@@ -1184,7 +1184,7 @@ describe("audit guidé (bout en bout)", { timeout: 60_000 }, () => {
 				"Logo :\n\talternative vérifiée",
 			);
 			await b.getByText("Indices de l’audit automatique pour Accueil (1)").waitFor();
-			await expect(b.locator(".audit-conflict").count()).resolves.toBe(1);
+			await expect.poll(() => b.locator(".audit-conflict").count()).toBe(1);
 			await second.close();
 		});
 
@@ -1225,7 +1225,7 @@ describe("audit guidé (bout en bout)", { timeout: 60_000 }, () => {
 				await dialog(page).waitFor({ state: "hidden" });
 				// Fermeture : le focus revient au champ fichier (événement `close`, asynchrone).
 				await expect.poll(() => page.evaluate(() => document.activeElement?.id)).toBe("audit-session");
-				await expect(page.locator(".audit-page-list li").count()).resolves.toBe(3);
+				await expect.poll(() => page.locator(".audit-page-list li").count()).toBe(3);
 				await expect(live(page)).resolves.toMatch(/^Audit importé : 3 pages, 318 évaluations/);
 				expect(await axeViolations(page), "après import").toEqual([]);
 				if (captures)
@@ -1234,7 +1234,7 @@ describe("audit guidé (bout en bout)", { timeout: 60_000 }, () => {
 				await page.getByRole("button", { name: "Annuler cet import" }).click();
 				await expect(live(page)).resolves.toBe("Import annulé : l’audit est revenu à son état d’avant l’import.");
 				expect(await page.evaluate(() => document.activeElement?.id)).toBe("audit-session");
-				await expect(page.locator(".audit-page-list li").count()).resolves.toBe(1);
+				await expect.poll(() => page.locator(".audit-page-list li").count()).toBe(1);
 				await expect(page.getByLabel("Non conforme", { exact: true }).isChecked()).resolves.toBe(true);
 				await page.waitForFunction(() => {
 					const saved = localStorage.getItem("rampe.audit.session");
@@ -1287,12 +1287,12 @@ describe("audit guidé (bout en bout)", { timeout: 60_000 }, () => {
 			await page.keyboard.press("Tab"); // du bouton « Télécharger d'abord » à « Remplacer »
 			expect(await page.evaluate(() => document.activeElement?.textContent)).toBe("Remplacer l’audit en cours");
 			await page.keyboard.press("Enter");
-			await expect(page.locator(".audit-page-list li").count()).resolves.toBe(3);
+			await expect.poll(() => page.locator(".audit-page-list li").count()).toBe(3);
 			expect(await page.evaluate(() => document.activeElement?.id)).toBe("audit-session");
 			await tabUntil(page, "el.textContent === 'Annuler cet import'");
 			await page.keyboard.press("Enter");
 			expect(await page.evaluate(() => document.activeElement?.id)).toBe("audit-session");
-			await expect(page.locator(".audit-page-list li").count()).resolves.toBe(1);
+			await expect.poll(() => page.locator(".audit-page-list li").count()).toBe(1);
 			await page.close();
 		});
 
@@ -1352,8 +1352,8 @@ describe("audit guidé (bout en bout)", { timeout: 60_000 }, () => {
 				if (detail)
 					await expect.poll(() => error.locator("details > p").textContent(), { message: name }).toMatch(detail);
 				await expect.poll(() => error.locator("> p").textContent(), { message: name }).toMatch(message);
-				await expect(dialog(page).count()).resolves.toBe(0);
-				await expect(error.locator("details").count()).resolves.toBe(detail ? 1 : 0);
+				await expect.poll(() => dialog(page).count()).toBe(0);
+				await expect.poll(() => error.locator("details").count()).toBe(detail ? 1 : 0);
 				if (detail) {
 					await expect(error.locator("details").evaluate((d) => (d as HTMLDetailsElement).open)).resolves.toBe(false);
 					await expect(error.locator("details > p").textContent()).resolves.toMatch(detail);
@@ -1390,7 +1390,7 @@ describe("audit guidé (bout en bout)", { timeout: 60_000 }, () => {
 				.toBe(
 					"Ce fichier est un audit Rampe complet (téléchargé depuis l’audit guidé), pas un rapport de la CLI : importez-le avec le champ « Importer un audit (JSON) », section « Sauvegarde de l’audit ». Rien n’a été importé.",
 				);
-			await expect(dialog(page).count()).resolves.toBe(0);
+			await expect.poll(() => dialog(page).count()).toBe(0);
 			if (captures) await page.screenshot({ path: join(captures, "mauvais-champ.png"), fullPage: true });
 			await page.waitForTimeout(600);
 			expect(await stored(page)).toBe(before);
