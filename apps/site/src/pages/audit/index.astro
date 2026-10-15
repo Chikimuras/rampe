@@ -174,12 +174,35 @@ const criteria: AuditCriterion[] = rgaa.criteria.map((c) => ({
 		overflow-wrap: anywhere;
 	}
 	/* Évaluation posée par un import : bordure pointillée et texte, pas seulement une couleur. */
-	.audit-auto {
+	.audit-auto,
+	.audit-conflict {
 		margin: 0.5rem 0 0;
 		padding: 0.4rem 0.75rem;
 		border: 2px dashed var(--nc);
 		border-radius: 6px;
 		font-size: 0.9375rem;
+	}
+	.audit-auto p {
+		margin: 0 0 0.4rem;
+	}
+	/* Conflit entre l'humain et l'outil : bordure pleine et épaisse, en plus du texte. */
+	.audit-conflict {
+		border: 3px solid var(--nc);
+	}
+	.audit-to-confirm {
+		display: block;
+		margin-top: 0.25rem;
+	}
+	.audit-error p {
+		margin: 0;
+	}
+	.audit-error details {
+		font-weight: 400;
+		color: var(--text);
+		margin-top: 0.25rem;
+	}
+	.audit-error summary {
+		cursor: pointer;
 	}
 	.audit-criterion details.audit-findings {
 		margin: 0.75rem 0 0;
