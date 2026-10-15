@@ -320,8 +320,8 @@ describe("importAutomaticResults (ADR-0014 §1-3)", () => {
 			importAutomaticResults(session, parse(value), LATER, gen);
 		const first = run(createSession(NOW), report(pages(0, 600))).session;
 		const e = refusal(() => run(first, report(pages(600, 401))));
-		expect(e.message).toMatch(
-			/^Cet import porterait l’échantillon à 1001 pages : 1000 au plus\. Rien n’a été importé\.$/,
+		expect(e.message).toBe(
+			"Cet import ajouterait 401 pages à l’échantillon, qui en compte déjà 600 : 1000 au plus. Rien n’a été importé.",
 		);
 		expect(run(first, report(pages(600, 400))).session.pages).toHaveLength(1000);
 		// Deux rapports de 30 000 indices chacun, sur des pages différentes : le second est refusé.
@@ -331,6 +331,31 @@ describe("importAutomaticResults (ADR-0014 §1-3)", () => {
 		);
 		// Réimporter le même rapport remplace ses indices : pas de dépassement.
 		expect(() => run(a, report(pages(0, 150, 200)))).not.toThrow();
+	});
+
+	it("audit hérité de plus de 1 000 pages : seules les pages NOUVELLES comptent", () => {
+		const gen = ids();
+		const legacy = {
+			...createSession(NOW),
+			site: "https://exemple.fr",
+			pages: Array.from({ length: 1001 }, () => gen()).map((id, i) => ({
+				id,
+				url: `https://exemple.fr/${i}`,
+				title: "",
+			})),
+		};
+		const page = (i: number) => ({
+			url: `https://exemple.fr/${i}`,
+			results: [result("image-alt", "non-conformite", ["1.1"])],
+		});
+		const r = importAutomaticResults(legacy, parse(report([page(0), page(1000)])), LATER, gen);
+		expect(r.summary.pagesAdded).toBe(0);
+		expect(r.summary.statusesSet).toBe(2);
+		expect(
+			refusal(() => importAutomaticResults(legacy, parse(report([page(0), page(5000)])), LATER, gen)).message,
+		).toBe(
+			"Cet import ajouterait 1 page à l’échantillon, qui en compte déjà 1001 : 1000 au plus. Rien n’a été importé.",
+		);
 	});
 
 	it("refuse une adresse dont la forme normalisée (encodée) dépasse 2 048 caractères", () => {

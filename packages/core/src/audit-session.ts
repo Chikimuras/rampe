@@ -23,7 +23,7 @@ import {
 	toolName,
 } from "./strict.ts";
 
-export { isObject, MAX_PAGES, MAX_URL, SESSION_TOOL_NAME } from "./strict.ts";
+export { isObject, MAX_PAGES, MAX_SESSION_BYTES, MAX_URL, SESSION_TOOL_NAME } from "./strict.ts";
 
 export const SCHEMA_VERSION = 2;
 
@@ -383,7 +383,9 @@ function parseSessionWith(json: unknown, known: ReadonlySet<string>, bounded: bo
 		const rawText = rawProcess === undefined ? "" : string(rawProcess, `${at}.process`);
 		const process = bounded ? stripControl(rawText) : rawText;
 		if (process.length > limit(MAX_PROCESS)) fail(`${at}.process`, `processus de plus de ${MAX_PROCESS} caractères`);
-		return { id, url, title: text(field(page, "title"), `${at}.title`, MAX_TITLE), ...(process && { process }) };
+		// Relecture : `process` gardé tel quel, même vide ; import : un processus vide n'en est pas un.
+		const keep = bounded ? process !== "" : rawProcess !== undefined;
+		return { id, url, title: text(field(page, "title"), `${at}.title`, MAX_TITLE), ...(keep && { process }) };
 	});
 
 	/** `byCriterion[critère][pageId]` : critères du référentiel et pages de l'audit seulement. */

@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 import mainV2 from "../test/fixtures/session-main-v2-limites.json" with { type: "json" };
 import v1Limits from "../test/fixtures/session-v1-limites.json" with { type: "json" };
+import { importAutomaticResults, MAX_REPORT_BYTES, parseAuditReport } from "./audit-report.ts";
 import {
 	type AuditSession,
 	addPage,
@@ -10,6 +11,7 @@ import {
 	getFindings,
 	INVALID_SESSION,
 	isFutureSession,
+	MAX_SESSION_BYTES,
 	parseSessionStrict,
 	parseStoredSession,
 	progress,
@@ -23,6 +25,7 @@ import {
 	setPageProcess,
 } from "./audit-session.ts";
 import { rgaa } from "./rgaa.ts";
+import { truncate } from "./sample-file.ts";
 import { ReportError } from "./strict.ts";
 
 const NOW = "2026-10-15T10:00:00.000Z";
@@ -595,6 +598,65 @@ describe("bornes à l'écriture : tout ce que l'interface produit se réimporte 
 		const f = { ...exported(), createdAt: "2026-10-15" };
 		expect(refusal(f).detail).toMatch(/^createdAt : date invalide/);
 		expect(stored(f).createdAt).toBe("2026-10-15");
+	});
+});
+
+describe("contre-relecture de la PR #18", () => {
+	it('4 : la relecture du stockage garde `process: ""` tel quel ; l\'import de fichier le retire', () => {
+		const raw = fixture("main-v2");
+		raw.pages[1].process = "";
+		expect(stored(raw)).toEqual(raw);
+		const file = { ...exported(), pages: [{ ...exported().pages[0], process: "" }], evaluations: {}, findings: {} };
+		expect(parse(file).pages[0]).not.toHaveProperty("process");
+	});
+
+	it("5 : troncature idempotente, coupée sur un point de code ; double import identique", () => {
+		const f = exported();
+		f.evaluations["1.1"][A].note = `${"n".repeat(9_999)}😀${"x".repeat(50)}`;
+		f.pages[0].title = `${"t".repeat(999)}😀 fin`;
+		const once = parse(f);
+		const note = getEvaluation(once, "1.1", A).note;
+		expect(note).toBe(`${"n".repeat(9_999)}… (tronqué)`); // l'emoji n'est pas coupé en deux
+		expect(once.pages[0]?.title).toBe(`${"t".repeat(999)}… (tronqué)`);
+		expect(parse(JSON.parse(serializeSession(once)))).toEqual(once);
+		expect(truncate(note, 10_000)).toBe(note);
+	});
+
+	it("6 : invariant aux bornes, 50 imports CLI aux descriptions CJK : le fichier tient dans 64 Mo et se réimporte", () => {
+		let n = 0;
+		const newId = () => `00000000-0000-4000-8000-${String(++n).padStart(12, "0")}`;
+		const criteriaIds = [...known].slice(0, 10);
+		const help = "無障礙".repeat(140); // 420 caractères CJK : tronqué à 300 par l'import
+		let s = createSession(NOW);
+		for (let k = 0; k < 50; k++) {
+			const pages = Array.from({ length: 20 }, (_, i) => ({
+				url: `https://exemple.fr/${k}-${i}`,
+				finalUrl: null,
+				title: "頁".repeat(400),
+				warnings: [],
+				error: null,
+				results: ["image-alt", "label", "region", "link-name", "list"].map((ruleId) => ({
+					ruleId,
+					help,
+					kind: "incertain",
+					level: "rgaa",
+					tests: [],
+					criteria: criteriaIds,
+					wcag: [],
+					flags: { bestPractice: false, experimental: false },
+					impact: "serious",
+					nodes: [],
+				})),
+			}));
+			const r = parseAuditReport({ schemaVersion: 2, tool: { name: "@rampe/cli", version: "0" }, pages }, known);
+			s = importAutomaticResults(s, r, NOW, newId).session;
+		}
+		expect(s.pages).toHaveLength(1000);
+		const text = serializeSession(s);
+		const bytes = new TextEncoder().encode(text).length;
+		expect(bytes).toBeGreaterThan(MAX_REPORT_BYTES);
+		expect(bytes).toBeLessThanOrEqual(MAX_SESSION_BYTES);
+		expect(parse(JSON.parse(text))).toEqual(s);
 	});
 });
 

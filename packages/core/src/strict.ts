@@ -37,6 +37,11 @@ export const isObject = (v: unknown): v is Record<string, unknown> =>
 // Bornes communes aux deux imports (ADR-0014 §4, ADR-0016 §2).
 /** Taille maximale d'un fichier importé, vérifiée par l'appelant AVANT lecture. */
 export const MAX_REPORT_BYTES = 20 * 1024 * 1024;
+/**
+ * Taille maximale d'un audit importé : ce que l'export peut produire aux bornes (50 000 indices aux descriptions
+ * tronquées à 311 caractères, CJK compris, soit environ 3 octets par caractère : près de 50 Mo), avec de la marge.
+ */
+export const MAX_SESSION_BYTES = 64 * 1024 * 1024;
 export const MAX_PAGES = 1000;
 /** Total d'indices : au-delà, l'audit ne tiendrait plus dans le stockage du navigateur. */
 export const MAX_FINDINGS = 50_000;

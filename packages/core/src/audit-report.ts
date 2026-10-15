@@ -298,9 +298,10 @@ export function importAutomaticResults(
 			summary.statusesSet++;
 		}
 	// Bornes de la session entière (ADR-0016) : ce que l'import produit doit pouvoir être exporté puis réimporté.
-	if (pages.length > MAX_PAGES)
+	// Seules les pages NOUVELLES comptent : un audit hérité de plus de 1 000 pages peut encore recevoir un rapport.
+	if (summary.pagesAdded > 0 && pages.length > MAX_PAGES)
 		throw new ReportError(
-			`Cet import porterait l’échantillon à ${pages.length} pages : ${MAX_PAGES} au plus. Rien n’a été importé.`,
+			`Cet import ajouterait ${plural(summary.pagesAdded, "page")} à l’échantillon, qui en compte déjà ${session.pages.length} : ${MAX_PAGES} au plus. Rien n’a été importé.`,
 		);
 	let total = 0;
 	for (const byPage of Object.values(findings)) for (const list of Object.values(byPage)) total += list.length;
