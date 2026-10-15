@@ -141,8 +141,9 @@ describe("audit guidé (bout en bout)", { timeout: 60_000 }, () => {
 			`/audit/ : ${files} modules JS, ${js} octets non compressés ; scripts en ligne d'Astro : ${inline} octets`,
 		);
 		expect(js).toBeGreaterThan(0);
-		// Budget relevé de 60 000 à 70 000 avec l'écran « Résultat » (ADR-0015) : 62 299 octets à ce moment-là.
-		expect(js).toBeLessThan(70_000);
+		// Budget relevé de 60 000 à 70 000 avec l'écran « Résultat » (ADR-0015) : 62 299 octets à ce moment-là ;
+		// puis à 80 000 avec la sauvegarde et la validation stricte de session (ADR-0016) : 72 128 octets.
+		expect(js).toBeLessThan(80_000);
 		await page.close();
 	});
 
@@ -766,62 +767,65 @@ describe("audit guidé (bout en bout)", { timeout: 60_000 }, () => {
 	// Taux de conformité (ADR-0015). Une session complète demande 106 critères × 3 pages : elle est INJECTÉE dans le
 	// stockage local (même format que ce que l'outil écrit, relu par parseSession), pas saisie clic par clic. Le
 	// processus, lui, est saisi au clavier : c'est lui qui fait passer le taux moyen de 77,77 % à 61,11 %.
-	describe("taux de conformité (ADR-0015)", () => {
-		const [P1, P2, P3] = [1, 2, 3].map((n) => `00000000-0000-4000-8000-00000000000${n}`) as [string, string, string];
-		const PCT = "\u202f%";
-		/** Tout NA sur les 3 pages, sauf 1.1, 3.2 et 8.3 (exemple chiffré du test de conformity.ts). */
-		function sessionJson(patch: (evaluations: Record<string, Record<string, unknown>>) => void = () => {}) {
-			const evaluations: Record<string, Record<string, unknown>> = {};
-			const e = (status: string) => ({ status, note: "", source: "humain" });
-			for (const c of rgaa.criteria) evaluations[c.id] = { [P1]: e("NA"), [P2]: e("NA"), [P3]: e("NA") };
-			evaluations["1.1"] = { [P1]: e("C"), [P2]: e("C"), [P3]: e("NC") };
-			evaluations["3.2"] = { [P1]: e("C"), [P2]: e("C"), [P3]: e("C") };
-			evaluations["8.3"] = { [P1]: e("NC"), [P2]: e("NA"), [P3]: e("C") };
-			patch(evaluations);
-			const at = "2026-10-15T10:00:00.000Z";
-			return JSON.stringify({
-				schemaVersion: 2,
-				site: "https://exemple.fr",
-				createdAt: at,
-				updatedAt: at,
-				pages: [
-					{ id: P1, url: "https://exemple.fr/", title: "Accueil" },
-					{ id: P2, url: "https://exemple.fr/panier", title: "Panier" },
-					{ id: P3, url: "https://exemple.fr/paiement", title: "Paiement" },
-				],
-				evaluations,
-				findings: {},
-			});
-		}
-		async function openWith(page: Page, json: string) {
-			await page.addInitScript((value) => {
-				if (!sessionStorage.getItem("seeded")) {
-					localStorage.setItem("rampe.audit.session", value);
-					sessionStorage.setItem("seeded", "1");
-				}
-			}, json);
-			await openAudit(page);
-		}
-		const rates = (page: Page) => page.locator(".audit-rate").allTextContents();
-		const rows = (page: Page) =>
-			page
-				.locator(".audit-result tbody tr")
-				.evaluateAll((trs) => trs.map((tr) => [...tr.children].map((td) => td.textContent)));
-		/**
-		 * Processus saisi au clavier seul : « Commande » sur Panier, « commande  » (casse et espace différentes) sur
-		 * Paiement. Les deux forment un seul processus, affiché « Commande » (premier libellé saisi).
-		 */
-		async function typeProcess(page: Page) {
-			await page.focus("body");
-			for (const [id, name] of [
-				[P2, "Commande"],
-				[P3, "commande  "],
-			]) {
-				await tabUntil(page, `el.id === 'processus-${id}'`);
-				await page.keyboard.type(name as string);
+	const [P1, P2, P3] = [1, 2, 3].map((n) => `00000000-0000-4000-8000-00000000000${n}`) as [string, string, string];
+	const PCT = "\u202f%";
+	/** Tout NA sur les 3 pages, sauf 1.1, 3.2 et 8.3 (exemple chiffré du test de conformity.ts). */
+	function sessionJson(
+		patch: (evaluations: Record<string, Record<string, unknown>>, session: Record<string, unknown>) => void = () => {},
+	) {
+		const evaluations: Record<string, Record<string, unknown>> = {};
+		const e = (status: string) => ({ status, note: "", source: "humain" });
+		for (const c of rgaa.criteria) evaluations[c.id] = { [P1]: e("NA"), [P2]: e("NA"), [P3]: e("NA") };
+		evaluations["1.1"] = { [P1]: e("C"), [P2]: e("C"), [P3]: e("NC") };
+		evaluations["3.2"] = { [P1]: e("C"), [P2]: e("C"), [P3]: e("C") };
+		evaluations["8.3"] = { [P1]: e("NC"), [P2]: e("NA"), [P3]: e("C") };
+		const at = "2026-10-15T10:00:00.000Z";
+		const session: Record<string, unknown> = {
+			schemaVersion: 2,
+			site: "https://exemple.fr",
+			createdAt: at,
+			updatedAt: at,
+			pages: [
+				{ id: P1, url: "https://exemple.fr/", title: "Accueil" },
+				{ id: P2, url: "https://exemple.fr/panier", title: "Panier" },
+				{ id: P3, url: "https://exemple.fr/paiement", title: "Paiement" },
+			],
+			evaluations,
+			findings: {},
+		};
+		patch(evaluations, session);
+		return JSON.stringify(session);
+	}
+	async function openWith(page: Page, json: string) {
+		await page.addInitScript((value) => {
+			if (!sessionStorage.getItem("seeded")) {
+				localStorage.setItem("rampe.audit.session", value);
+				sessionStorage.setItem("seeded", "1");
 			}
+		}, json);
+		await openAudit(page);
+	}
+	const rates = (page: Page) => page.locator(".audit-rate").allTextContents();
+	const rows = (page: Page) =>
+		page
+			.locator(".audit-result tbody tr")
+			.evaluateAll((trs) => trs.map((tr) => [...tr.children].map((td) => td.textContent)));
+	/**
+	 * Processus saisi au clavier seul : « Commande » sur Panier, « commande  » (casse et espace différentes) sur
+	 * Paiement. Les deux forment un seul processus, affiché « Commande » (premier libellé saisi).
+	 */
+	async function typeProcess(page: Page) {
+		await page.focus("body");
+		for (const [id, name] of [
+			[P2, "Commande"],
+			[P3, "commande  "],
+		]) {
+			await tabUntil(page, `el.id === 'processus-${id}'`);
+			await page.keyboard.type(name as string);
 		}
+	}
 
+	describe("taux de conformité (ADR-0015)", () => {
 		it("processus saisi au clavier ; taux exactement égaux au calcul à la main", async () => {
 			const page = await browser.newPage();
 			await openWith(page, sessionJson());
@@ -915,6 +919,331 @@ describe("audit guidé (bout en bout)", { timeout: 60_000 }, () => {
 			);
 			if (captures) await page.locator(".audit-result").screenshot({ path: join(captures, "resultat-incomplet.png") });
 			expect(await axeViolations(page)).toEqual([]);
+			await page.close();
+		});
+	});
+
+	describe("sauvegarde : export et import de l'audit en JSON (ADR-0016)", () => {
+		const SESSION_LABEL = "Importer un audit (JSON)";
+		const REPORT_LABEL = "Importer un rapport de la CLI (JSON)";
+		const live = (page: Page) => page.locator("[aria-live=polite]").textContent();
+		const stored = (page: Page) => page.evaluate(() => localStorage.getItem("rampe.audit.session"));
+		const reminder = (page: Page) => page.locator(".audit-backup > p").first().textContent();
+		const dialog = (page: Page) => page.getByRole("dialog", { name: "Remplacer l’audit en cours ?" });
+		const pad = (n: number) => String(n).padStart(2, "0");
+		const today = () => {
+			const d = new Date();
+			return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`;
+		};
+		/** Clique et intercepte le téléchargement ; aucune requête réseau pendant ce temps (Blob local). */
+		async function download(page: Page, button: string) {
+			const requests: string[] = [];
+			const onRequest = (r: { url: () => string }) => {
+				if (!r.url().startsWith("blob:")) requests.push(r.url());
+			};
+			page.on("request", onRequest);
+			const [file] = await Promise.all([
+				page.waitForEvent("download"),
+				page.getByRole("button", { name: button }).click(),
+			]);
+			const content = await readFile(await file.path(), "utf8");
+			page.off("request", onRequest);
+			expect(requests).toEqual([]);
+			return { name: file.suggestedFilename(), content, json: JSON.parse(content) };
+		}
+		/** Session complète (taux calculé) avec une note sur deux lignes et un indice de la CLI. */
+		const fullSession = () =>
+			sessionJson((ev, session) => {
+				(ev["1.1"] as Record<string, unknown>)[P1] = {
+					status: "C",
+					note: "Logo :\n\talternative vérifiée",
+					source: "humain",
+				};
+				session.findings = {
+					"1.1": {
+						[P1]: [
+							{
+								ruleId: "image-alt",
+								kind: "non-conformite",
+								nodes: 2,
+								impact: "critical",
+								help: "Images must have alternative text",
+							},
+						],
+					},
+				};
+			});
+		const asFile = (json: string, name = "audit.json") => ({
+			name,
+			mimeType: "application/json",
+			buffer: Buffer.from(json.replace(/^\{/, '{"tool":{"name":"@rampe/site"},')),
+		});
+		/** Audit non vide dans une page neuve : Accueil, 1.1 non conforme avec une note. */
+		async function nonEmpty(page: Page) {
+			await openAudit(page);
+			await addPage(page, "https://exemple.fr/", "Accueil");
+			await page.getByLabel("Non conforme", { exact: true }).check();
+			await page.getByLabel("Note sur Accueil (facultative)").fill("Logo sans alternative");
+			await page.waitForFunction(() => localStorage.getItem("rampe.audit.session")?.includes("Logo sans alternative"));
+		}
+
+		it("aller-retour : export réel, navigateur vierge, import : audit identique", async () => {
+			const first = await browser.newContext();
+			const a = await first.newPage();
+			await openWith(a, fullSession());
+			await typeProcess(a);
+			await a.waitForFunction(() => localStorage.getItem("rampe.audit.session")?.includes("commande  "));
+			await expect(reminder(a)).resolves.toBe(
+				"Cet audit n’existe que dans ce navigateur. Dernier téléchargement : jamais.",
+			);
+			if (captures) await a.locator(".audit-backup").screenshot({ path: join(captures, "sauvegarde-jamais.png") });
+
+			const file = await download(a, "Télécharger l’audit (JSON)");
+			expect(file.name).toBe(`audit-exemple.fr-${today()}.json`);
+			expect(file.json.tool).toEqual({ name: "@rampe/site" });
+			expect(file.json.schemaVersion).toBe(2);
+			await expect(live(a)).resolves.toBe(`Audit téléchargé : ${file.name}`);
+			await expect(reminder(a)).resolves.toMatch(
+				/^Cet audit n’existe que dans ce navigateur\. Dernier téléchargement : \d+ \S+ \d{4} à \d{2}:\d{2}\.$/,
+			);
+			if (captures) await a.locator(".audit-backup").screenshot({ path: join(captures, "sauvegarde-telechargee.png") });
+			await a.waitForFunction(() => localStorage.getItem("rampe.audit.session")?.includes("exportedAt"));
+			const before = {
+				session: JSON.parse((await stored(a)) ?? "null"),
+				rates: await rates(a),
+				rows: await rows(a),
+				reminder: await reminder(a),
+			};
+			expect(before.rates).toEqual([`33,33${PCT}`, `61,11${PCT}`]);
+			expect(before.session).toEqual(file.json);
+			await first.close();
+
+			// Nouveau contexte : stockage vierge, comme un autre navigateur.
+			const second = await browser.newContext();
+			const b = await second.newPage();
+			await openAudit(b);
+			expect(await stored(b)).toBeNull();
+			await b
+				.getByLabel(SESSION_LABEL)
+				.setInputFiles({ name: file.name, mimeType: "application/json", buffer: Buffer.from(file.content) });
+			// Audit vide : aucune confirmation, import direct.
+			await expect(dialog(b).count()).resolves.toBe(0);
+			await expect(live(b)).resolves.toBe(
+				"Audit importé : 3 pages, 318 évaluations enregistrées, 1 indice. L’audit précédent a été remplacé.",
+			);
+			await b.waitForFunction(() => localStorage.getItem("rampe.audit.session")?.includes("exportedAt"));
+			expect(JSON.parse((await stored(b)) ?? "null")).toEqual(before.session);
+			await expect(rates(b)).resolves.toEqual(before.rates);
+			await expect(rows(b)).resolves.toEqual(before.rows);
+			await expect(reminder(b)).resolves.toBe(before.reminder);
+			await expect(b.getByLabel("Processus (facultatif) de Paiement").inputValue()).resolves.toBe("commande  ");
+			await expect(b.getByLabel("Note sur Accueil (facultative)").inputValue()).resolves.toBe(
+				"Logo :\n\talternative vérifiée",
+			);
+			await b.getByText("Indices de l’audit automatique pour Accueil (1)").waitFor();
+			await expect(b.locator(".audit-conflict").count()).resolves.toBe(1);
+			await second.close();
+		});
+
+		for (const colorScheme of ["light", "dark"] as const) {
+			const scheme = colorScheme === "light" ? "clair" : "sombre";
+			it(`audit non vide : confirmation, « Télécharger d’abord », remplacement puis annulation ; axe (${scheme})`, async () => {
+				const page = await browser.newPage({ colorScheme });
+				await nonEmpty(page);
+				const original = await stored(page);
+				await page.getByLabel(SESSION_LABEL).setInputFiles(asFile(sessionJson()));
+				await dialog(page).waitFor();
+				// Focus dans la boîte, sur l'action la plus sûre ; le reste de la page est inerte.
+				expect(await page.evaluate(() => document.activeElement?.textContent)).toBe(
+					"Télécharger d’abord l’audit en cours",
+				);
+				expect(await page.evaluate(() => document.activeElement?.closest("dialog") !== null)).toBe(true);
+				await expect
+					.poll(() => dialog(page).getByRole("paragraph").first().textContent())
+					.toBe(
+						"L’audit en cours (1 page, https://exemple.fr) sera remplacé par celui du fichier (3 pages, https://exemple.fr). Téléchargez d’abord l’audit en cours si vous voulez pouvoir y revenir.",
+					);
+				expect(await axeViolations(page), "boîte de dialogue ouverte").toEqual([]);
+				if (captures) await page.screenshot({ path: join(captures, `confirmation-${scheme}.png`) });
+
+				const backup = await download(page, "Télécharger d’abord l’audit en cours");
+				expect(backup.json.pages.map((p: { title: string }) => p.title)).toEqual(["Accueil"]);
+				expect(backup.json.evaluations["1.1"][backup.json.pages[0].id]).toEqual({
+					status: "NC",
+					note: "Logo sans alternative",
+					source: "humain",
+				});
+				await expect
+					.poll(() => dialog(page).getByRole("status").textContent())
+					.toBe(`Audit en cours téléchargé : ${backup.name}`);
+				await dialog(page).waitFor();
+
+				await page.getByRole("button", { name: "Remplacer l’audit en cours" }).click();
+				await dialog(page).waitFor({ state: "hidden" });
+				// Fermeture : le focus revient au champ fichier (événement `close`, asynchrone).
+				await expect.poll(() => page.evaluate(() => document.activeElement?.id)).toBe("audit-session");
+				await expect(page.locator(".audit-page-list li").count()).resolves.toBe(3);
+				await expect(live(page)).resolves.toMatch(/^Audit importé : 3 pages, 318 évaluations/);
+				expect(await axeViolations(page), "après import").toEqual([]);
+				if (captures)
+					await page.locator(".audit-backup").screenshot({ path: join(captures, `import-audit-${scheme}.png`) });
+
+				await page.getByRole("button", { name: "Annuler cet import" }).click();
+				await expect(live(page)).resolves.toBe("Import annulé : l’audit est revenu à son état d’avant l’import.");
+				expect(await page.evaluate(() => document.activeElement?.id)).toBe("audit-session");
+				await expect(page.locator(".audit-page-list li").count()).resolves.toBe(1);
+				await expect(page.getByLabel("Non conforme", { exact: true }).isChecked()).resolves.toBe(true);
+				await page.waitForFunction(() => {
+					const saved = localStorage.getItem("rampe.audit.session");
+					return saved?.includes("exportedAt") && !saved.includes("Panier");
+				});
+				// L'état d'avant, téléchargement compris (date du dernier téléchargement).
+				expect(JSON.parse((await stored(page)) ?? "null")).toEqual({
+					...JSON.parse(original ?? "null"),
+					exportedAt: backup.json.exportedAt,
+				});
+				await page.close();
+			});
+		}
+
+		it("au clavier seul : boîte de dialogue au focus piégé, Échap rend le focus, remplacer puis annuler", async () => {
+			const page = await browser.newPage();
+			await nonEmpty(page);
+			const original = await stored(page);
+			await page.focus("body");
+			await tabUntil(page, "el.id === 'audit-session'");
+			const choose = async () => {
+				const [chooser] = await Promise.all([page.waitForEvent("filechooser"), page.keyboard.press("Space")]);
+				await chooser.setFiles(asFile(sessionJson()));
+				await dialog(page).waitFor();
+			};
+			await choose();
+			// Tab et Maj+Tab ne sortent jamais de la boîte vers la page (le navigateur peut passer par sa propre interface).
+			const visited: string[] = [];
+			for (const key of [...Array(7).fill("Tab"), ...Array(7).fill("Shift+Tab")]) {
+				await page.keyboard.press(key);
+				const where = await page.evaluate(() => {
+					const el = document.activeElement;
+					if (!el || el === document.body) return "hors document";
+					return el.closest("dialog") ? (el.textContent ?? "") : `FUITE ${el.id || el.tagName}`;
+				});
+				visited.push(where);
+			}
+			expect(visited.filter((v) => v.startsWith("FUITE"))).toEqual([]);
+
+			expect(visited).toEqual(
+				expect.arrayContaining(["Télécharger d’abord l’audit en cours", "Remplacer l’audit en cours", "Annuler"]),
+			);
+			await page.keyboard.press("Escape");
+			await dialog(page).waitFor({ state: "hidden" });
+			expect(await page.evaluate(() => document.activeElement?.id)).toBe("audit-session");
+			await page.waitForTimeout(600);
+			expect(await stored(page)).toBe(original);
+
+			await choose();
+			await page.keyboard.press("Tab"); // du bouton « Télécharger d'abord » à « Remplacer »
+			expect(await page.evaluate(() => document.activeElement?.textContent)).toBe("Remplacer l’audit en cours");
+			await page.keyboard.press("Enter");
+			await expect(page.locator(".audit-page-list li").count()).resolves.toBe(3);
+			expect(await page.evaluate(() => document.activeElement?.id)).toBe("audit-session");
+			await tabUntil(page, "el.textContent === 'Annuler cet import'");
+			await page.keyboard.press("Enter");
+			expect(await page.evaluate(() => document.activeElement?.id)).toBe("audit-session");
+			await expect(page.locator(".audit-page-list li").count()).resolves.toBe(1);
+			await page.close();
+		});
+
+		it("fichier hostile ou abîmé : refusé avant toute confirmation, message clair, session intacte", async () => {
+			const page = await browser.newPage();
+			await nonEmpty(page);
+			const before = await stored(page);
+			const input = page.getByLabel(SESSION_LABEL);
+			const invalid = "Ce fichier n’est pas un audit Rampe, ou il a été modifié. Rien n’a été importé.";
+			const good = sessionJson();
+			const cases: [string, string | Buffer, string | RegExp, RegExp | null][] = [
+				[
+					"proto.json",
+					good.replace(`"title":"Accueil"`, `"title":"Accueil","__proto__":{"polluted":true}`),
+					invalid,
+					/^fichier\.pages\.0 : clé interdite « __proto__ »/,
+				],
+				[
+					"critere.json",
+					good.replace(`"1.1":`, `"99.1":`),
+					invalid,
+					/^evaluations : critère "99\.1" inexistant dans le référentiel/,
+				],
+				[
+					"id.json",
+					good.replaceAll(P1, "toString"),
+					invalid,
+					/^pages\[0\]\.id : identifiant de page qui n’est pas un UUID/,
+				],
+				[
+					"url.json",
+					good.replace("https://exemple.fr/panier", "javascript:alert(1)"),
+					invalid,
+					/^pages\[1\]\.url : Seules les adresses http/,
+				],
+				["statut.json", good.replace(`"status":"NC"`, `"status":"OK"`), invalid, /statut inconnu "OK"/],
+				[
+					"futur.json",
+					good.replace(`"schemaVersion":2`, `"schemaVersion":3`),
+					/^Cet audit a été créé par une version plus récente de Rampe/,
+					null,
+				],
+				["casse.json", "{ pas du JSON", /^Ce fichier n’est pas un fichier JSON lisible/, null],
+				["enorme.json", Buffer.alloc(21 * 1024 * 1024, " "), /^Fichier trop volumineux \(21 Mo\)/, null],
+			];
+			const error = page.locator("#audit-session-erreur");
+			for (const [name, content, message, detail] of cases) {
+				const buffer = typeof content === "string" ? asFile(content).buffer : content;
+				await input.setInputFiles({ name, mimeType: "application/json", buffer });
+				// Le message peut être le même d'un cas à l'autre : on attend le détail propre à ce cas.
+				if (detail)
+					await expect.poll(() => error.locator("details > p").textContent(), { message: name }).toMatch(detail);
+				await expect.poll(() => error.locator("> p").textContent(), { message: name }).toMatch(message);
+				await expect(dialog(page).count()).resolves.toBe(0);
+				await expect(error.locator("details").count()).resolves.toBe(detail ? 1 : 0);
+				if (detail) {
+					await expect(error.locator("details").evaluate((d) => (d as HTMLDetailsElement).open)).resolves.toBe(false);
+					await expect(error.locator("details > p").textContent()).resolves.toMatch(detail);
+					if (captures && name === "critere.json") {
+						await error.locator("summary").click();
+						await page.locator(".audit-session-import").screenshot({ path: join(captures, "import-audit-refus.png") });
+						await error.locator("summary").click();
+					}
+				}
+				await expect(input.getAttribute("aria-describedby")).resolves.toContain("audit-session-erreur");
+				await expect(input.getAttribute("aria-invalid")).resolves.toBe("true");
+				await expect(live(page)).resolves.toMatch(message);
+			}
+			expect(await page.evaluate(() => "polluted" in {})).toBe(false);
+			await page.waitForTimeout(600);
+			expect(await stored(page)).toBe(before);
+			await page.close();
+		});
+
+		it("mauvais champ : rapport de la CLI comme audit, audit comme rapport : message qui oriente", async () => {
+			const page = await browser.newPage();
+			await nonEmpty(page);
+			const before = await stored(page);
+			await page.getByLabel(SESSION_LABEL).setInputFiles(reportPath);
+			await expect
+				.poll(() => page.locator("#audit-session-erreur > p").textContent())
+				.toBe(
+					"Ce fichier est un rapport de la CLI Rampe, pas un audit complet : importez-le avec le champ « Importer un rapport de la CLI (JSON) », section « 1. Pages de l’échantillon ». Rien n’a été importé.",
+				);
+			await page.getByLabel(REPORT_LABEL).setInputFiles(asFile(sessionJson()));
+			await expect
+				.poll(() => page.locator("#audit-rapport-erreur > p").textContent())
+				.toBe(
+					"Ce fichier est un audit Rampe complet (téléchargé depuis l’audit guidé), pas un rapport de la CLI : importez-le avec le champ « Importer un audit (JSON) », section « Sauvegarde de l’audit ». Rien n’a été importé.",
+				);
+			await expect(dialog(page).count()).resolves.toBe(0);
+			if (captures) await page.screenshot({ path: join(captures, "mauvais-champ.png"), fullPage: true });
+			await page.waitForTimeout(600);
+			expect(await stored(page)).toBe(before);
 			await page.close();
 		});
 	});

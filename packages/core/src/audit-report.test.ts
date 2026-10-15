@@ -8,8 +8,16 @@ import {
 	parseAuditReport,
 	REPORT_TOOL_NAME,
 	ReportError,
+	SESSION_GIVEN_AS_REPORT,
 } from "./audit-report.ts";
-import { addPage, createSession, getEvaluation, getFindings, setEvaluation } from "./audit-session.ts";
+import {
+	addPage,
+	createSession,
+	getEvaluation,
+	getFindings,
+	serializeSession,
+	setEvaluation,
+} from "./audit-session.ts";
 import { rgaa } from "./rgaa.ts";
 
 const NOW = "2026-10-15T10:00:00.000Z";
@@ -194,6 +202,14 @@ describe("parseAuditReport : validation stricte (ADR-0014 §4)", () => {
 		["prototype", `{"schemaVersion":2,"tool":{"name":"@rampe/cli","prototype":1},"pages":[]}`],
 	])("rejette une clé %s, où qu'elle soit", (key, json) => {
 		expect(refusal(() => parseAuditReport(JSON.parse(json), known)).detail).toContain(`clé interdite « ${key} »`);
+	});
+
+	it("audit complet (export de l'audit guidé) donné au champ du rapport : message qui oriente vers le bon champ", () => {
+		const file = JSON.parse(
+			serializeSession(addPage(createSession(NOW), { url: "https://exemple.fr/", title: "" }, NOW, A)),
+		);
+		expect(() => parseAuditReport(file, known)).toThrow(SESSION_GIVEN_AS_REPORT);
+		expect(SESSION_GIVEN_AS_REPORT).toMatch(/« Importer un audit \(JSON\) »/);
 	});
 
 	it("rejette une imbrication anormale sans épuiser la pile", () => {

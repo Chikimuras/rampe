@@ -6,14 +6,33 @@ import {
 	type AuditSession,
 	type Evaluation,
 	type Finding,
-	isObject,
 	isPageId,
 	own,
 	RESULT_KINDS,
 	type ResultKind,
 } from "./audit-session.ts";
 import type { AxeRuleMapping } from "./axe.ts";
-import { parseAuditUrl, plural, stripBidi, stripControl, truncate, urlKey } from "./sample-file.ts";
+import { parseAuditUrl, plural, stripBidi, urlKey } from "./sample-file.ts";
+import {
+	array,
+	checkKeys,
+	display,
+	displayOrNull,
+	fail,
+	field,
+	IMPACTS,
+	MAX_FINDINGS,
+	MAX_PAGES,
+	MAX_URL,
+	object,
+	REPORT_TOOL_NAME,
+	ReportError,
+	RULE_ID,
+	SESSION_TOOL_NAME,
+	strictly,
+	string,
+	toolName,
+} from "./strict.ts";
 
 export type { ResultKind } from "./audit-session.ts";
 
@@ -56,10 +75,7 @@ export interface AuditReport {
 }
 
 export const REPORT_SCHEMA_VERSION = 2;
-/** Nom écrit par la CLI dans `tool.name` (nom de son paquet). */
-export const REPORT_TOOL_NAME = "@rampe/cli";
-/** ADR-0014 §4 : taille maximale du fichier, vérifiée par l'appelant AVANT lecture. */
-export const MAX_REPORT_BYTES = 20 * 1024 * 1024;
+export { MAX_FINDINGS, MAX_REPORT_BYTES, REPORT_TOOL_NAME, ReportError } from "./strict.ts";
 
 /** Rapport validé : seuls les champs utilisés par l'import, nettoyés et bornés. */
 export interface ImportableReport {
@@ -77,56 +93,17 @@ export interface ImportableReport {
 // Bornes (ADR-0014 §4, OWASP Input Validation Cheat Sheet : type, forme et bornes en liste blanche).
 // La structure, les adresses, les critères, les classes et les nombres font rejeter le fichier ; les textes
 // seulement affichés (titre, erreur de page, description de règle) sont tronqués.
-const MAX_PAGES = 1000;
 const MAX_RESULTS = 1000;
 const MAX_CRITERIA = 200;
-/** Total d'indices d'un rapport : au-delà, l'audit ne tiendrait plus dans le stockage du navigateur. */
-export const MAX_FINDINGS = 50_000;
-const MAX_URL = 2048;
 const MAX_TITLE = 300;
 const MAX_ERROR = 500;
 const MAX_HELP = 300;
-const MAX_DEPTH = 64;
-const RULE_ID = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
-const IMPACTS = ["minor", "moderate", "serious", "critical"];
-const FORBIDDEN_KEYS = ["__proto__", "constructor", "prototype"];
 
-/** Refus d'import : `message` est une phrase claire pour un non-expert, `detail` le premier défaut technique. */
-export class ReportError extends Error {
-	// Pas de propriété de paramètre : la CLI exécute ce fichier par simple suppression des types (Node ≥ 22.18).
-	readonly detail?: string;
-	constructor(message: string, detail?: string) {
-		super(message);
-		this.detail = detail;
-	}
-}
 export const INVALID_REPORT =
 	"Ce fichier n’est pas un rapport de la CLI Rampe, ou il a été modifié. Rien n’a été importé.";
-// Détail borné : jamais de texte importé non borné dans un message.
-const fail = (path: string, problem: string): never => {
-	throw new ReportError(INVALID_REPORT, `${path} : ${problem}.`.slice(0, 500));
-};
-
-/** Refuse les clés dangereuses partout dans le fichier, et une imbrication anormale (pile bornée). */
-function checkKeys(value: unknown, path: string, depth: number): void {
-	if (typeof value !== "object" || value === null) return;
-	if (depth > MAX_DEPTH) fail(path, "structure trop profonde");
-	for (const key of Object.keys(value)) {
-		if (FORBIDDEN_KEYS.includes(key)) fail(path, `clé interdite « ${key} »`);
-		checkKeys((value as Record<string, unknown>)[key], `${path}.${key}`, depth + 1);
-	}
-}
-
-const field = (o: Record<string, unknown>, key: string) => (Object.hasOwn(o, key) ? o[key] : undefined);
-const object = (v: unknown, path: string) => (isObject(v) ? v : fail(path, "objet attendu"));
-const array = (v: unknown, path: string, max: number) => {
-	if (!Array.isArray(v)) return fail(path, "liste attendue");
-	return v.length > max ? fail(path, `plus de ${max} éléments`) : v;
-};
-const string = (v: unknown, path: string) => (typeof v === "string" ? v : fail(path, "texte attendu"));
-/** Texte affiché : nettoyé puis tronqué, jamais rejeté pour sa longueur. */
-const display = (v: unknown, path: string, max: number) => truncate(stripControl(string(v, path)).trim(), max);
-const displayOrNull = (v: unknown, path: string, max: number) => (v === null ? null : display(v, path, max));
+/** Audit complet donné au champ du rapport (ADR-0016) : on oriente vers le bon champ. */
+export const SESSION_GIVEN_AS_REPORT =
+	"Ce fichier est un audit Rampe complet (téléchargé depuis l’audit guidé), pas un rapport de la CLI : importez-le avec le champ « Importer un audit (JSON) », section « Sauvegarde de l’audit ». Rien n’a été importé.";
 
 /**
  * Valide un rapport JSON de la CLI (ADR-0014 §4), déjà désérialisé par `JSON.parse` seul.
@@ -134,8 +111,13 @@ const displayOrNull = (v: unknown, path: string, max: number) => (v === null ? n
  * `knownCriteria` : critères du référentiel (le modèle n'embarque pas les données RGAA).
  */
 export function parseAuditReport(json: unknown, knownCriteria: ReadonlySet<string>): ImportableReport {
-	checkKeys(json, "fichier", 0);
+	return strictly(INVALID_REPORT, () => parseReport(json, knownCriteria));
+}
+
+function parseReport(json: unknown, knownCriteria: ReadonlySet<string>): ImportableReport {
+	checkKeys(json, "fichier");
 	const root = object(json, "fichier");
+	if (toolName(root) === SESSION_TOOL_NAME) throw new ReportError(SESSION_GIVEN_AS_REPORT);
 	const version = field(root, "schemaVersion");
 	if (version !== REPORT_SCHEMA_VERSION)
 		fail("schemaVersion", `version ${JSON.stringify(version) ?? "absente"} non prise en charge (attendu : 2)`);

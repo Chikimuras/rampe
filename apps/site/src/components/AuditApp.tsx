@@ -14,13 +14,17 @@ import {
 	createSession,
 	getEvaluation,
 	getFindings,
+	INVALID_SESSION,
 	isFutureSession,
-	parseSession,
+	MAX_PROCESS,
+	parseSessionStrict,
 	progress,
 	type ResultKind,
 	removePage,
 	type SessionPage,
 	type Status,
+	serializeSession,
+	sessionFileName,
 	setEvaluation,
 	setPageProcess,
 } from "@rampe/core/audit-session";
@@ -48,6 +52,10 @@ export interface AuditCriterion {
 type Filter = "all" | "NT" | "NC" | "auto";
 
 const STORAGE_KEY = "rampe.audit.session";
+/** Bornes de saisie, sous celles de la validation de session (core) : un aller-retour export → import ne tronque rien. */
+const MAX_TITLE_INPUT = 300;
+const MAX_NOTE_INPUT = 10_000;
+const UNDONE = "Import annulé : l’audit est revenu à son état d’avant l’import.";
 const SAVE_DELAY = 400;
 const STATUS_LABELS: [Status, string][] = [
 	["C", "Conforme"],
@@ -88,13 +96,17 @@ function storageAvailable(): boolean {
 	}
 }
 
-/** Relit une valeur du stockage ; `future` : écrite par une version plus récente de Rampe. */
-function readStored(raw: string): { session: AuditSession | null; future: boolean } {
+/**
+ * Relit une valeur du stockage, avec la même validation stricte qu'un fichier importé (ADR-0016, Conséquences) ;
+ * `future` : écrite par une version plus récente de Rampe.
+ */
+function readStored(raw: string, known: ReadonlySet<string>): { session: AuditSession | null; future: boolean } {
+	let value: unknown;
 	try {
-		const value = JSON.parse(raw);
-		return { session: parseSession(value), future: isFutureSession(value) };
+		value = JSON.parse(raw);
+		return { session: parseSessionStrict(value, known), future: false };
 	} catch {
-		return { session: null, future: false };
+		return { session: null, future: isFutureSession(value) };
 	}
 }
 
@@ -102,7 +114,7 @@ function readStored(raw: string): { session: AuditSession | null; future: boolea
  * `ignored` : une valeur était présente mais illisible ; elle est mise de côté, jamais réutilisée.
  * `future` : une version plus récente l'a écrite ; on n'y touche pas (ni mise de côté, ni écrasement).
  */
-function loadSession(): { session: AuditSession | null; ignored: boolean; future: boolean } {
+function loadSession(known: ReadonlySet<string>): { session: AuditSession | null; ignored: boolean; future: boolean } {
 	let raw: string | null;
 	try {
 		raw = localStorage.getItem(STORAGE_KEY);
@@ -110,7 +122,7 @@ function loadSession(): { session: AuditSession | null; ignored: boolean; future
 		return { session: null, ignored: false, future: false };
 	}
 	if (raw === null) return { session: null, ignored: false, future: false };
-	const { session, future } = readStored(raw);
+	const { session, future } = readStored(raw, known);
 	if (session) return { session, ignored: false, future: false };
 	if (future) return { session: null, ignored: false, future: true };
 	try {
@@ -121,7 +133,7 @@ function loadSession(): { session: AuditSession | null; ignored: boolean; future
 
 function saveSession(session: AuditSession): boolean {
 	try {
-		localStorage.setItem(STORAGE_KEY, JSON.stringify(session));
+		localStorage.setItem(STORAGE_KEY, serializeSession(session));
 		return true;
 	} catch {
 		return false;
@@ -152,6 +164,7 @@ export default function AuditApp({ topics, criteria }: { topics: AuditTopic[]; c
 	const [filter, setFilter] = useState<Filter>("all");
 	const [announce, setAnnounce] = useState("");
 	const narrow = useNarrow();
+	const known = useMemo(() => new Set(criteria.map((c) => c.id)), [criteria]);
 	const headingRef = useRef<HTMLHeadingElement>(null);
 	/** Dernière session écrite ou relue : on n'écrit qu'après un vrai changement. */
 	const saved = useRef<AuditSession>(session);
@@ -162,7 +175,7 @@ export default function AuditApp({ topics, criteria }: { topics: AuditTopic[]; c
 		const ok = storageAvailable();
 		setStorageOk(ok);
 		if (ok) {
-			const { session: stored, ignored: wasIgnored, future: isFuture } = loadSession();
+			const { session: stored, ignored: wasIgnored, future: isFuture } = loadSession(known);
 			if (stored) {
 				saved.current = stored;
 				setSession(stored);
@@ -203,7 +216,7 @@ export default function AuditApp({ topics, criteria }: { topics: AuditTopic[]; c
 	useEffect(() => {
 		const onStorage = (e: StorageEvent) => {
 			if (e.key !== STORAGE_KEY || e.newValue === null) return;
-			const { session: other, future: isFuture } = readStored(e.newValue);
+			const { session: other, future: isFuture } = readStored(e.newValue, known);
 			if (isFuture) {
 				pending.current = null;
 				setFuture(true);
@@ -324,8 +337,10 @@ export default function AuditApp({ topics, criteria }: { topics: AuditTopic[]; c
 				</p>
 			)}
 
+			<Backup session={session} setSession={setSession} setAnnounce={setAnnounce} known={known} />
+
 			<Pages session={session} setSession={setSession} setAnnounce={setAnnounce}>
-				<ImportReport session={session} setSession={setSession} setAnnounce={setAnnounce} criteria={criteria} />
+				<ImportReport session={session} setSession={setSession} setAnnounce={setAnnounce} known={known} />
 			</Pages>
 
 			<section aria-labelledby="audit-criteres" class="audit-eval">
@@ -606,7 +621,13 @@ function PageEvaluation({
 				))}
 			</div>
 			<label for={noteId}>Note sur {pageName(page)} (facultative)</label>
-			<textarea id={noteId} rows={2} value={evaluation.note} onInput={(e) => update({ note: e.currentTarget.value })} />
+			<textarea
+				id={noteId}
+				rows={2}
+				maxLength={MAX_NOTE_INPUT}
+				value={evaluation.note}
+				onInput={(e) => update({ note: e.currentTarget.value })}
+			/>
 			{findings.length > 0 && (
 				<details class="audit-findings">
 					<summary>
@@ -759,6 +780,7 @@ function Pages({
 								<input
 									id={`processus-${p.id}`}
 									type="text"
+									maxLength={MAX_PROCESS}
 									value={p.process ?? ""}
 									aria-describedby="audit-processus-aide"
 									onInput={(e) => {
@@ -803,7 +825,13 @@ function Pages({
 				</div>
 				<div class="audit-field">
 					<label for="audit-titre-page">Nom de la page (facultatif)</label>
-					<input id="audit-titre-page" type="text" value={title} onInput={(e) => setTitle(e.currentTarget.value)} />
+					<input
+						id="audit-titre-page"
+						type="text"
+						maxLength={MAX_TITLE_INPUT}
+						value={title}
+						onInput={(e) => setTitle(e.currentTarget.value)}
+					/>
 				</div>
 				<button type="submit">Ajouter la page</button>
 			</form>
@@ -842,76 +870,41 @@ function ImportReport({
 	session,
 	setSession,
 	setAnnounce,
-	criteria,
+	known,
 }: {
 	session: AuditSession;
 	setSession: (update: AuditSession) => void;
 	setAnnounce: (message: string) => void;
-	criteria: AuditCriterion[];
+	known: ReadonlySet<string>;
 }) {
-	const known = useMemo(() => new Set(criteria.map((c) => c.id)), [criteria]);
-	const [error, setError] = useState<{ message: string; detail?: string } | null>(null);
-	const [done, setDone] = useState<{ summary: ImportSummary; before: AuditSession; after: AuditSession } | null>(null);
-	const [undone, setUndone] = useState(false);
-	const inputRef = useRef<HTMLInputElement>(null);
-	// La lecture du fichier est asynchrone : l'import part de la session à jour à ce moment-là.
-	const latest = useRef(session);
-	latest.current = session;
+	const imp = useFileImport<ImportSummary>(session, setSession, setAnnounce);
+	const { error, done, undone, inputRef } = imp;
 
-	const refuse = (message: string, detail?: string) => {
-		setError({ message, detail });
-		setDone(null);
-		setUndone(false);
-		setAnnounce(message);
-	};
-	const onChange = async (e: Event) => {
-		const input = e.currentTarget as HTMLInputElement;
-		const file = input.files?.[0];
-		input.value = ""; // le même fichier peut être choisi à nouveau
-		if (!file) return;
-		if (file.size > MAX_REPORT_BYTES)
-			return refuse(
-				`Fichier trop volumineux (${Math.ceil(file.size / 1024 / 1024)} Mo) : 20 Mo au plus. Rien n’a été importé.`,
-			);
-		let json: unknown;
-		try {
-			json = JSON.parse(await file.text());
-		} catch {
-			return refuse(
-				"Ce fichier n’est pas un fichier JSON lisible : choisissez le fichier écrit par rampe audit --json. Rien n’a été importé.",
-			);
-		}
-		const before = latest.current;
-		let result: ReturnType<typeof importAutomaticResults>;
-		try {
-			result = importAutomaticResults(before, parseAuditReport(json, known));
-		} catch (err) {
-			if (err instanceof ReportError) return refuse(err.message, err.detail);
-			return refuse(INVALID_REPORT, (err as Error).message);
-		}
-		setSession(result.session);
-		setError(null);
-		setUndone(false);
-		setDone({ summary: result.summary, before, after: result.session });
-		setAnnounce(summaryText(result.summary));
-	};
-	const undo = () => {
-		if (!done) return;
-		setSession(done.before);
-		setDone(null);
-		setUndone(true);
-		setAnnounce("Import annulé : l’audit est revenu à son état d’avant l’import.");
-		inputRef.current?.focus();
-	};
-	const canUndo = done !== null && session === done.after;
+	const onChange = (e: Event) =>
+		imp.read(
+			e,
+			"Ce fichier n’est pas un fichier JSON lisible : choisissez le fichier écrit par rampe audit --json. Rien n’a été importé.",
+			(json, before) => {
+				let result: ReturnType<typeof importAutomaticResults>;
+				try {
+					result = importAutomaticResults(before, parseAuditReport(json, known));
+				} catch (err) {
+					if (err instanceof ReportError) return imp.refuse(err.message, err.detail);
+					return imp.refuse(INVALID_REPORT, (err as Error).message);
+				}
+				imp.apply(before, result.session, result.summary, summaryText(result.summary));
+			},
+		);
 
 	return (
 		<div class="audit-import">
-			<h3>Reprendre les résultats de l’audit automatique</h3>
+			<h3>Rapport de la CLI : reprendre les résultats de l’audit automatique</h3>
 			<p id="audit-rapport-aide">
 				Fichier écrit par <code>rampe audit --json</code> (20 Mo au plus). Les pages manquantes sont ajoutées. Les
 				non-conformités détectées sont proposées « à confirmer » sur les critères encore non testés ; les autres
-				résultats deviennent des indices. Vos évaluations déjà saisies ne sont jamais modifiées.
+				résultats deviennent des indices. Vos évaluations déjà saisies ne sont jamais modifiées. Pour reprendre un audit
+				complet téléchargé depuis Rampe, utilisez plutôt « Importer un audit (JSON) », section « Sauvegarde de l’audit
+				».
 			</p>
 			<label for="audit-rapport">Importer un rapport de la CLI (JSON)</label>
 			<input
@@ -923,18 +916,8 @@ function ImportReport({
 				aria-invalid={error ? "true" : undefined}
 				aria-describedby={error ? "audit-rapport-aide audit-rapport-erreur" : "audit-rapport-aide"}
 			/>
-			{error && (
-				<div id="audit-rapport-erreur" class="audit-error">
-					<p>{error.message}</p>
-					{error.detail && (
-						<details>
-							<summary>Détail technique</summary>
-							<p>{error.detail}</p>
-						</details>
-					)}
-				</div>
-			)}
-			{undone && <p>Import annulé : l’audit est revenu à son état d’avant l’import.</p>}
+			{error && <ImportError id="audit-rapport-erreur" error={error} />}
+			{undone && <p>{UNDONE}</p>}
 			{done && (
 				<div class="audit-import-summary">
 					<p>{summaryText(done.summary)}</p>
@@ -948,14 +931,260 @@ function ImportReport({
 							</li>
 						))}
 					</ul>
-					{canUndo && (
-						<button type="button" onClick={undo}>
+					{imp.canUndo && (
+						<button type="button" onClick={imp.undo}>
 							Annuler cet import
 						</button>
 					)}
 				</div>
 			)}
 		</div>
+	);
+}
+
+type ImportFailure = { message: string; detail?: string };
+
+/** Phrase claire d'abord ; le premier défaut trouvé suit, replié (ADR-0014 §4, ADR-0016 §2). */
+function ImportError({ id, error }: { id: string; error: ImportFailure }) {
+	return (
+		<div id={id} class="audit-error">
+			<p>{error.message}</p>
+			{error.detail && (
+				<details>
+					<summary>Détail technique</summary>
+					<p>{error.detail}</p>
+				</details>
+			)}
+		</div>
+	);
+}
+
+/**
+ * Import d'un fichier JSON, commun au rapport de la CLI et à l'audit complet : taille vérifiée avant lecture,
+ * `JSON.parse` seul, puis « Annuler cet import » (ADR-0014 §5, ADR-0016 §3), qui restaure l'état d'avant tant que
+ * rien d'autre n'a changé.
+ */
+function useFileImport<S>(
+	session: AuditSession,
+	setSession: (update: AuditSession) => void,
+	setAnnounce: (message: string) => void,
+) {
+	const [error, setError] = useState<ImportFailure | null>(null);
+	const [done, setDone] = useState<{ summary: S; before: AuditSession; after: AuditSession } | null>(null);
+	const [undone, setUndone] = useState(false);
+	const inputRef = useRef<HTMLInputElement>(null);
+	// La lecture du fichier est asynchrone : l'import part de la session à jour à ce moment-là.
+	const latest = useRef(session);
+	latest.current = session;
+	const refuse = (message: string, detail?: string) => {
+		setError({ message, detail });
+		setDone(null);
+		setUndone(false);
+		setAnnounce(message);
+	};
+	return {
+		error,
+		done,
+		undone,
+		inputRef,
+		latest,
+		refuse,
+		canUndo: done !== null && session === done.after,
+		/** Lit le fichier choisi ; `unreadable` : message d'un JSON illisible. */
+		async read(e: Event, unreadable: string, use: (json: unknown, current: AuditSession) => void) {
+			const input = e.currentTarget as HTMLInputElement;
+			const file = input.files?.[0];
+			input.value = ""; // le même fichier peut être choisi à nouveau
+			if (!file) return;
+			if (file.size > MAX_REPORT_BYTES)
+				return refuse(
+					`Fichier trop volumineux (${Math.ceil(file.size / 1024 / 1024)} Mo) : 20 Mo au plus. Rien n’a été importé.`,
+				);
+			let json: unknown;
+			try {
+				json = JSON.parse(await file.text());
+			} catch {
+				return refuse(unreadable);
+			}
+			use(json, latest.current);
+		},
+		apply(before: AuditSession, after: AuditSession, summary: S, message: string) {
+			setSession(after);
+			setError(null);
+			setUndone(false);
+			setDone({ summary, before, after });
+			setAnnounce(message);
+		},
+		undo() {
+			if (!done) return;
+			setSession(done.before);
+			setDone(null);
+			setUndone(true);
+			setAnnounce(UNDONE);
+			inputRef.current?.focus();
+		},
+	};
+}
+
+const dateTime = (iso: string) => new Date(iso).toLocaleString("fr-FR", { dateStyle: "long", timeStyle: "short" });
+
+/**
+ * Sauvegarde (ADR-0016) : téléchargement de l'audit complet en JSON, sans réseau, et import d'un audit téléchargé.
+ * Importer remplace l'audit en cours : s'il a des pages (donc d'éventuelles évaluations, qui n'existent pas sans
+ * page), une boîte de dialogue native demande confirmation et propose d'abord de télécharger l'audit en cours.
+ */
+function Backup({
+	session,
+	setSession,
+	setAnnounce,
+	known,
+}: {
+	session: AuditSession;
+	setSession: (update: AuditSession) => void;
+	setAnnounce: (message: string) => void;
+	known: ReadonlySet<string>;
+}) {
+	const imp = useFileImport<{ pages: number; evaluations: number; findings: number }>(session, setSession, setAnnounce);
+	const { error, done, undone, inputRef, latest } = imp;
+	const dialogRef = useRef<HTMLDialogElement>(null);
+	/** Audit validé en attente de confirmation ; `downloaded` : nom du fichier téléchargé depuis la boîte de dialogue. */
+	const [pending, setPending] = useState<AuditSession | null>(null);
+	const [downloaded, setDownloaded] = useState("");
+	useEffect(() => {
+		if (pending && !dialogRef.current?.open) dialogRef.current?.showModal();
+	}, [pending]);
+
+	/** Fichier fabriqué dans le navigateur (Blob et lien) : rien ne part sur le réseau. */
+	const download = () => {
+		const at = new Date();
+		const next = { ...latest.current, exportedAt: at.toISOString() };
+		const name = sessionFileName(next, at);
+		const a = document.createElement("a");
+		a.href = URL.createObjectURL(new Blob([serializeSession(next)], { type: "application/json" }));
+		a.download = name;
+		a.click();
+		setTimeout(() => URL.revokeObjectURL(a.href));
+		setSession(next);
+		setAnnounce(`Audit téléchargé : ${name}`);
+		return name;
+	};
+	const replace = (before: AuditSession, next: AuditSession) => {
+		const summary = {
+			pages: next.pages.length,
+			evaluations: Object.values(next.evaluations).reduce((n, byPage) => n + Object.keys(byPage).length, 0),
+			findings: Object.values(next.findings).reduce(
+				(n, byPage) => n + Object.values(byPage).reduce((m, list) => m + list.length, 0),
+				0,
+			),
+		};
+		const message = `Audit importé : ${plural(summary.pages, "page")}, ${plural(summary.evaluations, "évaluation")} enregistrée${summary.evaluations > 1 ? "s" : ""}, ${plural(summary.findings, "indice")}. L’audit précédent a été remplacé.`;
+		imp.apply(before, next, summary, message);
+	};
+	const onChange = (e: Event) =>
+		imp.read(
+			e,
+			"Ce fichier n’est pas un fichier JSON lisible : choisissez un fichier audit-….json téléchargé depuis Rampe. Rien n’a été importé.",
+			(json, current) => {
+				let next: AuditSession;
+				try {
+					next = parseSessionStrict(json, known);
+				} catch (err) {
+					if (err instanceof ReportError) return imp.refuse(err.message, err.detail);
+					return imp.refuse(INVALID_SESSION, (err as Error).message);
+				}
+				if (current.pages.length === 0) return replace(current, next);
+				setDownloaded("");
+				setPending(next);
+			},
+		);
+	const confirmReplace = () => {
+		const next = pending;
+		dialogRef.current?.close();
+		if (next) replace(latest.current, next);
+	};
+	const changedSince = session.exportedAt !== undefined && session.updatedAt > session.exportedAt;
+
+	return (
+		<section aria-labelledby="audit-sauvegarde" class="audit-backup">
+			<h2 id="audit-sauvegarde">Sauvegarde de l’audit</h2>
+			<p>
+				Cet audit n’existe que dans ce navigateur. Dernier téléchargement :{" "}
+				{session.exportedAt ? dateTime(session.exportedAt) : "jamais"}
+				{changedSince && " (l’audit a changé depuis)"}.
+			</p>
+			<button type="button" onClick={download}>
+				Télécharger l’audit (JSON)
+			</button>
+			<div class="audit-session-import">
+				<h3>Audit Rampe complet : reprendre un audit téléchargé</h3>
+				<p id="audit-session-aide">
+					Fichier <code>audit-….json</code> téléchargé avec le bouton ci-dessus, dans ce navigateur ou un autre (20 Mo
+					au plus). Il remplace l’audit en cours. Pour les résultats de l’audit automatique, utilisez plutôt « Rapport
+					de la CLI », section « 1. Pages de l’échantillon ».
+				</p>
+				<label for="audit-session">Importer un audit (JSON)</label>
+				<input
+					id="audit-session"
+					ref={inputRef}
+					type="file"
+					accept="application/json,.json"
+					onChange={onChange}
+					aria-invalid={error ? "true" : undefined}
+					aria-describedby={error ? "audit-session-aide audit-session-erreur" : "audit-session-aide"}
+				/>
+				{error && <ImportError id="audit-session-erreur" error={error} />}
+				{undone && <p>{UNDONE}</p>}
+				{done && (
+					<div class="audit-session-summary">
+						<p>
+							Audit importé : {plural(done.summary.pages, "page")}, {plural(done.summary.evaluations, "évaluation")}{" "}
+							enregistrée{done.summary.evaluations > 1 ? "s" : ""}, {plural(done.summary.findings, "indice")}. L’audit
+							précédent a été remplacé.
+						</p>
+						{imp.canUndo && (
+							<button type="button" onClick={imp.undo}>
+								Annuler cet import
+							</button>
+						)}
+					</div>
+				)}
+			</div>
+			{/* Boîte native et modale : focus piégé par le navigateur, Échap ferme ; le focus revient au champ fichier. */}
+			<dialog
+				ref={dialogRef}
+				class="audit-dialog"
+				aria-labelledby="audit-remplacer-titre"
+				aria-describedby="audit-remplacer-texte"
+				onClose={() => {
+					setPending(null);
+					inputRef.current?.focus();
+				}}
+			>
+				{pending && (
+					<>
+						<h2 id="audit-remplacer-titre">Remplacer l’audit en cours ?</h2>
+						<p id="audit-remplacer-texte">
+							L’audit en cours ({plural(session.pages.length, "page")}, {session.site}) sera remplacé par celui du
+							fichier ({plural(pending.pages.length, "page")}
+							{pending.site && `, ${pending.site}`}). Téléchargez d’abord l’audit en cours si vous voulez pouvoir y
+							revenir.
+						</p>
+						<p role="status">{downloaded && `Audit en cours téléchargé : ${downloaded}`}</p>
+						<div class="audit-dialog-actions">
+							<button type="button" onClick={() => setDownloaded(download())}>
+								Télécharger d’abord l’audit en cours
+							</button>
+							<button type="button" class="audit-replace" onClick={confirmReplace}>
+								Remplacer l’audit en cours
+							</button>
+							<button type="button" onClick={() => dialogRef.current?.close()}>
+								Annuler
+							</button>
+						</div>
+					</>
+				)}
+			</dialog>
+		</section>
 	);
 }
 
