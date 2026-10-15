@@ -154,9 +154,11 @@ describe("audit guidé (bout en bout)", { timeout: 60_000 }, () => {
 		await page.keyboard.press("Enter");
 		// Le focus va sur le titre du nouveau critère.
 		await page.waitForFunction(() => document.activeElement?.id === "audit-titre");
-		expect(await page.evaluate(() => document.activeElement?.textContent)).toMatch(/^Critère 1\.2 /);
-		// Sauvegarde différée : l'annonce arrive après une courte pause.
-		await page.waitForFunction(() => document.querySelector("[aria-live=polite]")?.textContent === "Enregistré");
+		expect(await page.evaluate(() => document.activeElement?.textContent)).toMatch(
+			/^Critère 1\.2, thématique 1 « Images » /,
+		);
+		// Sauvegarde différée : on attend l'écriture avant de recharger.
+		await page.waitForFunction(() => localStorage.getItem("rampe.audit.session")?.includes("Logo sans alternative"));
 
 		// Reprise après rechargement : la page et le statut sont toujours là.
 		await page.reload();
@@ -164,7 +166,7 @@ describe("audit guidé (bout en bout)", { timeout: 60_000 }, () => {
 		await expect(page.locator(".audit-page-list li").textContent()).resolves.toContain("Accueil");
 		// Au rechargement, le parcours repart du critère 1.1.
 		await expect(page.getByLabel("Non conforme", { exact: true }).isChecked()).resolves.toBe(true);
-		await expect(page.getByLabel("Note (facultative)").inputValue()).resolves.toBe("Logo sans alternative");
+		await expect(page.getByLabel("Note sur Accueil (facultative)").inputValue()).resolves.toBe("Logo sans alternative");
 		await page.close();
 	});
 
@@ -182,42 +184,199 @@ describe("audit guidé (bout en bout)", { timeout: 60_000 }, () => {
 			await addPage(page, "https://exemple.fr/contact", "Contact");
 			await page.getByRole("button", { name: "Critère suivant : 1.2" }).click();
 			await page
-				.getByRole("group", { name: /^Accueil/ })
+				.getByRole("group", { name: /^Critère 1\.2, page Accueil/ })
 				.getByLabel("Non conforme", { exact: true })
 				.check();
 			await page
-				.getByRole("group", { name: /^Contact/ })
+				.getByRole("group", { name: /^Critère 1\.2, page Contact/ })
 				.getByLabel("Non applicable")
 				.check();
-			await page
-				.getByRole("group", { name: /^Accueil/ })
-				.getByLabel("Note (facultative)")
-				.fill("Image décorative annoncée");
+			await page.getByLabel("Note sur Accueil (facultative)").fill("Image décorative annoncée");
 			await page.getByRole("button", { name: "Critère précédent : 1.1" }).click();
 			await page.getByRole("button", { name: "Critère suivant : 1.2" }).click();
 			await page.getByLabel("Critères non conformes sur au moins une page").check();
 			await expect(page.locator("[aria-live=polite]").textContent()).resolves.toBe("1 critère affiché");
 			await page.getByRole("button", { name: /^2\. / }).click();
 			await page.getByRole("button", { name: /^1\. / }).click();
+			if (captures) await page.screenshot({ path: join(captures, `audit-${name}.png`), fullPage: true });
 			for (const d of await page.locator("details").all())
 				await d.evaluate((el) => ((el as HTMLDetailsElement).open = true));
 
 			expect(await axeViolations(page), "après interactions").toEqual([]);
 			if (name === "mobile")
 				expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBeLessThanOrEqual(375);
-			if (captures) await page.screenshot({ path: join(captures, `audit-${name}.png`), fullPage: true });
 			await page.close();
 		});
 	}
 
-	it("le bouton « Précédent » est absent quand aucun critère antérieur ne correspond au filtre", async () => {
+	it("M1 : filtre sans résultat dans la thématique : message au lieu d'un critère hors filtre", async () => {
 		const page = await browser.newPage();
 		await openAudit(page);
 		await addPage(page, "https://exemple.fr/", "Accueil");
 		await page.getByLabel("Critères non conformes sur au moins une page").check();
-		await expect(page.getByRole("button", { name: /Critère suivant/ }).count()).resolves.toBe(0);
 		await expect(page.locator("[aria-live=polite]").textContent()).resolves.toBe("0 critère affiché");
+		await expect(page.locator("article").count()).resolves.toBe(0);
+		await expect(
+			page.getByText("Aucun critère ne correspond à ce filtre dans cette thématique.").count(),
+		).resolves.toBe(1);
 		await page.close();
+	});
+
+	it("M1 : filtre dont le critère affiché sort : saut au premier critère correspondant", async () => {
+		const page = await browser.newPage();
+		await openAudit(page);
+		await addPage(page, "https://exemple.fr/", "Accueil");
+		await page.getByLabel("Conforme", { exact: true }).check(); // 1.1 évalué
+		await page.getByLabel("Critères avec des pages non testées").check();
+		await expect(page.locator("[aria-live=polite]").textContent()).resolves.toBe(
+			"105 critères affichés ; critère 1.2 affiché",
+		);
+		await expect(page.locator("#audit-titre").textContent()).resolves.toMatch(/^Critère 1\.2,/);
+		await page.close();
+	});
+
+	it("M2 et M3 : changement de thématique annoncé, sauvegardes réussies silencieuses", async () => {
+		const page = await browser.newPage();
+		await openAudit(page);
+		await addPage(page, "https://exemple.fr/", "Accueil");
+		await page.getByRole("button", { name: /^3\. Couleurs/ }).click();
+		await expect(page.locator("[aria-live=polite]").textContent()).resolves.toBe(
+			"Thématique 3 « Couleurs » : critère 3.1 affiché",
+		);
+		await expect(page.locator("#audit-titre").textContent()).resolves.toMatch(
+			/^Critère 3\.1, thématique 3 « Couleurs » /,
+		);
+		await page.getByLabel("Non applicable").check();
+		await page.waitForFunction(() => localStorage.getItem("rampe.audit.session")?.includes('"NA"'));
+		await expect(page.locator("[aria-live=polite]").textContent()).resolves.toBe(
+			"Thématique 3 « Couleurs » : critère 3.1 affiché",
+		);
+		await page.close();
+	});
+
+	it("C5 : groupe et note nomment le critère et la page ; aide visible sur les statuts", async () => {
+		const page = await browser.newPage();
+		await openAudit(page);
+		await addPage(page, "https://exemple.fr/contact", "Contact");
+		await expect(
+			page.getByRole("group", { name: "Critère 1.1, page Contact (https://exemple.fr/contact)" }).count(),
+		).resolves.toBe(1);
+		await expect(page.getByLabel("Note sur Contact (facultative)").count()).resolves.toBe(1);
+		await expect(page.locator(".audit-help").isVisible()).resolves.toBe(true);
+		await expect(page.locator(".audit-help").textContent()).resolves.toContain(
+			"Non applicable : le contenu visé par ce critère n’existe pas sur la page.",
+		);
+		await page.close();
+	});
+
+	it("C1 : statuts avant les tests (repliés) ; liste des critères repliée sous 700 px", async () => {
+		const distances: string[] = [];
+		for (const width of [1280, 375]) {
+			const page = await browser.newPage({ viewport: { width, height: 800 } });
+			await openAudit(page);
+			await addPage(page, "https://exemple.fr/", "Accueil");
+			await addPage(page, "https://exemple.fr/contact", "Contact");
+			const list = page.locator("details.audit-list");
+			await expect(list.count()).resolves.toBe(width < 700 ? 1 : 0);
+			if (width < 700) await expect(list.evaluate((d) => (d as HTMLDetailsElement).open)).resolves.toBe(false);
+			for (const id of ["1.1", "1.6"]) {
+				if (id === "1.6") {
+					if (width < 700) await page.locator("details.audit-list summary").click();
+					await page.getByRole("button", { name: /^1\.6/ }).click();
+				}
+				const d = await page.evaluate(() => {
+					const h = document.querySelector("#audit-titre")?.getBoundingClientRect().top ?? 0;
+					const f = document.querySelector(".audit-page")?.getBoundingClientRect().top ?? 0;
+					const tests = document.querySelector(".audit-criterion > details") as HTMLDetailsElement;
+					return { gap: Math.round(f - h), testsOpen: tests.open, testsAfter: f < tests.getBoundingClientRect().top };
+				});
+				expect(d.testsOpen).toBe(false);
+				expect(d.testsAfter).toBe(true);
+				expect(d.gap).toBeLessThan(width < 700 ? 900 : 600);
+				distances.push(`${id} à ${width} px : ${d.gap} px`);
+			}
+			await page.close();
+		}
+		console.log(`Distance titre du critère → 1er groupe de statuts : ${distances.join(" ; ")}`);
+	});
+
+	it("C2 : après « Retirer », focus sur le « Retirer » suivant, sinon précédent, sinon le titre de section", async () => {
+		const page = await browser.newPage();
+		page.on("dialog", (d) => d.accept());
+		await openAudit(page);
+		for (const n of ["a", "b", "c"]) await addPage(page, `https://exemple.fr/${n}`, n.toUpperCase());
+		const focused = () => page.evaluate(() => document.activeElement?.textContent);
+		await page.getByRole("button", { name: "Retirer B" }).click();
+		await page.waitForFunction(() => document.querySelectorAll(".audit-page-list li").length === 2);
+		await expect(focused()).resolves.toBe("Retirer C");
+		await page.getByRole("button", { name: "Retirer C" }).click();
+		await page.waitForFunction(() => document.querySelectorAll(".audit-page-list li").length === 1);
+		await expect(focused()).resolves.toBe("Retirer A");
+		await page.getByRole("button", { name: "Retirer A" }).click();
+		await page.waitForFunction(() => document.activeElement?.id === "audit-echantillon");
+		await page.close();
+	});
+
+	it("C4 : stockage plein : alerte, puis nouvel essai et alerte retirée dès qu'une écriture réussit", async () => {
+		const page = await browser.newPage();
+		await page.addInitScript(() => {
+			const setItem = Storage.prototype.setItem;
+			Storage.prototype.setItem = function (key: string, value: string) {
+				if ((window as unknown as { plein?: boolean }).plein && key === "rampe.audit.session")
+					throw new DOMException("plein", "QuotaExceededError");
+				setItem.call(this, key, value);
+			};
+		});
+		await openAudit(page);
+		await page.evaluate(() => {
+			(window as unknown as { plein: boolean }).plein = true;
+		});
+		await addPage(page, "https://exemple.fr/", "Accueil");
+		const alert = page.getByRole("alert");
+		await alert.waitFor();
+		await expect(alert.textContent()).resolves.toContain("Échec de l’enregistrement.");
+		await page.waitForFunction(
+			() => document.querySelector("[aria-live=polite]")?.textContent === "Échec de l’enregistrement",
+		);
+		await page.getByLabel("Conforme", { exact: true }).check(); // nouvel essai : toujours plein
+		await page.waitForTimeout(600);
+		await expect(alert.count()).resolves.toBe(1);
+		await page.evaluate(() => {
+			(window as unknown as { plein: boolean }).plein = false;
+		});
+		await page.getByLabel("Non conforme", { exact: true }).check();
+		await alert.waitFor({ state: "detached" });
+		await expect(page.evaluate(() => localStorage.getItem("rampe.audit.session"))).resolves.toContain('"NC"');
+		await page.close();
+	});
+
+	it("B1 : deux onglets : l'onglet ouvert avant adopte les écritures de l'autre, rien n'est perdu", async () => {
+		const context = await browser.newContext();
+		const a = await context.newPage();
+		const b = await context.newPage();
+		await openAudit(a);
+		await openAudit(b); // B est ouvert avant toute saisie dans A
+		await addPage(a, "https://exemple.fr/", "Accueil");
+		await a.getByLabel("Non conforme", { exact: true }).check();
+		await a.waitForFunction(() => localStorage.getItem("rampe.audit.session")?.includes('"NC"'));
+		await b.waitForFunction(
+			() => document.querySelector("[aria-live=polite]")?.textContent === "Audit mis à jour depuis un autre onglet",
+		);
+		await addPage(b, "https://exemple.fr/contact", "Contact"); // écriture de B après celle de A
+		await b.waitForFunction(() => localStorage.getItem("rampe.audit.session")?.includes("Contact"));
+		await a.reload();
+		await a.waitForSelector("astro-island:not([ssr])");
+		await expect(a.locator(".audit-page-list li").allTextContents()).resolves.toEqual([
+			expect.stringContaining("Accueil"),
+			expect.stringContaining("Contact"),
+		]);
+		await expect(
+			a
+				.getByRole("group", { name: /page Accueil/ })
+				.getByLabel("Non conforme", { exact: true })
+				.isChecked(),
+		).resolves.toBe(true);
+		await context.close();
 	});
 
 	it("accepte un echantillon.txt collé, avec la même lecture que la CLI", async () => {
