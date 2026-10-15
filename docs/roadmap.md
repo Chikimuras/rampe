@@ -16,7 +16,7 @@ Chaque case cochée correspond à du code mergé sur `main` avec la CI verte. Le
 ## Phase 1 — Référentiel RGAA
 
 - [x] Import du référentiel officiel (critères, tests, méthodologies, glossaire)
-- [ ] Correspondance règles axe-core → critères RGAA, testée
+- [x] Correspondance règles axe-core → critères RGAA, testée
 - [ ] Synchronisation automatique (cron CI) qui ouvre une PR si le référentiel officiel change
 - [ ] Référentiel consultable sur le site, en langage simple
 

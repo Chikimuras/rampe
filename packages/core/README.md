@@ -1,10 +1,26 @@
 # @rampe/core
 
-Cœur de Rampe : code pur, sans I/O. Pour l’instant, le référentiel **RGAA 4.1.2** (basé sur WCAG 2.1) sous forme de modèle typé : thématiques, critères, tests et leur méthodologie, références WCAG, glossaire indexé par ancre.
+Cœur de Rampe : code pur, sans I/O. Le référentiel **RGAA 4.1.2** (basé sur WCAG 2.1) sous forme de modèle typé : thématiques, critères, tests et leur méthodologie, références WCAG, glossaire indexé par ancre.
 
 ```ts
 import { getCriterion, getGlossaryEntry, rgaa } from "@rampe/core";
 ```
+
+## Correspondance axe-core → RGAA
+
+`classifyAxeRule(tags)` rattache une règle [axe-core](https://github.com/dequelabs/axe-core) au RGAA à partir des étiquettes qu’axe fournit avec chaque règle et chaque résultat (ADR-0008). Aucune table maintenue à la main. Trois niveaux, du plus précis au moins précis :
+
+- **`rgaa`** : la règle porte des étiquettes `RGAA-x.y.z` ; elle est rattachée à ces tests et à leurs critères ;
+- **`wcag`** : rattachement *indirect* via les étiquettes de critères de succès WCAG (`wcag111`, `wcag1412`…) et les références WCAG du référentiel ; il demande plus de vérification humaine (4.1.2, par exemple, renvoie à 17 critères RGAA) ;
+- **`hors-rgaa`** : aucun rattachement RGAA possible (bonnes pratiques d’axe sans étiquette, critères WCAG absents du RGAA 4.1.2 comme 2.5.8 ou les AAA) ; `wcag` liste quand même les critères de succès trouvés, pour l’affichage. Jamais compté dans la conformité.
+
+Le niveau qualifie la **précision du rattachement**, pas la certitude du défaut. Les drapeaux `bestPractice` (étiquette `best-practice`) et `experimental` sont présents sur les trois niveaux : certaines bonnes pratiques d’axe (`region`, `skip-link`, `table-duplicate-name`, `focus-order-semantics`) portent des étiquettes RGAA et sont au niveau `rgaa`. Une étiquette `RGAA-x.y.z` qui ne désigne aucun test du référentiel est écartée du rattachement et renvoyée dans `unknownRgaaTags`.
+
+```ts
+classifyAxeRule(["wcag2a", "wcag111", "RGAA-1.1.1"]); // { level: "rgaa", tests: ["1.1.1"], criteria: ["1.1"], unknownRgaaTags: [], bestPractice: false, experimental: false }
+```
+
+axe-core n’est qu’une dépendance de développement, épinglée : les tests vérifient sur toutes ses règles que chaque étiquette RGAA désigne un test existant, et figent le décompte par niveau (axe-core 4.14.0 : 67 `rgaa`, 8 `wcag`, 30 `hors-rgaa`). Une montée de version se lit donc dans le diff des tests.
 
 ## Données
 
