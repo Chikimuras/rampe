@@ -24,6 +24,24 @@ classifyAxeRule(["wcag2a", "wcag111", "RGAA-1.1.1"]); // { level: "rgaa", tests:
 
 axe-core n’est qu’une dépendance de développement, épinglée : les tests vérifient sur toutes ses règles que chaque étiquette RGAA désigne un test existant, et figent le décompte par niveau (axe-core 4.14.0 : 67 `rgaa`, 8 `wcag`, 30 `hors-rgaa`). Une montée de version se lit donc dans le diff des tests.
 
+## Audit guidé : session et import des résultats automatiques
+
+`audit-session.ts` est le modèle pur d’un audit manuel (ADR-0013). Il n’embarque pas le référentiel, pour que l’îlot de `/audit/` reste léger. La session (`schemaVersion: 2`) range `evaluations[critère][pageId]` = `{ status, note, source }` et `findings[critère][pageId]` = indices automatiques. `source` vaut `humain` (par défaut) ou `auto`. Une session v1 relue par `parseSession` est migrée sans perte : toutes ses évaluations sont humaines, et elle n’a aucun indice.
+
+`audit-report.ts` porte la forme du JSON v2 de la CLI (`AuditReport`, partagé par la CLI qui l’écrit et le site qui le relit) et son import (ADR-0014) :
+
+```ts
+import { importAutomaticResults, MAX_REPORT_BYTES, parseAuditReport } from "@rampe/core/audit-report";
+
+// file.size <= MAX_REPORT_BYTES (20 Mo) vérifié AVANT lecture ; JSON.parse est la seule désérialisation.
+const report = parseAuditReport(JSON.parse(text), new Set(rgaa.criteria.map((c) => c.id))); // lève une erreur sinon
+const { session: next, summary } = importAutomaticResults(session, report);
+// summary : { pagesAdded, statusesSet, findingsAdded, pagesSkipped: [{ url, reason }] }
+```
+
+- `parseAuditReport` valide par liste blanche, tout ou rien (OWASP *Input Validation* et *Deserialization Cheat Sheets*). Elle vérifie `schemaVersion` 2 et `tool.name` `@rampe/cli`, puis, pour chaque champ utilisé, son type et ses bornes : URL http(s) d’un seul site, critères existants dans le référentiel passé en paramètre, classes connues, textes bornés et débarrassés des caractères de contrôle et bidi. Elle refuse les clés `__proto__`, `constructor` et `prototype` à toute profondeur, ainsi qu’une imbrication anormale, et ignore les propriétés inconnues. Le message d’erreur nomme le premier défaut (« pages[0].results[2].criteria[0] : critère "99.1" inexistant dans le référentiel »).
+- `importAutomaticResults` est pure. Une non-conformité ne fixe « Non conforme » (`source: "auto"`, note générée) que sur une évaluation encore « non testé » et sans note. Tous les résultats sont rangés comme indices. Une évaluation humaine n’est jamais modifiée. Les pages sont rapprochées par adresse normalisée (`urlKey`). Un rapport d’un autre site est refusé. Réimporter le même rapport ne change rien.
+
 ## Données
 
 `data/rgaa/` contient une copie **non modifiée** de `RGAA/criteres.json`, `RGAA/methodologies.json` et `RGAA/glossaire.json` du dépôt officiel de la DINUM, [DISIC/accessibilite.numerique.gouv.fr](https://github.com/DISIC/accessibilite.numerique.gouv.fr). Le commit source et la date d’import sont dans `data/rgaa/source.json`. Contenu sous [Licence Ouverte 2.0](https://www.etalab.gouv.fr/licence-ouverte-open-licence/).

@@ -150,6 +150,7 @@ En mode URL unique (`rampe audit <url>`), une page en erreur arrête la CLI en 2
       "results": [
         {
           "ruleId": "image-alt",
+          "help": "Images must have alternative text", // description de la règle par axe, en anglais
           "kind": "non-conformite",
           "level": "rgaa",                 // précision du rattachement : rgaa | wcag | hors-rgaa
           "tests": ["1.1.1"],              // tests RGAA cités (niveau rgaa)
@@ -168,6 +169,24 @@ En mode URL unique (`rampe audit <url>`), une page en erreur arrête la CLI en 2
 `html` est tronqué à 500 caractères, marqué « … (tronqué) », sans couper un caractère en deux. `pages` contient une entrée par page auditée, dans l’ordre du fichier d’échantillon.
 
 Version 2 : ajout de `error` par page, et `finalUrl`/`title` à `null` pour une page en erreur. Sans ce changement, un lecteur de la version 1 aurait pris une page en erreur, sans résultats, pour une page sans défaut.
+
+## Reprendre le JSON dans l’audit guidé (ADR-0014)
+
+Le fichier `--json` s’importe dans la page `/audit/` du site Rampe, pour ne pas ressaisir ce que la machine a trouvé :
+
+```sh
+pnpm exec rampe echantillon https://exemple.fr/ --sortie echantillon.txt   # 1. proposer l’échantillon
+pnpm exec rampe audit --echantillon echantillon.txt --json rapport.json     # 2. audit automatique
+# 3. Sur /audit/ : « Importer un rapport de la CLI (JSON) », choisir rapport.json
+```
+
+- Les pages du rapport absentes de l’audit sont ajoutées. Elles sont rapprochées par adresse, sans fragment ni identifiants. Les pages en erreur ne sont pas importées et sont listées dans le bilan.
+- Une **non-conformité** passe le critère à « Non conforme » **seulement s’il est encore « non testé »** sur la page. L’évaluation est alors marquée « Détecté automatiquement, à confirmer », avec une note générée (« Détecté automatiquement : image-alt (3 éléments) »). Dès que la personne change le statut ou la note, l’évaluation devient la sienne.
+- Les autres résultats (rattachement incertain, à vérifier) deviennent des **indices** sous le critère et la page. Ils ne valent ni conformité ni non-conformité. Une non-conformité trouvée sur un critère déjà évalué y figure aussi, sans toucher à l’évaluation.
+- Une évaluation saisie par une personne n’est jamais modifiée. Réimporter le même fichier ne change rien. « Annuler cet import » restaure l’état précédent tant que rien d’autre n’a été modifié.
+- Le fichier vient de l’extérieur de l’application : il est validé strictement, tout ou rien (`parseAuditReport` de `@rampe/core`). Un fichier refusé ne modifie pas l’audit, et le message nomme le premier défaut trouvé.
+
+Le champ `help` est apparu après la première version du format 2. Il reste facultatif à l’import, donc un fichier plus ancien s’importe aussi, sans les descriptions.
 
 ## Tests
 
