@@ -3,6 +3,8 @@ import {
 	addPage,
 	createSession,
 	getEvaluation,
+	getFindings,
+	isFutureSession,
 	parseSession,
 	progress,
 	removePage,
@@ -36,6 +38,7 @@ describe("createSession", () => {
 			updatedAt: NOW,
 			pages: [],
 			evaluations: {},
+			findings: {},
 		});
 	});
 });
@@ -69,21 +72,21 @@ describe("addPage / removePage", () => {
 		s = setEvaluation(s, "1.1", B, { status: "C" }, NOW);
 		s = removePage(s, A, LATER);
 		expect(s.pages.map((p) => p.id)).toEqual([B]);
-		expect(s.evaluations).toEqual({ "1.1": { [B]: { status: "C", note: "" } } });
+		expect(s.evaluations).toEqual({ "1.1": { [B]: { status: "C", note: "", source: "humain" } } });
 		expect(s.updatedAt).toBe(LATER);
 	});
 });
 
 describe("setEvaluation / getEvaluation", () => {
 	it("une évaluation absente vaut « non testé » : jamais confondu avec conforme", () => {
-		expect(getEvaluation(withTwoPages(), "1.1", A)).toEqual({ status: "NT", note: "" });
+		expect(getEvaluation(withTwoPages(), "1.1", A)).toEqual({ status: "NT", note: "", source: "humain" });
 	});
 
 	it("fixe le statut et la note séparément, et date la modification", () => {
 		let s = withTwoPages();
 		s = setEvaluation(s, "1.1", A, { status: "NA" }, NOW);
 		s = setEvaluation(s, "1.1", A, { note: "pas d'image" }, LATER);
-		expect(getEvaluation(s, "1.1", A)).toEqual({ status: "NA", note: "pas d'image" });
+		expect(getEvaluation(s, "1.1", A)).toEqual({ status: "NA", note: "pas d'image", source: "humain" });
 		expect(s.updatedAt).toBe(LATER);
 	});
 
@@ -100,14 +103,17 @@ describe("progress", () => {
 		s = setEvaluation(s, "2.1", A, { status: "NA" }, NOW);
 		s = setEvaluation(s, "2.1", B, { note: "à revoir" }, NOW); // note seule : reste non testé
 		const p = progress(s, criteria);
-		expect(p.total).toEqual({ remaining: 3, total: 6 });
-		expect(p.byTopic).toEqual({ 1: { remaining: 2, total: 4 }, 2: { remaining: 1, total: 2 } });
-		expect(p.byCriterion["1.1"]).toEqual({ remaining: 0, total: 2 });
-		expect(p.byCriterion["1.2"]).toEqual({ remaining: 2, total: 2 });
+		expect(p.total).toEqual({ remaining: 3, toConfirm: 0, total: 6 });
+		expect(p.byTopic).toEqual({
+			1: { remaining: 2, toConfirm: 0, total: 4 },
+			2: { remaining: 1, toConfirm: 0, total: 2 },
+		});
+		expect(p.byCriterion["1.1"]).toEqual({ remaining: 0, toConfirm: 0, total: 2 });
+		expect(p.byCriterion["1.2"]).toEqual({ remaining: 2, toConfirm: 0, total: 2 });
 	});
 
 	it("sans page, rien à évaluer", () => {
-		expect(progress(createSession(NOW), criteria).total).toEqual({ remaining: 0, total: 0 });
+		expect(progress(createSession(NOW), criteria).total).toEqual({ remaining: 0, toConfirm: 0, total: 0 });
 	});
 });
 
@@ -119,9 +125,9 @@ describe("revue : robustesse du modèle", () => {
 
 	it("ne lit jamais une propriété héritée d'Object.prototype", () => {
 		const s = withTwoPages();
-		expect(getEvaluation(s, "toString", A)).toEqual({ status: "NT", note: "" });
-		expect(getEvaluation(s, "1.1", "toString")).toEqual({ status: "NT", note: "" });
-		expect(getEvaluation(s, "1.1", "__proto__")).toEqual({ status: "NT", note: "" });
+		expect(getEvaluation(s, "toString", A)).toEqual({ status: "NT", note: "", source: "humain" });
+		expect(getEvaluation(s, "1.1", "toString")).toEqual({ status: "NT", note: "", source: "humain" });
+		expect(getEvaluation(s, "1.1", "__proto__")).toEqual({ status: "NT", note: "", source: "humain" });
 	});
 
 	it("n'accepte que des ids de page au format UUID", () => {
@@ -145,9 +151,14 @@ describe("revue : robustesse du modèle", () => {
 		s = setEvaluation(s, "1.1", A, { status: "C" }, NOW);
 		s = removePage(s, B, LATER);
 		const p = progress(s, criteria);
-		expect(p.total).toEqual({ remaining: 2, total: 3 });
-		expect(p.byCriterion["1.1"]).toEqual({ remaining: 0, total: 1 });
-		expect(progress(removePage(s, A), criteria).total).toEqual({ remaining: 0, total: 0 });
+		expect(p.total).toEqual({ remaining: 2, toConfirm: 0, total: 3 });
+		expect(p.byCriterion["1.1"]).toEqual({ remaining: 0, toConfirm: 0, total: 1 });
+		expect(progress(removePage(s, A), criteria).total).toEqual({ remaining: 0, toConfirm: 0, total: 0 });
+	});
+
+	it("retire aussi les marques de direction U+200E, U+200F et U+061C", () => {
+		const s = addPage(createSession(NOW), { url: "https://exemple.fr/", title: "a\u200eb\u200fc\u061cd" }, NOW, A);
+		expect(s.pages[0]?.title).toBe("abcd");
 	});
 
 	it("retire les contrôles bidi du nom de page et de la note", () => {
@@ -168,6 +179,23 @@ describe("parseSession (relecture du stockage local)", () => {
 		["null", null],
 		["un tableau", []],
 		["une autre version", { ...createSession(NOW), schemaVersion: 99 }],
+		["une version 3", { ...createSession(NOW), schemaVersion: 3 }],
+		[
+			"une source inconnue",
+			{ ...withTwoPages(), evaluations: { "1.1": { [A]: { status: "C", note: "", source: "robot" } } } },
+		],
+		["des indices absents (v2)", { ...withTwoPages(), findings: undefined }],
+		[
+			"un indice de classe inconnue",
+			{ ...withTwoPages(), findings: { "1.1": { [A]: [{ ruleId: "image-alt", kind: "inconnu", nodes: 1 }] } } },
+		],
+		[
+			"un indice sur une page absente",
+			{
+				...withTwoPages(),
+				findings: { "1.1": { [B.replace("b", "c")]: [{ ruleId: "x", kind: "incertain", nodes: 1 }] } },
+			},
+		],
 		["des pages mal formées", { ...createSession(NOW), pages: [{ id: 1, url: "x", title: "" }] }],
 		["un statut inconnu", { ...withTwoPages(), evaluations: { "1.1": { [A]: { status: "OK", note: "" } } } }],
 		[
@@ -191,11 +219,99 @@ describe("parseSession (relecture du stockage local)", () => {
 		[
 			"une clé __proto__ dans les évaluations",
 			JSON.parse(
-				`{"schemaVersion":1,"site":"","createdAt":"","updatedAt":"","pages":[],"evaluations":{"__proto__":{}}}`,
+				`{"schemaVersion":2,"site":"","createdAt":"","updatedAt":"","pages":[],"evaluations":{"__proto__":{}},"findings":{}}`,
 			),
 		],
 		["un critère mal formé", { ...withTwoPages(), evaluations: { toString: { [A]: { status: "C", note: "" } } } }],
 	])("rejette %s", (_, value) => {
 		expect(parseSession(value)).toBeNull();
+	});
+
+	it("migre une session v1 sans perte : évaluations humaines, aucun indice", () => {
+		const v1 = {
+			schemaVersion: 1,
+			site: "https://exemple.fr",
+			createdAt: NOW,
+			updatedAt: LATER,
+			pages: [{ id: A, url: "https://exemple.fr/", title: "Accueil", process: "Commande" }],
+			evaluations: { "1.1": { [A]: { status: "NC", note: "logo" } }, "2.1": { [A]: { status: "NT", note: "à voir" } } },
+		};
+		expect(parseSession(JSON.parse(JSON.stringify(v1)))).toEqual({
+			...v1,
+			schemaVersion: 2,
+			evaluations: {
+				"1.1": { [A]: { status: "NC", note: "logo", source: "humain" } },
+				"2.1": { [A]: { status: "NT", note: "à voir", source: "humain" } },
+			},
+			findings: {},
+		});
+	});
+
+	it("distingue une session d'une version future (à ne pas écraser) d'une session corrompue", () => {
+		const future = { ...createSession(NOW), schemaVersion: SCHEMA_VERSION + 1 };
+		expect(parseSession(future)).toBeNull();
+		expect(isFutureSession(future)).toBe(true);
+		for (const corrupt of [null, [], { schemaVersion: "3" }, { schemaVersion: 0 }, { ...createSession(NOW), pages: 1 }])
+			expect(isFutureSession(corrupt)).toBe(false);
+	});
+
+	it("rejette une session v1 abîmée (clé __proto__, critère mal formé)", () => {
+		const base = `"schemaVersion":1,"site":"","createdAt":"","updatedAt":"","pages":[]`;
+		expect(parseSession(JSON.parse(`{${base},"evaluations":{"__proto__":{}}}`))).toBeNull();
+		expect(parseSession(JSON.parse(`{${base},"evaluations":{"toString":{}}}`))).toBeNull();
+	});
+});
+
+describe("source et indices (ADR-0014)", () => {
+	const auto = () =>
+		setEvaluation(withTwoPages(), "1.1", A, { status: "NC", note: "Détecté automatiquement : x", source: "auto" }, NOW);
+
+	it("« Confirmer » (patch vide) passe la source à humain sans changer statut ni note", () => {
+		expect(getEvaluation(setEvaluation(auto(), "1.1", A, {}, LATER), "1.1", A)).toEqual({
+			status: "NC",
+			note: "Détecté automatiquement : x",
+			source: "humain",
+		});
+	});
+
+	it("changer le statut d'une évaluation automatique vide sa note générée ; une note éditée est gardée", () => {
+		expect(getEvaluation(setEvaluation(auto(), "1.1", A, { status: "C" }, LATER), "1.1", A)).toEqual({
+			status: "C",
+			note: "",
+			source: "humain",
+		});
+		let s = setEvaluation(auto(), "1.1", A, { note: "Détecté automatiquement : x, vérifié" }, LATER);
+		s = setEvaluation(s, "1.1", A, { status: "C" }, LATER);
+		expect(getEvaluation(s, "1.1", A).note).toBe("Détecté automatiquement : x, vérifié");
+	});
+
+	it("progress compte à part les évaluations automatiques à confirmer", () => {
+		const p = progress(auto(), criteria);
+		expect(p.byCriterion["1.1"]).toEqual({ remaining: 1, toConfirm: 1, total: 2 });
+		expect(p.total.toConfirm).toBe(1);
+		expect(progress(setEvaluation(auto(), "1.1", A, {}, LATER), criteria).total.toConfirm).toBe(0);
+	});
+
+	it("toute saisie humaine, même une note seule, passe la source à humain", () => {
+		let s = setEvaluation(withTwoPages(), "1.1", A, { status: "NC", note: "auto", source: "auto" }, NOW);
+		expect(getEvaluation(s, "1.1", A).source).toBe("auto");
+		s = setEvaluation(s, "1.1", A, { note: "vérifié" }, NOW);
+		expect(getEvaluation(s, "1.1", A)).toEqual({ status: "NC", note: "vérifié", source: "humain" });
+	});
+
+	it("retirer une page retire ses indices", () => {
+		const s = {
+			...withTwoPages(),
+			findings: {
+				"1.1": {
+					[A]: [{ ruleId: "image-alt", kind: "incertain" as const, nodes: 1 }],
+					[B]: [{ ruleId: "image-alt", kind: "incertain" as const, nodes: 2 }],
+				},
+			},
+		};
+		expect(removePage(s, A).findings).toEqual({ "1.1": { [B]: s.findings["1.1"][B] } });
+		expect(getFindings(s, "1.1", B)).toHaveLength(1);
+		expect(getFindings(s, "toString", B)).toEqual([]);
+		expect(parseSession(JSON.parse(JSON.stringify(s)))).toEqual(s);
 	});
 });

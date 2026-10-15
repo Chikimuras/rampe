@@ -1,3 +1,4 @@
+import { REPORT_TOOL_NAME } from "@rampe/core";
 import { describe, expect, it } from "vitest";
 import {
 	type AxeRawResult,
@@ -13,6 +14,7 @@ import {
 const node = (target: string, html = "<x>") => ({ target: [target], html, failureSummary: "Corriger ceci" });
 const raw = (id: string, tags: string[], nodes = [node(`#${id}`)]): AxeRawResult => ({
 	id,
+	help: `Help for ${id}`,
 	tags,
 	impact: "serious",
 	nodes,
@@ -119,13 +121,14 @@ describe("buildReport", () => {
 	it("a la forme versionnée attendue", () => {
 		expect(report).toMatchObject({
 			schemaVersion: 2,
-			tool: { name: "@rampe/cli", version: expect.any(String) },
+			tool: { name: REPORT_TOOL_NAME, version: expect.any(String) },
 			engine: { axe: "4.14.0", browser: "156.0" },
 			startedAt: "2026-10-15T10:00:00.000Z",
 			pages: [{ url: "https://exemple.fr", finalUrl: "https://exemple.fr/", title: "Accueil", warnings: [] }],
 		});
 		expect(Object.keys(report.pages[0]?.results[0] ?? {})).toEqual([
 			"ruleId",
+			"help",
 			"kind",
 			"level",
 			"tests",

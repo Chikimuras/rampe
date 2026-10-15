@@ -18,10 +18,18 @@ export function parseAuditUrl(input: string): URL {
 export const redact = (text: string): string => text.replace(/\b(https?:\/\/)[^\s/?#@]+@/gi, "$1***:***@");
 
 /**
- * Contrôles de direction bidirectionnelle (U+202A–202E, U+2066–2069) : un titre de page qui en contient pourrait
- * retourner visuellement le texte de Rampe qui le suit (attaque dite « Trojan Source »).
+ * Contrôles de direction bidirectionnelle (U+202A–202E, U+2066–2069) et marques de direction (U+200E, U+200F,
+ * U+061C) : un titre de page qui en contient pourrait retourner visuellement le texte de Rampe qui le suit
+ * (attaque dite « Trojan Source »).
  */
-export const stripBidi = (text: string): string => text.replace(/[\u202a-\u202e\u2066-\u2069]/g, "");
+export const stripBidi = (text: string): string => text.replace(/[\u202a-\u202e\u2066-\u2069\u200e\u200f\u061c]/g, "");
+
+/** Tronque à `max` unités UTF-16 sans couper une paire de substitution, avec une marque visible. */
+export function truncate(text: string, max: number): string {
+	if (text.length <= max) return text;
+	const cut = text.slice(0, max);
+	return `${/[\ud800-\udbff]$/.test(cut) ? cut.slice(0, -1) : cut}… (tronqué)`;
+}
 
 /** Retire les caractères de contrôle (séquences d'échappement de terminal, contrôles bidi) venus de la page auditée. */
 // biome-ignore lint/suspicious/noControlCharactersInRegex: c'est précisément ce qu'on retire.
@@ -37,8 +45,8 @@ export const quote = (text: string) => {
 export const MAX_SAMPLE_URLS = 1000;
 const MAX_LINE = 2048;
 
-/** Clé de dédoublonnage : adresse sans fragment ni identifiants. */
-const sampleKey = (url: URL) => {
+/** Clé de dédoublonnage et de rapprochement : adresse sans fragment ni identifiants. */
+export const urlKey = (url: URL) => {
 	const u = new URL(url.href);
 	u.hash = "";
 	u.username = "";
@@ -73,7 +81,7 @@ export function parseSampleFile(text: string): { urls: URL[]; warnings: string[]
 			throw new Error(
 				`${where} : ${redact(url.href)} n’est pas sur la même origine que la première adresse (${first.origin}). Un échantillon porte sur un seul site.`,
 			);
-		const key = sampleKey(url);
+		const key = urlKey(url);
 		if (!keys.has(key)) {
 			if (urls.length === MAX_SAMPLE_URLS)
 				throw new Error(

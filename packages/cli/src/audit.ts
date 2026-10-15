@@ -1,80 +1,48 @@
 // Logique pure de l'audit : validation d'URL, classement des résultats axe (ADR-0011 §3), JSON et texte.
 import {
+	type AuditPage,
+	type AuditReport,
+	type AuditResult,
 	type AxeRuleMapping,
 	classifyAxeRule,
 	criteriaWithDirectRule,
 	getCriterion,
 	isDirectCheck,
 	plural,
+	REPORT_SCHEMA_VERSION,
+	type ResultKind,
 	redact,
 	rgaa,
 	stripControl,
+	truncate,
 } from "@rampe/core";
 import axe from "axe-core";
 
 // Fonctions partagées avec le site (lecture d'échantillon dans le navigateur) : elles vivent dans @rampe/core.
-export { parseAuditUrl, plural, redact, stripBidi, stripControl } from "@rampe/core";
+export { parseAuditUrl, plural, redact, stripBidi, stripControl, truncate } from "@rampe/core";
 
 import pkg from "../package.json" with { type: "json" };
 
 /** Sous-ensemble d'un résultat `axe.run` (violation ou incomplete) utilisé ici. */
 export interface AxeRawResult {
 	id: string;
+	/** Description courte de la règle, en anglais. */
+	help?: string;
 	tags: string[];
 	impact?: string | null;
 	nodes: { target: unknown[]; html: string; failureSummary?: string }[];
 }
 
-export type ResultKind = "non-conformite" | "incertain" | "bonne-pratique" | "a-verifier";
-
-export interface AuditResult {
-	ruleId: string;
-	kind: ResultKind;
-	level: AxeRuleMapping["level"];
-	/** Tests RGAA cités par la règle (niveau `rgaa` seulement). */
-	tests: string[];
-	/** Critères RGAA rattachés (vide hors RGAA). */
-	criteria: string[];
-	/** Critères de succès WCAG (niveaux `wcag` et `hors-rgaa`). */
-	wcag: string[];
-	flags: { bestPractice: boolean; experimental: boolean };
-	impact: string | null;
-	nodes: { target: unknown[]; html: string; failureSummary: string | null }[];
-}
-
-export interface AuditPage {
-	/** Identifiants éventuels masqués (`***`). */
-	url: string;
-	/** Nul si la page est en erreur. */
-	finalUrl: string | null;
-	title: string | null;
-	/** Avertissements sur l'audit de la page (ex. redirection vers une autre origine). */
-	warnings: string[];
-	results: AuditResult[];
-	/** Message d'erreur si la page n'a pas pu être auditée (échantillon) ; nul sinon. */
-	error: string | null;
-}
-
-export interface AuditReport {
-	schemaVersion: 2;
-	tool: { name: string; version: string };
-	engine: { axe: string; browser: string };
-	startedAt: string;
-	pages: AuditPage[];
-}
+// Forme du JSON : partagée avec le site (import dans l'audit guidé, ADR-0014), elle vit dans @rampe/core.
+export type { AuditPage, AuditReport, AuditResult, ResultKind } from "@rampe/core";
 
 const HTML_MAX = 500;
+/** Titre de page : borné à l'écriture, comme dans le rapport HTML. */
+export const TITLE_MAX = 300;
 
 /** Critères sans aucune vérification automatique directe (même décompte que le site). */
 export const uncoveredCriteria = () =>
 	rgaa.criteria.length - criteriaWithDirectRule(axe.getRules().map((r) => r.tags)).size;
-
-/** Tronque à `max` unités UTF-16 sans couper une paire de substitution, avec une marque visible. */
-export function truncate(text: string, max: number): string {
-	if (text.length <= max) return text;
-	const cut = text.slice(0, max);
-	return `${/[\ud800-\udbff]$/.test(cut) ? cut.slice(0, -1) : cut}… (tronqué)`;
-}
 
 // ADR-0011 §3 : seule une vérification directe (ni bonne pratique ni expérimentale) est une non-conformité.
 function kindOf(m: AxeRuleMapping, incomplete: boolean): ResultKind {
@@ -88,6 +56,7 @@ function toResult(r: AxeRawResult, incomplete: boolean): AuditResult | [] {
 	if (m.deprecated) return [];
 	return {
 		ruleId: r.id,
+		...(r.help !== undefined && { help: r.help }),
 		kind: kindOf(m, incomplete),
 		level: m.level,
 		tests: m.level === "rgaa" ? m.tests : [],
@@ -115,7 +84,7 @@ export function buildReport(input: {
 	pages: AuditPage[];
 }): AuditReport {
 	return {
-		schemaVersion: 2,
+		schemaVersion: REPORT_SCHEMA_VERSION,
 		tool: { name: pkg.name, version: pkg.version },
 		engine: { axe: input.axeVersion, browser: input.browserVersion },
 		startedAt: input.startedAt.toISOString(),

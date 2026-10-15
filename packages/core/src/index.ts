@@ -1,3 +1,4 @@
+export * from "./audit-report.ts";
 export * from "./audit-session.ts";
 export * from "./axe.ts";
 export * from "./rgaa.ts";

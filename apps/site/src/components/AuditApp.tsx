@@ -1,18 +1,30 @@
 // Audit guidé (ADR-0013) : le seul îlot JavaScript du site. Modèle et opérations : @rampe/core/audit-session.
 // Imports par sous-chemin : l'îlot n'embarque ni le référentiel ni axe-core, seulement les données reçues en props.
 import {
+	type ImportSummary,
+	INVALID_REPORT,
+	importAutomaticResults,
+	MAX_REPORT_BYTES,
+	parseAuditReport,
+	ReportError,
+} from "@rampe/core/audit-report";
+import {
 	type AuditSession,
 	addPage,
 	createSession,
 	getEvaluation,
+	getFindings,
+	isFutureSession,
 	parseSession,
 	progress,
+	type ResultKind,
 	removePage,
 	type SessionPage,
 	type Status,
 	setEvaluation,
 } from "@rampe/core/audit-session";
 import { parseAuditUrl, parseSampleFile, plural } from "@rampe/core/sample-file";
+import type { ComponentChildren } from "preact";
 import { useEffect, useLayoutEffect, useMemo, useRef, useState } from "preact/hooks";
 
 /** Données du référentiel préparées au build (pages/audit/index.astro). Les champs `*Html` sont DÉJÀ assainis. */
@@ -31,7 +43,7 @@ export interface AuditCriterion {
 	href: string;
 }
 
-type Filter = "all" | "NT" | "NC";
+type Filter = "all" | "NT" | "NC" | "auto";
 
 const STORAGE_KEY = "rampe.audit.session";
 const SAVE_DELAY = 400;
@@ -41,10 +53,18 @@ const STATUS_LABELS: [Status, string][] = [
 	["NA", "Non applicable"],
 	["NT", "Non testé"],
 ];
+/** Classes de résultat de la CLI (ADR-0011 §3), en clair pour un non-expert. */
+const KIND_LABELS: Record<ResultKind, string> = {
+	"non-conformite": "Non-conformité détectée",
+	incertain: "Rattachement incertain",
+	"a-verifier": "À vérifier",
+	"bonne-pratique": "Bonne pratique",
+};
 const FILTERS: [Filter, string][] = [
 	["all", "Tous les critères"],
 	["NT", "Critères avec des pages non testées"],
 	["NC", "Critères non conformes sur au moins une page"],
+	["auto", "Critères avec des statuts détectés automatiquement, à confirmer"],
 ];
 
 /**
@@ -66,24 +86,35 @@ function storageAvailable(): boolean {
 	}
 }
 
-/** `ignored` : une valeur était présente mais illisible ; elle est mise de côté, jamais réutilisée. */
-function loadSession(): { session: AuditSession | null; ignored: boolean } {
+/** Relit une valeur du stockage ; `future` : écrite par une version plus récente de Rampe. */
+function readStored(raw: string): { session: AuditSession | null; future: boolean } {
+	try {
+		const value = JSON.parse(raw);
+		return { session: parseSession(value), future: isFutureSession(value) };
+	} catch {
+		return { session: null, future: false };
+	}
+}
+
+/**
+ * `ignored` : une valeur était présente mais illisible ; elle est mise de côté, jamais réutilisée.
+ * `future` : une version plus récente l'a écrite ; on n'y touche pas (ni mise de côté, ni écrasement).
+ */
+function loadSession(): { session: AuditSession | null; ignored: boolean; future: boolean } {
 	let raw: string | null;
 	try {
 		raw = localStorage.getItem(STORAGE_KEY);
 	} catch {
-		return { session: null, ignored: false };
+		return { session: null, ignored: false, future: false };
 	}
-	if (raw === null) return { session: null, ignored: false };
-	let session: AuditSession | null = null;
-	try {
-		session = parseSession(JSON.parse(raw));
-	} catch {}
-	if (session) return { session, ignored: false };
+	if (raw === null) return { session: null, ignored: false, future: false };
+	const { session, future } = readStored(raw);
+	if (session) return { session, ignored: false, future: false };
+	if (future) return { session: null, ignored: false, future: true };
 	try {
 		localStorage.setItem(`${STORAGE_KEY}.ignoree`, raw);
 	} catch {}
-	return { session: null, ignored: true };
+	return { session: null, ignored: true, future: false };
 }
 
 function saveSession(session: AuditSession): boolean {
@@ -111,6 +142,8 @@ export default function AuditApp({ topics, criteria }: { topics: AuditTopic[]; c
 	const [storageOk, setStorageOk] = useState(true);
 	const [saveFailed, setSaveFailed] = useState(false);
 	const [ignored, setIgnored] = useState(false);
+	/** Session d'une version plus récente dans le stockage : plus aucune écriture, pour ne pas l'écraser. */
+	const [future, setFuture] = useState(false);
 	/** `null` : aucun critère de la thématique ne correspond au filtre. */
 	const [currentId, setCurrentId] = useState<string | null>(criteria[0]?.id ?? null);
 	const [topicNumber, setTopicNumber] = useState(criteria[0]?.topic ?? 1);
@@ -127,12 +160,13 @@ export default function AuditApp({ topics, criteria }: { topics: AuditTopic[]; c
 		const ok = storageAvailable();
 		setStorageOk(ok);
 		if (ok) {
-			const { session: stored, ignored: wasIgnored } = loadSession();
+			const { session: stored, ignored: wasIgnored, future: isFuture } = loadSession();
 			if (stored) {
 				saved.current = stored;
 				setSession(stored);
 			}
 			setIgnored(wasIgnored);
+			setFuture(isFuture);
 		}
 		setReady(true);
 	}, []);
@@ -141,7 +175,7 @@ export default function AuditApp({ topics, criteria }: { topics: AuditTopic[]; c
 	// la modification suivante retente, et l'alerte disparaît dès qu'une écriture réussit.
 	const pending = useRef<AuditSession | null>(null);
 	useEffect(() => {
-		if (!ready || !storageOk || session === saved.current) return;
+		if (!ready || !storageOk || future || session === saved.current) return;
 		pending.current = session;
 		const timer = setTimeout(() => {
 			pending.current = null;
@@ -154,7 +188,7 @@ export default function AuditApp({ topics, criteria }: { topics: AuditTopic[]; c
 			}
 		}, SAVE_DELAY);
 		return () => clearTimeout(timer);
-	}, [session, ready, storageOk]);
+	}, [session, ready, storageOk, future]);
 	// Fermeture de l'onglet pendant le délai : on écrit tout de suite.
 	useEffect(() => {
 		const flush = () => {
@@ -167,10 +201,11 @@ export default function AuditApp({ topics, criteria }: { topics: AuditTopic[]; c
 	useEffect(() => {
 		const onStorage = (e: StorageEvent) => {
 			if (e.key !== STORAGE_KEY || e.newValue === null) return;
-			let other: AuditSession | null = null;
-			try {
-				other = parseSession(JSON.parse(e.newValue));
-			} catch {}
+			const { session: other, future: isFuture } = readStored(e.newValue);
+			if (isFuture) {
+				pending.current = null;
+				setFuture(true);
+			}
 			if (!other) return;
 			pending.current = null;
 			saved.current = other;
@@ -190,7 +225,11 @@ export default function AuditApp({ topics, criteria }: { topics: AuditTopic[]; c
 
 	const prog = useMemo(() => progress(session, criteria), [session, criteria]);
 	const matchesWith = (f: Filter) => (c: AuditCriterion) =>
-		f === "all" || session.pages.some((p) => getEvaluation(session, c.id, p.id).status === f);
+		f === "all" ||
+		session.pages.some((p) => {
+			const e = getEvaluation(session, c.id, p.id);
+			return f === "auto" ? e.source === "auto" : e.status === f;
+		});
 	const matches = matchesWith(filter);
 	const index = criteria.findIndex((c) => c.id === currentId);
 	const current = criteria[index];
@@ -270,6 +309,12 @@ export default function AuditApp({ topics, criteria }: { topics: AuditTopic[]; c
 					modifications ne sont pas conservées. Rampe réessaie à chaque modification.
 				</p>
 			)}
+			{future && (
+				<p class="audit-banner" role="alert">
+					<strong>Cet audit a été créé par une version plus récente de Rampe : rechargez la page.</strong> Tant que la
+					page n’est pas rechargée, vos modifications ne sont pas enregistrées, pour ne pas abîmer cet audit.
+				</p>
+			)}
 			{ignored && (
 				<p class="audit-banner">
 					Une session enregistrée n’a pas pu être relue (format inconnu ou abîmé) : elle a été mise de côté et un nouvel
@@ -277,7 +322,9 @@ export default function AuditApp({ topics, criteria }: { topics: AuditTopic[]; c
 				</p>
 			)}
 
-			<Pages session={session} setSession={setSession} setAnnounce={setAnnounce} />
+			<Pages session={session} setSession={setSession} setAnnounce={setAnnounce}>
+				<ImportReport session={session} setSession={setSession} setAnnounce={setAnnounce} criteria={criteria} />
+			</Pages>
 
 			<section aria-labelledby="audit-criteres" class="audit-eval">
 				<h2 id="audit-criteres">2. Évaluer les critères</h2>
@@ -287,6 +334,12 @@ export default function AuditApp({ topics, criteria }: { topics: AuditTopic[]; c
 							Il reste {plural(prog.total.remaining, "évaluation")} « non testé » sur {prog.total.total}
 						</label>
 						<progress id="audit-avancement" max={prog.total.total} value={prog.total.total - prog.total.remaining} />
+						{prog.total.toConfirm > 0 && (
+							<span class="audit-to-confirm">
+								Dont {plural(prog.total.toConfirm, "statut")} détecté{prog.total.toConfirm > 1 ? "s" : ""}{" "}
+								automatiquement, à confirmer.
+							</span>
+						)}
 					</p>
 				) : (
 					<p class="audit-empty">
@@ -380,6 +433,7 @@ export default function AuditApp({ topics, criteria }: { topics: AuditTopic[]; c
 										page={p}
 										session={session}
 										setSession={setSession}
+										setAnnounce={setAnnounce}
 									/>
 								))}
 							</div>
@@ -462,7 +516,12 @@ function CriterionSummary({ session, id }: { session: AuditSession; id: string }
 	const statuses = session.pages.map((p) => getEvaluation(session, id, p.id).status);
 	const nc = statuses.filter((s) => s === "NC").length;
 	const nt = statuses.filter((s) => s === "NT").length;
-	const parts = [nc > 0 && `${nc} non conforme${nc > 1 ? "s" : ""}`, nt > 0 && `${nt} non testé${nt > 1 ? "s" : ""}`];
+	const auto = session.pages.filter((p) => getEvaluation(session, id, p.id).source === "auto").length;
+	const parts = [
+		nc > 0 && `${nc} non conforme${nc > 1 ? "s" : ""}`,
+		nt > 0 && `${nt} non testé${nt > 1 ? "s" : ""}`,
+		auto > 0 && `${auto} à confirmer`,
+	];
 	return <span class="audit-count">{parts.filter(Boolean).join(", ") || "évalué"}</span>;
 }
 
@@ -471,23 +530,51 @@ function PageEvaluation({
 	page,
 	session,
 	setSession,
+	setAnnounce,
 }: {
 	criterionId: string;
 	page: SessionPage;
 	session: AuditSession;
 	setSession: (update: (s: AuditSession) => AuditSession) => void;
+	setAnnounce: (message: string) => void;
 }) {
+	const groupRef = useRef<HTMLFieldSetElement>(null);
 	const evaluation = getEvaluation(session, criterionId, page.id);
+	const findings = getFindings(session, criterionId, page.id);
 	const noteId = `note-${criterionId}-${page.id}`;
 	const update = (patch: { status?: Status; note?: string }) =>
 		setSession((s) => setEvaluation(s, criterionId, page.id, patch));
+	const label = STATUS_LABELS.find(([s]) => s === evaluation.status)?.[1] ?? "";
+	/** Garde le statut détecté et le fait sien : le bouton disparaît, le focus va sur le statut coché. */
+	const confirmAuto = () => {
+		update({});
+		groupRef.current?.querySelector<HTMLInputElement>("input:checked")?.focus();
+		setAnnounce(`Statut « ${label} » confirmé pour ${pageName(page)}, critère ${criterionId}`);
+	};
+	const conflict = evaluation.status === "C" && findings.some((f) => f.kind === "non-conformite");
 	return (
-		<fieldset class="audit-page">
+		<fieldset class="audit-page" ref={groupRef}>
 			<legend>
 				<span class="visually-hidden">Critère {criterionId}, page </span>
 				{pageName(page)}
 				{page.title.trim() && <span class="audit-url"> ({page.url})</span>}
 			</legend>
+			{evaluation.source === "auto" && (
+				<div class="audit-auto">
+					<p>
+						<strong>Détecté automatiquement, à confirmer.</strong> Vérifiez sur la page, puis confirmez ce statut ou
+						choisissez-en un autre : il comptera alors comme votre évaluation.
+					</p>
+					<button type="button" onClick={confirmAuto}>
+						Confirmer « {label} »<span class="visually-hidden"> pour {pageName(page)}</span>
+					</button>
+				</div>
+			)}
+			{conflict && (
+				<p class="audit-conflict">
+					<strong>L’outil a détecté une non-conformité sur cette page : vérifiez votre évaluation.</strong>
+				</p>
+			)}
 			<div class="audit-statuses">
 				{STATUS_LABELS.map(([status, label]) => (
 					<label key={status} class={`audit-status audit-status-${status}`}>
@@ -504,6 +591,32 @@ function PageEvaluation({
 			</div>
 			<label for={noteId}>Note sur {pageName(page)} (facultative)</label>
 			<textarea id={noteId} rows={2} value={evaluation.note} onInput={(e) => update({ note: e.currentTarget.value })} />
+			{findings.length > 0 && (
+				<details class="audit-findings">
+					<summary>
+						Indices de l’audit automatique pour {pageName(page)} ({findings.length})
+					</summary>
+					<ul>
+						{findings.map((f) => (
+							<li key={`${f.kind}-${f.ruleId}`}>
+								<strong>{KIND_LABELS[f.kind]}</strong> : règle <code>{f.ruleId}</code>
+								{f.help && (
+									<>
+										{" "}
+										« <span lang="en">{f.help}</span> »
+									</>
+								)}
+								, {plural(f.nodes, "élément")} concerné{f.nodes > 1 ? "s" : ""}
+							</li>
+						))}
+					</ul>
+					<p class="audit-help">
+						Un indice aide à chercher, il ne décide pas : seule une non-conformité détectée est certaine. Rattachement
+						incertain : un problème existe, mais il ne relève peut-être pas de ce critère. À vérifier : l’outil n’a pas
+						pu trancher. Bonne pratique : conseil, hors conformité.
+					</p>
+				</details>
+			)}
 		</fieldset>
 	);
 }
@@ -512,10 +625,12 @@ function Pages({
 	session,
 	setSession,
 	setAnnounce,
+	children,
 }: {
 	session: AuditSession;
 	setSession: (update: AuditSession | ((s: AuditSession) => AuditSession)) => void;
 	setAnnounce: (message: string) => void;
+	children: ComponentChildren;
 }) {
 	const [url, setUrl] = useState("");
 	const [title, setTitle] = useState("");
@@ -677,6 +792,135 @@ function Pages({
 					Ajouter ces pages
 				</button>
 			</details>
+			{children}
 		</section>
 	);
 }
+
+/**
+ * Import d'un rapport JSON de la CLI (ADR-0014). Taille contrôlée avant lecture, `JSON.parse` seul, validation stricte
+ * tout ou rien dans @rampe/core ; « Annuler cet import » restaure l'état précédent tant que rien d'autre n'a changé.
+ */
+function ImportReport({
+	session,
+	setSession,
+	setAnnounce,
+	criteria,
+}: {
+	session: AuditSession;
+	setSession: (update: AuditSession) => void;
+	setAnnounce: (message: string) => void;
+	criteria: AuditCriterion[];
+}) {
+	const known = useMemo(() => new Set(criteria.map((c) => c.id)), [criteria]);
+	const [error, setError] = useState<{ message: string; detail?: string } | null>(null);
+	const [done, setDone] = useState<{ summary: ImportSummary; before: AuditSession; after: AuditSession } | null>(null);
+	const [undone, setUndone] = useState(false);
+	const inputRef = useRef<HTMLInputElement>(null);
+	// La lecture du fichier est asynchrone : l'import part de la session à jour à ce moment-là.
+	const latest = useRef(session);
+	latest.current = session;
+
+	const refuse = (message: string, detail?: string) => {
+		setError({ message, detail });
+		setDone(null);
+		setUndone(false);
+		setAnnounce(message);
+	};
+	const onChange = async (e: Event) => {
+		const input = e.currentTarget as HTMLInputElement;
+		const file = input.files?.[0];
+		input.value = ""; // le même fichier peut être choisi à nouveau
+		if (!file) return;
+		if (file.size > MAX_REPORT_BYTES)
+			return refuse(
+				`Fichier trop volumineux (${Math.ceil(file.size / 1024 / 1024)} Mo) : 20 Mo au plus. Rien n’a été importé.`,
+			);
+		let json: unknown;
+		try {
+			json = JSON.parse(await file.text());
+		} catch {
+			return refuse(
+				"Ce fichier n’est pas un fichier JSON lisible : choisissez le fichier écrit par rampe audit --json. Rien n’a été importé.",
+			);
+		}
+		const before = latest.current;
+		let result: ReturnType<typeof importAutomaticResults>;
+		try {
+			result = importAutomaticResults(before, parseAuditReport(json, known));
+		} catch (err) {
+			if (err instanceof ReportError) return refuse(err.message, err.detail);
+			return refuse(INVALID_REPORT, (err as Error).message);
+		}
+		setSession(result.session);
+		setError(null);
+		setUndone(false);
+		setDone({ summary: result.summary, before, after: result.session });
+		setAnnounce(summaryText(result.summary));
+	};
+	const undo = () => {
+		if (!done) return;
+		setSession(done.before);
+		setDone(null);
+		setUndone(true);
+		setAnnounce("Import annulé : l’audit est revenu à son état d’avant l’import.");
+		inputRef.current?.focus();
+	};
+	const canUndo = done !== null && session === done.after;
+
+	return (
+		<div class="audit-import">
+			<h3>Reprendre les résultats de l’audit automatique</h3>
+			<p id="audit-rapport-aide">
+				Fichier écrit par <code>rampe audit --json</code> (20 Mo au plus). Les pages manquantes sont ajoutées. Les
+				non-conformités détectées sont proposées « à confirmer » sur les critères encore non testés ; les autres
+				résultats deviennent des indices. Vos évaluations déjà saisies ne sont jamais modifiées.
+			</p>
+			<label for="audit-rapport">Importer un rapport de la CLI (JSON)</label>
+			<input
+				id="audit-rapport"
+				ref={inputRef}
+				type="file"
+				accept="application/json,.json"
+				onChange={onChange}
+				aria-invalid={error ? "true" : undefined}
+				aria-describedby={error ? "audit-rapport-aide audit-rapport-erreur" : "audit-rapport-aide"}
+			/>
+			{error && (
+				<div id="audit-rapport-erreur" class="audit-error">
+					<p>{error.message}</p>
+					{error.detail && (
+						<details>
+							<summary>Détail technique</summary>
+							<p>{error.detail}</p>
+						</details>
+					)}
+				</div>
+			)}
+			{undone && <p>Import annulé : l’audit est revenu à son état d’avant l’import.</p>}
+			{done && (
+				<div class="audit-import-summary">
+					<p>{summaryText(done.summary)}</p>
+					<ul>
+						<li>Pages ajoutées à l’échantillon : {done.summary.pagesAdded}</li>
+						<li>Critères marqués « Non conforme », à confirmer : {done.summary.statusesSet}</li>
+						<li>Indices ajoutés sous les critères : {done.summary.findingsAdded}</li>
+						{done.summary.pagesSkipped.map((p) => (
+							<li key={p.url}>
+								Page non importée, en erreur dans le rapport : <span class="audit-url">{p.url}</span> ({p.reason})
+							</li>
+						))}
+					</ul>
+					{canUndo && (
+						<button type="button" onClick={undo}>
+							Annuler cet import
+						</button>
+					)}
+				</div>
+			)}
+		</div>
+	);
+}
+
+const summaryText = (s: ImportSummary) =>
+	`Import terminé : ${plural(s.pagesAdded, "page")} ajoutée${s.pagesAdded > 1 ? "s" : ""}, ${plural(s.statusesSet, "statut")} « Non conforme » à confirmer, ${plural(s.findingsAdded, "indice")}${s.pagesSkipped.length > 0 ? `, ${plural(s.pagesSkipped.length, "page")} en erreur non importée${s.pagesSkipped.length > 1 ? "s" : ""}` : ""}. Vos évaluations déjà saisies n’ont pas été modifiées.`;
