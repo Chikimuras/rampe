@@ -29,6 +29,8 @@ jobs:
           node-version: 22
           cache: pnpm
       - run: pnpm install --frozen-lockfile
+      # Chromium pour le test de bout en bout de la CLI (ADR-0011 §5).
+      - run: pnpm --filter @rampe/cli exec playwright install --with-deps chromium
       - run: pnpm check
       - run: pnpm build
       - if: github.ref == 'refs/heads/main'
