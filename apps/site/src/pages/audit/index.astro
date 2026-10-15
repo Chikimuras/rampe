@@ -318,6 +318,31 @@ const criteria: AuditCriterion[] = rgaa.criteria.map((c) => ({
 	.audit-pager .audit-next {
 		margin-left: auto;
 	}
+	.audit-help {
+		color: var(--muted);
+		font-size: 0.9375rem;
+		margin-top: 0;
+	}
+	.audit-none {
+		margin-top: 2rem;
+		padding: 0.75rem 1rem;
+		border: 1px dashed var(--muted);
+		border-radius: 6px;
+	}
+	details.audit-list {
+		margin-top: 1rem;
+		padding: 0.5rem 1rem;
+		border: 1px solid var(--line);
+		border-radius: 6px;
+		background: var(--surface);
+	}
+	details.audit-list summary {
+		cursor: pointer;
+		font-weight: 600;
+	}
+	details.audit-list ul {
+		margin-top: 0.75rem;
+	}
 	.audit-live {
 		min-height: 1.6em;
 		color: var(--muted);

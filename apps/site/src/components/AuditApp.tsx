@@ -109,12 +109,16 @@ export default function AuditApp({ topics, criteria }: { topics: AuditTopic[]; c
 	const [session, setSession] = useState<AuditSession>(() => createSession());
 	const [ready, setReady] = useState(false);
 	const [storageOk, setStorageOk] = useState(true);
+	const [saveFailed, setSaveFailed] = useState(false);
 	const [ignored, setIgnored] = useState(false);
-	const [currentId, setCurrentId] = useState(criteria[0]?.id ?? "");
+	/** `null` : aucun critère de la thématique ne correspond au filtre. */
+	const [currentId, setCurrentId] = useState<string | null>(criteria[0]?.id ?? null);
+	const [topicNumber, setTopicNumber] = useState(criteria[0]?.topic ?? 1);
 	const [filter, setFilter] = useState<Filter>("all");
 	const [announce, setAnnounce] = useState("");
+	const narrow = useNarrow();
 	const headingRef = useRef<HTMLHeadingElement>(null);
-	/** Dernière session écrite ou relue : on n'écrit (et n'annonce « Enregistré ») qu'après un vrai changement. */
+	/** Dernière session écrite ou relue : on n'écrit qu'après un vrai changement. */
 	const saved = useRef<AuditSession>(session);
 	const focusHeading = useRef(false);
 
@@ -133,16 +137,21 @@ export default function AuditApp({ topics, criteria }: { topics: AuditTopic[]; c
 		setReady(true);
 	}, []);
 
-	// Sauvegarde automatique, différée pour ne pas écrire à chaque frappe dans une note.
+	// Sauvegarde automatique, différée pour ne pas écrire à chaque frappe. Un échec (stockage plein) n'arrête rien :
+	// la modification suivante retente, et l'alerte disparaît dès qu'une écriture réussit.
 	const pending = useRef<AuditSession | null>(null);
 	useEffect(() => {
 		if (!ready || !storageOk || session === saved.current) return;
 		pending.current = session;
 		const timer = setTimeout(() => {
 			pending.current = null;
-			saved.current = session;
-			if (saveSession(session)) setAnnounce("Enregistré");
-			else setStorageOk(false);
+			if (saveSession(session)) {
+				saved.current = session;
+				setSaveFailed(false);
+			} else {
+				setSaveFailed(true);
+				setAnnounce("Échec de l’enregistrement");
+			}
 		}, SAVE_DELAY);
 		return () => clearTimeout(timer);
 	}, [session, ready, storageOk]);
@@ -154,6 +163,23 @@ export default function AuditApp({ topics, criteria }: { topics: AuditTopic[]; c
 		addEventListener("pagehide", flush);
 		return () => removeEventListener("pagehide", flush);
 	}, []);
+	// Un autre onglet a enregistré : on adopte son état (validé), sinon notre prochaine écriture l'effacerait.
+	useEffect(() => {
+		const onStorage = (e: StorageEvent) => {
+			if (e.key !== STORAGE_KEY || e.newValue === null) return;
+			let other: AuditSession | null = null;
+			try {
+				other = parseSession(JSON.parse(e.newValue));
+			} catch {}
+			if (!other) return;
+			pending.current = null;
+			saved.current = other;
+			setSession(other);
+			setAnnounce("Audit mis à jour depuis un autre onglet");
+		};
+		addEventListener("storage", onStorage);
+		return () => removeEventListener("storage", onStorage);
+	}, []);
 
 	useLayoutEffect(() => {
 		if (focusHeading.current) {
@@ -163,43 +189,72 @@ export default function AuditApp({ topics, criteria }: { topics: AuditTopic[]; c
 	}, [currentId]);
 
 	const prog = useMemo(() => progress(session, criteria), [session, criteria]);
-	const matches = (c: AuditCriterion) => {
-		if (filter === "all") return true;
-		return session.pages.some((p) => getEvaluation(session, c.id, p.id).status === filter);
-	};
-	const visible = criteria.filter(matches);
+	const matchesWith = (f: Filter) => (c: AuditCriterion) =>
+		f === "all" || session.pages.some((p) => getEvaluation(session, c.id, p.id).status === f);
+	const matches = matchesWith(filter);
 	const index = criteria.findIndex((c) => c.id === currentId);
-	const current = criteria[index] ?? criteria[0];
-	const prev = criteria.slice(0, Math.max(index, 0)).findLast(matches);
-	const next = criteria.slice(index + 1).find(matches);
+	const current = criteria[index];
+	const prev = current && criteria.slice(0, index).findLast(matches);
+	const next = current && criteria.slice(index + 1).find(matches);
+	const topic = topics.find((t) => t.number === (current?.topic ?? topicNumber));
+	const inTopic = criteria.filter((c) => c.topic === topic?.number && matches(c));
 
-	const goTo = (id: string) => {
-		focusHeading.current = true;
-		setCurrentId(id);
-		if (id === currentId) headingRef.current?.focus();
+	const show = (c: AuditCriterion) => {
+		setCurrentId(c.id);
+		setTopicNumber(c.topic);
 	};
-	const chooseTopic = (topic: number) => {
-		const first = visible.find((c) => c.topic === topic) ?? criteria.find((c) => c.topic === topic);
-		if (first) setCurrentId(first.id);
+	const goTo = (c: AuditCriterion) => {
+		focusHeading.current = true;
+		show(c);
+		if (c.id === currentId) headingRef.current?.focus();
+	};
+	const topicLabel = (t: AuditTopic) => `Thématique ${t.number} « ${t.title} »`;
+	const chooseTopic = (t: AuditTopic) => {
+		const first = criteria.find((c) => c.topic === t.number && matches(c));
+		setTopicNumber(t.number);
+		setCurrentId(first?.id ?? null);
+		setAnnounce(
+			first
+				? `${topicLabel(t)} : critère ${first.id} affiché`
+				: `${topicLabel(t)} : aucun critère ne correspond au filtre`,
+		);
 	};
 	const changeFilter = (f: Filter) => {
 		setFilter(f);
-		const n =
-			f === "all"
-				? criteria.length
-				: criteria.filter((c) => session.pages.some((p) => getEvaluation(session, c.id, p.id).status === f)).length;
-		setAnnounce(`${plural(n, "critère")} affiché${n > 1 ? "s" : ""}`);
+		const ok = matchesWith(f);
+		const n = criteria.filter(ok).length;
+		let message = `${plural(n, "critère")} affiché${n > 1 ? "s" : ""}`;
+		if (!current || !ok(current)) {
+			// Le critère affiché sort du filtre : premier critère correspondant de la thématique, sinon rien.
+			const first = criteria.find((c) => c.topic === topic?.number && ok(c));
+			setCurrentId(first?.id ?? null);
+			if (first) message += ` ; critère ${first.id} affiché`;
+		}
+		setAnnounce(message);
 	};
 	const restart = () => {
 		if (!confirm("Effacer toutes les pages et toutes les évaluations de cet audit ? Cette action est définitive."))
 			return;
 		setSession(createSession());
-		setCurrentId(criteria[0]?.id ?? "");
+		const first = criteria[0];
+		if (first) show(first);
 		setAnnounce("Audit effacé : vous repartez de zéro.");
 	};
 
-	if (!current) return null;
-	const topic = topics.find((t) => t.number === current.topic);
+	const criteriaList = (
+		<ul>
+			{inTopic.map((c) => (
+				<li key={c.id}>
+					<button type="button" aria-current={c.id === currentId ? "true" : undefined} onClick={() => goTo(c)}>
+						<span class="audit-num">{c.id}</span>
+						<span {...trustedBuildHtml(c.titleTextHtml)} />
+						<CriterionSummary session={session} id={c.id} />
+					</button>
+				</li>
+			))}
+		</ul>
+	);
+	const listTitle = `Critères de la thématique ${topic?.number ?? ""}${filter !== "all" ? " (filtrés)" : ""}`;
 
 	return (
 		<div class="audit">
@@ -207,6 +262,12 @@ export default function AuditApp({ topics, criteria }: { topics: AuditTopic[]; c
 				<p class="audit-banner">
 					<strong>Votre travail ne sera pas conservé si vous fermez cette page.</strong> Le stockage local de ce
 					navigateur est indisponible (navigation privée, stockage plein ou refusé).
+				</p>
+			)}
+			{saveFailed && (
+				<p class="audit-banner" role="alert">
+					<strong>Échec de l’enregistrement.</strong> Le stockage de ce navigateur est plein ou refusé : vos dernières
+					modifications ne sont pas conservées. Rampe réessaie à chaque modification.
 				</p>
 			)}
 			{ignored && (
@@ -259,8 +320,8 @@ export default function AuditApp({ topics, criteria }: { topics: AuditTopic[]; c
 								<li key={t.number}>
 									<button
 										type="button"
-										aria-current={t.number === current.topic ? "true" : undefined}
-										onClick={() => chooseTopic(t.number)}
+										aria-current={t.number === topic?.number ? "true" : undefined}
+										onClick={() => chooseTopic(t)}
 									>
 										{t.number}. {t.title}
 										{count && count.total > 0 && (
@@ -275,98 +336,94 @@ export default function AuditApp({ topics, criteria }: { topics: AuditTopic[]; c
 					</ul>
 				</nav>
 
-				<nav aria-labelledby="audit-liste" class="audit-list">
-					<h3 id="audit-liste">
-						Critères de la thématique {current.topic}
-						{filter !== "all" && " (filtrés)"}
-					</h3>
-					{visible.some((c) => c.topic === current.topic) ? (
-						<ul>
-							{visible
-								.filter((c) => c.topic === current.topic)
-								.map((c) => (
-									<li key={c.id}>
-										<button
-											type="button"
-											aria-current={c.id === current.id ? "true" : undefined}
-											onClick={() => goTo(c.id)}
-										>
-											<span class="audit-num">{c.id}</span>
-											<span {...trustedBuildHtml(c.titleTextHtml)} />
-											<CriterionSummary session={session} id={c.id} />
-										</button>
-									</li>
-								))}
-						</ul>
+				{inTopic.length > 0 &&
+					(narrow ? (
+						// Petit écran : la liste est repliée pour que le critère reste proche (revue de la PR #15).
+						<details class="audit-list">
+							<summary>{listTitle}</summary>
+							<nav aria-label={listTitle}>{criteriaList}</nav>
+						</details>
 					) : (
-						<p>Aucun critère de cette thématique ne correspond au filtre.</p>
-					)}
-				</nav>
+						<nav aria-labelledby="audit-liste" class="audit-list">
+							<h3 id="audit-liste">{listTitle}</h3>
+							{criteriaList}
+						</nav>
+					))}
 
-				<article class="audit-criterion" aria-labelledby="audit-titre">
-					<h3 id="audit-titre" ref={headingRef} tabIndex={-1}>
-						<span class="audit-num">Critère {current.id}</span> <span {...trustedBuildHtml(current.titleHtml)} />
-					</h3>
-					<p class="audit-official">
-						Texte officiel du RGAA. <a href={current.href}>Fiche complète du critère {current.id}</a>
-					</p>
-					{topic && (
+				{current && topic ? (
+					<article class="audit-criterion" aria-labelledby="audit-titre">
+						<h3 id="audit-titre" ref={headingRef} tabIndex={-1}>
+							<span class="audit-num">
+								Critère {current.id}, thématique {topic.number} « {topic.title} »
+							</span>{" "}
+							<span {...trustedBuildHtml(current.titleHtml)} />
+						</h3>
+						<p class="audit-official">
+							Texte officiel du RGAA. <a href={current.href}>Fiche complète du critère {current.id}</a>
+						</p>
 						<div class="rampe-note">
 							<p class="label">Explication Rampe — non normative (thématique « {topic.title} »)</p>
 							<p>{topic.intro}</p>
 						</div>
-					)}
-					<details open>
-						<summary>Tests du critère {current.id}</summary>
-						{current.tests.map((t) => (
-							<div class="audit-test" key={t.id}>
-								<h4>Test {t.id}</h4>
-								<p {...trustedBuildHtml(t.statementHtml)} />
-								{t.conditionsHtml.length > 0 && (
-									<ul>
-										{t.conditionsHtml.map((html) => (
-											<li key={html} {...trustedBuildHtml(html)} />
-										))}
-									</ul>
-								)}
-								{t.methodologyHtml && (
-									<details>
-										<summary>Méthodologie du test {t.id}</summary>
-										<div {...trustedBuildHtml(t.methodologyHtml)} />
-									</details>
-								)}
+
+						{session.pages.length > 0 && (
+							<div class="audit-pages-eval">
+								<h4>Statut par page</h4>
+								<p class="audit-help">
+									Non applicable : le contenu visé par ce critère n’existe pas sur la page. Non testé : pas encore
+									vérifié — un critère non testé empêche de conclure.
+								</p>
+								{session.pages.map((p) => (
+									<PageEvaluation
+										key={`${current.id}-${p.id}`}
+										criterionId={current.id}
+										page={p}
+										session={session}
+										setSession={setSession}
+									/>
+								))}
 							</div>
-						))}
-					</details>
+						)}
 
-					{session.pages.length > 0 && (
-						<div class="audit-pages-eval">
-							<h4>Statut par page</h4>
-							{session.pages.map((p) => (
-								<PageEvaluation
-									key={`${current.id}-${p.id}`}
-									criterionId={current.id}
-									page={p}
-									session={session}
-									setSession={setSession}
-								/>
+						<details>
+							<summary>Tests du critère {current.id}</summary>
+							{current.tests.map((t) => (
+								<div class="audit-test" key={t.id}>
+									<h4>Test {t.id}</h4>
+									<p {...trustedBuildHtml(t.statementHtml)} />
+									{t.conditionsHtml.length > 0 && (
+										<ul>
+											{t.conditionsHtml.map((html) => (
+												<li key={html} {...trustedBuildHtml(html)} />
+											))}
+										</ul>
+									)}
+									{t.methodologyHtml && (
+										<details>
+											<summary>Méthodologie du test {t.id}</summary>
+											<div {...trustedBuildHtml(t.methodologyHtml)} />
+										</details>
+									)}
+								</div>
 							))}
-						</div>
-					)}
+						</details>
 
-					<nav aria-label="Critères voisins" class="audit-pager">
-						{prev && (
-							<button type="button" onClick={() => goTo(prev.id)}>
-								Critère précédent : {prev.id}
-							</button>
-						)}
-						{next && (
-							<button type="button" class="audit-next" onClick={() => goTo(next.id)}>
-								Critère suivant : {next.id}
-							</button>
-						)}
-					</nav>
-				</article>
+						<nav aria-label="Critères voisins" class="audit-pager">
+							{prev && (
+								<button type="button" onClick={() => goTo(prev)}>
+									Critère précédent : {prev.id}
+								</button>
+							)}
+							{next && (
+								<button type="button" class="audit-next" onClick={() => goTo(next)}>
+									Critère suivant : {next.id}
+								</button>
+							)}
+						</nav>
+					</article>
+				) : (
+					<p class="audit-none">Aucun critère ne correspond à ce filtre dans cette thématique.</p>
+				)}
 			</section>
 
 			<p aria-live="polite" class="audit-live">
@@ -385,6 +442,19 @@ export default function AuditApp({ topics, criteria }: { topics: AuditTopic[]; c
 			</section>
 		</div>
 	);
+}
+
+/** Vrai sous 700 px de large. Le rendu du build suppose un grand écran ; corrigé à l'hydratation. */
+function useNarrow(): boolean {
+	const [narrow, setNarrow] = useState(false);
+	useEffect(() => {
+		const query = matchMedia("(max-width: 699px)");
+		const update = () => setNarrow(query.matches);
+		update();
+		query.addEventListener("change", update);
+		return () => query.removeEventListener("change", update);
+	}, []);
+	return narrow;
 }
 
 function CriterionSummary({ session, id }: { session: AuditSession; id: string }) {
@@ -414,6 +484,7 @@ function PageEvaluation({
 	return (
 		<fieldset class="audit-page">
 			<legend>
+				<span class="visually-hidden">Critère {criterionId}, page </span>
 				{pageName(page)}
 				{page.title.trim() && <span class="audit-url"> ({page.url})</span>}
 			</legend>
@@ -431,7 +502,7 @@ function PageEvaluation({
 					</label>
 				))}
 			</div>
-			<label for={noteId}>Note (facultative)</label>
+			<label for={noteId}>Note sur {pageName(page)} (facultative)</label>
 			<textarea id={noteId} rows={2} value={evaluation.note} onInput={(e) => update({ note: e.currentTarget.value })} />
 		</fieldset>
 	);
@@ -453,6 +524,18 @@ function Pages({
 	const [sampleMessage, setSampleMessage] = useState<{ error: boolean; text: string } | null>(null);
 	const urlRef = useRef<HTMLInputElement>(null);
 	const sampleRef = useRef<HTMLTextAreaElement>(null);
+	const listRef = useRef<HTMLOListElement>(null);
+	const headingRef = useRef<HTMLHeadingElement>(null);
+	/** Après « Retirer » : position du bouton qui doit recevoir le focus (le suivant, sinon le précédent). */
+	const focusAfterRemove = useRef<number | null>(null);
+	useLayoutEffect(() => {
+		const i = focusAfterRemove.current;
+		if (i === null) return;
+		focusAfterRemove.current = null;
+		const buttons = listRef.current?.querySelectorAll("button") ?? [];
+		const target = buttons[Math.min(i, buttons.length - 1)];
+		(target ?? headingRef.current)?.focus();
+	});
 
 	/** Contrôle commun à la saisie et au collage : http(s), un seul site, pas de doublon. */
 	const check = (s: AuditSession, u: URL): string | null => {
@@ -514,15 +597,18 @@ function Pages({
 
 	const remove = (p: SessionPage) => {
 		if (!confirm(`Retirer « ${pageName(p)} » de l’échantillon ? Ses évaluations seront effacées.`)) return;
+		focusAfterRemove.current = session.pages.indexOf(p);
 		setSession((s) => removePage(s, p.id));
 		setAnnounce(`Page retirée : ${pageName(p)}`);
 	};
 
 	return (
 		<section aria-labelledby="audit-echantillon" class="audit-sample">
-			<h2 id="audit-echantillon">1. Pages de l’échantillon</h2>
+			<h2 id="audit-echantillon" ref={headingRef} tabIndex={-1}>
+				1. Pages de l’échantillon
+			</h2>
 			{session.pages.length > 0 ? (
-				<ol class="audit-page-list">
+				<ol class="audit-page-list" ref={listRef}>
 					{session.pages.map((p) => (
 						<li key={p.id}>
 							<span>
