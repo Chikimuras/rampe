@@ -185,7 +185,7 @@ describe("formatReport", () => {
 
 	it("range une bonne pratique d'axe rattachée au RGAA sous son critère, à confirmer", () => {
 		expect(text).toMatch(
-			/rattachement RGAA incertain :\n {2}Critère 9\.2 — .*\n {4}- region \(test 9\.2\.1 ; règle de bonne pratique d’axe : à confirmer par un humain\)/,
+			/rattachement RGAA incertain :\n {2}Critère 9\.2 — .*\n {4}- region \(test 9\.2\.1 ; règle indicative d’axe : à confirmer par une personne\)/,
 		);
 	});
 

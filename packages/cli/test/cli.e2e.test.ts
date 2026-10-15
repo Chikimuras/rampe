@@ -122,7 +122,7 @@ describe("rampe audit (bout en bout)", { timeout: 60_000 }, () => {
 		const results = (await readReport()).pages[0]?.results ?? [];
 		expect(results.map((r) => [r.ruleId, r.kind])).toEqual([["region", "incertain"]]);
 		expect(stdout).toContain("Aucune non-conformité détectée automatiquement");
-		expect(stdout).toContain("règle de bonne pratique d’axe : à confirmer par un humain");
+		expect(stdout).toContain("règle indicative d’axe : à confirmer par une personne");
 	});
 
 	it("borne toute l'opération par --timeout, même si la page bloque son fil principal", async () => {

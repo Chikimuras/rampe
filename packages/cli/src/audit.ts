@@ -156,7 +156,7 @@ export const byNumber = (a: string, b: string) => a.localeCompare(b, "en", { num
 
 function ruleLine(r: AuditResult, detail: string, showFlags = true): string {
 	const first = r.nodes[0] ? `, ex. ${selector(r.nodes[0].target)}` : "";
-	const flags = [r.flags.bestPractice && "bonne pratique d’axe", r.flags.experimental && "expérimentale"].filter(
+	const flags = [r.flags.bestPractice && "règle indicative d’axe", r.flags.experimental && "expérimentale"].filter(
 		Boolean,
 	);
 	const suffix = showFlags && flags.length > 0 ? ` [${flags.join(", ")}]` : "";
@@ -209,8 +209,7 @@ export function formatPage(page: AuditPage): string {
 		out.push(
 			...byCriterion(
 				uncertain.filter((r) => r.level === "rgaa"),
-				(r) =>
-					` ; règle ${r.flags.bestPractice ? "de bonne pratique" : "expérimentale"} d’axe : à confirmer par un humain`,
+				(r) => ` ; règle ${r.flags.bestPractice ? "indicative" : "expérimentale"} d’axe : à confirmer par une personne`,
 			),
 		);
 		for (const r of uncertain.filter((x) => x.level === "wcag"))
