@@ -19,6 +19,10 @@ updates:
         update-types: [minor, patch]
         # axe-core reste seul : sa montée change la correspondance RGAA et doit se lire isolément (ADR-0008).
         exclude-patterns: [axe-core]
+    ignore:
+      # TypeScript 7 écarté tant que @astrojs/check ne le supporte pas (ADR-0003).
+      - dependency-name: typescript
+        update-types: ["version-update:semver-major"]
 
   - package-ecosystem: github-actions
     directory: /
