@@ -1,5 +1,13 @@
 // Logique pure de l'audit : validation d'URL, classement des résultats axe (ADR-0011 §3), JSON et texte.
-import { type AxeRuleMapping, classifyAxeRule, getCriterion, isDirectCheck, rgaa } from "@rampe/core";
+import {
+	type AxeRuleMapping,
+	classifyAxeRule,
+	criteriaWithDirectRule,
+	getCriterion,
+	isDirectCheck,
+	rgaa,
+} from "@rampe/core";
+import axe from "axe-core";
 import pkg from "../package.json" with { type: "json" };
 
 /** Sous-ensemble d'un résultat `axe.run` (violation ou incomplete) utilisé ici. */
@@ -49,6 +57,10 @@ export interface AuditReport {
 }
 
 const HTML_MAX = 500;
+
+/** Critères sans aucune vérification automatique directe (même décompte que le site). */
+export const uncoveredCriteria = () =>
+	rgaa.criteria.length - criteriaWithDirectRule(axe.getRules().map((r) => r.tags)).size;
 
 /** N'accepte que http: et https: (ADR-0011 §6). Lève une erreur au message lisible sinon. */
 export function parseAuditUrl(input: string): URL {
@@ -120,14 +132,14 @@ export function buildReport(input: {
 // --- Sortie console ---
 
 /** Titre officiel sans les liens markdown vers le glossaire. */
-const plainTitle = (id: string) => (getCriterion(id)?.title ?? "").replace(/\[([^\]]+)\]\([^)]*\)/g, "$1");
+export const plainTitle = (id: string) => (getCriterion(id)?.title ?? "").replace(/\[([^\]]+)\]\([^)]*\)/g, "$1");
 
 // Cible axe : un sélecteur par niveau de cadre ; un niveau peut être un tableau (Shadow DOM).
-const selector = (target: unknown[]) =>
+export const selector = (target: unknown[]) =>
 	stripControl(target.map((t) => (Array.isArray(t) ? t.join(" >>> ") : String(t))).join(" | "));
 
 export const plural = (n: number, word: string) => `${n} ${word}${n > 1 ? "s" : ""}`;
-const byNumber = (a: string, b: string) => a.localeCompare(b, "en", { numeric: true });
+export const byNumber = (a: string, b: string) => a.localeCompare(b, "en", { numeric: true });
 
 function ruleLine(r: AuditResult, detail: string, showFlags = true): string {
 	const first = r.nodes[0] ? `, ex. ${selector(r.nodes[0].target)}` : "";

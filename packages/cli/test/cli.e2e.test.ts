@@ -5,17 +5,19 @@ import { createServer, type Server } from "node:http";
 import type { AddressInfo } from "node:net";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
-import { fileURLToPath } from "node:url";
+import { fileURLToPath, pathToFileURL } from "node:url";
 import axe from "axe-core";
+import { chromium } from "playwright";
 import { afterAll, beforeAll, describe, expect, it } from "vitest";
 import type { AuditReport } from "../src/audit.ts";
 
 const cli = fileURLToPath(new URL("../src/cli.ts", import.meta.url));
 const fixtures = fileURLToPath(new URL("./fixtures/", import.meta.url));
 
-// --json n'écrase jamais : le fichier du test précédent est retiré avant chaque lancement.
+// --json et --html n'écrasent jamais : les fichiers du test précédent sont retirés avant chaque lancement.
 const run = async (...args: string[]) => {
 	await rm(json, { force: true });
+	await rm(html, { force: true });
 	return runCli(...args);
 };
 const runCli = (...args: string[]) =>
@@ -27,6 +29,7 @@ const runCli = (...args: string[]) =>
 
 const FIXTURES = new Set(["propre", "defauts", "region", "boucle", "quitte", "csp"]);
 const json = join(tmpdir(), `rampe-e2e-${process.pid}.json`);
+const html = join(tmpdir(), `rampe-e2e-${process.pid}.html`);
 let server: Server;
 let port: number;
 let base: string;
@@ -50,6 +53,7 @@ beforeAll(async () => {
 
 afterAll(async () => {
 	await rm(json, { force: true });
+	await rm(html, { force: true });
 	await new Promise<void>((resolve) => server.close(() => resolve()));
 });
 
@@ -157,5 +161,42 @@ describe("rampe audit (bout en bout)", { timeout: 60_000 }, () => {
 		expect(page.url).toBe(`http://***:***@127.0.0.1:${port}/redirige`);
 		expect(page.warnings).toHaveLength(1);
 		for (const out of [stdout, stderr, raw]) expect(out).not.toContain("secret");
+	});
+
+	it("--json et --html ensemble : le rapport HTML est lui-même sans violation axe, en clair et en sombre", async () => {
+		const { code, stdout, stderr } = await run("audit", `${base}/defauts`, "--json", json, "--html", html);
+		expect(code, stderr).toBe(1);
+		expect(stdout).toContain(`Rapport HTML écrit dans ${html}`);
+		await readReport();
+		const report = await readFile(html, "utf8");
+		for (const id of ["1-1", "3-2", "8-3", "11-1"]) expect(report).toContain(`id="critere-${id}"`);
+		expect(report).not.toMatch(/<script/i);
+
+		const browser = await chromium.launch({ chromiumSandbox: true });
+		try {
+			for (const colorScheme of ["light", "dark"] as const) {
+				const page = await browser.newPage({ colorScheme });
+				await page.goto(pathToFileURL(html).href);
+				await page.evaluate(() => {
+					for (const d of document.querySelectorAll("details")) d.open = true;
+				});
+				await page.evaluate(axe.source);
+				const violations = await page.evaluate(async () => {
+					const r = await (window as unknown as { axe: typeof axe }).axe.run();
+					return r.violations.map((v) => `${v.id} : ${v.nodes.map((n) => n.target.join(" ")).join(", ")}`);
+				});
+				expect(violations, colorScheme).toEqual([]);
+				await page.close();
+			}
+		} finally {
+			await browser.close();
+		}
+	});
+
+	it("refuse --html égal à --json, avant tout chargement", async () => {
+		const { code, stdout, stderr } = await run("audit", `${base}/propre`, "--json", json, "--html", json);
+		expect(code).toBe(2);
+		expect(stderr).toContain("--json et --html désignent le même fichier");
+		expect(stdout).toBe("");
 	});
 });
