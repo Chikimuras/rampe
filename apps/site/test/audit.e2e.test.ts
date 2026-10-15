@@ -1735,6 +1735,49 @@ describe("audit guidé (bout en bout)", { timeout: 60_000 }, () => {
 			await page.close();
 		});
 
+		it("export : une date en brouillon est enregistrée avant le document ; invalide, l'export est bloqué", async () => {
+			const page = await browser.newPage();
+			await openWith(page, twoThirds());
+			const field = page.getByLabel("Date de mise à jour (facultatif)");
+			// Nouvelle date valide, puis clic immédiat : le clic provoque la sortie du champ, le fichier a la NOUVELLE date.
+			await field.focus();
+			await page.keyboard.type("10142026");
+			const html = await download(page, "Télécharger (HTML)");
+			expect(html.content).toContain("Elle a été mise à jour le 14 octobre 2026.");
+			await field.focus();
+			await page.keyboard.type("11052026");
+			const md = await download(page, "Télécharger (Markdown)");
+			expect(md.content).toContain("Elle a été mise à jour le 05 novembre 2026.");
+			// Activation sans sortie du champ (technologie d'assistance, clic programmatique) : le focus reste dans la
+			// date, aucun « blur » ; l'export doit quand même prendre la nouvelle date.
+			await field.focus();
+			await page.keyboard.type("12242026");
+			const [noBlur] = await Promise.all([
+				page.waitForEvent("download"),
+				page.getByRole("button", { name: "Télécharger (HTML)" }).evaluate((b) => (b as HTMLButtonElement).click()),
+			]);
+			expect(await readFile(await noBlur.path(), "utf8")).toContain("Elle a été mise à jour le 24 décembre 2026.");
+			// Date invalide puis clic : aucun téléchargement, message relié, focus sur le champ ; la date publiée reste.
+			const downloads: string[] = [];
+			page.on("download", (d) => downloads.push(d.suggestedFilename()));
+			await field.focus();
+			await page.keyboard.type("10140010");
+			await page.getByRole("button", { name: "Télécharger (HTML)" }).click();
+			await expect.poll(() => page.evaluate(() => document.activeElement?.id)).toBe("declaration-updatedOn");
+			await expect.poll(() => field.getAttribute("aria-invalid")).toBe("true");
+			await expect(page.locator("#declaration-updatedOn-erreur").textContent()).resolves.toMatch(
+				/^Date incomplète ou hors limites/,
+			);
+			await expect
+				.poll(() => page.locator("[aria-live=polite]").textContent())
+				.toBe("Export impossible : une date est incomplète ou hors limites (années 1900 à 9999).");
+			await page.getByRole("button", { name: "Télécharger (Markdown)" }).click();
+			await page.waitForTimeout(800);
+			expect(downloads).toEqual([]);
+			await expect(previewText(page)).resolves.toContain("Elle a été mise à jour le 24 décembre 2026.");
+			await page.close();
+		});
+
 		it("relecture : une date de déclaration abîmée est retirée, signalée sobrement ; l'audit n'est pas mis de côté", async () => {
 			const page = await browser.newPage();
 			const json = JSON.parse(twoThirds());

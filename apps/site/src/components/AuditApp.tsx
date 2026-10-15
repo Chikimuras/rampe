@@ -1697,25 +1697,55 @@ function Declaration({
 		set(field, value);
 	};
 	/** Date d'établissement figée au premier export : une déclaration ne change pas de date à chaque téléchargement. */
-	const freezeDate = () => {
-		if (fields.establishedOn) return;
-		const d = new Date();
-		const pad = (n: number) => String(n).padStart(2, "0");
-		set("establishedOn", `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`);
+	/**
+	 * Avant tout export : les dates en brouillon sont validées et enregistrées (même règle qu'à la sortie du champ),
+	 * et la date d'établissement est figée si elle ne l'est pas (première copie ou premier téléchargement). Le document
+	 * est produit à partir de cet état à jour, jamais d'un état antérieur au clic. Un brouillon invalide bloque
+	 * l'export : message relié au champ, focus dessus. `null` : export bloqué.
+	 */
+	const prepare = (): AuditSession | null => {
+		const updates: [DeclarationField, string][] = [];
+		for (const [field, value] of Object.entries(drafts) as [DeclarationField, string][]) {
+			if (value !== "" && !isDay(value)) {
+				setTouched((t) => new Set(t).add(field));
+				document.getElementById(`declaration-${field}`)?.focus();
+				setAnnounce("Export impossible : une date est incomplète ou hors limites (années 1900 à 9999).");
+				return null;
+			}
+			updates.push([field, value]);
+		}
+		const apply = (s: AuditSession) => {
+			let next = updates.reduce((acc, [field, value]) => setDeclarationField(acc, field, value), s);
+			if (!next.declaration?.establishedOn) {
+				const d = new Date();
+				const pad = (n: number) => String(n).padStart(2, "0");
+				next = setDeclarationField(
+					next,
+					"establishedOn",
+					`${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`,
+				);
+			}
+			return next;
+		};
+		setDrafts({});
+		setSession(apply);
+		return apply(session);
 	};
-	const render = (format: "html" | "markdown", standalone = false) =>
-		renderDeclaration(session, r, fields, { ...options, format, standalone });
+	const render = (current: AuditSession, format: "html" | "markdown", standalone = false) =>
+		renderDeclaration(current, r, current.declaration ?? {}, { ...options, format, standalone });
 	const download = (format: "html" | "markdown") => {
+		const current = prepare();
+		if (!current) return;
 		const ext = format === "html" ? "html" : "md";
-		const name = declarationFileName(session, new Date(), ext);
-		saveFile(name, render(format, true), format === "html" ? "text/html" : "text/markdown");
-		freezeDate();
+		const name = declarationFileName(current, new Date(), ext);
+		saveFile(name, render(current, format, true), format === "html" ? "text/html" : "text/markdown");
 		setAnnounce(`Déclaration téléchargée : ${name}`);
 	};
 	const copy = async () => {
+		const current = prepare();
+		if (!current) return;
 		try {
-			await navigator.clipboard.writeText(render("html"));
-			freezeDate();
+			await navigator.clipboard.writeText(render(current, "html"));
 			setAnnounce("Code HTML de la déclaration copié dans le presse-papiers.");
 		} catch {
 			setAnnounce("Copie impossible dans ce navigateur : utilisez « Télécharger (HTML) ».");
