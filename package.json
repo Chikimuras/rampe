@@ -1,0 +1,21 @@
+{
+	"name": "rampe",
+	"private": true,
+	"type": "module",
+	"packageManager": "pnpm@9.3.0",
+	"engines": {
+		"node": ">=22.12"
+	},
+	"scripts": {
+		"lint": "biome check .",
+		"format": "biome check --write .",
+		"typecheck": "pnpm -r typecheck",
+		"test": "pnpm -r --if-present test",
+		"build": "pnpm -r build",
+		"check": "pnpm lint && pnpm typecheck && pnpm test"
+	},
+	"devDependencies": {
+		"@biomejs/biome": "2.5.15",
+		"typescript": "^6.0.3"
+	}
+}

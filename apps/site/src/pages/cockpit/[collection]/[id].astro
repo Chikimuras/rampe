@@ -1,0 +1,40 @@
+---
+import { type CollectionEntry, getCollection, render } from "astro:content";
+import Base from "../../../layouts/Base.astro";
+import { url } from "../../../lib/url";
+
+type Entry = CollectionEntry<"adr" | "journal" | "docs">;
+
+export async function getStaticPaths() {
+	const names = ["adr", "journal", "docs"] as const;
+	const all = await Promise.all(names.map((n) => getCollection(n)));
+	return all.flat().map((entry) => ({
+		params: { collection: entry.collection, id: entry.id },
+		props: { entry },
+	}));
+}
+
+const { entry } = Astro.props as { entry: Entry };
+const { Content } = await render(entry);
+const meta =
+	entry.collection === "adr"
+		? `${entry.data.status} · ${entry.data.date.toLocaleDateString("fr-FR")} · ${entry.data.deciders}`
+		: entry.collection === "journal"
+			? entry.data.date.toLocaleDateString("fr-FR")
+			: "";
+const source = `${entry.collection === "docs" ? "" : `${entry.collection}/`}${entry.id}.md`;
+---
+
+<Base title={entry.data.title}>
+	<p><a href={url("cockpit/")}>← Cockpit</a></p>
+	<h1>{entry.data.title}</h1>
+	{meta && <p class="meta">{meta}</p>}
+	<article><Content /></article>
+	<p><a href={`https://github.com/Chikimuras/rampe/blob/main/docs/${source}`}>Voir la source sur GitHub</a></p>
+</Base>
+
+<style>
+	.meta {
+		color: var(--muted);
+	}
+</style>

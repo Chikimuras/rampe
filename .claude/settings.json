@@ -1,0 +1,16 @@
+{
+	"hooks": {
+		"Stop": [
+			{
+				"hooks": [
+					{
+						"type": "command",
+						"command": "\"${CLAUDE_PROJECT_DIR:-.}\"/.claude/gate.sh",
+						"timeout": 300,
+						"statusMessage": "Gate : pnpm check (biome, typecheck, tests)…"
+					}
+				]
+			}
+		]
+	}
+}
