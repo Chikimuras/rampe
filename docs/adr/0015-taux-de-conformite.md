@@ -26,9 +26,14 @@ C’est le premier chiffre de conformité que Rampe affichera. L’ADR-0002 inte
 2. **Pas de taux tant que l’audit n’est pas complet.** S’il reste une évaluation « Non testé » ou une non-conformité automatique « à confirmer » (ADR-0014), aucun pourcentage n’est affiché. L’interface indique à la place « Audit incomplet : N évaluations restantes, M statuts à confirmer », avec des liens vers les critères concernés.
 3. **Pas de taux sans échantillon minimal** : au moins une page.
 4. **Affichage** : les deux taux, avec leur définition officielle en une phrase et la source citée ; le détail par page et par critère (validé, non validé, non applicable). Le taux n’est pas présenté comme une certification. Le niveau de conformité de la déclaration (« totalement », « partiellement », « non conforme ») relève de la phase 4 et n’est pas affiché ici.
-5. Les processus se déclarent dans l’interface en attribuant un même nom de processus à plusieurs pages (champ `process` existant du modèle).
+5. Les processus se déclarent dans l’interface en attribuant un même nom de processus à plusieurs pages (champ `process` existant du modèle). Les noms sont comparés après normalisation Unicode (NFC), réduction des espaces et passage en minuscules.
+6. **Une page « non applicable » dans un processus** n’invalide pas les autres pages du processus, et elle reste elle-même non applicable. La méthode ne traite pas ce cas pour les processus. Elle le tranche en revanche pour l’échantillon :
+   - un critère n’est pas validé dès qu’il est **« invalidé sur une seule page »** ;
+   - un critère non applicable sur une page ne l’invalide pas : il n’est non applicable sur l’échantillon que s’il l’est partout.
+
+   On applique la même lecture au processus. Une page non applicable n’a pas le contenu visé : c’est la raison n° 1 de non-applicabilité de la section « Test des pages ». Rien n’y est donc invalidé. La lecture inverse, à la lettre, ferait tomber les critères sur les images de tout un parcours dès qu’une de ses étapes n’a pas d’image.
 
 ## Conséquences
 
 - Rampe affiche enfin un chiffre, mais seulement quand il a un sens.
-- Deux interprétations sont tranchées et documentées : la page « tout non applicable » exclue de la moyenne, et l’arrondi vers le bas. Une évolution de la méthode officielle demandera un nouvel ADR.
+- Trois interprétations sont tranchées et documentées : la page « tout non applicable » exclue de la moyenne, l’arrondi vers le bas (calculé exactement, en entiers et en fractions, sans flottant), et la page « non applicable » dans un processus (§6). Une évolution de la méthode officielle demandera un nouvel ADR.
