@@ -20,7 +20,16 @@ const phases = roadmap
 		return { name, done, total };
 	});
 // « En attente d’Alexandre » = tâches non faites marquées ⛔ dans la roadmap (seule source de vérité).
-const waiting = [...roadmap.matchAll(/^- \[ \] (.+?) ⛔ (.+)$/gm)].map(([, task, reason]) => ({ task, reason }));
+// Garde-fou : une tâche ⛔ mal écrite (⛔️ avec sélecteur de variante, indentée, sans intitulé…)
+// ne doit jamais disparaître en silence de cette section : elle casse le build.
+const blockedRe = /^- \[ \] (\S.*?)\s*⛔\uFE0F?\s*(\S.*)$/;
+const blockedLines = roadmap.split(/\r?\n/).filter((l) => /^\s*[-*+]\s+\[ \]/.test(l) && l.includes("⛔"));
+const unrecognized = blockedLines.filter((l) => !blockedRe.test(l));
+if (unrecognized.length > 0) throw new Error(`roadmap : tâche(s) ⛔ non reconnue(s) : ${unrecognized.join(" | ")}`);
+const waiting = blockedLines.map((l) => {
+	const [, task, reason] = l.match(blockedRe) ?? [];
+	return { task, reason };
+});
 const fr = (d: Date) =>
 	d.toLocaleDateString("fr-FR", {
 		day: "numeric",
@@ -33,21 +42,25 @@ const fr = (d: Date) =>
 	<h1>Cockpit</h1>
 	<p>Tout ce qui est affiché ici est généré depuis le dossier <code>docs/</code> du dépôt, à chaque mise en production.</p>
 
-	{
-		waiting.length > 0 && (
-			<section class="waiting" aria-labelledby="en-attente">
-				<h2 id="en-attente">En attente d’Alexandre</h2>
-				<p>Ces tâches demandent une action humaine (compte tiers, dépense, engagement juridique). Le reste avance sans intervention.</p>
-				<ul>
-					{waiting.map((w) => (
-						<li>
-							<strong>{w.task}</strong> — {w.reason}
-						</li>
-					))}
-				</ul>
-			</section>
-		)
-	}
+	<section class="waiting" aria-labelledby="en-attente">
+		<h2 id="en-attente">En attente d’Alexandre</h2>
+		{
+			waiting.length > 0 ? (
+				<>
+					<p>Ces tâches demandent une action humaine (compte tiers, dépense, engagement juridique). Le reste avance sans intervention.</p>
+					<ul>
+						{waiting.map((w) => (
+							<li>
+								<strong>{w.task}</strong> — {w.reason}
+							</li>
+						))}
+					</ul>
+				</>
+			) : (
+				<p>Rien en attente : aucune tâche de la roadmap ne demande d’action humaine.</p>
+			)
+		}
+	</section>
 
 	<h2 id="avancement">Avancement</h2>
 	<ul class="phases">
