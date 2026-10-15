@@ -19,6 +19,7 @@ import {
 	MAX_NOTE,
 	MAX_PAGES,
 	MAX_PROCESS,
+	MAX_SESSION_BYTES,
 	MAX_TITLE,
 	MAX_URL,
 	parseSessionStrict,
@@ -115,23 +116,49 @@ function readStored(raw: string, known: ReadonlySet<string>): { session: AuditSe
 	}
 }
 
-/** Valeur illisible du stockage ; `kept` : copiée sous une clé horodatée (sinon, seule la copie en mémoire reste). */
-type Ignored = { raw: string; kept: boolean };
+/**
+ * Valeur illisible du stockage. `kept` : une copie existe dans le stockage, ou l'utilisateur a confirmé avoir enregistré
+ * le fichier ; tant que ce n'est pas le cas, rien n'est écrit (`downloaded` : téléchargement lancé, à confirmer).
+ */
+type Ignored = { raw: string; kept: boolean; downloaded?: boolean };
 
-/** Met `raw` de côté sous une nouvelle clé ; au-delà de 3 copies, la plus ancienne seulement est retirée. */
+/** Copies mises de côté (`<préfixe><n>.<ISO>`), dans l'ordre d'écriture `n` : jamais dans l'ordre de l'horloge. */
+function asides(): { key: string; n: number }[] {
+	return Object.keys(localStorage)
+		.flatMap((key) => {
+			const m = key.startsWith(IGNORED_PREFIX) ? /^(\d+)\./.exec(key.slice(IGNORED_PREFIX.length)) : null;
+			return m ? [{ key, n: Number(m[1]) }] : [];
+		})
+		.sort((a, b) => a.n - b.n);
+}
+
+/**
+ * Met `raw` de côté sous une nouvelle clé, sauf si une copie identique existe déjà (rechargements répétés). Au-delà de
+ * 3 copies, les plus anciennes ÉCRITES sont retirées, jamais celle qu'on vient d'écrire. Vrai seulement si la copie
+ * est relue intacte.
+ */
 function keepAside(raw: string): boolean {
+	let list: { key: string; n: number }[];
 	try {
-		localStorage.setItem(`${IGNORED_PREFIX}${new Date().toISOString()}`, raw);
+		list = asides();
+		if (list.some((a) => localStorage.getItem(a.key) === raw)) return true;
+	} catch {
+		return false;
+	}
+	const key = `${IGNORED_PREFIX}${(list.at(-1)?.n ?? 0) + 1}.${new Date().toISOString()}`;
+	try {
+		localStorage.setItem(key, raw);
 	} catch {
 		return false;
 	}
 	try {
-		const keys = Object.keys(localStorage)
-			.filter((k) => k.startsWith(IGNORED_PREFIX))
-			.sort();
-		for (const k of keys.slice(0, Math.max(0, keys.length - MAX_IGNORED))) localStorage.removeItem(k);
+		for (const old of list.slice(0, Math.max(0, list.length + 1 - MAX_IGNORED))) localStorage.removeItem(old.key);
 	} catch {}
-	return true;
+	try {
+		return localStorage.getItem(key) === raw;
+	} catch {
+		return false;
+	}
 }
 
 /**
@@ -374,9 +401,9 @@ export default function AuditApp({ topics, criteria }: { topics: AuditTopic[]; c
 							"Une session enregistrée n’a pas pu être relue (format inconnu ou abîmé) : elle a été mise de côté dans ce navigateur, sans être effacée, et un nouvel audit commence."
 						) : (
 							<strong>
-								Une session enregistrée n’a pas pu être relue, ni mise de côté (stockage plein) : téléchargez-la avant
-								de continuer. Tant qu’elle n’est pas téléchargée, vos modifications ne sont pas enregistrées, pour ne
-								pas l’effacer.
+								Une session enregistrée n’a pas pu être relue, ni mise de côté (stockage plein) : téléchargez-la,
+								vérifiez que le fichier est bien enregistré, puis confirmez. D’ici là, vos modifications ne sont pas
+								enregistrées, pour ne pas l’effacer.
 							</strong>
 						)}
 					</p>
@@ -385,12 +412,18 @@ export default function AuditApp({ topics, criteria }: { topics: AuditTopic[]; c
 						onClick={() => {
 							const name = `session-mise-de-cote-${new Date().toISOString().slice(0, 10)}.json`;
 							saveFile(name, ignored.raw);
-							setIgnored({ ...ignored, kept: true });
+							// Aucune preuve que le fichier est enregistré (téléchargement annulable) : le gel reste.
+							if (!ignored.kept) setIgnored({ ...ignored, downloaded: true });
 							setAnnounce(`Session mise de côté téléchargée : ${name}`);
 						}}
 					>
 						Télécharger la session mise de côté
 					</button>
+					{!ignored.kept && ignored.downloaded && (
+						<button type="button" onClick={() => setIgnored({ ...ignored, kept: true })}>
+							J’ai bien enregistré le fichier, continuer
+						</button>
+					)}
 				</div>
 			)}
 
@@ -939,7 +972,7 @@ function ImportReport({
 	setAnnounce: (message: string) => void;
 	known: ReadonlySet<string>;
 }) {
-	const imp = useFileImport<ImportSummary>(session, setSession, setAnnounce);
+	const imp = useFileImport<ImportSummary>(session, setSession, setAnnounce, MAX_REPORT_BYTES);
 	const { error, done, undone, inputRef } = imp;
 
 	const onChange = (e: Event) =>
@@ -1030,6 +1063,7 @@ function useFileImport<S>(
 	session: AuditSession,
 	setSession: (update: AuditSession) => void,
 	setAnnounce: (message: string) => void,
+	maxBytes: number,
 ) {
 	const [error, setError] = useState<ImportFailure | null>(null);
 	const [done, setDone] = useState<{ summary: S; before: AuditSession; after: AuditSession } | null>(null);
@@ -1058,9 +1092,9 @@ function useFileImport<S>(
 			const file = input.files?.[0];
 			input.value = ""; // le même fichier peut être choisi à nouveau
 			if (!file) return;
-			if (file.size > MAX_REPORT_BYTES)
+			if (file.size > maxBytes)
 				return refuse(
-					`Fichier trop volumineux (${Math.ceil(file.size / 1024 / 1024)} Mo) : 20 Mo au plus. Rien n’a été importé.`,
+					`Fichier trop volumineux (${Math.ceil(file.size / 1024 / 1024)} Mo) : ${maxBytes / 1024 / 1024} Mo au plus. Rien n’a été importé.`,
 				);
 			let json: unknown;
 			try {
@@ -1106,7 +1140,12 @@ function Backup({
 	setAnnounce: (message: string) => void;
 	known: ReadonlySet<string>;
 }) {
-	const imp = useFileImport<{ pages: number; evaluations: number; findings: number }>(session, setSession, setAnnounce);
+	const imp = useFileImport<{ pages: number; evaluations: number; findings: number }>(
+		session,
+		setSession,
+		setAnnounce,
+		MAX_SESSION_BYTES,
+	);
 	const { error, done, undone, inputRef, latest } = imp;
 	const dialogRef = useRef<HTMLDialogElement>(null);
 	/** Audit validé en attente de confirmation ; `downloaded` : nom du fichier téléchargé depuis la boîte de dialogue. */
@@ -1191,7 +1230,7 @@ function Backup({
 			<div class="audit-session-import">
 				<h3>Audit Rampe complet : reprendre un audit téléchargé</h3>
 				<p id="audit-session-aide">
-					Fichier <code>audit-….json</code> téléchargé avec le bouton ci-dessus, dans ce navigateur ou un autre (20 Mo
+					Fichier <code>audit-….json</code> téléchargé avec le bouton ci-dessus, dans ce navigateur ou un autre (64 Mo
 					au plus). Il remplace l’audit en cours. Pour les résultats de l’audit automatique, utilisez plutôt « Rapport
 					de la CLI », section « 1. Pages de l’échantillon ».
 				</p>

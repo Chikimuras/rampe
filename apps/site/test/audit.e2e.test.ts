@@ -3,7 +3,7 @@
 // reprise de la session, stockage indisponible ou corrompu, aucune autre page avec du JavaScript, et import d'un
 // rapport produit par la VRAIE CLI (ADR-0014) sur sa page de test à défauts connus.
 import { execFile } from "node:child_process";
-import { mkdir, mkdtemp, readdir, readFile, rm } from "node:fs/promises";
+import { mkdir, mkdtemp, readdir, readFile, rm, writeFile } from "node:fs/promises";
 import { createServer, type Server } from "node:http";
 import type { AddressInfo } from "node:net";
 import { tmpdir } from "node:os";
@@ -453,16 +453,20 @@ describe("audit guidé (bout en bout)", { timeout: 60_000 }, () => {
 		await page.close();
 	});
 
+	/** Copies mises de côté, dans l'ordre d'écriture (numéro de clé). */
+	const copies = (page: Page) =>
+		page.evaluate(() =>
+			Object.keys(localStorage)
+				.map((k) => /^rampe\.audit\.session\.ignoree\.(\d+)\./.exec(k))
+				.filter((m) => m !== null)
+				.sort((a, b) => Number(a[1]) - Number(b[1]))
+				.map((m) => localStorage.getItem(m.input)),
+		);
+
 	it("session corrompue : mise de côté sous une clé horodatée, jamais écrasée (3 copies au plus), téléchargeable", async () => {
 		const page = await browser.newPage();
 		await openAudit(page);
-		const asides = () =>
-			page.evaluate(() =>
-				Object.keys(localStorage)
-					.filter((k) => k.startsWith("rampe.audit.session.ignoree."))
-					.sort()
-					.map((k) => localStorage.getItem(k)),
-			);
+		const asides = () => copies(page);
 		// Copie unique laissée par une version précédente : jamais touchée.
 		await page.evaluate(() => localStorage.setItem("rampe.audit.session.ignoree", "ancienne copie"));
 		const broken = (n: number) => `{"schemaVersion":2,"pages":"abîmé ${n}"}`;
@@ -480,8 +484,6 @@ describe("audit guidé (bout en bout)", { timeout: 60_000 }, () => {
 				if (captures)
 					await page.locator(".audit-banner").screenshot({ path: join(captures, "session-mise-de-cote.png") });
 			}
-			// Horodatage à la milliseconde : deux chargements dans la même milliseconde sont impossibles ici.
-			await page.waitForTimeout(5);
 		}
 		// Les 3 dernières copies ; la plus ancienne n'est retirée qu'au-delà de 3.
 		await expect(asides()).resolves.toEqual([broken(2), broken(3), broken(4)]);
@@ -518,8 +520,46 @@ describe("audit guidé (bout en bout)", { timeout: 60_000 }, () => {
 			page.getByRole("button", { name: "Télécharger la session mise de côté" }).click(),
 		]);
 		expect(await readFile(await file.path(), "utf8")).toBe('{"schemaVersion":2,"pages":"abîmé"}');
-		// Téléchargée : l'écriture reprend.
-		await page.waitForFunction(() => localStorage.getItem("rampe.audit.session")?.includes("Accueil"));
+		// Téléchargement lancé, mais peut-être annulé : toujours aucune écriture sans confirmation explicite.
+		await addPage(page, "https://exemple.fr/contact", "Contact");
+		await page.waitForTimeout(600);
+		await expect(page.evaluate(() => localStorage.getItem("rampe.audit.session"))).resolves.toBe(
+			'{"schemaVersion":2,"pages":"abîmé"}',
+		);
+		await page.getByRole("button", { name: "J’ai bien enregistré le fichier, continuer" }).click();
+		await page.waitForFunction(() => localStorage.getItem("rampe.audit.session")?.includes("Contact"));
+		await page.close();
+	});
+
+	it("contre-relecture 1 : rechargements répétés : aucune recopie, une copie plus ancienne et distincte survit", async () => {
+		const page = await browser.newPage();
+		await openAudit(page);
+		await page.evaluate(() => {
+			localStorage.setItem("rampe.audit.session.ignoree.1.2026-01-01T00:00:00.000Z", "X du 1er janvier");
+			localStorage.setItem("rampe.audit.session", '{"schemaVersion":2,"pages":"Y illisible"}');
+		});
+		for (let i = 0; i < 5; i++) {
+			await page.reload();
+			await page.waitForSelector("astro-island:not([ssr])");
+		}
+		await expect(copies(page)).resolves.toEqual(["X du 1er janvier", '{"schemaVersion":2,"pages":"Y illisible"}']);
+		await page.close();
+	});
+
+	it("contre-relecture 2 : horloge en arrière : la copie neuve n'est jamais purgée, l'ordre d'écriture fait foi", async () => {
+		const page = await browser.newPage();
+		await openAudit(page);
+		await page.evaluate(() => {
+			// Copies écrites quand l'horloge avançait de 70 ans : leurs noms sont « plus récents » que la copie neuve.
+			for (const n of [1, 2, 3])
+				localStorage.setItem(`rampe.audit.session.ignoree.${n}.2099-01-0${n}T00:00:00.000Z`, `copie ${n}`);
+			localStorage.setItem("rampe.audit.session", '{"schemaVersion":2,"pages":"Z"}');
+		});
+		await page.reload();
+		await page.waitForSelector("astro-island:not([ssr])");
+		// Copie gardée (pas d'alerte de stockage plein), la plus ancienne ÉCRITE retirée.
+		await expect(page.getByText(/ni mise de côté/).count()).resolves.toBe(0);
+		await expect(copies(page)).resolves.toEqual(["copie 2", "copie 3", '{"schemaVersion":2,"pages":"Z"}']);
 		await page.close();
 	});
 
@@ -1296,12 +1336,18 @@ describe("audit guidé (bout en bout)", { timeout: 60_000 }, () => {
 					null,
 				],
 				["casse.json", "{ pas du JSON", /^Ce fichier n’est pas un fichier JSON lisible/, null],
-				["enorme.json", Buffer.alloc(21 * 1024 * 1024, " "), /^Fichier trop volumineux \(21 Mo\)/, null],
+				// Au-delà de 50 Mo, Playwright exige un fichier sur disque.
+				["enorme.json", "", /^Fichier trop volumineux \(65 Mo\) : 64 Mo au plus/, null],
 			];
+			const big = join(await mkdtemp(join(tmpdir(), "rampe-gros-")), "enorme.json");
+			await writeFile(big, Buffer.alloc(65 * 1024 * 1024, " "));
 			const error = page.locator("#audit-session-erreur");
 			for (const [name, content, message, detail] of cases) {
-				const buffer = typeof content === "string" ? asFile(content).buffer : content;
-				await input.setInputFiles({ name, mimeType: "application/json", buffer });
+				if (name === "enorme.json") await input.setInputFiles(big);
+				else {
+					const buffer = typeof content === "string" ? asFile(content).buffer : content;
+					await input.setInputFiles({ name, mimeType: "application/json", buffer });
+				}
 				// Le message peut être le même d'un cas à l'autre : on attend le détail propre à ce cas.
 				if (detail)
 					await expect.poll(() => error.locator("details > p").textContent(), { message: name }).toMatch(detail);
@@ -1324,6 +1370,7 @@ describe("audit guidé (bout en bout)", { timeout: 60_000 }, () => {
 			expect(await page.evaluate(() => "polluted" in {})).toBe(false);
 			await page.waitForTimeout(600);
 			expect(await stored(page)).toBe(before);
+			await rm(dirname(big), { recursive: true, force: true });
 			await page.close();
 		});
 

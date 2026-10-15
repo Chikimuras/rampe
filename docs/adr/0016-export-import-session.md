@@ -12,7 +12,7 @@ L’ADR-0005 garde les audits dans le navigateur. Sa conséquence assumée, c’
 ## Décision
 
 1. **Export** : un bouton « Télécharger l’audit (JSON) » produit le fichier `audit-<site>-<date>.json` dans le navigateur (`Blob` et lien de téléchargement), sans serveur. Le contenu est la session complète, avec son `schemaVersion` et `tool: { name: "@rampe/site" }`.
-2. **Import** : un champ fichier étiqueté. La taille est vérifiée avant lecture (20 Mo au plus). La validation est **stricte**, sur le même modèle que l’ADR-0014 §4 :
+2. **Import** : un champ fichier étiqueté. La taille est vérifiée avant lecture (64 Mo au plus : ce que l’export peut produire aux bornes, 50 000 indices aux descriptions CJK compris). La validation est **stricte**, sur le même modèle que l’ADR-0014 §4 :
    - liste blanche des champs, types et bornes ;
    - critères **existants dans le référentiel** ;
    - identifiants de page au format UUID ;
@@ -34,4 +34,4 @@ L’ADR-0005 garde les audits dans le navigateur. Sa conséquence assumée, c’
   - **structure et types partout** : import de fichier comme relecture du stockage local (objet, ids UUID, même origine, clés interdites, critères du référentiel, statuts et sources connus, version future protégée avant tout autre contrôle) ;
   - **bornes à l’écriture et à l’import de fichier** : longueurs, nombre de pages et d’indices, avec une seule définition partagée, pour que tout audit produit par l’interface se réimporte à l’identique ;
   - **jamais de borne à la relecture du stockage** : un audit écrit par une version précédente, aux textes plus longs que les bornes d’aujourd’hui, est relu sans perte ni modification ;
-  - **aucune session mise de côté n’est écrasée** : une session illisible est copiée sous une clé horodatée (3 copies au plus, la plus ancienne retirée seulement au-delà), et l’utilisateur peut la télécharger telle quelle.
+  - **aucune session mise de côté n’est écrasée** : une session illisible est copiée sous une clé horodatée (3 copies au plus, les plus anciennes dans l’ordre d’écriture retirées seulement au-delà, jamais celle qu’on vient d’écrire, et jamais deux copies identiques), et rien n’est écrit sur l’audit tant qu’une session qui n’a pas pu être copiée n’a pas été téléchargée et son enregistrement confirmé par l’utilisateur, et l’utilisateur peut la télécharger telle quelle.
