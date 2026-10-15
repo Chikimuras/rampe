@@ -125,10 +125,18 @@ export const AUDIT_BY = ["interne", "prestataire"] as const;
 export const MAX_DECLARATION_TEXT = 1000;
 export const MAX_DECLARATION_LINES = 10_000;
 const DAY = /^\d{4}-\d{2}-\d{2}$/;
-/** Date `AAAA-MM-JJ` qui existe au calendrier (pas de 31 février). */
+/**
+ * Date `AAAA-MM-JJ` qui existe au calendrier (pas de 31 février), années 1900 à 9999 : une saisie en cours dans le
+ * champ date du navigateur (« 0010-10-14 ») n'en est pas une, et ne doit jamais être publiée.
+ */
 export const isDay = (value: string) => {
 	const date = new Date(`${value}T00:00:00Z`);
-	return DAY.test(value) && !Number.isNaN(date.getTime()) && date.toISOString().startsWith(value);
+	return (
+		DAY.test(value) &&
+		Number(value.slice(0, 4)) >= 1900 &&
+		!Number.isNaN(date.getTime()) &&
+		date.toISOString().startsWith(value)
+	);
 };
 const isDeclarationField = (key: string): key is DeclarationField => Object.hasOwn(DECLARATION_FIELDS, key);
 const declarationMax = (kind: string) =>
@@ -403,12 +411,22 @@ export function parseSessionStrict(json: unknown, knownCriteria: ReadonlySet<str
  * borne de longueur ni de nombre et SANS rien modifier. Une session écrite par une version précédente, aux textes
  * plus longs que les bornes d'aujourd'hui, est relue telle quelle : la relecture ne perd jamais rien.
  */
-export function parseStoredSession(json: unknown, knownCriteria: ReadonlySet<string>): AuditSession {
-	return strictly(INVALID_SESSION, () => parseSessionWith(json, knownCriteria, false));
+export function parseStoredSession(
+	json: unknown,
+	knownCriteria: ReadonlySet<string>,
+	/** Champs de déclaration retirés à la relecture (date abîmée) : l'appelant le signale, la session reste lisible. */
+	dropped: DeclarationField[] = [],
+): AuditSession {
+	return strictly(INVALID_SESSION, () => parseSessionWith(json, knownCriteria, false, dropped));
 }
 
 /** `bounded` : import d'un fichier (bornes, nettoyage, troncature) ; sinon relecture du stockage (structure et types). */
-function parseSessionWith(json: unknown, known: ReadonlySet<string>, bounded: boolean): AuditSession {
+function parseSessionWith(
+	json: unknown,
+	known: ReadonlySet<string>,
+	bounded: boolean,
+	dropped: DeclarationField[] = [],
+): AuditSession {
 	const root = object(json, "fichier");
 	// Avant tout autre contrôle : une session d'une version future n'est jamais traitée comme abîmée.
 	if (isFutureSession(root)) throw new ReportError(FUTURE_SESSION);
@@ -527,7 +545,8 @@ function parseSessionWith(json: unknown, known: ReadonlySet<string>, bounded: bo
 			);
 
 	// Déclaration (ADR-0017), absente avant la v3. Import : textes nettoyés et tronqués, adresse rejetée au-delà de
-	// sa borne (comme une adresse de page) ; relecture : types seulement. Date et réalisation : forme vérifiée partout.
+	// sa borne (comme une adresse de page), date et réalisation vérifiées. Relecture : types seulement ; une date
+	// abîmée retire ce seul champ (signalé par `dropped`), une réalisation inconnue reste une erreur de structure.
 	const rawDeclaration = version === SCHEMA_VERSION ? field(root, "declaration") : undefined;
 	let declaration: DeclarationFields | undefined;
 	if (rawDeclaration !== undefined) {
@@ -542,7 +561,12 @@ function parseSessionWith(json: unknown, known: ReadonlySet<string>, bounded: bo
 			else if (bounded && kind === "text") value = truncate(stripControl(value), MAX_DECLARATION_TEXT);
 			else if (bounded) value = stripControl(value);
 			if (kind === "url" && value.length > limit(MAX_URL)) fail(at, `adresse de plus de ${MAX_URL} caractères`);
-			if (kind === "date" && value !== "" && !isDay(value)) fail(at, "date invalide (attendu : AAAA-MM-JJ)");
+			if (kind === "date" && value !== "" && !isDay(value)) {
+				// Relecture tolérante : une date abîmée ne coûte que ce champ, jamais la session (mise de côté).
+				if (bounded) fail(at, "date invalide (attendu : AAAA-MM-JJ, années 1900 à 9999)");
+				dropped.push(key as DeclarationField);
+				continue;
+			}
 			if (kind === "auditBy" && value !== "" && !(AUDIT_BY as readonly string[]).includes(value))
 				fail(at, `valeur inconnue ${JSON.stringify(value)}`);
 			if (value !== "" || !bounded) declaration[key as DeclarationField] = value;

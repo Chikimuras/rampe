@@ -444,7 +444,7 @@ describe("export et import d'un audit (ADR-0016)", () => {
 const fixture = (name: "main-v2" | "v1") => JSON.parse(JSON.stringify(name === "v1" ? v1Limits : mainV2));
 /** Ids de page des fixtures. */
 const FA = "11111111-1111-4111-8111-111111111111";
-const stored = (value: unknown) => parseStoredSession(value, known);
+const stored = (value: unknown, dropped?: DeclarationField[]) => parseStoredSession(value, known, dropped);
 
 describe("relecture du stockage local : structure et types, sans borne ni modification (ADR-0016)", () => {
 	it("relit sans perte une session v2 écrite par main aux valeurs limites", () => {
@@ -820,6 +820,30 @@ describe("déclaration d’accessibilité dans la session (ADR-0017 §4)", () =>
 		// Les types et formes restent contrôlés.
 		expect(() => stored({ ...raw, declaration: { auditBy: "moi" } })).toThrow(ReportError);
 		expect(() => stored({ ...raw, declaration: [] })).toThrow(ReportError);
+	});
+
+	it("dates : années 1900 à 9999 seulement, partout ; une saisie en cours (« 0010-10-14 ») est refusée", () => {
+		const s = full();
+		for (const bad of ["0010-10-14", "0014-10-14", "1899-12-31", "27576-10-14", "+27576-10-14"])
+			expect(() => setDeclarationField(s, "updatedOn", bad, LATER), bad).toThrow(/Date invalide/);
+		for (const good of ["1900-01-01", "2026-10-14", "9999-12-31"])
+			expect(setDeclarationField(s, "updatedOn", good, LATER).declaration?.updatedOn).toBe(good);
+		expect(refusal({ ...exported(s), declaration: { updatedOn: "0010-10-14" } }).detail).toMatch(
+			/^declaration\.updatedOn : date invalide/,
+		);
+	});
+
+	it("relecture tolérante : une date abîmée retire ce seul champ, signalé ; la session reste lisible", () => {
+		const raw = exported(declared());
+		raw.declaration.establishedOn = "0010-10-14";
+		const dropped: DeclarationField[] = [];
+		const s = stored(raw, dropped);
+		expect(dropped).toEqual(["establishedOn"]);
+		expect(s.declaration).not.toHaveProperty("establishedOn");
+		expect(s.declaration?.organization).toBe("Boulangerie Dupont ");
+		expect(s.pages).toEqual(full().pages);
+		// L'import de fichier, lui, reste strict.
+		expect(refusal(raw).detail).toMatch(/^declaration\.establishedOn : date invalide/);
 	});
 
 	it("migration sans perte : une session v1 ou v2 n'a pas de déclaration, et rien d'autre ne change", () => {

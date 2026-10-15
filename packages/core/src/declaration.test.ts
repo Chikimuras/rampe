@@ -221,6 +221,120 @@ describe("fidélité au gabarit officiel", () => {
 	});
 });
 
+/**
+ * Test « golden » : la sortie Markdown est le texte officiel lui-même, après une liste FERMÉE de remplacements. Tout
+ * ajout, retrait ou reformulation hors de cette liste le fait échouer (la fidélité segment par segment, plus haut, ne
+ * voit pas un ajout).
+ *
+ * Seule normalisation des blancs, documentée : une tabulation en début de ligne du gabarit (adresse postale) est
+ * écrite comme deux espaces, l'indentation des autres lignes de cet élément de liste. Le titre de la page officielle
+ * est ajouté en tête (h1) : le gabarit n'en a pas.
+ */
+function golden(replacements: [placeholder: string, value: string][]): string {
+	let expected = `# Déclaration d’accessibilité\n\n${OFFICIAL.replace(/^\t/gm, "  ")}`;
+	for (const [from, to] of replacements) {
+		const at = expected.indexOf(from);
+		expect(at, `remplacement introuvable : ${from}`).toBeGreaterThanOrEqual(0);
+		expected = expected.slice(0, at) + to + expected.slice(at + from.length);
+	}
+	return expected;
+}
+const STATE_SLOT =
+	"[totalement / partiellement / non] conforme avec [pour les sites : le référentiel général d’amélioration de l’accessibilité / autre protocole de test utilisé ; pour les autres services de communication : protocole de test utilisé]";
+const REFERENTIAL = "le référentiel général d’amélioration de l’accessibilité (RGAA), version 4.1.2";
+const SITE_CHOICES: [string, string][] = [
+	["[Du site web / De l’application mobile / Du service…]", "du site web"],
+	["[site internet / application mobile / Autre service]", "site internet"],
+];
+
+describe("golden : le texte officiel, à une liste fermée de remplacements près", () => {
+	it("champs vides, audit incomplet (sans page)", () => {
+		const md = render(createSession(NOW), {});
+		expect(md).toBe(
+			golden([
+				[STATE_SLOT, `non conforme avec ${REFERENTIAL}`],
+				[
+					"[Détailler ici les résultats des tests ou insérer un lien vers le rapport de test]",
+					NON_CONFORMITY_REASONS.incomplete,
+				],
+				["établie le [JJ mois AAAA]", "établie le 15 octobre 2026"],
+				...SITE_CHOICES,
+			]),
+		);
+	});
+
+	it("audit complet, tous les champs remplis", () => {
+		const md = render(audit(EXAMPLE), FULL_FIELDS);
+		const NB = " ";
+		expect(md).toBe(
+			golden([
+				["[Nom de l’organisme concerné]", "Boulangerie Dupont"],
+				[
+					"[son (ses) site(s) internet, intranet, extranet et son (ses) application(s) mobile(s), etc.]",
+					"son site internet",
+				],
+				[
+					"[liens vers le schéma pluriannuel et vers le plan d’action de l’année en cours incluant le bilan des actions réalisées l’année précédente]",
+					"[schéma pluriannuel](https://exemple.fr/schema) et [plan d’action de l’année en cours](https://exemple.fr/plan)",
+				],
+				[
+					"[Nom du site web de l’application mobile, ou d’un autre service auquel la déclaration s’applique]",
+					"exemple\\.fr",
+				],
+				["[Nom du site web, de l’application mobile, ou d’un autre service concerné]", "exemple\\.fr"],
+				[STATE_SLOT, `non conforme avec ${REFERENTIAL}`],
+				["[en interne / par la société NNN]", "par la société Acces SARL"],
+				["[pourcentage de critères RGAA respectés]", `33,33 %`],
+				[
+					"[Facultatif] Le taux moyen de conformité du service en ligne s’élève à [taux moyen de conformité du service en ligne]",
+					`Le taux moyen de conformité du service en ligne s’élève à 77,77 %`,
+				],
+				[
+					"[Détailler ici les résultats des tests ou insérer un lien vers le rapport de test]",
+					"[https\\:\\/\\/exemple\\.fr\\/grille\\.ods](https://exemple.fr/grille.ods)",
+				],
+				[
+					"- [Lister la/les non-conformité(s) du/de la/des site(s) internet/application(s) mobile(s) et/ou décrire quels section(s)/contenu(s)/fonction(s) ne sont pas encore conformes, indiquer les alternatives s’il y a lieu].",
+					[
+						`- Critère 1.1${NB}: ${TITLES["1.1"]?.replace(/[-?]/g, "\\$&")} Page concernée${NB}: Paiement.`,
+						`- Critère 8.3${NB}: ${TITLES["8.3"]?.replace(/[-?,]/g, "\\$&")} Page concernée${NB}: Accueil.`,
+						"- La vidéo n’a pas de transcription \\; contactez\\-nous\\.",
+					].join("\n"),
+				],
+				[
+					"- [Lister la/le/les section(s)/contenu(s)/fonction(s) non accessible(s) pour laquelle/lequel/lesquels la dérogation pour charge disproportionnée est temporairement invoquée, indiquer les alternatives s’il y a lieu].",
+					"- Archives PDF avant 2010.",
+				],
+				[
+					"- [Lister la/le/les section(s)/contenu(s)/fonction(s) non accessible(s) qui n’entre(nt) pas dans le champ d’application de la législation applicable, indiquer les alternatives s’il y a lieu].",
+					"- Cartes interactives\n- Vidéos en direct.",
+				],
+				["établie le [JJ mois AAAA]", "établie le 01 octobre 2026"],
+				["mise à jour le [JJ mois AAAA]", "mise à jour le 14 octobre 2026"],
+				...SITE_CHOICES.slice(0, 1),
+				["- [Liste des technologies utilisées]", "- HTML5\n- CSS\n- JavaScript"],
+				[
+					"- [Indiquer les combinaisons utilisées pour effectuer les vérifications de conformité]",
+					"- Firefox et NVDA\n- Safari et VoiceOver",
+				],
+				["- [Indiquer les outils utilisés]", "- Rampe\n- Colour Contrast Analyser"],
+				[
+					"- [Indiquer la liste des pages qui ont été testées]",
+					[
+						`- Accueil${NB}: [https\\:\\/\\/exemple\\.fr\\/](https://exemple.fr/)`,
+						`- Panier${NB}: [https\\:\\/\\/exemple\\.fr\\/panier](https://exemple.fr/panier)`,
+						`- Paiement${NB}: [https\\:\\/\\/exemple\\.fr\\/paiement](https://exemple.fr/paiement)`,
+					].join("\n"),
+				],
+				...SITE_CHOICES.slice(1),
+				["[url du formulaire en ligne]", "[https\\:\\/\\/exemple\\.fr\\/contact](https://exemple.fr/contact)"],
+				["[Nom de l’entité responsable du service en ligne]", "Service client"],
+				["[url d’une page avec les coordonnées de l’entité]", "[contact\\@exemple\\.fr](mailto:contact@exemple.fr)"],
+			]),
+		);
+	});
+});
+
 describe("ce que Rampe remplit (ADR-0017 §2)", () => {
 	it("audit complet : état, pourcentage, taux moyen, critères non conformes avec titre et pages, pages, date", () => {
 		// Calcul à la main (conformity.test.ts) : 1 validé (3.2) sur 3 applicables → 33,33 % ; partiellement ? non :
@@ -335,6 +449,18 @@ describe("ce que Rampe remplit (ADR-0017 §2)", () => {
 		expect(page).toContain("<main>\n<h1>Déclaration d’accessibilité</h1>");
 	});
 
+	it("HTML à coller : fragment qui commence au h2, sections en h3 et h4 ; la page complète garde h1 à h3", () => {
+		const s = audit(EXAMPLE);
+		const fragment = render(s, {}, "html");
+		expect(fragment.startsWith("<h2>Déclaration d’accessibilité</h2>")).toBe(true);
+		expect(fragment).toContain("<h3>État de conformité</h3>");
+		expect(fragment).toContain("<h4>Résultat des tests</h4>");
+		expect(fragment).not.toMatch(/<h1|<h5/);
+		const page = renderDeclaration(s, computeConformity(s, ALL), {}, { ...OPTIONS, format: "html", standalone: true });
+		expect(page).toContain("<h2>État de conformité</h2>");
+		expect(page).toContain("<h3>Résultat des tests</h3>");
+	});
+
 	it("nom de fichier : declaration-accessibilite-<hôte>-<AAAA-MM-JJ>", () => {
 		expect(declarationFileName(audit(), new Date(2026, 9, 5), "md")).toBe(
 			"declaration-accessibilite-exemple.fr-2026-10-05.md",
@@ -366,7 +492,7 @@ describe("saisies hostiles neutralisées (OWASP XSS Prevention Cheat Sheet, « O
 		const html = render(withPage, HOSTILE, "html");
 		const tags = [...html.matchAll(/<\/?([a-zA-Z][a-zA-Z0-9]*)([^>]*)>/g)];
 		for (const [whole, name, attributes] of tags) {
-			expect(["h1", "h2", "h3", "p", "ul", "li", "a", "br"], whole).toContain(name);
+			expect(["h2", "h3", "h4", "p", "ul", "li", "a", "br"], whole).toContain(name);
 			if (name === "a" && !whole.startsWith("</"))
 				expect(attributes, whole).toMatch(/^ href="(https?:\/\/|mailto:)[^"<>\s]*"$/);
 			else expect(attributes, whole).toBe("");

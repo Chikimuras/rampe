@@ -64,7 +64,9 @@ export type Inline =
 	| { kind: "slot"; text: string }
 	/** `href` déjà vérifié par `safeUrl` (http, https, mailto). */
 	| { kind: "link"; href: string; label: Inline[] }
-	| { kind: "break" };
+	| { kind: "break" }
+	/** Retour à la ligne du source Markdown (gabarit), une simple espace une fois rendu. */
+	| { kind: "newline" };
 export type Block =
 	| { kind: "heading"; level: 1 | 2 | 3; content: Inline[] }
 	| { kind: "paragraph"; content: Inline[] }
@@ -126,6 +128,7 @@ const text = (t: string): Inline => ({ kind: "text", text: t });
 const slot = (t: string): Inline => ({ kind: "slot", text: t });
 const input = (t: string): Inline => ({ kind: "input", text: t });
 const BREAK: Inline = { kind: "break" };
+const NEWLINE: Inline = { kind: "newline" };
 const heading = (level: 1 | 2 | 3, t: string): Block => ({ kind: "heading", level, content: [text(t)] });
 const paragraph = (...content: Inline[]): Block => ({ kind: "paragraph", content });
 const list = (items: Inline[][]): Block => ({ kind: "list", items });
@@ -233,8 +236,10 @@ export function declarationBlocks(
 		day(options.date.getFullYear(), options.date.getMonth() + 1, options.date.getDate());
 	const updated = dayOf(value("updatedOn"));
 	const defenseur = (label: string, href: string): Inline[] => [
+		// Comme le gabarit : l'adresse entre parenthèses, à la ligne suivante du source.
 		text(label),
-		text(" ("),
+		NEWLINE,
+		text("("),
 		link(href, text(href)),
 		text(")"),
 	];
@@ -410,6 +415,8 @@ function inlineHtml(i: Inline): string {
 			return `<a href="${escapeHtml(i.href)}">${i.label.map(inlineHtml).join("")}</a>`;
 		case "break":
 			return "<br>";
+		case "newline":
+			return "\n";
 	}
 }
 
@@ -429,10 +436,12 @@ function inlineMarkdown(i: Inline, inList: boolean): string {
 		}
 		case "break":
 			return inList ? "<br>\n  " : "  \n";
+		case "newline":
+			return inList ? "\n  " : "\n";
 	}
 }
 
-/** Fragment HTML sémantique ; `offset` décale les niveaux de titre (aperçu intégré dans une page). */
+/** Fragment HTML sémantique ; `offset` décale les niveaux de titre (fragment collé sous le h1 d'une page). */
 export function blocksToHtml(blocks: readonly Block[], offset = 0): string {
 	return blocks
 		.map((b) => {
@@ -456,8 +465,9 @@ export function blocksToMarkdown(blocks: readonly Block[]): string {
 }
 
 /**
- * Déclaration remplie. `html` : fragment à coller dans une page existante ; `standalone` : page HTML complète, prête à
- * publier telle quelle. `markdown` : saisies échappées.
+ * Déclaration remplie. `html` : fragment à coller dans une page existante, qui a déjà son h1 : il commence au h2
+ * (« Déclaration d’accessibilité »), ses sections en h3 et h4. `standalone` : page HTML complète, prête à publier
+ * telle quelle, avec la déclaration en h1. `markdown` : saisies échappées.
  */
 export function renderDeclaration(
 	session: AuditSession,
@@ -467,8 +477,8 @@ export function renderDeclaration(
 ): string {
 	const blocks = declarationBlocks(session, result, fields, options);
 	if (options.format === "markdown") return blocksToMarkdown(blocks);
+	if (!options.standalone) return blocksToHtml(blocks, 1);
 	const fragment = blocksToHtml(blocks);
-	if (!options.standalone) return fragment;
 	return `<!doctype html>
 <html lang="fr">
 <head>
