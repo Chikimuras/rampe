@@ -43,6 +43,25 @@ const { session: next, summary } = importAutomaticResults(session, report);
 - `importAutomaticResults` est pure. Une non-conformité ne fixe « Non conforme » (`source: "auto"`, note générée) que là où **aucune évaluation n’est enregistrée**. Tous les résultats sont rangés comme indices, et les indices d’une page du rapport remplacent ceux qu’elle avait. Une évaluation enregistrée n’est jamais modifiée. Les pages sont rapprochées par adresse normalisée (`urlKey`, index en `Map`). Un rapport d’un autre site est refusé. Réimporter le même rapport ne change rien (hors `updatedAt`). 1 000 pages × 15 résultats × 2 critères : environ 70 ms, validation comprise.
 - Côté session : `setEvaluation(s, critère, page, {})` confirme une évaluation automatique (source `humain`, statut et note gardés). Changer le statut d’une évaluation encore automatique vide sa note générée. `progress` compte à part les évaluations à confirmer (`toConfirm`). `isFutureSession` repère une session d’une version plus récente, à ne pas écraser.
 
+## Taux de conformité
+
+`conformity.ts` applique la formule de la méthode RGAA (`src/obligations/evaluation-conformite.md`, sections « Test des pages » et « Taux de conformité à la norme ») à une session d’audit (ADR-0015). Pur, sans données : l’îlot l’importe par `@rampe/core/conformity`.
+
+```ts
+import { computeConformity, formatRate } from "@rampe/core/conformity";
+
+const r = computeConformity(session, rgaa.criteria.map((c) => c.id));
+if (!r.complete) r.remaining, r.toConfirm; // « non testé » restants, statuts automatiques à confirmer : aucun taux
+else formatRate(r.globalRate ?? 0); // « 33,33 % » (espace insécable)
+```
+
+- **Incomplet** tant qu’il reste un « non testé », un statut automatique à confirmer (ADR-0014), ou sans aucune page : aucun taux n’est calculé.
+- **Par page** : critères validés, non validés et non applicables ; taux = validés ÷ (validés + non validés). Une page où tout est non applicable a un taux `null` et n’entre pas dans la moyenne.
+- **Processus** (pages au même `process`, comparé sans espaces autour ni casse) : un critère conforme sur une page n’est validé que s’il n’est non conforme sur aucune page du processus. Interprétation retenue : une page « non applicable » du processus n’invalide pas les autres et reste non applicable.
+- **Échantillon** : un critère est validé s’il est conforme sur au moins une page et non conforme sur aucune, non applicable s’il l’est partout. **Taux global** = validés ÷ applicables (`null` si aucun applicable) ; **taux moyen** = moyenne des taux des pages.
+- Aucun arrondi dans le calcul. `formatRate` tronque à deux décimales vers le bas (99,996 → « 99,99 % », jamais « 100 % »).
+- `setPageProcess(session, pageId, nom)` (dans `audit-session.ts`) nomme le processus d’une page ; une chaîne vide le retire.
+
 ## Données
 
 `data/rgaa/` contient une copie **non modifiée** de `RGAA/criteres.json`, `RGAA/methodologies.json` et `RGAA/glossaire.json` du dépôt officiel de la DINUM, [DISIC/accessibilite.numerique.gouv.fr](https://github.com/DISIC/accessibilite.numerique.gouv.fr). Le commit source et la date d’import sont dans `data/rgaa/source.json`. Contenu sous [Licence Ouverte 2.0](https://www.etalab.gouv.fr/licence-ouverte-open-licence/).

@@ -6,6 +6,7 @@
 		".": "./src/index.ts",
 		"./audit-report": "./src/audit-report.ts",
 		"./audit-session": "./src/audit-session.ts",
+		"./conformity": "./src/conformity.ts",
 		"./sample-file": "./src/sample-file.ts"
 	},
 	"scripts": {
