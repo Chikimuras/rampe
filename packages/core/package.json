@@ -1,0 +1,16 @@
+{
+	"name": "@rampe/core",
+	"private": true,
+	"type": "module",
+	"exports": {
+		".": "./src/index.ts"
+	},
+	"scripts": {
+		"test": "vitest run",
+		"typecheck": "tsc --noEmit",
+		"sync-rgaa": "node scripts/sync-rgaa.mjs"
+	},
+	"devDependencies": {
+		"vitest": "5.0.4"
+	}
+}
