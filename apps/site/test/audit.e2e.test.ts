@@ -768,7 +768,7 @@ describe("audit guidé (bout en bout)", { timeout: 60_000 }, () => {
 	// processus, lui, est saisi au clavier : c'est lui qui fait passer le taux moyen de 77,77 % à 61,11 %.
 	describe("taux de conformité (ADR-0015)", () => {
 		const [P1, P2, P3] = [1, 2, 3].map((n) => `00000000-0000-4000-8000-00000000000${n}`) as [string, string, string];
-		const PCT = "\u00a0%";
+		const PCT = "\u202f%";
 		/** Tout NA sur les 3 pages, sauf 1.1, 3.2 et 8.3 (exemple chiffré du test de conformity.ts). */
 		function sessionJson(patch: (evaluations: Record<string, Record<string, unknown>>) => void = () => {}) {
 			const evaluations: Record<string, Record<string, unknown>> = {};
@@ -807,12 +807,18 @@ describe("audit guidé (bout en bout)", { timeout: 60_000 }, () => {
 			page
 				.locator(".audit-result tbody tr")
 				.evaluateAll((trs) => trs.map((tr) => [...tr.children].map((td) => td.textContent)));
-		/** Processus « Commande » saisi au clavier seul sur Panier et Paiement. */
+		/**
+		 * Processus saisi au clavier seul : « Commande » sur Panier, « commande  » (casse et espace différentes) sur
+		 * Paiement. Les deux forment un seul processus, affiché « Commande » (premier libellé saisi).
+		 */
 		async function typeProcess(page: Page) {
 			await page.focus("body");
-			for (const id of [P2, P3]) {
+			for (const [id, name] of [
+				[P2, "Commande"],
+				[P3, "commande  "],
+			]) {
 				await tabUntil(page, `el.id === 'processus-${id}'`);
-				await page.keyboard.type("Commande");
+				await page.keyboard.type(name as string);
 			}
 		}
 
@@ -881,6 +887,23 @@ describe("audit guidé (bout en bout)", { timeout: 60_000 }, () => {
 				await page.close();
 			});
 		}
+
+		it("axe à 320 px : tableau dans une région qui défile, aucune violation, pas de défilement de page", async () => {
+			const page = await browser.newPage({ viewport: { width: 320, height: 800 } });
+			await openWith(page, sessionJson());
+			await typeProcess(page);
+			await expect(rates(page)).resolves.toEqual([`33,33${PCT}`, `61,11${PCT}`]);
+			const region = page.getByRole("region", { name: "Résultat par page" });
+			await expect(region.evaluate((el) => el.scrollWidth > el.clientWidth)).resolves.toBe(true);
+			await region.focus();
+			await page.keyboard.press("ArrowRight");
+			// Défilement éventuellement animé : on attend qu'il ait eu lieu.
+			await expect.poll(() => region.evaluate((el) => el.scrollLeft)).toBeGreaterThan(0);
+			if (captures) await page.locator(".audit-result").screenshot({ path: join(captures, "resultat-320.png") });
+			expect(await axeViolations(page)).toEqual([]);
+			expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBeLessThanOrEqual(320);
+			await page.close();
+		});
 
 		it("axe : aucune violation sur un résultat incomplet (clair)", async () => {
 			const page = await browser.newPage();

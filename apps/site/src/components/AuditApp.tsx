@@ -24,7 +24,7 @@ import {
 	setEvaluation,
 	setPageProcess,
 } from "@rampe/core/audit-session";
-import { computeConformity, formatRate } from "@rampe/core/conformity";
+import { computeConformity, formatRate, processKey } from "@rampe/core/conformity";
 import { parseAuditUrl, parseSampleFile, plural } from "@rampe/core/sample-file";
 import type { ComponentChildren } from "preact";
 import { useEffect, useLayoutEffect, useMemo, useRef, useState } from "preact/hooks";
@@ -1009,6 +1009,13 @@ function Result({
 			</>
 		);
 	else {
+		// Un libellé par processus, le premier saisi : les variantes regroupées (« commande », « Commande ») se voient.
+		const processLabels = new Map<string, string>();
+		for (const p of session.pages) {
+			const key = processKey(p.process);
+			if (key !== null && !processLabels.has(key))
+				processLabels.set(key, (p.process ?? "").replace(/\s+/g, " ").trim());
+		}
 		const failed = criteria.filter((c) => r.criteria.some((x) => x.criterion === c.id && x.status === "non validé"));
 		body = (
 			<>
@@ -1040,34 +1047,38 @@ function Result({
 				<p>
 					<strong>Ce taux mesure la conformité de votre échantillon ; il n’est pas une certification.</strong>
 				</p>
-				<table>
-					<caption>Résultat par page</caption>
-					<thead>
-						<tr>
-							<th scope="col">Page</th>
-							<th scope="col">Processus</th>
-							<th scope="col">Critères validés</th>
-							<th scope="col">Non validés</th>
-							<th scope="col">Non applicables</th>
-							<th scope="col">Taux de conformité</th>
-						</tr>
-					</thead>
-					<tbody>
-						{r.pages.map((pr) => {
-							const p = session.pages.find((x) => x.id === pr.pageId) as SessionPage;
-							return (
-								<tr key={pr.pageId}>
-									<th scope="row">{pageName(p)}</th>
-									<td>{p.process?.trim() || "aucun"}</td>
-									<td>{pr.validated}</td>
-									<td>{pr.invalidated}</td>
-									<td>{pr.notApplicable}</td>
-									<td>{rate(pr.rate)}</td>
-								</tr>
-							);
-						})}
-					</tbody>
-				</table>
+				{/* Défilement horizontal au clavier sur petit écran : la région est nommée par la légende et focalisable. */}
+				{/* biome-ignore lint/a11y/noNoninteractiveTabindex: une zone qui défile doit être atteignable au clavier (règle axe scrollable-region-focusable, WCAG 2.1.1). */}
+				<section class="audit-table" aria-labelledby="audit-resultat-pages" tabIndex={0}>
+					<table>
+						<caption id="audit-resultat-pages">Résultat par page</caption>
+						<thead>
+							<tr>
+								<th scope="col">Page</th>
+								<th scope="col">Processus</th>
+								<th scope="col">Critères validés</th>
+								<th scope="col">Non validés</th>
+								<th scope="col">Non applicables</th>
+								<th scope="col">Taux de conformité</th>
+							</tr>
+						</thead>
+						<tbody>
+							{r.pages.map((pr) => {
+								const p = session.pages.find((x) => x.id === pr.pageId) as SessionPage;
+								return (
+									<tr key={pr.pageId}>
+										<th scope="row">{pageName(p)}</th>
+										<td>{processLabels.get(processKey(p.process) ?? "") ?? "aucun"}</td>
+										<td>{pr.validated}</td>
+										<td>{pr.invalidated}</td>
+										<td>{pr.notApplicable}</td>
+										<td>{rate(pr.rate)}</td>
+									</tr>
+								);
+							})}
+						</tbody>
+					</table>
+				</section>
 				<h3>Critères non validés ({failed.length})</h3>
 				{failed.length > 0 ? (
 					<ul class="audit-failed">
