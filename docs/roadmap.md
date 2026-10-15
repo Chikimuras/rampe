@@ -10,8 +10,8 @@ Chaque case cochée correspond à du code mergé sur `main` avec la CI verte. Le
 - [x] Dépôt, workspace pnpm, Biome, TypeScript
 - [x] Cockpit : avancement, journal, ADR, documentation
 - [x] Gate local (hook Stop) et CI (lint, typecheck, tests, build)
-- [ ] Déploiement automatique sur GitHub Pages
-- [ ] Protection de `main` : merge uniquement par PR avec CI verte
+- [x] Déploiement automatique sur GitHub Pages
+- [x] Protection de `main` : merge uniquement par PR avec CI verte
 
 ## Phase 1 — Référentiel RGAA
 
