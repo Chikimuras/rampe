@@ -4,6 +4,7 @@ import {
 	buildReport,
 	classifyResults,
 	formatReport,
+	formatSynthesis,
 	parseAuditUrl,
 	redact,
 	stripControl,
@@ -106,13 +107,14 @@ describe("buildReport", () => {
 				title: "Accueil",
 				warnings: [],
 				results: classifyResults([raw("image-alt", ["RGAA-1.1.1"])], []),
+				error: null,
 			},
 		],
 	});
 
 	it("a la forme versionnée attendue", () => {
 		expect(report).toMatchObject({
-			schemaVersion: 1,
+			schemaVersion: 2,
 			tool: { name: "@rampe/cli", version: expect.any(String) },
 			engine: { axe: "4.14.0", browser: "156.0" },
 			startedAt: "2026-10-15T10:00:00.000Z",
@@ -155,6 +157,7 @@ describe("formatReport", () => {
 		finalUrl: "https://alice:secret@exemple.fr/\u001b[2J",
 		title: "Accueil\u001b]0;piège\u0007",
 		warnings: [],
+		error: null,
 		results: classifyResults(
 			[
 				raw("image-alt", ["RGAA-1.1.1"], [node("img.logo\u001b[31m"), node("img.photo")]),
@@ -192,5 +195,52 @@ describe("formatReport", () => {
 			"Les 106 critères demandent une vérification humaine. 79 d’entre eux n’ont même aucune vérification automatique directe.",
 		);
 		expect(text).not.toMatch(/\d\s?%|score/i);
+	});
+});
+
+describe("formatSynthesis", () => {
+	const page = (url: string, results = classifyResults([], []), error: string | null = null) => ({
+		url,
+		finalUrl: error ? null : url,
+		title: error ? null : "T",
+		warnings: [],
+		results,
+		error,
+	});
+	const text = formatSynthesis(
+		[
+			page("https://exemple.fr/", classifyResults([raw("image-alt", ["RGAA-1.1.1"])], [])),
+			page(
+				"https://exemple.fr/contact",
+				classifyResults([raw("image-alt", ["RGAA-1.1.1"]), raw("region", ["best-practice", "RGAA-9.2.1"])], []),
+			),
+			page("https://alice:secret@exemple.fr/lent", [], "audit interrompu\u001b[2J"),
+		],
+		79,
+	);
+
+	it("liste les critères en non-conformité sur au moins une page, avec les pages concernées", () => {
+		expect(text).toMatch(
+			/Critère 1\.1 — .* : 2 pages\n {4}- https:\/\/exemple\.fr\/\n {4}- https:\/\/exemple\.fr\/contact/,
+		);
+		expect(text).not.toContain("Critère 9.2");
+	});
+
+	it("compte séparément pages auditées et pages en erreur", () => {
+		expect(text).toMatch(/^Synthèse de l’échantillon : 2 pages auditées, 1 en erreur\n/);
+		const allFailed = formatSynthesis([page("https://exemple.fr/", [], "HTTP 404 pour https://exemple.fr/")], 79);
+		expect(allFailed).toMatch(
+			/^Synthèse de l’échantillon : 0 page auditée, 1 en erreur\n\nAucune page n’a pu être auditée\./,
+		);
+		expect(allFailed).not.toContain("Aucune non-conformité");
+		expect(formatSynthesis([page("https://exemple.fr/")], 79)).toContain(
+			"1 page auditée, 0 en erreur\n\nAucune non-conformité détectée automatiquement sur les pages auditées.",
+		);
+	});
+
+	it("signale les pages en erreur, masque les identifiants, rappelle la vérification humaine", () => {
+		expect(text).toContain("1 page en erreur, non auditée :\n  - https://***:***@exemple.fr/lent");
+		expect(text).not.toContain("secret");
+		expect(text).toContain("Les 106 critères demandent une vérification humaine.");
 	});
 });

@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="fr">
+	<head>
+		<meta charset="utf-8" />
+		<title>Atelier Dupont — accueil</title>
+	</head>
+	<body>
+		<a href="#contenu">Aller au contenu</a>
+		<header>
+			<nav aria-label="Liens utiles">
+				<a href="/contact">Contact</a>
+			</nav>
+			<nav aria-label="Choix de la langue">
+				<a href="https://en.exemple.test/">English</a>
+				<a href="https://de.exemple.test/">Deutsch</a>
+				<a href="https://es.exemple.test/">Español</a>
+				<a href="https://it.exemple.test/">Italiano</a>
+				<a href="https://nl.exemple.test/">Nederlands</a>
+			</nav>
+			<nav aria-label="Navigation du site">
+				<ul>
+					<li>
+						<a href="/services">Services</a>
+						<ul>
+							<li><a href="/services/renovation">Rénovation</a></li>
+						</ul>
+					</li>
+					<li><a href="/realisations">Réalisations</a></li>
+					<li><a href="/a-propos">À propos</a></li>
+				</ul>
+			</nav>
+			<form role="search" action="/recherche" method="get">
+				<label for="q">Rechercher</label>
+				<input id="q" type="search" name="q" />
+				<input type="hidden" name="lang" value="fr" />
+				<button>Rechercher</button>
+			</form>
+		</header>
+		<main id="contenu">
+			<h1>Atelier Dupont</h1>
+			<p><a href="/devis">Contactez-nous pour un devis</a> gratuit.</p>
+			<p><a href="/blog/article-1">Premier article</a>, <a href="/blog/article-2#suite">second article</a>.</p>
+			<p><a href="/catalogue.pdf">Catalogue (PDF)</a>, <a href="mailto:bonjour@exemple.fr">écrire</a>, <a href="https://autre.example/">partenaire</a>.</p>
+		</main>
+		<footer>
+			<ul>
+				<li><a href="/mentions-legales">Mentions légales</a></li>
+				<li><a href="/accessibilite">Accessibilité : partiellement conforme</a></li>
+				<li><a href="/plan-du-site">Plan du site</a></li>
+			</ul>
+		</footer>
+	</body>
+</html>

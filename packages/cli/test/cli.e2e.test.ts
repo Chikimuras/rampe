@@ -13,7 +13,12 @@ import type { AuditReport } from "../src/audit.ts";
 const cli = fileURLToPath(new URL("../src/cli.ts", import.meta.url));
 const fixtures = fileURLToPath(new URL("./fixtures/", import.meta.url));
 
-const run = (...args: string[]) =>
+// --json n'écrase jamais : le fichier du test précédent est retiré avant chaque lancement.
+const run = async (...args: string[]) => {
+	await rm(json, { force: true });
+	return runCli(...args);
+};
+const runCli = (...args: string[]) =>
 	new Promise<{ code: number; stdout: string; stderr: string }>((resolve) => {
 		execFile(process.execPath, [cli, ...args], (error, stdout, stderr) => {
 			resolve({ code: typeof error?.code === "number" ? error.code : error ? -1 : 0, stdout, stderr });
@@ -65,7 +70,8 @@ describe("rampe audit (bout en bout)", { timeout: 60_000 }, () => {
 		expect(code, stderr).toBe(1);
 
 		const report = await readReport();
-		expect(report.schemaVersion).toBe(1);
+		expect(report.schemaVersion).toBe(2);
+		expect(report.pages[0]?.error).toBeNull();
 		const [page] = report.pages;
 		expect(page?.finalUrl).toBe(`${base}/defauts`);
 		const nc = page?.results.filter((r) => r.kind === "non-conformite") ?? [];
