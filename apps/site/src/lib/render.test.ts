@@ -43,6 +43,28 @@ describe("renderMarkdown", () => {
 		);
 	});
 
+	it("garde le numéro de départ d'une liste ordonnée", () => {
+		expect(renderMarkdown("3. trois\n4. quatre")).toContain('<ol start="3">');
+	});
+
+	it.each(["//evil.example", "/\\evil.example", "/chemin", "relatif", "data:text/html,x"])(
+		"retire un lien hors site ou relatif : %s",
+		(href) => {
+			expect(renderMarkdown(`[clic](${href})`, { inline: true })).toBe("clic");
+			expect(renderGlossaryHtml(`<a href="${href}">clic</a>`)).toBe("clic");
+		},
+	);
+
+	it("retire un lien d'ancre mal encodée", () => {
+		expect(renderMarkdown("[clic](#%E0%A4%A)", { inline: true })).toBe("clic");
+	});
+
+	it("garde les liens mailto et https", () => {
+		expect(renderGlossaryHtml('<a href="mailto:a@b.fr">a</a> <a href="https://w3.org/">b</a>')).toBe(
+			'<a href="mailto:a@b.fr">a</a> <a href="https://w3.org/">b</a>',
+		);
+	});
+
 	it("garde les listes en mode bloc", () => {
 		expect(renderMarkdown("1. un\n2. deux")).toContain("<ol>");
 	});
