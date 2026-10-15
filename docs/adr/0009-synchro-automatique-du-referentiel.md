@@ -23,9 +23,11 @@ GitHub pose une contrainte : une PR ouverte avec le `GITHUB_TOKEN` d’un workfl
    - aucun secret ni jeton personnel : seul le `GITHUB_TOKEN` éphémère est utilisé (**CICD-SEC-6**) ;
    - le contenu téléchargé n’est **jamais exécuté**. Il est seulement validé comme JSON puis écrit, et ce sont les tests de la CI qui le jugent (**CICD-SEC-4**, *Poisoned Pipeline Execution*) ;
    - la PR n’est jamais mergée automatiquement : elle suit le flux normal (ADR-0006).
-4. Le réglage du dépôt « Allow GitHub Actions to create pull requests » est activé. Il ne donne aucun droit de merge, puisque la protection de `main` s’applique toujours.
+4. Le réglage du dépôt « Allow GitHub Actions to create pull requests » est activé. Attention : avec zéro approbation requise sur `main`, un jeton `contents: write` **pourrait** techniquement merger une PR dont le check est vert. Ce n’est pas un contrôle qui l’empêche, mais le code du workflow, qui n’appelle jamais `gh pr merge` ; toute modification de `sync-rgaa.yml` passe elle-même par une PR relue.
 
 ## Conséquences
 
 - Une mise à jour officielle du RGAA devient une PR testée dans la semaine.
 - Nouvelle exigence pour `sync-rgaa.mjs` : un mode « seulement si le contenu change ». Aujourd’hui, le script compare le SHA du commit, qui change même quand le référentiel reste identique.
+- Risque accepté : l’étape de téléchargement tourne dans le job qui a les droits d’écriture. Le contenu n’est jamais exécuté, seulement parsé comme JSON, et le commit doit appartenir à l’historique de `main` du dépôt DINUM. Séparer téléchargement (sans droits) et publication (avec droits) en deux jobs a été écarté pour l’instant : la complexité ajoutée (artefact intermédiaire) dépasse le gain tant que rien n’est exécuté.
+- GitHub désactive les workflows planifiés d’un dépôt public après 60 jours sans activité : si le dépôt dort, la synchro s’arrête sans bruit et doit être réactivée depuis l’onglet Actions.

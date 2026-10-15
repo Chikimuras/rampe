@@ -42,15 +42,15 @@ Ensuite :
 
 ## Synchronisation automatique
 
-Le workflow `.github/workflows/sync-rgaa.yml` (ADR-0009) tourne chaque lundi à 06:00 UTC, et à la demande depuis l’onglet Actions avec un `ref` DINUM facultatif. Il lance :
+Le workflow `.github/workflows/sync-rgaa.yml` (ADR-0009) tourne chaque lundi à 06:17 UTC, depuis `main` uniquement,, et à la demande depuis l’onglet Actions avec un `ref` DINUM facultatif. Il lance :
 
 ```sh
 node packages/core/scripts/sync-rgaa.mjs <ref> --if-changed
 ```
 
-Avec `--if-changed`, le script compare les trois JSON téléchargés aux fichiers du dépôt. S’ils sont identiques octet pour octet, il n’écrit rien et affiche « Référentiel inchangé » : un commit DINUM qui ne touche que leur site ne produit pas de PR. La version du RGAA, si elle n’est pas donnée, est reprise de `source.json`. Sous GitHub Actions, il écrit `changed`, `sha` et `previous` dans `$GITHUB_OUTPUT`.
+Avec `--if-changed`, le script compare les trois JSON téléchargés aux fichiers du dépôt. S’ils sont identiques octet pour octet, il n’écrit rien et affiche « Référentiel inchangé » : un commit DINUM qui ne touche que leur site ne produit pas de PR. La version du RGAA, si elle n’est pas donnée, est reprise de `source.json`. Le commit demandé doit appartenir à l’historique de `main` du dépôt DINUM, sinon le script s’arrête en erreur. Sous GitHub Actions, il écrit `changed`, `sha` et `previous` dans `$GITHUB_OUTPUT`.
 
-Si le contenu a changé, le workflow pousse une branche `chore/sync-rgaa-<sha court>`, ouvre une PR, puis déclenche `ci.yml` sur cette branche pour que le check `check` s’y attache (une PR ouverte avec le `GITHUB_TOKEN` ne déclenche pas `pull_request`). Si la branche existe déjà, il s’arrête sans doublon. Le relecteur **confirme la version du RGAA** dans `source.json`, relit le diff des données, et la PR suit le flux normal : jamais de merge automatique.
+Si le contenu a changé, le workflow pousse une branche `chore/sync-rgaa-<sha court>`, ouvre une PR, puis déclenche `ci.yml` sur cette branche pour que le check `check` s’y attache (une PR ouverte avec le `GITHUB_TOKEN` ne déclenche pas `pull_request`). Il est idempotent : après un échec partiel, il ne recrée que ce qui manque (branche, PR, exécution de la CI) et n’ouvre jamais de doublon. Le relecteur **confirme la version du RGAA** dans `source.json`, relit le diff des données, et la PR suit le flux normal : jamais de merge automatique.
 
 Dependabot (`.github/dependabot.yml`) surveille de son côté les dépendances npm et les actions GitHub chaque semaine ; axe-core a sa propre PR, puisque sa montée change la correspondance RGAA.
 
