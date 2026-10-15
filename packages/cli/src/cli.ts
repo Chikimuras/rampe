@@ -3,6 +3,7 @@
 import { randomInt } from "node:crypto";
 import { existsSync } from "node:fs";
 import { readFile, writeFile } from "node:fs/promises";
+import { dirname, resolve } from "node:path";
 import { parseArgs } from "node:util";
 import { criteriaWithDirectRule, rgaa } from "@rampe/core";
 import axe from "axe-core";
@@ -145,7 +146,10 @@ async function onFreshPage<T>(browser: Browser, timeout: number, what: string, f
 
 /** Charge la page et renvoie son URL finale, en refusant toute page qui a quitté le web (ADR-0011 §6). */
 async function load(page: Page, url: URL, timeout: number): Promise<string> {
-	await page.goto(url.href, { waitUntil: "load", timeout });
+	const response = await page.goto(url.href, { waitUntil: "load", timeout });
+	// Une page d'erreur (404, 500…) n'est pas la page voulue : l'auditer donnerait un résultat trompeur.
+	const status = response?.status() ?? 0;
+	if (status >= 400) throw new Error(`HTTP ${status} pour ${url.href}`);
 	// Réseau calme : laisse aux scripts le temps de rendre, sans bloquer sur une page qui interroge en continu.
 	await page.waitForLoadState("networkidle", { timeout: Math.min(timeout, 5_000) }).catch(() => {});
 	// La page a pu naviguer d'elle-même (about:blank, data:…) : on n'audite que du http(s).
@@ -188,14 +192,19 @@ async function collect(page: Page, url: URL, timeout: number): Promise<Collected
 	const found = await page.evaluate(() => {
 		const FOOTER = "footer, [role=contentinfo]";
 		const HEADER = "header, [role=banner]";
-		const navs = [...document.querySelectorAll("nav, [role=navigation]")].filter((n) => !n.closest(FOOTER));
+		const name = (n: Element) =>
+			`${n.getAttribute("aria-label") ?? ""} ${n.id} ${document.getElementById(n.getAttribute("aria-labelledby") ?? "")?.textContent ?? ""}`;
+		// Ni sélecteur de langue, ni fil d'Ariane, ni liens d'évitement ; au moins 3 liens.
+		const notMain = /langue|language|ariane|breadcrumb|acc[eè]s rapide|skip|[ée]vitement/i;
+		const navs = [...document.querySelectorAll("nav, [role=navigation]")].filter(
+			(n) => !n.closest(FOOTER) && !notMain.test(name(n)) && n.querySelectorAll("a[href]").length >= 3,
+		);
 		const inHeader = navs.filter((n) => n.closest(HEADER));
 		const pool = inHeader.length > 0 ? inHeader : navs;
 		const count = (n: Element) => n.querySelectorAll("a[href]").length;
 		// Navigation principale : nommée comme telle, sinon celle qui a le plus de liens (en-tête d'abord).
 		const main =
-			pool.find((n) => /princip|main|primary/i.test(`${n.getAttribute("aria-label")} ${n.id}`)) ??
-			[...pool].sort((a, b) => count(b) - count(a))[0];
+			pool.find((n) => /princip|main|primary/i.test(name(n))) ?? [...pool].sort((a, b) => count(b) - count(a))[0];
 		// Premier niveau : les liens les moins imbriqués dans des éléments de liste.
 		const depth = (a: Element) => {
 			let d = 0;
@@ -248,11 +257,22 @@ async function collect(page: Page, url: URL, timeout: number): Promise<Collected
 		return { links, search, navLabel: label };
 	});
 	return {
+		requestedUrl: url.href,
 		homeUrl,
 		links: found.links as RawLink[],
 		navLabel: found.navLabel,
 		search: found.search as RawSearch | null,
 	};
+}
+
+/**
+ * Vérifie, avant tout chargement, qu'un fichier de sortie pourra être écrit sans rien écraser : un fichier a pu être
+ * relu et modifié à la main, et un audit perdu faute de dossier coûte cher.
+ */
+function assertWritable(file: string, option: string) {
+	if (existsSync(file))
+		throw new Error(`Le fichier ${file} existe déjà (${option}) : choisissez un autre nom, ou supprimez-le.`);
+	if (!existsSync(dirname(resolve(file)))) throw new Error(`Le dossier de ${file} n’existe pas (${option}).`);
 }
 
 /** Message d'erreur affichable : identifiants masqués, sans caractère de contrôle. */
@@ -275,7 +295,8 @@ async function auditOne(url: URL, json: string | undefined, timeout: number): Pr
 
 /** Audite les pages une à une dans un seul navigateur, chacune dans un contexte neuf (ADR-0012 §3 et §4). */
 async function auditSample(file: string, json: string | undefined, timeout: number): Promise<number> {
-	const urls = parseSampleFile(await readFile(file, "utf8"));
+	const { urls, warnings } = parseSampleFile(await readFile(file, "utf8"));
+	for (const w of warnings) console.error(`Avertissement : ${w}`);
 	const startedAt = new Date();
 	return withBrowser(async (browser) => {
 		const pages: AuditPage[] = [];
@@ -303,18 +324,15 @@ async function auditSample(file: string, json: string | undefined, timeout: numb
 async function writeJson(json: string | undefined, startedAt: Date, browser: Browser, pages: AuditPage[]) {
 	if (!json) return;
 	const report = buildReport({ startedAt, axeVersion: axe.version, browserVersion: browser.version(), pages });
-	await writeFile(json, `${JSON.stringify(report, null, 2)}\n`);
+	await writeFile(json, `${JSON.stringify(report, null, 2)}\n`, { flag: "wx" });
 	console.log(`\nRésultat JSON écrit dans ${json}`);
 }
 
 async function sample(url: URL, sortie: string, max: number, seed: number, timeout: number): Promise<number> {
-	// Le fichier a pu être relu et modifié à la main : on ne l'écrase jamais.
-	if (existsSync(sortie))
-		throw new Error(`Le fichier ${sortie} existe déjà : choisissez un autre nom avec --sortie, ou supprimez-le.`);
+	assertWritable(sortie, "--sortie");
 	const collected = await withBrowser((browser) =>
 		onFreshPage(browser, timeout, "chargement de l’accueil", (page) => collect(page, url, timeout)),
 	);
-	for (const w of originWarning(url, collected.homeUrl)) console.error(`Avertissement : ${w}`);
 	const proposal = proposeSample(collected, max, seed);
 	await writeFile(sortie, formatSampleFile(proposal), { flag: "wx" });
 	console.log(formatSampleSummary(proposal, sortie));
@@ -334,6 +352,11 @@ try {
 }
 try {
 	const o = options;
+	if (o.command === "audit" && o.json) {
+		if (o.file && resolve(o.json) === resolve(o.file))
+			throw new Error("--json désigne le fichier d’échantillon lui-même : choisissez un autre fichier.");
+		assertWritable(o.json, "--json");
+	}
 	process.exitCode =
 		o.command === "echantillon"
 			? await sample(o.url, o.sortie, o.max, o.seed, o.timeout)

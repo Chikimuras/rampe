@@ -1,5 +1,5 @@
 // Logique pure de l'échantillon (ADR-0012) : repérage des pages types, tirage reproductible, fichier modifiable.
-import { parseAuditUrl, redact, stripControl } from "./audit.ts";
+import { parseAuditUrl, plural, redact, stripControl } from "./audit.ts";
 
 /** Lien collecté sur la page d'accueil, tel que vu par le navigateur. */
 export interface RawLink {
@@ -24,6 +24,8 @@ export interface RawSearch {
 }
 
 export interface Collected {
+	/** URL demandée par l'utilisateur. */
+	requestedUrl: string;
 	/** URL finale de l'accueil, après redirections. */
 	homeUrl: string;
 	links: RawLink[];
@@ -44,7 +46,8 @@ export interface Sample {
 	entries: SampleEntry[];
 	/** Ce que Rampe n'a pas pu deviner : à compléter par l'humain (ADR-0012 §2). */
 	todo: string[];
-	missingAccessibility: boolean;
+	/** Avertissements mis en tête du résumé et du fichier (page accessibilité absente, pages obligatoires écartées…). */
+	warnings: string[];
 }
 
 /** Terme cherché pour obtenir une page de résultats (un mot présent sur presque tous les sites). */
@@ -58,7 +61,10 @@ export const normalizeText = (s: string): string =>
 const NOT_A_PAGE =
 	/\.(pdf|docx?|xlsx?|pptx?|od[tsp]|zip|rar|7z|gz|jpe?g|png|gif|webp|svg|mp3|mp4|webm|avi|mov|xml|json|csv|txt|ics|rss|atom)$/i;
 
-/** Adresse http(s) de même origine, sans fragment ni identifiants ; `null` sinon (ADR-0012 §4). */
+// Adresses dont la simple visite déclenche une action (déconnexion, suppression, désinscription) : jamais visitées.
+const ACTION = /log-?out|deconnexion|sign-?out|delete|supprimer|unsubscribe|desinscri/;
+
+/** Adresse http(s) de même origine, sans fragment ni identifiants, ni action à la visite ; `null` sinon (ADR-0012 §4). */
 export function normalizeUrl(href: string, origin: string): string | null {
 	let url: URL;
 	try {
@@ -67,6 +73,11 @@ export function normalizeUrl(href: string, origin: string): string | null {
 		return null;
 	}
 	if (!/^https?:$/.test(url.protocol) || url.origin !== origin || NOT_A_PAGE.test(url.pathname)) return null;
+	let path = `${url.pathname}${url.search}`;
+	try {
+		path = decodeURIComponent(path);
+	} catch {}
+	if (ACTION.test(normalizeText(path))) return null;
 	url.hash = "";
 	url.username = "";
 	url.password = "";
@@ -244,12 +255,22 @@ const randomShare = (n: number) => Math.max(1, Math.ceil(n / 9));
 export const NOT_FOUND = "non trouvée automatiquement : à ajouter si elle existe";
 
 /** Propose l'échantillon de la méthode RGAA (ADR-0012 §1 et §2). */
-export function proposeSample({ homeUrl, links, navLabel, search }: Collected, max: number, seed: number): Sample {
+export function proposeSample(
+	{ requestedUrl, homeUrl, links, navLabel, search }: Collected,
+	max: number,
+	seed: number,
+): Sample {
 	const origin = new URL(homeUrl).origin;
 	const home = normalizeUrl(homeUrl, origin) ?? homeUrl;
+	const warnings: string[] = [];
+	if (new URL(requestedUrl).origin !== origin)
+		warnings.push(
+			`ATTENTION : l’accueil demandé (${redact(requestedUrl)}) redirige vers une autre origine : l’échantillon est construit sur ${origin}.`,
+		);
+	// Liens vers l'accueil lui-même (ancres, liens d'évitement) écartés : ils ne désignent aucune autre page.
 	const valid = links.flatMap((l) => {
 		const href = normalizeUrl(l.href, origin);
-		return href ? [{ ...l, href }] : [];
+		return href && href !== home ? [{ ...l, href }] : [];
 	});
 
 	const entries: SampleEntry[] = [];
@@ -266,7 +287,7 @@ export function proposeSample({ homeUrl, links, navLabel, search }: Collected, m
 		if (hit) add(hit.url, `${rule.type} — ${hit.reason}`);
 		else todo.push(`${rule.type} — ${NOT_FOUND}`);
 	}
-	const missingAccessibility = todo.some((t) => t.startsWith("accessibilité"));
+	if (todo.some((t) => t.startsWith("accessibilité"))) warnings.push(ACCESSIBILITY_WARNING);
 
 	if (!search) todo.push(`recherche — ${NOT_FOUND}`);
 	else {
@@ -280,7 +301,12 @@ export function proposeSample({ homeUrl, links, navLabel, search }: Collected, m
 	}
 
 	const nav = navLabel ? ` ${quote(navLabel)}` : "";
-	for (const link of valid.filter((l) => l.topNav))
+	const topNav = valid.filter((l) => l.topNav);
+	if (topNav.length === 0)
+		todo.push(
+			"rubriques — navigation principale non trouvée automatiquement : à ajouter (une page par rubrique de premier niveau)",
+		);
+	for (const link of topNav)
 		add(link.href, `rubrique — lien ${quote(link.text || "(sans texte)")} de la navigation principale${nav}`);
 
 	// Limite --max : on écarte d'abord les dernières rubriques, en gardant la place du tirage au hasard.
@@ -288,17 +314,27 @@ export function proposeSample({ homeUrl, links, navLabel, search }: Collected, m
 	while (entries.length > 1 && entries.length + randomShare(entries.length) > max)
 		dropped.unshift(entries.pop() as SampleEntry);
 
-	const taken = new Set(entries.map((e) => e.url));
+	// Pages obligatoires (types et recherche) écartées par --max : l'échantillon n'est plus conforme à la méthode.
+	const mandatory = dropped
+		.flatMap((e) => e.notes.map((n) => n.split(" — ")[0] ?? ""))
+		.filter((type) => type !== "rubrique");
+	if (mandatory.length > 0)
+		warnings.push(
+			`ATTENTION : --max ${max} a écarté des pages obligatoires. Échantillon non conforme à la méthode tant que ces pages obligatoires n’y sont pas : ${mandatory.join(", ")}.`,
+		);
+
+	// Les pages écartées par --max ne reviennent pas par le tirage au hasard.
+	const taken = new Set([...entries, ...dropped].map((e) => e.url));
+	const candidates = valid.map((l) => l.href).filter((h) => !taken.has(h));
 	const wanted = randomShare(entries.length);
-	const drawn = drawRandom(
-		valid.map((l) => l.href).filter((h) => !taken.has(h)),
-		Math.min(wanted, max - entries.length),
-		seed,
-	);
+	const room = max - entries.length;
+	const drawn = drawRandom(candidates, Math.min(wanted, room), seed);
 	for (const url of drawn) add(url, `hasard — tirée au hasard (graine ${seed})`);
 	if (drawn.length < wanted)
 		todo.push(
-			"tirage au hasard — pas assez d’autres pages de même origine sur l’accueil pour atteindre 10 % de l’échantillon : à compléter",
+			room < wanted
+				? `tirage au hasard — --max ${max} ne laisse pas la place d’atteindre 10 % de l’échantillon : à compléter`
+				: "tirage au hasard — pas assez d’autres pages de même origine sur l’accueil pour atteindre 10 % de l’échantillon : à compléter",
 		);
 
 	for (const e of dropped) todo.push(`écartée pour respecter --max : ${e.url} (${e.notes.join(" ; ")})`);
@@ -307,8 +343,11 @@ export function proposeSample({ homeUrl, links, navLabel, search }: Collected, m
 		"contenus particuliers — des pages au contenu sensiblement différent (tableaux, multimédia, formulaires, documents…) : à ajouter",
 		"documents téléchargeables — au moins un document pertinent par type de service, le cas échéant : à évaluer à la main (Rampe n’audite que des pages web)",
 	);
-	return { site: home, seed, entries, todo, missingAccessibility };
+	return { site: home, seed, entries, todo, warnings };
 }
+
+export const RANDOM_ADVICE =
+	"Tirage au hasard : si vous ajoutez des pages, ajoutez-en au hasard pour garder au moins 10 % de l’échantillon (1 pour 9).";
 
 const ACCESSIBILITY_WARNING =
 	"ATTENTION : aucune page « accessibilité » trouvée automatiquement. La déclaration d’accessibilité est une obligation légale : vérifiez qu’elle existe et ajoutez-la à l’échantillon.";
@@ -320,41 +359,85 @@ export function formatSampleFile(sample: Sample): string {
 		"# Une adresse par ligne. Les lignes vides et celles qui commencent par # sont ignorées.",
 		"# Rampe propose, vous décidez : ajoutez, retirez ou remplacez des pages, puis lancez",
 		"#   rampe audit --echantillon <ce fichier>",
+		`# ${RANDOM_ADVICE}`,
 		"",
 	];
-	if (sample.missingAccessibility) out.push(`# ${ACCESSIBILITY_WARNING}`, "");
+	if (sample.warnings.length > 0) out.push(...sample.warnings.map((w) => `# ${w}`), "");
 	for (const e of sample.entries) out.push(...e.notes.map((n) => `# ${n}`), e.url, "");
 	out.push("# À COMPLÉTER PAR VOUS :", ...sample.todo.map((t) => `#   ${t}`), "");
 	return out.join("\n");
 }
 
-/** Lit un fichier d'échantillon : http(s) uniquement, même origine que la première adresse, doublons retirés. */
-export function parseSampleFile(text: string): URL[] {
+export const MAX_SAMPLE_URLS = 1000;
+const MAX_LINE = 2048;
+
+/** Clé de dédoublonnage : adresse sans fragment ni identifiants. */
+const sampleKey = (url: URL) => {
+	const u = new URL(url.href);
+	u.hash = "";
+	u.username = "";
+	u.password = "";
+	return u.href;
+};
+
+/**
+ * Lit un fichier d'échantillon : http(s) uniquement, même origine que la première adresse, doublons retirés.
+ * Avertit si les pages notées « hasard » font moins de 10 % de l'échantillon (r ≥ n / 9).
+ */
+export function parseSampleFile(text: string): { urls: URL[]; warnings: string[] } {
 	const urls: URL[] = [];
+	const keys = new Set<string>();
+	let random = 0;
+	let isRandom = false;
 	for (const [i, raw] of text.split(/\r?\n/).entries()) {
 		const line = raw.trim();
+		const where = `Échantillon, ligne ${i + 1}`;
+		if (line.length > MAX_LINE)
+			throw new Error(`${where} : ligne trop longue (plus de ${MAX_LINE} caractères) : ${quote(line.slice(0, 80))}`);
+		if (line.startsWith("# hasard — ")) isRandom = true;
 		if (line === "" || line.startsWith("#")) continue;
 		let url: URL;
 		try {
 			url = parseAuditUrl(line);
 		} catch (e) {
-			throw new Error(`Échantillon, ligne ${i + 1} : ${(e as Error).message}`);
+			throw new Error(`${where} : ${(e as Error).message}`);
 		}
 		const first = urls[0];
 		if (first && url.origin !== first.origin)
 			throw new Error(
-				`Échantillon, ligne ${i + 1} : ${redact(url.href)} n’est pas sur la même origine que la première adresse (${first.origin}). Un échantillon porte sur un seul site.`,
+				`${where} : ${redact(url.href)} n’est pas sur la même origine que la première adresse (${first.origin}). Un échantillon porte sur un seul site.`,
 			);
-		if (!urls.some((u) => u.href === url.href)) urls.push(url);
+		const key = sampleKey(url);
+		if (!keys.has(key)) {
+			if (urls.length === MAX_SAMPLE_URLS)
+				throw new Error(
+					`${where} : plus de ${MAX_SAMPLE_URLS} adresses ; découpez l’échantillon en plusieurs fichiers.`,
+				);
+			keys.add(key);
+			urls.push(url);
+			if (isRandom) random++;
+		}
+		isRandom = false;
 	}
 	if (urls.length === 0) throw new Error("Échantillon vide : aucune adresse trouvée dans le fichier.");
-	return urls;
+	const others = urls.length - random;
+	const needed = Math.ceil(others / 9);
+	const warnings =
+		random < needed
+			? [
+					`Seulement ${plural(random, "page")} notée${random > 1 ? "s" : ""} « hasard » pour ${others} autre${others > 1 ? "s" : ""} : il en faut au moins ${needed} pour que le tirage au hasard fasse 10 % de l’échantillon (méthode RGAA).`,
+				]
+			: [];
+	return { urls, warnings };
 }
 
 /** Résumé console de l'échantillon proposé. */
 export function formatSampleSummary(sample: Sample, file: string): string {
-	const out = [`Échantillon proposé pour ${sample.site} : ${sample.entries.length} pages (graine ${sample.seed})`, ""];
-	if (sample.missingAccessibility) out.push(ACCESSIBILITY_WARNING, "");
+	const out = [
+		`Échantillon proposé pour ${sample.site} : ${plural(sample.entries.length, "page")} (graine ${sample.seed})`,
+		"",
+	];
+	if (sample.warnings.length > 0) out.push(...sample.warnings, "");
 	for (const e of sample.entries) out.push(`  ${e.url}`, ...e.notes.map((n) => `      ${n}`));
 	out.push("");
 	out.push("À compléter par vous :", ...sample.todo.map((t) => `  - ${t}`), "");
@@ -362,6 +445,7 @@ export function formatSampleSummary(sample: Sample, file: string): string {
 		`Fichier écrit : ${file}`,
 		`Relisez-le et modifiez-le, puis lancez : rampe audit --echantillon ${file}`,
 		`Même tirage au hasard : --graine ${sample.seed}`,
+		RANDOM_ADVICE,
 	);
 	return out.join("\n");
 }

@@ -83,7 +83,7 @@ describe("rampe echantillon puis audit --echantillon (bout en bout)", { timeout:
 		);
 		for (const r of ["services", "realisations", "a-propos"])
 			expect(text).toMatch(
-				new RegExp(`# rubrique — lien « .+ » de la navigation principale « Menu principal »\\n${base}/${r}\\n`),
+				new RegExp(`# rubrique — lien « .+ » de la navigation principale « Navigation du site »\\n${base}/${r}\\n`),
 			);
 		expect(text).not.toMatch(/rubrique — lien « Rénovation »/);
 		expect(text).toMatch(/# hasard — tirée au hasard \(graine 1\)\n/);
@@ -125,20 +125,23 @@ describe("rampe echantillon puis audit --echantillon (bout en bout)", { timeout:
 	it("continue après une page en erreur, la signale et sort en 2", async () => {
 		const file = join(dir, "erreur.txt");
 		const json = join(dir, "erreur.json");
-		await writeFile(file, `# test\n${base}/\n${base}/boucle\n\n${base}/a-propos\n`);
+		await writeFile(file, `# test\n${base}/\n${base}/boucle\n\n${base}/inexistante\n${base}/a-propos\n`);
 		const t0 = Date.now();
 		const { code, stdout, stderr } = await run("audit", "--echantillon", file, "--json", json, "--timeout", "4000");
 		expect(code).toBe(2);
 		expect(Date.now() - t0).toBeLessThan(40_000);
 		expect(stderr).toContain(`Erreur sur ${base}/boucle : audit interrompu après 4000 ms`);
-		expect(stdout).toContain(`1 page en erreur, non auditée :\n  - ${base}/boucle`);
+		expect(stderr).toContain(`Erreur sur ${base}/inexistante : HTTP 404 pour ${base}/inexistante`);
+		expect(stdout).toContain("Synthèse de l’échantillon : 2 pages auditées, 2 en erreur");
+		expect(stdout).toContain(`2 pages en erreur, non auditées :\n  - ${base}/boucle\n  - ${base}/inexistante`);
 		const { pages }: AuditReport = JSON.parse(await readFile(json, "utf8"));
 		expect(pages.map((p) => [p.url, p.error === null])).toEqual([
 			[`${base}/`, true],
 			[`${base}/boucle`, false],
+			[`${base}/inexistante`, false],
 			[`${base}/a-propos`, true],
 		]);
-		expect(pages[2]?.title).toBe("Page du mini-site");
+		expect(pages[3]?.title).toBe("Page du mini-site");
 	});
 
 	it("refuse un échantillon mêlant deux origines, sans rien auditer", async () => {
@@ -148,5 +151,24 @@ describe("rampe echantillon puis audit --echantillon (bout en bout)", { timeout:
 		expect(code).toBe(2);
 		expect(stderr).toContain("ligne 2 : https://autre.example/ n’est pas sur la même origine");
 		expect(stdout).toBe("");
+	});
+
+	it("n'écrase jamais un fichier et vérifie les dossiers de sortie avant de charger quoi que ce soit", async () => {
+		const file = join(dir, "court.txt");
+		await writeFile(file, `${base}/a-propos\n`);
+		const cases = [
+			[["audit", "--echantillon", file, "--json", file], "--json désigne le fichier d’échantillon lui-même"],
+			[["audit", "--echantillon", file, "--json", file.replace("court", "./court")], "--json désigne le fichier"],
+			[["audit", "--echantillon", file, "--json", join(dir, "absent", "r.json")], "n’existe pas (--json)"],
+			[["audit", `${base}/a-propos`, "--json", file], "existe déjà (--json)"],
+			[["echantillon", `${base}/`, "--sortie", join(dir, "absent", "e.txt")], "n’existe pas (--sortie)"],
+		] as const;
+		for (const [args, message] of cases) {
+			const { code, stdout, stderr } = await run(...args);
+			expect(code, args.join(" ")).toBe(2);
+			expect(stderr).toContain(message);
+			expect(stdout).toBe("");
+		}
+		expect(await readFile(file, "utf8")).toBe(`${base}/a-propos\n`);
 	});
 });

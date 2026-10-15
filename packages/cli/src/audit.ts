@@ -126,7 +126,7 @@ const plainTitle = (id: string) => (getCriterion(id)?.title ?? "").replace(/\[([
 const selector = (target: unknown[]) =>
 	stripControl(target.map((t) => (Array.isArray(t) ? t.join(" >>> ") : String(t))).join(" | "));
 
-const plural = (n: number, word: string) => `${n} ${word}${n > 1 ? "s" : ""}`;
+export const plural = (n: number, word: string) => `${n} ${word}${n > 1 ? "s" : ""}`;
 const byNumber = (a: string, b: string) => a.localeCompare(b, "en", { numeric: true });
 
 function ruleLine(r: AuditResult, detail: string, showFlags = true): string {
@@ -211,12 +211,17 @@ export function formatPage(page: AuditPage): string {
 export function formatSynthesis(pages: AuditPage[], uncovered: number): string {
 	const where = (p: AuditPage) => stripControl(redact(p.finalUrl ?? p.url));
 	const failed = pages.filter((p) => p.error !== null);
-	const out = [`Synthèse de l’échantillon : ${plural(pages.length, "page")}`, ""];
+	const audited = pages.length - failed.length;
+	const out = [
+		`Synthèse de l’échantillon : ${plural(audited, "page")} auditée${audited > 1 ? "s" : ""}, ${failed.length} en erreur`,
+		"",
+	];
 	const byCrit = new Map<string, Set<string>>();
 	for (const p of pages)
 		for (const r of p.results.filter((x) => x.kind === "non-conformite"))
 			for (const c of r.criteria) byCrit.set(c, (byCrit.get(c) ?? new Set()).add(where(p)));
-	if (byCrit.size === 0) out.push("Aucune non-conformité détectée automatiquement sur les pages auditées.");
+	if (audited === 0) out.push("Aucune page n’a pu être auditée.");
+	else if (byCrit.size === 0) out.push("Aucune non-conformité détectée automatiquement sur les pages auditées.");
 	else {
 		out.push("Critères avec une non-conformité détectée sur au moins une page :");
 		for (const id of [...byCrit.keys()].sort(byNumber)) {
