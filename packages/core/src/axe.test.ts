@@ -1,6 +1,6 @@
 import axe from "axe-core";
 import { describe, expect, it } from "vitest";
-import { classifyAxeRule, criteriaWithDirectRule, getCriterion } from "./index.ts";
+import { classifyAxeRule, criteriaWithDirectRule, getCriterion, isDirectCheck } from "./index.ts";
 
 const rules = axe.getRules();
 const noFlags = { unknownRgaaTags: [], bestPractice: false, experimental: false, deprecated: false };
@@ -158,6 +158,13 @@ describe(`règles réelles d'axe-core ${axe.version}`, () => {
 		]);
 	});
 
+	it("isDirectCheck écarte bonnes pratiques, expérimentales et dépréciées", () => {
+		expect(isDirectCheck(classifyAxeRule(["RGAA-1.1.1"]))).toBe(true);
+		for (const flag of ["best-practice", "experimental", "deprecated"])
+			expect(isDirectCheck(classifyAxeRule([flag, "RGAA-1.1.1"]))).toBe(false);
+		expect(isDirectCheck(classifyAxeRule(["wcag111"]))).toBe(false);
+	});
+
 	it("photographie : bonnes pratiques d'axe rattachées au niveau rgaa", () => {
 		const ids = classified.filter(({ m }) => m.level === "rgaa" && m.bestPractice).map(({ id }) => id);
 		expect(ids).toEqual(["focus-order-semantics", "region", "skip-link", "table-duplicate-name"]);
@@ -165,21 +172,21 @@ describe(`règles réelles d'axe-core ${axe.version}`, () => {
 });
 
 describe("criteriaWithDirectRule", () => {
-	it("ne compte que les rattachements directs, sans les règles dépréciées", () => {
+	it("ne compte que les vérifications directes : ni bonne pratique, ni expérimentale, ni dépréciée", () => {
 		const covered = criteriaWithDirectRule([
 			["RGAA-1.1.1"],
 			["RGAA-8.3.1", "RGAA-8.4.1"],
 			["deprecated", "RGAA-11.1.1"],
+			["best-practice", "RGAA-9.2.1"],
+			["experimental", "RGAA-12.7.1"],
 			["wcag143"],
 			["best-practice"],
 		]);
 		expect([...covered]).toEqual(["1.1", "8.3", "8.4"]);
 	});
 
-	it("photographie : critères couverts directement par axe-core 4.14.0", () => {
-		const tags = rules.map((r) => r.tags);
-		expect(criteriaWithDirectRule(tags).size).toBe(33);
-		// Configuration par défaut d'axe.run : sans les règles expérimentales.
-		expect(criteriaWithDirectRule(tags.filter((t) => !t.includes("experimental"))).size).toBe(29);
+	it("photographie : critères vérifiés directement par axe-core 4.14.0", () => {
+		// 106 - 27 = 79 critères sans aucune vérification automatique directe.
+		expect(criteriaWithDirectRule(rules.map((r) => r.tags)).size).toBe(27);
 	});
 });

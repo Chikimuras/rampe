@@ -84,14 +84,24 @@ export function classifyAxeRule(tags: readonly string[]): AxeRuleMapping {
 }
 
 /**
- * Critères RGAA qu'au moins une de ces règles vérifie directement (étiquette `RGAA-x.y.z`).
- * Les règles dépréciées ne comptent pas : on ne les présente plus comme une vérification.
+ * Vérification directe d'un critère : la règle cite un test RGAA et n'est ni une bonne pratique,
+ * ni expérimentale, ni dépréciée chez axe. Seule une telle règle peut signaler une non-conformité
+ * (ADR-0011 §3) ou compter comme couverture automatique d'un critère (ADR-0002, ADR-0008).
+ */
+export function isDirectCheck(m: AxeRuleMapping): m is Extract<AxeRuleMapping, { level: "rgaa" }> {
+	return m.level === "rgaa" && !m.bestPractice && !m.experimental && !m.deprecated;
+}
+
+/**
+ * Critères RGAA qu'au moins une de ces règles vérifie directement (voir `isDirectCheck`).
+ * Les règles expérimentales étant exclues, le résultat vaut aussi pour `axe.run` en configuration par défaut
+ * (les autres règles désactivées par défaut dans axe 4.14.0 sont toutes hors RGAA).
  */
 export function criteriaWithDirectRule(rulesTags: Iterable<readonly string[]>): Set<string> {
 	const covered: string[] = [];
 	for (const tags of rulesTags) {
 		const m = classifyAxeRule(tags);
-		if (m.level === "rgaa" && !m.deprecated) covered.push(...m.criteria);
+		if (isDirectCheck(m)) covered.push(...m.criteria);
 	}
 	return new Set(sortIds(covered));
 }

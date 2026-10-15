@@ -1,5 +1,6 @@
 ---
-import { rgaa } from "@rampe/core";
+import { criteriaWithDirectRule, rgaa } from "@rampe/core";
+import axe from "axe-core";
 import RampeNote from "../../components/RampeNote.astro";
 import RgaaSource from "../../components/RgaaSource.astro";
 import { topicIntros } from "../../data/thematiques";
@@ -9,10 +10,11 @@ import { renderMarkdown } from "../../lib/render";
 import { url } from "../../lib/url";
 
 const plural = (n: number, word: string) => `${n} ${word}${n > 1 ? "s" : ""}`;
-// Seules les règles directes comptent comme couverture ; les indirectes sont un signal faible (ADR-0002).
+// Seules les vérifications directes (`isDirectCheck`) comptent comme couverture : les règles à confirmer
+// et les indirectes sont un signal faible (ADR-0002). Même décompte que la CLI (`criteriaWithDirectRule`).
 const axeSummary = (id: string) => {
-	const { direct, indirect } = rulesFor(id);
-	const all = [...direct, ...indirect];
+	const { direct, unconfirmed, indirect } = rulesFor(id);
+	const all = [...direct, ...unconfirmed, ...indirect];
 	const flags = [
 		all.some((r) => r.bestPractice) && "bonne pratique d’axe",
 		all.some((r) => r.experimental) && "règle expérimentale",
@@ -21,6 +23,7 @@ const axeSummary = (id: string) => {
 		direct.length > 0
 			? `${plural(direct.length, "règle")} axe-core directe${direct.length > 1 ? "s" : ""}`
 			: "Aucune règle directe : vérification humaine indispensable",
+		unconfirmed.length > 0 && `${plural(unconfirmed.length, "règle")} à confirmer (bonne pratique ou expérimentale)`,
 		indirect.length > 0 &&
 			`${plural(indirect.length, "règle")} indirecte${indirect.length > 1 ? "s" : ""} (signal faible)`,
 		flags.length > 0 && `dont ${flags.join(", ")}`,
@@ -28,7 +31,7 @@ const axeSummary = (id: string) => {
 		.filter(Boolean)
 		.join(" ; ");
 };
-const covered = rgaa.criteria.filter((c) => rulesFor(c.id).direct.length > 0).length;
+const covered = criteriaWithDirectRule(axe.getRules().map((r) => r.tags)).size;
 const topics = rgaa.topics.map((t) => ({ ...t, criteria: rgaa.criteria.filter((c) => c.topic === t.number) }));
 ---
 
@@ -44,8 +47,11 @@ const topics = rgaa.topics.map((t) => ({ ...t, criteria: rgaa.criteria.filter((c
 	</p>
 	<p>
 		Pour chaque critère, on indique combien de règles d’axe-core {axeVersion} lui sont rattachées. Une règle
-		« directe » cite un test RGAA du critère : {covered} critères sur {rgaa.criteria.length} en ont au moins une. Une
-		règle « indirecte » ne partage avec le critère qu’un critère WCAG : c’est un signal faible, pas une vérification.
+		« directe » cite un test RGAA du critère, sans être une bonne pratique ni une règle expérimentale d’axe :{" "}
+		{covered} critères sur {rgaa.criteria.length} en ont au moins une ; les {rgaa.criteria.length - covered} autres
+		n’ont aucune vérification automatique directe. Une règle « à confirmer » cite un test mais relève des bonnes
+		pratiques ou des règles expérimentales d’axe ; une règle « indirecte » ne partage avec le critère qu’un critère
+		WCAG : ce sont des signaux faibles, pas des vérifications.
 		Même directe, une règle repère seulement certaines erreurs ; elle ne suffit jamais à déclarer un critère conforme.
 	</p>
 

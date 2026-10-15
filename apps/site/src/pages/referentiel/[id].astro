@@ -22,7 +22,7 @@ interface Props {
 }
 const { criterion: c, prev, next } = Astro.props;
 const topic = rgaa.topics.find((t) => t.number === c.topic);
-const { direct, indirect } = rulesFor(c.id);
+const { direct, unconfirmed, indirect } = rulesFor(c.id);
 const indirectSc = [...new Set(indirect.flatMap((r) => r.wcag))].join(", ");
 const flags = (r: { bestPractice: boolean; experimental: boolean }) =>
 	`${r.bestPractice ? " Bonne pratique selon axe." : ""}${r.experimental ? " Règle expérimentale." : ""}`;
@@ -132,6 +132,28 @@ const officialUrl = `https://accessibilite.numerique.gouv.fr/methode/criteres-et
 				</p>
 				<ul class="rules">
 					{direct.map((r) => (
+						<li>
+							<code>{r.ruleId}</code> : <span lang="en">{r.description}</span>
+							<span class="level">
+								{r.tests.length > 1 ? "Tests" : "Test"} {r.tests.join(", ")}.{flags(r)}
+							</span>
+						</li>
+					))}
+				</ul>
+			</>
+		)
+	}
+	{
+		unconfirmed.length > 0 && (
+			<>
+				<h3>Règles de bonne pratique ou expérimentales — à confirmer par un humain</h3>
+				<p>
+					Ces règles citent un test de ce critère, mais axe-core les classe comme bonnes pratiques ou comme
+					expérimentales : ce qu’elles signalent ne prouve pas une non-conformité, et elles ne comptent pas comme une
+					vérification de ce critère.
+				</p>
+				<ul class="rules">
+					{unconfirmed.map((r) => (
 						<li>
 							<code>{r.ruleId}</code> : <span lang="en">{r.description}</span>
 							<span class="level">
