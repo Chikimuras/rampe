@@ -22,6 +22,10 @@ Outil open source d’accompagnement à la conformité RGAA pour les PME. Vision
 - `pnpm build` : build de tous les paquets
 - `pnpm --filter @rampe/site dev` : cockpit et site en local
 
+## Pièges connus
+
+- Le proxy **rtk** de la machine d’Alexandre réécrit `pnpm lint` en `eslint`, ce qui casse la commande ici (le repo utilise Biome). En session Claude, lancer `rtk proxy pnpm check`. La CI et le hook Stop ne sont pas concernés.
+
 ## Conventions
 
 - Doc, UI et commentaires en français ; identifiants de code en anglais.
