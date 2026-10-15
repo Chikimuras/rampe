@@ -1,0 +1,46 @@
+---
+import { rgaa } from "@rampe/core";
+import RgaaSource from "../../components/RgaaSource.astro";
+import Base from "../../layouts/Base.astro";
+import { renderGlossaryHtml } from "../../lib/render";
+import { url } from "../../lib/url";
+---
+
+<Base title="Glossaire du RGAA" description={`Les ${rgaa.glossary.length} définitions du glossaire du RGAA ${rgaa.version}.`}>
+	<p class="crumbs"><a href={url("referentiel/")}>Retour au référentiel</a></p>
+	<h1>Glossaire du RGAA {rgaa.version}</h1>
+	<p>
+		Les {rgaa.glossary.length} définitions officielles auxquelles renvoient les critères. Elles précisent le sens exact
+		des termes employés dans les tests.
+	</p>
+
+	<dl>
+		{
+			rgaa.glossary.map((e) => (
+				<>
+					<dt id={e.anchor}>{e.title}</dt>
+					<dd set:html={renderGlossaryHtml(e.body)} />
+				</>
+			))
+		}
+	</dl>
+
+	<RgaaSource />
+</Base>
+
+<style>
+	dt {
+		font-weight: 700;
+		font-size: 1.125rem;
+		margin-top: 2rem;
+		padding-top: 1rem;
+		border-top: 1px solid var(--line);
+		scroll-margin-top: 1rem;
+	}
+	dd {
+		margin: 0.5rem 0 0;
+	}
+	.crumbs {
+		font-size: 0.875rem;
+	}
+</style>

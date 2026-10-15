@@ -1,0 +1,102 @@
+---
+import { rgaa } from "@rampe/core";
+import RampeNote from "../../components/RampeNote.astro";
+import RgaaSource from "../../components/RgaaSource.astro";
+import { topicIntros } from "../../data/thematiques";
+import Base from "../../layouts/Base.astro";
+import { axeVersion, rulesFor } from "../../lib/axe-rules";
+import { renderMarkdown } from "../../lib/render";
+import { url } from "../../lib/url";
+
+const plural = (n: number, word: string) => `${n} ${word}${n > 1 ? "s" : ""}`;
+const axeSummary = (id: string) => {
+	const rules = rulesFor(id);
+	if (rules.length === 0) return "aucune règle axe-core : vérification humaine";
+	const direct = rules.filter((r) => r.level === "rgaa").length;
+	const parts = [
+		direct && plural(direct, "directe"),
+		rules.length - direct && plural(rules.length - direct, "indirecte"),
+	];
+	return `${plural(rules.length, "règle")} axe-core (${parts.filter(Boolean).join(", ")})`;
+};
+const topics = rgaa.topics.map((t) => ({ ...t, criteria: rgaa.criteria.filter((c) => c.topic === t.number) }));
+---
+
+<Base
+	title="Référentiel RGAA"
+	description={`Les ${rgaa.criteria.length} critères du RGAA ${rgaa.version}, par thématique, avec ce que l’audit automatique peut en détecter.`}
+>
+	<h1>Référentiel RGAA {rgaa.version}</h1>
+	<p>
+		Le RGAA compte {rgaa.criteria.length} critères, répartis en {rgaa.topics.length} thématiques. Chaque critère est
+		affiché avec son texte officiel, ses tests et leur méthodologie ; les termes techniques y renvoient au{" "}
+		<a href={url("referentiel/glossaire/")}>glossaire du RGAA</a>.
+	</p>
+	<p>
+		Pour chaque critère, on indique combien de règles d’axe-core {axeVersion} lui sont rattachées : « directe » quand
+		la règle cite le test RGAA, « indirecte » quand le lien passe par un critère WCAG. Une règle rattachée aide à
+		repérer des erreurs ; elle ne suffit jamais à déclarer un critère conforme.
+	</p>
+
+	<nav aria-labelledby="sommaire">
+		<h2 id="sommaire">Thématiques</h2>
+		<ol class="toc">
+			{topics.map((t) => <li><a href={`#thematique-${t.number}`}>{t.title}</a></li>)}
+		</ol>
+	</nav>
+
+	{
+		topics.map((t) => (
+			<section aria-labelledby={`thematique-${t.number}`}>
+				<h2 id={`thematique-${t.number}`}>
+					{t.number}. {t.title}
+				</h2>
+				<RampeNote>{topicIntros[t.number]}</RampeNote>
+				<ul class="criteria">
+					{t.criteria.map((c) => (
+						<li>
+							<a href={url(`referentiel/${c.id.replace(".", "-")}/`)}>
+								<span class="num">Critère {c.id}</span>
+								<span set:html={renderMarkdown(c.title, { inline: true, stripLinks: true })} />
+							</a>
+							<span class="axe">{axeSummary(c.id)}</span>
+						</li>
+					))}
+				</ul>
+			</section>
+		))
+	}
+
+	<RgaaSource />
+</Base>
+
+<style>
+	.toc {
+		columns: 2 14rem;
+		padding-left: 1.5rem;
+	}
+	section {
+		margin-top: 2.5rem;
+	}
+	.criteria {
+		list-style: none;
+		padding: 0;
+		margin: 0;
+	}
+	.criteria li {
+		padding: 0.75rem 0;
+		border-top: 1px solid var(--line);
+	}
+	.criteria a {
+		display: block;
+	}
+	.num {
+		font-weight: 600;
+		margin-right: 0.5rem;
+	}
+	.axe {
+		display: block;
+		color: var(--muted);
+		font-size: 0.875rem;
+	}
+</style>
