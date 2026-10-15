@@ -1753,10 +1753,10 @@ describe("audit guidé (bout en bout)", { timeout: 60_000 }, () => {
 			await page.close();
 		});
 
-		it("375 px : une adresse de page très longue ne fait pas défiler la page (libellés et légendes)", async () => {
+		it("375 px : une adresse de page très longue ne fait pas défiler la page (libellé de note, annonce)", async () => {
 			const page = await browser.newPage({ viewport: { width: 375, height: 800 } });
 			await openAudit(page);
-			await page.getByLabel("Adresse de la page").fill(`https://exemple.fr/${"segment-sans-espace".repeat(20)}`);
+			await page.getByLabel("Adresse de la page").fill(`https://exemple.fr/${"sanscoupure".repeat(30)}`);
 			await page.getByRole("button", { name: "Ajouter la page" }).click();
 			await expect.poll(() => page.locator(".audit-page-list li").count()).toBe(1);
 			await page.locator(".audit-page > label").first().waitFor();
