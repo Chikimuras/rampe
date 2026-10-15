@@ -17,7 +17,9 @@ Une fonction **pure** de `@rampe/core` classe une règle à partir de ses étiqu
 
 1. **`rgaa`** : la règle porte des étiquettes `RGAA-x.y.z`. Elle est rattachée à ces **tests** RGAA, donc à leurs critères.
 2. **`wcag`** : pas d’étiquette RGAA, mais des étiquettes WCAG (`wcag111`…). La règle est rattachée aux critères RGAA qui référencent ces critères WCAG dans le référentiel officiel (ADR-0007). C’est marqué comme *indirect*.
-3. **`hors-rgaa`** : aucune des deux, ce sont les « bonnes pratiques » d’axe. On les affiche à part, sans jamais les compter dans la conformité.
+3. **`hors-rgaa`** : aucun rattachement RGAA possible (bonnes pratiques d’axe sans étiquette, ou critères WCAG absents du RGAA 4.1.2 comme 2.5.8). On les affiche à part, sans jamais les compter dans la conformité.
+
+Le niveau qualifie la précision du rattachement, pas la certitude du défaut ; les règles bonnes-pratiques/expérimentales sont signalées par des drapeaux.
 
 Des tests vérifient, sur **toutes** les règles de la version d’axe installée, que chaque étiquette RGAA désigne un test qui existe dans le référentiel et que chaque règle tombe dans exactement un niveau. Une montée de version d’axe qui introduirait une étiquette inconnue fera donc échouer la CI.
 
