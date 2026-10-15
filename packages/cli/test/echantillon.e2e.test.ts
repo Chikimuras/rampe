@@ -155,7 +155,10 @@ describe("rampe echantillon puis audit --echantillon (bout en bout)", { timeout:
 		expect(pages[3]?.title).toBe("Page du mini-site");
 		const report = await readFile(html, "utf8");
 		expect(report).toContain("2 pages en erreur, non auditées");
-		expect(report).toContain(`<strong>En erreur, non auditée :</strong> <a href="${base}/inexistante">`);
+		expect(report).toContain(
+			`<strong>Non auditée :</strong> <a href="${base}/inexistante"><bdi>${base}/inexistante</bdi></a>. La page n’a pas pu être chargée : le serveur a répondu HTTP 404.`,
+		);
+		expect(report).toContain("La page n’a pas pu être chargée : délai dépassé.");
 	});
 
 	it("refuse un échantillon mêlant deux origines, sans rien auditer", async () => {

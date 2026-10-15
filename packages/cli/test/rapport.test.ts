@@ -28,7 +28,7 @@ const report = (pages: AuditPage[]): AuditReport =>
 
 /** Balises du gabarit : tout le reste vient forcément d'une donnée non échappée. */
 const TEMPLATE_TAGS = new Set(
-	"html head meta title style body a header main footer section article h1 h2 h3 h4 p dl dt dd ul ol li details summary code pre time strong span div br".split(
+	"html head meta title style body a header main footer section article h1 h2 h3 h4 p dl dt dd ul ol li details summary code pre time strong span div br bdi".split(
 		" ",
 	),
 );
@@ -92,7 +92,21 @@ describe("renderHtmlReport", () => {
 					result({ ruleId: "label", tests: ["11.1.1"], criteria: ["11.1"] }),
 					result({ ruleId: "color-contrast", tests: ["3.2.1"], criteria: ["3.2"] }),
 					result({ ruleId: "frame-title", tests: ["2.1.1"], criteria: ["2.1"] }),
-					result({ ruleId: "region", kind: "incertain", tests: ["9.2.1"], criteria: ["9.2"] }),
+					result({
+						ruleId: "region",
+						kind: "incertain",
+						tests: ["9.2.1"],
+						criteria: ["9.2"],
+						flags: { bestPractice: true, experimental: false },
+					}),
+					result({
+						ruleId: "aria-allowed-role",
+						kind: "incertain",
+						level: "wcag",
+						tests: [],
+						criteria: ["7.1", "8.2", "9.1", "11.1"],
+						wcag: ["4.1.2"],
+					}),
 					result({ ruleId: "landmark-one-main", kind: "bonne-pratique", level: "hors-rgaa", criteria: [] }),
 					result({ ruleId: "video-caption", kind: "a-verifier", criteria: ["4.3"] }),
 				],
@@ -121,8 +135,88 @@ describe("renderHtmlReport", () => {
 
 	it("liste les pages en erreur sans les compter comme sans défaut", () => {
 		expect(sample).toContain("1 page en erreur");
-		expect(sample).toContain("HTTP 500 pour …/panne");
 		expect(sample).toContain("<dd>2</dd>");
+		expect(sample).toContain("Elle n’est pas comptée comme sans défaut.");
+	});
+
+	it("explique une erreur de page en français, message technique replié", () => {
+		expect(sample).toContain("La page n’a pas pu être chargée : le serveur a répondu HTTP 500.");
+		expect(sample).toMatch(/<summary>Message technique<\/summary><pre><code>HTTP 500 pour …\/panne<\/code><\/pre>/);
+	});
+
+	it("rend le rattachement sans parenthèses imbriquées et réserve « bonne pratique » à la rubrique hors RGAA", () => {
+		expect(sample).toContain(
+			'— lié au critère <a href="https://chikimuras.github.io/rampe/referentiel/9-2/">9.2</a> (test 9.2.1), mais axe classe cette règle comme indicative : à confirmer par une personne : 1 page',
+		);
+		const body = sample.replace(/<style>[\s\S]*<\/style>/, "");
+		expect(body).not.toMatch(/\([^()]*\(/);
+		expect(body.match(/bonnes? pratiques?/gi)).toEqual(["Bonnes pratiques", "bonnes pratiques"]);
+	});
+
+	it("affiche la description d'axe en anglais et replie au-delà de 3 critères possibles", () => {
+		expect(sample).toContain('<code>image-alt</code> « <span lang="en">Images must have alternative text</span> »');
+		expect(sample).toContain("4 critères RGAA possibles, listés ci-dessous");
+		expect(sample).toContain("<summary>Voir les 4 critères RGAA possibles</summary>");
+	});
+
+	it("nomme le contenu de chaque bloc replié et n'a pas deux titres identiques", () => {
+		expect(sample).toContain(
+			"<summary>Voir l’élément concerné par image-alt sur <bdi>https://exemple.fr/</bdi></summary>",
+		);
+		const headings = [...sample.matchAll(/<h[1-4][^>]*>([\s\S]*?)<\/h[1-4]>/g)].map((m) => m[1]);
+		expect(new Set(headings).size).toBe(headings.length);
+	});
+
+	it("donne, par page, le nombre de points à vérifier par un humain", () => {
+		expect(sample).toContain("4 règles en non-conformité ; 1 point à vérifier par un humain");
+	});
+
+	it("ne propose de corriger que s'il y a des non-conformités ; obligation légale conditionnelle et sourcée", () => {
+		expect(sample).toContain("<li>Corriger les non-conformités détectées");
+		expect(sample).toContain(
+			'Si votre organisation est soumise à l’obligation d’accessibilité, publier une déclaration d’accessibilité. <a href="https://accessibilite.numerique.gouv.fr/obligations/">',
+		);
+		// Seules mentions juridiques : la phrase conditionnelle et son lien (« obligatoires » de l'intro 3 mis à part).
+		expect(sample.match(/obligat(?!oires signalés)\S*/g)).toEqual(["obligation", 'obligations/">Les', "obligations,"]);
+		const clean = renderHtmlReport(report([page({})]));
+		expect(clean).not.toContain("Corriger les non-conformités");
+	});
+
+	it("sans aucune page auditée : un seul message, sans sous-rubriques", () => {
+		const none = renderHtmlReport(
+			report([page({ finalUrl: null, title: null, error: "audit interrompu après 4000 ms" })]),
+		);
+		expect(none).toContain("<p>Aucune page n’a pu être auditée : aucun résultat.</p>");
+		expect(none).not.toMatch(/Rien à signaler|Non-conformités détectées|Rattachement incertain/);
+		expect(none).toContain("La page n’a pas pu être chargée : délai dépassé.");
+	});
+
+	it("isole les données de la page et retire les contrôles bidi : le verdict de Rampe reste intact", () => {
+		const bidi = renderHtmlReport(
+			report([
+				page({
+					title: "Accueil\u202e\u2066",
+					finalUrl: "https://exemple.fr/\u202e",
+					warnings: ["\u202bavertissement"],
+				}),
+			]),
+		);
+		expect(bidi).not.toMatch(/[\u202a-\u202e\u2066-\u2069]/);
+		expect(bidi).toContain(", titre « <bdi>Accueil</bdi> » : aucune non-conformité détectée automatiquement</li>");
+		expect(bidi).toContain("<bdi>avertissement</bdi>");
+	});
+
+	it("borne titre et sélecteur à 300 caractères, avec une marque de troncature", () => {
+		const long = renderHtmlReport(
+			report([
+				page({
+					title: "t".repeat(400),
+					results: [result({ nodes: [{ target: ["s".repeat(400)], html: "<i>", failureSummary: null }] })],
+				}),
+			]),
+		);
+		expect(long).toContain(`<bdi>${"t".repeat(300)}… (tronqué)</bdi>`);
+		expect(long).toContain(`<code>${"s".repeat(300)}… (tronqué)</code>`);
 	});
 
 	it("rappelle ce que l'automatique ne couvre pas, sans aucun score ni pourcentage", () => {

@@ -78,9 +78,22 @@ export function parseAuditUrl(input: string): URL {
 /** Masque identifiant et mot de passe de toute URL http(s) du texte (audits de préproduction derrière authentification). */
 export const redact = (text: string): string => text.replace(/\b(https?:\/\/)[^\s/?#@]+@/gi, "$1***:***@");
 
-/** Retire les caractères de contrôle (séquences d'échappement de terminal venues de la page auditée). */
+/**
+ * Contrôles de direction bidirectionnelle (U+202A–202E, U+2066–2069) : un titre de page qui en contient pourrait
+ * retourner visuellement le texte de Rampe qui le suit (attaque dite « Trojan Source »).
+ */
+export const stripBidi = (text: string): string => text.replace(/[\u202a-\u202e\u2066-\u2069]/g, "");
+
+/** Retire les caractères de contrôle (séquences d'échappement de terminal, contrôles bidi) venus de la page auditée. */
 // biome-ignore lint/suspicious/noControlCharactersInRegex: c'est précisément ce qu'on retire.
-export const stripControl = (text: string): string => text.replace(/[\x00-\x1f\x7f-\x9f]/g, "");
+export const stripControl = (text: string): string => stripBidi(text).replace(/[\x00-\x1f\x7f-\x9f]/g, "");
+
+/** Tronque à `max` unités UTF-16 sans couper une paire de substitution, avec une marque visible. */
+export function truncate(text: string, max: number): string {
+	if (text.length <= max) return text;
+	const cut = text.slice(0, max);
+	return `${/[\ud800-\udbff]$/.test(cut) ? cut.slice(0, -1) : cut}… (tronqué)`;
+}
 
 // ADR-0011 §3 : seule une vérification directe (ni bonne pratique ni expérimentale) est une non-conformité.
 function kindOf(m: AxeRuleMapping, incomplete: boolean): ResultKind {
@@ -103,7 +116,7 @@ function toResult(r: AxeRawResult, incomplete: boolean): AuditResult | [] {
 		impact: r.impact ?? null,
 		nodes: r.nodes.map((n) => ({
 			target: n.target,
-			html: n.html.slice(0, HTML_MAX),
+			html: truncate(n.html, HTML_MAX),
 			failureSummary: n.failureSummary ?? null,
 		})),
 	};

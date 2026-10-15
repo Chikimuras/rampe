@@ -1,7 +1,10 @@
 // Rapport HTML autonome, sans JavaScript, lui-même accessible (ADR-0011 §4), généré à partir du JSON v2.
-// Toute donnée venue de la page auditée ou de l'URL passe par `escapeHtml` (ADR-0011 §6 ; OWASP Cross Site Scripting
-// Prevention Cheat Sheet, « Output Encoding » pour le contexte HTML) : une page malveillante ne doit pas piéger son rapport.
+// Toute donnée venue de la page auditée ou de l'URL passe par `text`/`data` : contrôles bidi retirés puis `escapeHtml`
+// (ADR-0011 §6 ; OWASP Cross Site Scripting Prevention Cheat Sheet, « Output Encoding » pour le contexte HTML), et
+// isolée du texte de Rampe (`<bdi>`, ou `unicode-bidi: isolate` en CSS) : une page malveillante ne doit pas piéger son
+// rapport, ni retourner visuellement le verdict qui suit son titre.
 import { rgaa, topicIntros } from "@rampe/core";
+import axe from "axe-core";
 import {
 	type AuditPage,
 	type AuditReport,
@@ -11,21 +14,39 @@ import {
 	plural,
 	type ResultKind,
 	selector,
+	stripBidi,
+	truncate,
 	uncoveredCriteria,
 } from "./audit.ts";
 
 const SITE = "https://chikimuras.github.io/rampe";
+const OBLIGATIONS = "https://accessibilite.numerique.gouv.fr/obligations/";
+/** Longueur maximale affichée d'un titre de page ou d'un sélecteur. */
+const SHORT_MAX = 300;
 
 /** Encodage du contexte HTML (contenu et attributs entre guillemets) : & < > " '. */
 const ENTITIES: Record<string, string> = { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" };
 export const escapeHtml = (text: string): string => text.replace(/[&<>"']/g, (c) => ENTITIES[c] as string);
 
-/** Lien seulement vers une adresse http(s) ; sinon le texte seul (défense en profondeur, le JSON peut être modifié). */
-const link = (href: string, text: string) =>
-	/^https?:\/\//i.test(href) ? `<a href="${escapeHtml(href)}">${escapeHtml(text)}</a>` : escapeHtml(text);
+/** Donnée externe dans du texte : contrôles bidi retirés, puis échappée. */
+const text = (s: string, max = Number.POSITIVE_INFINITY) => escapeHtml(stripBidi(truncate(s, max)));
+/** Donnée externe en ligne, isolée du texte de Rampe qui l'entoure. */
+const data = (s: string, max?: number) => `<bdi>${text(s, max)}</bdi>`;
+
+/** Lien seulement vers une adresse http(s) ; sinon le texte seul (défense en profondeur). */
+const link = (href: string, label: string) =>
+	/^https?:\/\//i.test(href) ? `<a href="${escapeHtml(stripBidi(href))}">${label}</a>` : label;
 
 const criterionUrl = (id: string) => `${SITE}/referentiel/${id.replace(".", "-")}/`;
+const anchor = (id: string) => `critere-${id.replace(".", "-")}`;
 const where = (p: AuditPage) => p.finalUrl ?? p.url;
+
+/** Description courte de chaque règle par axe (en anglais). */
+const HELP = new Map(axe.getRules().map((r) => [r.ruleId, r.help]));
+const ruleName = (rule: string) => {
+	const help = HELP.get(rule);
+	return `<code>${text(rule)}</code>${help ? ` « <span lang="en">${text(help)}</span> »` : ""}`;
+};
 
 interface Hit {
 	page: AuditPage;
@@ -41,25 +62,28 @@ function byRule(hits: Hit[]): Map<string, Hit[]> {
 
 const pageCount = (hits: Hit[]) => new Set(hits.map((h) => h.page)).size;
 const nodeCount = (hits: Hit[]) => hits.reduce((n, h) => n + h.result.nodes.length, 0);
+const upperFirst = (x: string) => x.charAt(0).toUpperCase() + x.slice(1);
+const s = (n: number) => (n > 1 ? "s" : "");
 
 /** Éléments en défaut d'une règle, page par page, repliés. */
 function elements(hits: Hit[]): string {
 	return hits
 		.map(({ page, result }) => {
+			const n = result.nodes.length;
 			const items = result.nodes
 				.map(
-					(n) => `<li>
-<p>Élément : <code>${escapeHtml(selector(n.target))}</code></p>
-<pre><code>${escapeHtml(n.html)}</code></pre>${
-						n.failureSummary
-							? `\n<p class="diag">Diagnostic d’axe, en anglais : <span lang="en">${escapeHtml(n.failureSummary)}</span></p>`
+					(node) => `<li>
+<p>Élément : <code>${text(selector(node.target), SHORT_MAX)}</code></p>
+<pre><code>${text(node.html)}</code></pre>${
+						node.failureSummary
+							? `\n<p class="diag">Diagnostic d’axe, en anglais : <span lang="en">${text(node.failureSummary)}</span></p>`
 							: ""
 					}
 </li>`,
 				)
 				.join("\n");
 			return `<details>
-<summary>${escapeHtml(where(page))} : ${plural(result.nodes.length, "élément")}</summary>
+<summary>Voir ${n > 1 ? `les ${n} éléments concernés` : "l’élément concerné"} par ${text(result.ruleId)} sur ${data(where(page))}</summary>
 <ol class="nodes">
 ${items}
 </ol>
@@ -68,19 +92,33 @@ ${items}
 		.join("\n");
 }
 
-const flagsNote = (r: AuditResult) =>
-	r.flags.bestPractice ? "règle de bonne pratique d’axe" : r.flags.experimental ? "règle expérimentale d’axe" : "";
+const critLinks = (ids: string[]) => ids.map((c) => link(criterionUrl(c), c)).join(", ");
 
-/** Ce que dit le rattachement d'une règle hors non-conformité, en clair. */
+/** Rattachement d'une règle hors non-conformité, en une phrase sans parenthèses imbriquées. */
 function attachment(r: AuditResult): string {
-	const crits = r.criteria.map((c) => link(criterionUrl(c), c)).join(", ");
+	const n = r.criteria.length;
+	const tests = r.tests.length > 0 ? ` (test${s(r.tests.length)} ${r.tests.join(", ")})` : "";
 	if (r.kind === "bonne-pratique") return "hors conformité RGAA";
-	if (r.kind === "incertain" && r.level === "rgaa")
-		return `cite le test ${r.tests.join(", ")} (critère ${crits}), mais c’est une ${flagsNote(r)} : à confirmer par un humain`;
-	if (r.level === "wcag")
-		return `via WCAG ${r.wcag.join(", ")} ; critère${r.criteria.length > 1 ? "s" : ""} possible${r.criteria.length > 1 ? "s" : ""} : ${crits}`;
-	return r.criteria.length > 0 ? `critère${r.criteria.length > 1 ? "s" : ""} ${crits}` : "sans critère RGAA associé";
+	if (r.level === "wcag") {
+		const possible =
+			n > 3
+				? `${n} critères RGAA possibles, listés ci-dessous`
+				: `critère${s(n)} RGAA possible${s(n)} : ${critLinks(r.criteria)}`;
+		return `lié au critère de succès WCAG ${r.wcag.join(", ")} ; ${possible}`;
+	}
+	if (n === 0) return "sans critère RGAA associé";
+	const base = `lié au critère${s(n)} ${critLinks(r.criteria)}${tests}`;
+	if (r.kind !== "incertain") return base;
+	return r.flags.bestPractice
+		? `${base}, mais axe classe cette règle comme indicative : à confirmer par une personne`
+		: `${base}, mais c’est une règle expérimentale d’axe : à confirmer par une personne`;
 }
+
+/** Liste repliée des critères possibles quand il y en a plus de 3 (niveau wcag). */
+const possibleList = (r: AuditResult) =>
+	r.level === "wcag" && r.criteria.length > 3
+		? `<details><summary>Voir les ${r.criteria.length} critères RGAA possibles</summary><p>${critLinks(r.criteria)}</p></details>`
+		: "";
 
 const KINDS: { kind: Exclude<ResultKind, "non-conformite">; title: string; id: string; intro: string }[] = [
 	{
@@ -103,6 +141,16 @@ const KINDS: { kind: Exclude<ResultKind, "non-conformite">; title: string; id: s
 		intro: "Ces points ne comptent pas pour la conformité RGAA, mais les corriger rend le site plus facile à utiliser.",
 	},
 ];
+
+/** Raison d'une erreur de page en français clair ; le message technique reste disponible, replié. */
+function errorReason(error: string): string {
+	const http = /^HTTP (\d{3})/.exec(error);
+	if (http) return `le serveur a répondu HTTP ${http[1]}`;
+	if (/interrompu après/.test(error)) return "délai dépassé";
+	if (/quitté le web/.test(error)) return "la page a quitté le web pendant le chargement";
+	if (/net::ERR_|ECONNREFUSED|ENOTFOUND|EAI_AGAIN/.test(error)) return "adresse injoignable";
+	return "erreur inattendue";
+}
 
 const dateFr = new Intl.DateTimeFormat("fr-FR", { dateStyle: "long", timeStyle: "short", timeZone: "Europe/Paris" });
 
@@ -130,16 +178,14 @@ export function renderHtmlReport(report: AuditReport): string {
 	const total = rgaa.criteria.length;
 
 	const synthesisNc =
-		audited === 0
-			? "<p>Aucune page n’a pu être auditée.</p>"
-			: criteria.length === 0
-				? "<p>Aucune non-conformité détectée automatiquement sur les pages auditées. Cela ne veut pas dire que le site est conforme : la plupart des critères demandent une vérification humaine.</p>"
-				: `<p>L’outil a trouvé un défaut certain pour ces critères. Chacun doit être corrigé.</p>
+		criteria.length === 0
+			? "<p>Aucune non-conformité détectée automatiquement sur les pages auditées. Cela ne veut pas dire que le site est conforme : la plupart des critères demandent une vérification humaine.</p>"
+			: `<p>L’outil a trouvé un défaut certain pour ces critères. Chacun doit être corrigé.</p>
 <ul class="criteria">
 ${criteria
 	.map(
 		(id) =>
-			`<li><strong><a href="#critere-${id.replace(".", "-")}">Critère ${id}</a> — ${escapeHtml(plainTitle(id))}</strong> : ${plural(pageCount(ncOf(id)), "page")}</li>`,
+			`<li><strong><a href="#${anchor(id)}">Critère ${id}</a> — ${escapeHtml(plainTitle(id))}</strong> : ${plural(pageCount(ncOf(id)), "page")}</li>`,
 	)
 	.join("\n")}
 </ul>`;
@@ -151,25 +197,30 @@ ${criteria
 <p>${intro}</p>
 <ul>
 ${[...rules]
-	.map(
-		([rule, hs]) =>
-			`<li><a href="#${id}-${escapeHtml(rule)}"><code>${escapeHtml(rule)}</code></a> (${attachment(hs[0]?.result as AuditResult)}) : ${plural(pageCount(hs), "page")}</li>`,
-	)
+	.map(([rule, hs]) => {
+		const r = hs[0]?.result as AuditResult;
+		return `<li><a href="#${id}-${escapeHtml(rule)}">${ruleName(rule)}</a> — ${attachment(r)} : ${plural(pageCount(hs), "page")}${possibleList(r)}</li>`;
+	})
 	.join("\n")}
 </ul>`;
 	}).join("\n");
+
+	const synthesis =
+		audited === 0
+			? "<p>Aucune page n’a pu être auditée : aucun résultat.</p>"
+			: `<h3>Non-conformités détectées</h3>\n${synthesisNc}\n${synthesisOthers}`;
 
 	const detailNc = criteria
 		.map((id) => {
 			const c = rgaa.criteria.find((x) => x.id === id);
 			const topic = rgaa.topics.find((t) => t.number === c?.topic);
 			const rules = byRule(ncOf(id));
-			return `<article id="critere-${id.replace(".", "-")}">
+			return `<article id="${anchor(id)}">
 <h3>Critère ${id} — ${escapeHtml(plainTitle(id))}</h3>
 ${
 	topic
 		? `<div class="note">
-<p class="note-label">Explication Rampe — non normative (thématique ${topic.number} : ${escapeHtml(topic.title)})</p>
+<p class="note-label">Explication Rampe — non normative, thématique ${topic.number} : ${escapeHtml(topic.title)}</p>
 <p>${escapeHtml(topicIntros[topic.number] ?? "")}</p>
 </div>`
 		: ""
@@ -178,7 +229,7 @@ ${
 ${[...rules]
 	.map(([rule, hs]) => {
 		const tests = (hs[0]?.result.tests ?? []).filter((t) => t.startsWith(`${id}.`));
-		return `<h4>Règle <code>${escapeHtml(rule)}</code> (test${tests.length > 1 ? "s" : ""} ${tests.join(", ")}) : ${plural(nodeCount(hs), "élément")}</h4>
+		return `<h4>Règle ${ruleName(rule)}, test${s(tests.length)} ${tests.join(", ")} : ${plural(nodeCount(hs), "élément")}</h4>
 ${elements(hs)}`;
 	})
 	.join("\n")}
@@ -190,51 +241,60 @@ ${elements(hs)}`;
 		const rules = byRule(hits.filter((h) => h.result.kind === kind));
 		if (rules.size === 0) return "";
 		return `<section aria-labelledby="titre-${id}">
-<h3 id="titre-${id}">${title}</h3>
+<h3 id="titre-${id}">Détail : ${title.charAt(0).toLowerCase()}${title.slice(1)}</h3>
 ${[...rules]
-	.map(
-		([
-			rule,
-			hs,
-		]) => `<h4 id="${id}-${escapeHtml(rule)}">Règle <code>${escapeHtml(rule)}</code> : ${plural(nodeCount(hs), "élément")}</h4>
-<p>${attachment(hs[0]?.result as AuditResult)}.</p>
-${elements(hs)}`,
-	)
+	.map(([rule, hs]) => {
+		const r = hs[0]?.result as AuditResult;
+		return `<h4 id="${id}-${escapeHtml(rule)}">Règle ${ruleName(rule)} : ${plural(nodeCount(hs), "élément")}</h4>
+<p>${upperFirst(attachment(r))}.</p>
+${possibleList(r)}
+${elements(hs)}`;
+	})
 	.join("\n")}
 </section>`;
 	}).join("\n");
 
-	const warnings = pages.flatMap((p) => p.warnings.map((w) => `<li>${escapeHtml(where(p))} : ${escapeHtml(w)}</li>`));
+	const warnings = pages.flatMap((p) => p.warnings.map((w) => `<li>${data(where(p))} : ${data(w)}</li>`));
 	const pageList = pages
 		.map((p) => {
-			const name = p.title ? ` (titre : « ${escapeHtml(p.title)} »)` : "";
 			if (p.error !== null)
-				return `<li class="error"><strong>En erreur, non auditée :</strong> ${link(p.url, p.url)}<br>${escapeHtml(p.error)}</li>`;
+				return `<li class="error"><strong>Non auditée :</strong> ${link(p.url, data(p.url))}. La page n’a pas pu être chargée : ${errorReason(p.error)}.
+<details><summary>Message technique</summary><pre><code>${text(p.error)}</code></pre></details></li>`;
+			const title = p.title ? `, titre « ${data(p.title, SHORT_MAX)} »` : "";
 			const n = p.results.filter((r) => r.kind === "non-conformite").length;
-			const status =
-				n > 0 ? `${plural(n, "règle")} en non-conformité` : "aucune non-conformité détectée automatiquement";
-			return `<li>${link(where(p), where(p))}${name} : ${status}</li>`;
+			const toCheck = p.results.filter((r) => r.kind === "a-verifier").length;
+			const status = [
+				n > 0 ? `${plural(n, "règle")} en non-conformité` : "aucune non-conformité détectée automatiquement",
+				...(toCheck > 0 ? [`${plural(toCheck, "point")} à vérifier par un humain`] : []),
+			].join(" ; ");
+			return `<li>${link(where(p), data(where(p)))}${title} : ${status}</li>`;
 		})
 		.join("\n");
+
+	const steps = [
+		...(criteria.length > 0 ? ["Corriger les non-conformités détectées, puis relancer l’audit."] : []),
+		`Faire vérifier les ${total} critères par une personne, sur le même échantillon de pages : c’est l’audit humain, le seul qui mesure la conformité. ${link(`${SITE}/referentiel/`, "Le référentiel RGAA sur le site Rampe")} détaille chaque critère.`,
+		`Si votre organisation est soumise à l’obligation d’accessibilité, publier une déclaration d’accessibilité. ${link(OBLIGATIONS, "Les obligations, sur le site officiel du RGAA")}.`,
+	];
 
 	return `<!doctype html>
 <html lang="fr">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Rapport d’audit automatique — ${escapeHtml(site)}</title>
+<title>Rapport d’audit automatique — ${text(site)}</title>
 <style>${CSS}</style>
 </head>
 <body>
 <a class="skip" href="#contenu">Aller au contenu</a>
 <header>
 <p class="brand">Rampe</p>
-<h1>Rapport d’audit automatique<span class="site">${escapeHtml(site)}</span></h1>
+<h1>Rapport d’audit automatique<span class="site">${text(site)}</span></h1>
 <dl class="meta">
-<div><dt>Date</dt><dd><time datetime="${escapeHtml(report.startedAt)}">${escapeHtml(formatDate(report.startedAt))}</time></dd></div>
+<div><dt>Date</dt><dd><time datetime="${text(report.startedAt)}">${text(formatDate(report.startedAt))}</time></dd></div>
 <div><dt>Pages auditées</dt><dd>${audited}</dd></div>
 <div><dt>Pages en erreur</dt><dd>${failed.length}</dd></div>
-<div><dt>Moteur</dt><dd>axe-core ${escapeHtml(report.engine.axe)}, Chromium ${escapeHtml(report.engine.browser)}</dd></div>
+<div><dt>Moteur</dt><dd>axe-core ${data(report.engine.axe)}, Chromium ${data(report.engine.browser)}</dd></div>
 </dl>
 </header>
 <main id="contenu">
@@ -248,16 +308,14 @@ ${
 		? `<section class="warnings" aria-labelledby="titre-avertissements">
 <h2 id="titre-avertissements">Avertissements</h2>
 <ul>
-${failed.length > 0 ? `<li>${plural(failed.length, "page")} en erreur, non auditée${failed.length > 1 ? "s" : ""} : voir <a href="#pages">la liste des pages</a>. Elles ne sont pas comptées comme sans défaut.</li>\n` : ""}${warnings.join("\n")}
+${failed.length > 0 ? `<li>${plural(failed.length, "page")} en erreur, non auditée${s(failed.length)} : voir <a href="#pages">la liste des pages</a>. ${failed.length > 1 ? "Elles ne sont pas comptées" : "Elle n’est pas comptée"} comme sans défaut.</li>\n` : ""}${warnings.join("\n")}
 </ul>
 </section>`
 		: ""
 }
 <section aria-labelledby="titre-synthese">
 <h2 id="titre-synthese">Synthèse</h2>
-<h3>Non-conformités détectées</h3>
-${synthesisNc}
-${synthesisOthers}
+${synthesis}
 </section>
 ${
 	criteria.length > 0
@@ -277,7 +335,7 @@ ${detailOthers}
 }
 <section id="pages" aria-labelledby="titre-pages">
 <h2 id="titre-pages">Pages de l’audit</h2>
-${failed.length > 0 ? `<p>${plural(audited, "page")} auditée${audited > 1 ? "s" : ""}, ${plural(failed.length, "page")} en erreur.</p>` : ""}
+${failed.length > 0 ? `<p>${plural(audited, "page")} auditée${s(audited)}, ${plural(failed.length, "page")} en erreur.</p>` : ""}
 <ul class="pages">
 ${pageList}
 </ul>
@@ -285,14 +343,12 @@ ${pageList}
 <section aria-labelledby="titre-suite">
 <h2 id="titre-suite">Ce qui reste à faire</h2>
 <ol>
-<li>Corriger les non-conformités détectées, puis relancer l’audit.</li>
-<li>Faire vérifier les ${total} critères par une personne, sur le même échantillon de pages : c’est l’audit humain, le seul qui mesure la conformité. ${link(`${SITE}/referentiel/`, "Le référentiel RGAA sur le site Rampe")} détaille chaque critère.</li>
-<li>Publier la déclaration d’accessibilité du site, obligatoire : elle indique le niveau de conformité issu de cet audit humain.</li>
+${steps.map((x) => `<li>${x}</li>`).join("\n")}
 </ol>
 </section>
 </main>
 <footer>
-<p>Rapport produit par ${escapeHtml(report.tool.name)} ${escapeHtml(report.tool.version)}, outil libre et gratuit d’aide à la conformité. Il ne modifie pas le site audité.</p>
+<p>Rapport produit par ${text(report.tool.name)} ${text(report.tool.version)}, outil libre et gratuit d’aide à la conformité. Il ne modifie pas le site audité.</p>
 <p>Référentiel RGAA ${escapeHtml(rgaa.version)} © DINUM, Licence Ouverte 2.0. Les explications marquées « Explication Rampe » ne sont pas normatives.</p>
 </footer>
 </body>
@@ -319,7 +375,7 @@ header,main,footer{max-width:52rem;margin:0 auto;padding:0 1rem}
 header{padding-block:1.5rem 1rem;border-bottom:1px solid var(--line)}
 .brand{margin:0;font-weight:700}
 h1{font-size:1.9rem;line-height:1.2;margin:.75rem 0 1rem}
-h1 .site{display:block;font-size:1.1rem;font-weight:400;color:var(--muted);overflow-wrap:anywhere}
+h1 .site{display:block;unicode-bidi:isolate;font-size:1.1rem;font-weight:400;color:var(--muted);overflow-wrap:anywhere}
 h2{font-size:1.45rem;line-height:1.25;margin:2.5rem 0 .75rem}
 h3{font-size:1.2rem;line-height:1.3;margin:2rem 0 .5rem}
 h4{font-size:1rem;margin:1.5rem 0 .5rem}
@@ -343,8 +399,8 @@ summary{cursor:pointer;padding:.5rem .75rem;overflow-wrap:anywhere}
 .nodes{margin:0;padding:.25rem 1rem .75rem 2.25rem}
 .nodes li{margin-top:.75rem}
 .nodes p{margin:.25rem 0}
-code{font-size:.9em;overflow-wrap:anywhere}
-pre{margin:.25rem 0;padding:.5rem .75rem;background:var(--bg);border:1px solid var(--line);border-radius:6px;white-space:pre-wrap;overflow-wrap:anywhere}
+code{font-size:.9em;overflow-wrap:anywhere;unicode-bidi:isolate}
+pre{unicode-bidi:isolate;margin:.25rem 0;padding:.5rem .75rem;background:var(--bg);border:1px solid var(--line);border-radius:6px;white-space:pre-wrap;overflow-wrap:anywhere}
 .diag span{white-space:pre-line}
 .pages li{margin-bottom:.5rem;overflow-wrap:anywhere}
 .pages .error{color:var(--warn)}
