@@ -10,6 +10,6 @@
 	"dependencies": {
 		"@astrojs/check": "0.9.10",
 		"astro": "7.3.8",
-		"typescript": "^6"
+		"typescript": "^7"
 	}
 }
