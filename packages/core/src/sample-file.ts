@@ -37,8 +37,8 @@ export const quote = (text: string) => {
 export const MAX_SAMPLE_URLS = 1000;
 const MAX_LINE = 2048;
 
-/** Clé de dédoublonnage : adresse sans fragment ni identifiants. */
-const sampleKey = (url: URL) => {
+/** Clé de dédoublonnage et de rapprochement : adresse sans fragment ni identifiants. */
+export const urlKey = (url: URL) => {
 	const u = new URL(url.href);
 	u.hash = "";
 	u.username = "";
@@ -73,7 +73,7 @@ export function parseSampleFile(text: string): { urls: URL[]; warnings: string[]
 			throw new Error(
 				`${where} : ${redact(url.href)} n’est pas sur la même origine que la première adresse (${first.origin}). Un échantillon porte sur un seul site.`,
 			);
-		const key = sampleKey(url);
+		const key = urlKey(url);
 		if (!keys.has(key)) {
 			if (urls.length === MAX_SAMPLE_URLS)
 				throw new Error(
