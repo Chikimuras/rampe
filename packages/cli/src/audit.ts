@@ -5,9 +5,16 @@ import {
 	criteriaWithDirectRule,
 	getCriterion,
 	isDirectCheck,
+	plural,
+	redact,
 	rgaa,
+	stripControl,
 } from "@rampe/core";
 import axe from "axe-core";
+
+// Fonctions partagées avec le site (lecture d'échantillon dans le navigateur) : elles vivent dans @rampe/core.
+export { parseAuditUrl, plural, redact, stripBidi, stripControl } from "@rampe/core";
+
 import pkg from "../package.json" with { type: "json" };
 
 /** Sous-ensemble d'un résultat `axe.run` (violation ou incomplete) utilisé ici. */
@@ -61,32 +68,6 @@ const HTML_MAX = 500;
 /** Critères sans aucune vérification automatique directe (même décompte que le site). */
 export const uncoveredCriteria = () =>
 	rgaa.criteria.length - criteriaWithDirectRule(axe.getRules().map((r) => r.tags)).size;
-
-/** N'accepte que http: et https: (ADR-0011 §6). Lève une erreur au message lisible sinon. */
-export function parseAuditUrl(input: string): URL {
-	let url: URL;
-	try {
-		url = new URL(input);
-	} catch {
-		throw new Error(`URL invalide : « ${input} ». Exemple attendu : https://exemple.fr/`);
-	}
-	if (url.protocol !== "http:" && url.protocol !== "https:")
-		throw new Error(`Seules les adresses http:// et https:// sont acceptées (reçu : ${url.protocol}).`);
-	return url;
-}
-
-/** Masque identifiant et mot de passe de toute URL http(s) du texte (audits de préproduction derrière authentification). */
-export const redact = (text: string): string => text.replace(/\b(https?:\/\/)[^\s/?#@]+@/gi, "$1***:***@");
-
-/**
- * Contrôles de direction bidirectionnelle (U+202A–202E, U+2066–2069) : un titre de page qui en contient pourrait
- * retourner visuellement le texte de Rampe qui le suit (attaque dite « Trojan Source »).
- */
-export const stripBidi = (text: string): string => text.replace(/[\u202a-\u202e\u2066-\u2069]/g, "");
-
-/** Retire les caractères de contrôle (séquences d'échappement de terminal, contrôles bidi) venus de la page auditée. */
-// biome-ignore lint/suspicious/noControlCharactersInRegex: c'est précisément ce qu'on retire.
-export const stripControl = (text: string): string => stripBidi(text).replace(/[\x00-\x1f\x7f-\x9f]/g, "");
 
 /** Tronque à `max` unités UTF-16 sans couper une paire de substitution, avec une marque visible. */
 export function truncate(text: string, max: number): string {
@@ -151,7 +132,6 @@ export const plainTitle = (id: string) => (getCriterion(id)?.title ?? "").replac
 export const selector = (target: unknown[]) =>
 	stripControl(target.map((t) => (Array.isArray(t) ? t.join(" >>> ") : String(t))).join(" | "));
 
-export const plural = (n: number, word: string) => `${n} ${word}${n > 1 ? "s" : ""}`;
 export const byNumber = (a: string, b: string) => a.localeCompare(b, "en", { numeric: true });
 
 function ruleLine(r: AuditResult, detail: string, showFlags = true): string {
