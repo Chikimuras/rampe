@@ -23,6 +23,8 @@ Le binaire est `src/cli.ts`, exécuté tel quel par Node ≥ 22.18 (suppression 
 
 Codes de sortie : **0** aucune non-conformité détectée, **1** au moins une non-conformité détectée (pratique en CI), **2** erreur d’usage ou page injoignable.
 
+Sous Ubuntu 23.10 ou plus récent, Chromium peut refuser de démarrer (« No usable sandbox! ») : AppArmor y interdit les espaces de noms utilisateur dont son bac à sable a besoin. Rampe ne désactive jamais ce bac à sable ; suivez plutôt la [documentation de Chromium](https://chromium.googlesource.com/chromium/src/+/main/docs/security/apparmor-userns-restrictions.md) (profil AppArmor ciblé, comme dans `.github/workflows/ci.yml`).
+
 ## Ce que fait l’audit
 
 1. Seules les adresses `http://` et `https://` sont acceptées.
