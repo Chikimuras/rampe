@@ -6,6 +6,7 @@ import type { AddressInfo } from "node:net";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { fileURLToPath, pathToFileURL } from "node:url";
+import { parseAuditReport, rgaa } from "@rampe/core";
 import axe from "axe-core";
 import { chromium } from "playwright";
 import { afterAll, beforeAll, describe, expect, it } from "vitest";
@@ -92,6 +93,10 @@ describe("rampe audit (bout en bout)", { timeout: 60_000 }, () => {
 				.map((r) => r.ruleId),
 		);
 		expect(page?.results.filter((r) => deprecated.has(r.ruleId))).toEqual([]);
+		// Le fichier écrit est importable tel quel dans l'audit guidé (ADR-0014), description des règles comprise.
+		expect(nc.find((r) => r.ruleId === "image-alt")?.help).toBe("Images must have alternative text");
+		const importable = parseAuditReport(report, new Set(rgaa.criteria.map((c) => c.id)));
+		expect(importable.pages[0]?.results.length).toBe(page?.results.length);
 
 		for (const id of ["1.1", "3.2", "8.3", "11.1"]) expect(stdout).toContain(`Critère ${id} — `);
 		expect(stdout).toContain(
