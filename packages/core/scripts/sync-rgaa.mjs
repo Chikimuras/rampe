@@ -5,6 +5,8 @@
 //                  sauf avec --if-changed où celle de source.json est reprise (à confirmer en PR).
 //   --if-changed : n'écrit rien si les trois JSON sont identiques octet pour octet à ceux du dépôt.
 // Sous GitHub Actions, écrit changed=true|false, sha et previous dans $GITHUB_OUTPUT.
+
+import { realpathSync } from "node:fs";
 import { appendFile, readFile, writeFile } from "node:fs/promises";
 import { pathToFileURL } from "node:url";
 
@@ -16,6 +18,13 @@ const sourceFile = new URL("source.json", outDir);
 /** Vrai si chaque fichier téléchargé est identique octet pour octet au fichier local (null = absent). */
 export function isUnchanged(downloaded, current) {
 	return downloaded.length === current.length && downloaded.every((buf, i) => current[i]?.equals(buf) === true);
+}
+
+/** Refuse un commit qui n'est pas dans l'historique de main du dépôt DINUM (statut de l'API compare main...sha). */
+export function assertOnMain(status, sha) {
+	if (status !== "identical" && status !== "behind") {
+		throw new Error(`Commit ${sha} absent de l'historique de main du dépôt DINUM (compare : ${status}) : refusé.`);
+	}
 }
 
 async function get(url, headers) {
@@ -36,6 +45,9 @@ async function main() {
 		await get(`https://api.github.com/repos/${repository}/commits/${encodeURIComponent(ref)}`, headers),
 	);
 	if (!/^[0-9a-f]{40}$/.test(sha)) throw new Error(`SHA inattendu : ${sha}`);
+	// Provenance : seul un commit publié sur main est importé (pas une branche ou un fork quelconque).
+	const { status } = JSON.parse(await get(`https://api.github.com/repos/${repository}/compare/main...${sha}`, headers));
+	assertOnMain(status, sha);
 
 	const current = JSON.parse(await readFile(sourceFile, "utf8").catch(() => "{}"));
 	const report = async (changed) => {
@@ -87,4 +99,5 @@ async function main() {
 }
 
 // Exécuté seulement en ligne de commande : l'import (tests) ne déclenche aucun appel réseau.
-if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) await main();
+// realpathSync : le chemin du module est résolu, argv[1] peut passer par un lien symbolique.
+if (process.argv[1] && import.meta.url === pathToFileURL(realpathSync(process.argv[1])).href) await main();
