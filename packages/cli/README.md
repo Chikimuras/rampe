@@ -18,7 +18,7 @@ Le binaire est `src/cli.ts`, exécuté tel quel par Node ≥ 22.18 (suppression 
 
 | Option | Effet |
 |---|---|
-| `--json <fichier>` | écrit le résultat détaillé en JSON (voir plus bas) |
+| `--json <fichier>` | écrit le résultat détaillé en JSON (voir plus bas) ; un fichier existant n’est jamais écrasé, et l’absence du dossier est signalée avant l’audit |
 | `--timeout <ms>` | durée maximale de tout l’audit d’une page : chargement, injection et analyse (défaut : 60 000) ; au-delà, la page est fermée et la CLI sort en 2 |
 | `--echantillon <fichier>` | audite les pages d’un fichier d’échantillon au lieu d’une seule URL (voir plus bas) |
 
@@ -48,22 +48,22 @@ pnpm exec rampe audit --echantillon echantillon.txt --json rapport.json
 Ce que Rampe propose, avec pour chaque page la **raison** de sa présence :
 
 - **les 7 pages types**, repérées par des indices explicables : le texte du lien (sans accents ni majuscules), un segment de son adresse, et sa présence dans l’en-tête (`header`, `role="banner"`) ou le pied de page (`footer`, `role="contentinfo"`). Le texte doit être l’intitulé entier du lien, éventuellement suivi d’un séparateur : « Accessibilité : partiellement conforme » ou « Mentions légales & CGU » sont reconnus, « Contactez-nous pour un devis » dans un paragraphe ne l’est pas. La position seule ne suffit jamais. « Aide à domicile » n’est pas une page d’aide : la méthode vise l’aide à l’utilisation du site, pas une offre. Les intitulés sont surtout français, avec quelques équivalents anglais (*contact us*, *legal notice*, *accessibility*, *sitemap*, *help*, *sign in*…) ;
-- **les rubriques** : liens de premier niveau de la navigation principale (celle de l’en-tête nommée « principal »/*main*, sinon celle qui a le plus de liens) ;
+- **les rubriques** : liens de premier niveau de la navigation principale (celle de l’en-tête nommée « principal »/*main*, sinon celle qui a le plus de liens). Une navigation de langues, un fil d’Ariane, des liens d’évitement ou une navigation de moins de 3 liens ne comptent pas ; sans navigation principale, les rubriques sont « à compléter ». Les liens vers l’accueil lui-même (ancres, liens d’évitement) sont ignorés ;
 - **la recherche** : formulaire dans `role="search"`, ou avec un champ `type="search"`, ou formulaire GET avec un champ `q`, `recherche`, `search`… ; Rampe ajoute la page de résultats pour le mot « contact ». Si l’adresse des résultats n’est pas déterminable (formulaire POST, recherche en JavaScript), Rampe le signale ;
 - **un tirage au hasard** parmi les autres liens de même origine, d’au moins 10 % de l’échantillon (au moins une page), par un générateur à graine (mulberry32) : même graine et mêmes liens, même tirage.
 
 Ce que Rampe ne devine pas est **signalé, jamais inventé** : une page type introuvable est notée « non trouvée automatiquement : à ajouter si elle existe » (Rampe ne conclut jamais qu’elle n’existe pas), l’absence de page « accessibilité » est mise en avant (la déclaration est une obligation légale), et les processus, les pages au contenu particulier et les documents téléchargeables sont toujours listés « à compléter ».
 
-Format du fichier : une adresse par ligne ; les lignes vides et celles qui commencent par `#` sont ignorées. Rampe écrit en commentaire, au-dessus de chaque adresse, son type et sa raison :
+Format du fichier : une adresse par ligne ; les lignes vides et celles qui commencent par `#` sont ignorées. Au plus 1 000 adresses et 2 048 caractères par ligne ; une même adresse (sans fragment ni identifiants) n’est auditée qu’une fois. **Tirage au hasard** : si vous ajoutez des pages, ajoutez-en au hasard pour garder au moins 10 % de l’échantillon (1 pour 9). Rampe compte les adresses précédées d’une note `# hasard — …` et avertit, à la relecture, s’il en manque. Rampe écrit en commentaire, au-dessus de chaque adresse, son type et sa raison :
 
 ```text
 # contact — lien « Contact », texte reconnu, adresse « /contact » reconnue, dans le pied de page
 https://exemple.fr/contact
 ```
 
-Garde-fous : seuls les liens **de même origine** que l’accueil (après redirections) sont retenus, sans fragment, sans doublon, sans fichiers non HTML (PDF, images…). Les identifiants éventuels de l’adresse (`https://moi:secret@…`) ne sont pas écrits dans le fichier : ajoutez-les à la main si besoin. Le fichier `robots.txt` n’est pas lu : Rampe audite, à faible volume, des pages que vous désignez sur votre propre site.
+Garde-fous : seuls les liens **de même origine** que l’accueil (après redirections) sont retenus, sans fragment, sans doublon, sans fichiers non HTML (PDF, images…), et jamais une adresse dont la visite déclencherait une action (déconnexion, `delete`, suppression, désinscription…). Si l’accueil redirige vers une autre origine, un avertissement le dit (console et fichier) et l’échantillon est construit sur l’origine finale. Si `--max` écarte des pages obligatoires (pages types, recherche), un avertissement en tête dit que l’échantillon n’est pas conforme à la méthode tant qu’elles n’y sont pas ; les pages écartées ne reviennent pas par le tirage au hasard. Les identifiants éventuels de l’adresse (`https://moi:secret@…`) ne sont pas écrits dans le fichier : ajoutez-les à la main si besoin. Le fichier `robots.txt` n’est pas lu : Rampe audite, à faible volume, des pages que vous désignez sur votre propre site.
 
-`rampe audit --echantillon <fichier>` vérifie d’abord tout le fichier (http(s) uniquement, toutes les adresses sur la même origine que la première ; sinon erreur avec le numéro de ligne), puis audite les pages **une à une**, dans un seul Chromium, chaque page dans un contexte neuf. `--timeout` s’applique alors à chaque page. La console affiche un bloc par page puis une synthèse : critères avec une non-conformité détectée sur au moins une page, pages en erreur, et le rappel que les 106 critères demandent une vérification humaine.
+`rampe audit --echantillon <fichier>` vérifie d’abord tout le fichier (http(s) uniquement, toutes les adresses sur la même origine que la première ; sinon erreur avec le numéro de ligne), puis audite les pages **une à une**, dans un seul Chromium, chaque page dans un contexte neuf. `--timeout` s’applique alors à chaque page. Une page qui répond avec un statut HTTP ≥ 400 est en erreur (« HTTP 404 »), pas auditée. La console affiche un bloc par page puis une synthèse (« N pages auditées, M en erreur ») : critères avec une non-conformité détectée sur au moins une page, pages en erreur, et le rappel que les 106 critères demandent une vérification humaine.
 
 Codes de sortie avec `--echantillon` : **0** aucune non-conformité détectée, **1** une non-conformité détectée sur au moins une page, **2** au moins une page en erreur (indiquée en console et dans `error` du JSON ; les autres pages sont quand même auditées) ou fichier invalide.
 

@@ -34,6 +34,9 @@ Une PME ne connaît pas ces règles. Les deviner automatiquement n’est que par
    - requêtes **séquentielles** ;
    - seuls les schémas http(s) sont acceptés ;
    - les mêmes garde-fous que pour `audit` s’appliquent : délai global, URL finale contrôlée, identifiants masqués.
+   - une page de l’échantillon qui redirige vers une autre origine pendant l’audit est auditée, avec un avertissement (comme pour `audit`, ADR-0011) ;
+   - une page qui répond avec un statut HTTP ≥ 400 est en erreur, pas auditée : son résultat serait trompeur ;
+   - les adresses dont la simple visite déclenche une action (déconnexion, suppression, désinscription…) ne sont jamais proposées.
 
    Le fichier `robots.txt` n’est pas lu : l’outil audite des pages que son utilisateur désigne sur son propre site, à faible volume. Ce n’est pas un robot d’indexation.
 
