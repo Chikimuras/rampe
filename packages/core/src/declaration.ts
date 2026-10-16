@@ -478,13 +478,16 @@ export function renderDeclaration(
 	const blocks = declarationBlocks(session, result, fields, options);
 	if (options.format === "markdown") return blocksToMarkdown(blocks);
 	if (!options.standalone) return blocksToHtml(blocks, 1);
-	const fragment = blocksToHtml(blocks);
-	return `<!doctype html>
+	return standaloneHtml("Déclaration d’accessibilité", blocksToHtml(blocks));
+}
+
+/** Page HTML complète autour d'un fragment produit par `blocksToHtml` ; `title` est un texte sûr (le nôtre). */
+export const standaloneHtml = (title: string, fragment: string) => `<!doctype html>
 <html lang="fr">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Déclaration d’accessibilité</title>
+<title>${escapeHtml(title)}</title>
 </head>
 <body>
 <main>
@@ -493,7 +496,6 @@ ${fragment}
 </body>
 </html>
 `;
-}
 
 /** `declaration-accessibilite-<hôte>-<AAAA-MM-JJ>.<html|md>`, date locale. */
 export const declarationFileName = (session: AuditSession, date: Date, extension: "html" | "md") =>

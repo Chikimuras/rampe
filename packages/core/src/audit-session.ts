@@ -26,11 +26,11 @@ import {
 export { isObject, MAX_PAGES, MAX_SESSION_BYTES, MAX_URL, SESSION_TOOL_NAME } from "./strict.ts";
 
 /**
- * 3 : champs de la déclaration d'accessibilité (ADR-0017). Une session v1 ou v2 est migrée sans perte (elle n'en a
- * pas) ; un onglet resté sur une version précédente voit une session v3 comme « future » et ne l'écrase pas, au lieu
- * de la relire en perdant la déclaration.
+ * 4 : schéma pluriannuel et plan d'action (ADR-0018). 3 : champs de la déclaration d'accessibilité (ADR-0017). Une
+ * session d'une version antérieure est migrée sans perte (elle n'a pas ces champs) ; un onglet resté sur une version
+ * précédente voit une session plus récente comme « future » et ne l'écrase pas, au lieu de la relire en la perdant.
  */
-export const SCHEMA_VERSION = 3;
+export const SCHEMA_VERSION = 4;
 
 /** C : conforme, NC : non conforme, NA : non applicable, NT : non testé (état initial). */
 export type Status = "C" | "NC" | "NA" | "NT";
@@ -87,7 +87,69 @@ export interface AuditSession {
 	findings: Record<string, Record<string, Finding[]>>;
 	/** Champs de la déclaration d'accessibilité saisis par l'utilisateur (ADR-0017 §3) ; absent : aucun saisi. */
 	declaration?: DeclarationFields;
+	/** Schéma pluriannuel et plan d'action (ADR-0018) ; absent : rien saisi. Opérations : schema.ts. */
+	schema?: SchemaPlan;
 }
+
+/**
+ * Volets officiels du schéma pluriannuel, dans l'ordre de la source (8 « politique », puis 6 « travaux ») ; leurs
+ * descriptions officielles sont dans schema.ts, qui ne charge que l'îlot.
+ */
+export const SCHEMA_SECTIONS = [
+	"strategy",
+	"referent",
+	"resources",
+	"recruitment",
+	"training",
+	"externalResources",
+	"organization",
+	"contracts",
+	"newProjects",
+	"userTests",
+	"audits",
+	"correctiveMeasures",
+	"optionalMeasures",
+	"annualReview",
+] as const;
+export type SchemaSection = (typeof SCHEMA_SECTIONS)[number];
+export const PRIORITIES = ["haute", "moyenne", "basse"] as const;
+export type Priority = (typeof PRIORITIES)[number];
+/** Bilan d'une action (ADR-0018 §4). */
+export const ACTION_STATUSES = ["faite", "en cours", "reportée"] as const;
+export type ActionStatus = (typeof ACTION_STATUSES)[number];
+
+/** Action du plan : proposée depuis un critère non validé de l'audit, ou libre. Réglages absents : « à définir ». */
+export interface SchemaAction {
+	/** UUID stable. */
+	id: string;
+	source: "audit" | "libre";
+	/** Actions de l'audit seulement : critère non validé, et ids des pages où il est non conforme. */
+	criterion?: string;
+	pages?: string[];
+	/** Titre officiel du critère (audit), ou intitulé saisi (libre). */
+	title: string;
+	priority?: Priority;
+	/** Dans la période du schéma à la saisie ; gardée (et signalée) si la période change ensuite. */
+	targetYear?: number;
+	comment: string;
+	/** Retrait gardé et visible (ADR-0018 §2) : une non-conformité ne disparaît jamais en silence. */
+	removed: boolean;
+	status?: ActionStatus;
+}
+
+export interface SchemaPlan {
+	/** Année de début (1900 à 9999) et durée en années (1 à 3). */
+	startYear?: number;
+	duration?: number;
+	/** Texte de chaque volet ; un volet vide est absent. */
+	sections: Partial<Record<SchemaSection, string>>;
+	actions: SchemaAction[];
+}
+/** Bornes du schéma (ADR-0016) : à l'écriture et à l'import, jamais à la relecture du stockage. */
+export const MAX_ACTIONS = 1000;
+export const MAX_SECTION = 10_000;
+export const isYear = (n: unknown): n is number =>
+	Number.isInteger(n) && (n as number) >= 1900 && (n as number) <= 9999;
 
 /**
  * Champs que Rampe ne remplit jamais à la place de l'utilisateur (ADR-0017 §3), et leur nature :
@@ -223,7 +285,7 @@ export function setPageProcess(session: AuditSession, pageId: string, process: s
  * Texte dans sa borne. Un texte plus long écrit par une version précédente (relu sans borne) peut être corrigé, pas
  * allongé : l'interface pose `maxLength` au maximum de la borne et de la longueur actuelle.
  */
-const fits = (text: string, max: number, previous = "") => text.length <= Math.max(max, previous.length);
+export const fits = (text: string, max: number, previous = "") => text.length <= Math.max(max, previous.length);
 
 /** Copie de `byCriterion` sans les entrées de `pageId` (critères vidés retirés). */
 function withoutPage<T>(byCriterion: Record<string, Record<string, T>>, pageId: string) {
@@ -436,7 +498,7 @@ function parseSessionWith(
 	if (field(root, "tool") !== undefined && name !== SESSION_TOOL_NAME)
 		fail("tool.name", "ce fichier n’a pas été produit par l’audit guidé de Rampe");
 	const version = field(root, "schemaVersion");
-	if (version !== 1 && version !== 2 && version !== SCHEMA_VERSION)
+	if (version !== 1 && version !== 2 && version !== 3 && version !== SCHEMA_VERSION)
 		fail("schemaVersion", `version ${JSON.stringify(version) ?? "absente"} non prise en charge`);
 	const v1 = version === 1;
 	const limit = (max: number) => (bounded ? max : Number.POSITIVE_INFINITY);
@@ -547,7 +609,7 @@ function parseSessionWith(
 	// Déclaration (ADR-0017), absente avant la v3. Import : textes nettoyés et tronqués, adresse rejetée au-delà de
 	// sa borne (comme une adresse de page), date et réalisation vérifiées. Relecture : types seulement ; une date
 	// abîmée retire ce seul champ (signalé par `dropped`), une réalisation inconnue reste une erreur de structure.
-	const rawDeclaration = version === SCHEMA_VERSION ? field(root, "declaration") : undefined;
+	const rawDeclaration = version === 3 || version === SCHEMA_VERSION ? field(root, "declaration") : undefined;
 	let declaration: DeclarationFields | undefined;
 	if (rawDeclaration !== undefined) {
 		const d = object(rawDeclaration, "declaration");
@@ -574,6 +636,10 @@ function parseSessionWith(
 		if (bounded && Object.keys(declaration).length === 0) declaration = undefined;
 	}
 
+	// Schéma pluriannuel (ADR-0018), absent avant la v4. Structure et types partout ; bornes à l'import seulement.
+	const rawSchema = version === SCHEMA_VERSION ? field(root, "schema") : undefined;
+	const schema = rawSchema === undefined ? undefined : parseSchema(rawSchema, known, bounded);
+
 	return {
 		schemaVersion: SCHEMA_VERSION,
 		site,
@@ -584,5 +650,104 @@ function parseSessionWith(
 		evaluations,
 		findings,
 		...(declaration !== undefined && { declaration }),
+		...(schema !== undefined && { schema }),
 	};
 }
+
+/** Valeur facultative parmi `values`, contrôlée partout (structure). */
+function oneOf<T>(raw: unknown, values: readonly T[], at: string, what: string): T | undefined {
+	if (raw !== undefined && !values.includes(raw as T)) fail(at, `${what} inconnu(e) ${JSON.stringify(raw)}`);
+	return raw as T | undefined;
+}
+
+function parseSchema(raw: unknown, known: ReadonlySet<string>, bounded: boolean): SchemaPlan | undefined {
+	const o = object(raw, "schema");
+	const limit = (max: number) => (bounded ? max : Number.POSITIVE_INFINITY);
+	/** Année : entier partout ; 1900 à 9999 à l'import seulement. */
+	const year = (v: unknown, at: string) => {
+		if (v !== undefined && !(bounded ? isYear(v) : Number.isInteger(v)))
+			fail(at, "année invalide (attendu : un entier de 1900 à 9999)");
+		return v as number | undefined;
+	};
+	const startYear = year(field(o, "startYear"), "schema.startYear");
+	const duration = oneOf(field(o, "duration"), [1, 2, 3], "schema.duration", "durée");
+
+	const rawSections = object(field(o, "sections"), "schema.sections");
+	const sections: SchemaPlan["sections"] = {};
+	for (const key of SCHEMA_SECTIONS) {
+		const v = field(rawSections, key);
+		if (v === undefined) continue;
+		const text = string(v, `schema.sections.${key}`);
+		const value = bounded ? truncate(cleanNote(text), MAX_SECTION) : text;
+		if (value !== "" || !bounded) sections[key] = value;
+	}
+
+	const seen = new Set<string>();
+	const actions = array(field(o, "actions"), "schema.actions", limit(MAX_ACTIONS)).map((v, i): SchemaAction => {
+		const at = `schema.actions[${i}]`;
+		const a = object(v, at);
+		const id = string(field(a, "id"), `${at}.id`);
+		if (!PAGE_ID.test(id)) fail(`${at}.id`, "identifiant qui n’est pas un UUID");
+		if (seen.has(id)) fail(`${at}.id`, "identifiant d’action en double");
+		seen.add(id);
+		const source = oneOf(field(a, "source"), ["audit", "libre"] as const, `${at}.source`, "source");
+		if (source === undefined) fail(`${at}.source`, "source absente");
+		const rawCriterion = field(a, "criterion");
+		const rawPages = field(a, "pages");
+		if (source === "libre" && (rawCriterion !== undefined || rawPages !== undefined))
+			fail(`${at}.criterion`, "réservé aux actions de l’audit");
+		let criterion: string | undefined;
+		let pages: string[] | undefined;
+		if (source === "audit") {
+			criterion = string(rawCriterion, `${at}.criterion`);
+			if (!known.has(criterion))
+				fail(`${at}.criterion`, `critère ${JSON.stringify(criterion)} inexistant dans le référentiel`);
+			// Pages : ids bien formés ; une page retirée depuis est ignorée au rendu, pas une erreur.
+			pages =
+				rawPages === undefined
+					? undefined
+					: array(rawPages, `${at}.pages`, limit(MAX_PAGES)).map((p, k) => {
+							const pid = string(p, `${at}.pages[${k}]`);
+							if (!PAGE_ID.test(pid)) fail(`${at}.pages[${k}]`, "identifiant de page qui n’est pas un UUID");
+							return pid;
+						});
+		}
+		const title = bounded
+			? display(field(a, "title"), `${at}.title`, MAX_TITLE)
+			: string(field(a, "title"), `${at}.title`);
+		const priority = oneOf(field(a, "priority"), PRIORITIES, `${at}.priority`, "priorité");
+		const targetYear = year(field(a, "targetYear"), `${at}.targetYear`);
+		const rawComment = string(field(a, "comment"), `${at}.comment`);
+		const comment = bounded ? truncate(cleanNote(rawComment), MAX_NOTE) : rawComment;
+		const removed = field(a, "removed");
+		if (typeof removed !== "boolean") fail(`${at}.removed`, "vrai ou faux attendu");
+		const status = oneOf(field(a, "status"), ACTION_STATUSES, `${at}.status`, "bilan");
+		return {
+			id,
+			source: source as SchemaAction["source"],
+			...(criterion !== undefined && { criterion }),
+			...(pages !== undefined && { pages }),
+			title,
+			...(priority !== undefined && { priority }),
+			...(targetYear !== undefined && { targetYear }),
+			comment,
+			removed: removed as boolean,
+			...(status !== undefined && { status }),
+		};
+	});
+
+	const plan: SchemaPlan = {
+		...(startYear !== undefined && { startYear }),
+		...(duration !== undefined && { duration }),
+		sections,
+		actions,
+	};
+	return bounded && isEmptySchema(plan) ? undefined : plan;
+}
+
+/** Schéma sans aucune saisie : retiré de la session. */
+export const isEmptySchema = (p: SchemaPlan) =>
+	p.startYear === undefined &&
+	p.duration === undefined &&
+	Object.keys(p.sections).length === 0 &&
+	p.actions.length === 0;
