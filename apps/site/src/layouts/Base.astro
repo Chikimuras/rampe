@@ -47,6 +47,8 @@ const { title, description = "Rampe — accompagner les PME vers la conformité 
 				background: var(--bg);
 				color: var(--text);
 				font: 17px/1.6 system-ui, -apple-system, "Segoe UI", sans-serif;
+				/* Une adresse ou un code long ne déborde pas de l'écran étroit (critère 10.11). */
+				overflow-wrap: break-word;
 			}
 			a {
 				color: var(--accent);
@@ -109,8 +111,6 @@ const { title, description = "Rampe — accompagner les PME vers la conformité 
 			}
 			table {
 				border-collapse: collapse;
-				display: block;
-				overflow-x: auto;
 			}
 			th,
 			td {

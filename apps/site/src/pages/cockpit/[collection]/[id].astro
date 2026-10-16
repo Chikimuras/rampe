@@ -47,6 +47,13 @@ const source = `${entry.collection === "docs" ? "" : `${entry.collection}/`}${en
 	.meta {
 		color: var(--muted);
 	}
+	/* Les tableaux Markdown tiennent dans un écran étroit (375 px) en coupant les mots au besoin, plutôt que de défiler :
+	   une zone qui défile devrait être atteignable au clavier, et axe ne peut pas juger le contraste des cellules
+	   masquées par le défilement (audit de Rampe en 375 px, ADR-0021). */
+	article :global(:is(th, td)) {
+		overflow-wrap: anywhere;
+		hyphens: auto;
+	}
 	article :global(.task-list-item) {
 		list-style: none;
 	}
