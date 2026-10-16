@@ -166,45 +166,48 @@ const originWarning = (url: URL, finalUrl: string) =>
 		: [`La page finale est sur une autre origine que celle demandée : ${redact(finalUrl)}`];
 
 /**
- * Exécute axe-core dans un monde isolé du cadre principal (ADR-0020) : DOM partagé, mais pas les objets JavaScript
- * de la page, qui ne peut donc ni remplacer `window.axe` ni fausser les primitives dont axe dépend. Injection par le
- * protocole de débogage : non soumise à la CSP de la page, sans la désactiver. Configuration par défaut d'axe.run
- * (sans règles expérimentales). Le résultat est sérialisé dans le monde isolé, puis validé ici.
+ * Évalue `expression` dans un monde isolé du cadre principal (ADR-0020) : DOM partagé, mais pas les objets JavaScript
+ * de la page, qui ne peut donc ni remplacer `window.axe` ni fausser les primitives (`querySelectorAll`, `getAttribute`,
+ * `JSON.stringify`…) dont la CLI dépend. Toute lecture de la page par la CLI passe par ici. Par le protocole de
+ * débogage : non soumis à la CSP de la page, sans la désactiver. Renvoie la valeur sérialisée dans le monde isolé.
  */
-async function runAxeIsolated(page: Page) {
+async function evaluateIsolated(page: Page, expression: string): Promise<unknown> {
 	const cdp = await page.context().newCDPSession(page);
 	try {
 		const { frameTree } = await cdp.send("Page.getFrameTree");
 		// ponytail: cadre principal seulement ; les iframes demanderont un monde isolé par cadre.
 		const { executionContextId } = await cdp.send("Page.createIsolatedWorld", {
 			frameId: frameTree.frame.id,
-			worldName: "rampe-axe",
+			worldName: "rampe",
 			grantUniveralAccess: false,
 		});
 		const { result, exceptionDetails } = await cdp.send("Runtime.evaluate", {
-			expression: `${axe.source}
-;(async () => {
-	const r = await axe.run();
-	return JSON.stringify({ violations: r.violations, incomplete: r.incomplete });
-})()`,
+			expression,
 			contextId: executionContextId,
 			awaitPromise: true,
 			returnByValue: true,
 		});
 		if (exceptionDetails)
 			throw new Error(
-				`échec d’axe-core dans la page : ${exceptionDetails.exception?.description ?? exceptionDetails.text}`,
+				`échec du script de Rampe dans la page : ${exceptionDetails.exception?.description ?? exceptionDetails.text}`,
 			);
-		return parseAxeOutput(result.value);
+		return result.value;
 	} finally {
 		await cdp.detach().catch(() => {});
 	}
 }
 
+/** Configuration par défaut d'axe.run (sans règles expérimentales) ; résultat sérialisé dans le monde isolé, validé ici. */
+const AXE_RUN = `${axe.source}
+;(async () => {
+	const r = await axe.run();
+	return JSON.stringify({ violations: r.violations, incomplete: r.incomplete });
+})()`;
+
 /** Charge la page et lance axe-core. */
 async function inspect(page: Page, url: URL, timeout: number): Promise<AuditPage> {
 	await load(page, url, timeout);
-	const raw = await runAxeIsolated(page);
+	const raw = parseAxeOutput(await evaluateIsolated(page, AXE_RUN));
 	const finalUrl = page.url();
 	if (!isHttp(finalUrl)) throw new Error(`la page a quitté le web (http/https) : ${finalUrl}`);
 	return {
@@ -217,77 +220,82 @@ async function inspect(page: Page, url: URL, timeout: number): Promise<AuditPage
 	};
 }
 
+/**
+ * Lecture de l'accueil, sérialisée par `Function.prototype.toString` puis évaluée dans le monde isolé : aucune
+ * référence au code extérieur.
+ */
+function collectInPage() {
+	const FOOTER = "footer, [role=contentinfo]";
+	const HEADER = "header, [role=banner]";
+	const name = (n: Element) =>
+		`${n.getAttribute("aria-label") ?? ""} ${n.id} ${document.getElementById(n.getAttribute("aria-labelledby") ?? "")?.textContent ?? ""}`;
+	// Ni sélecteur de langue, ni fil d'Ariane, ni liens d'évitement ; au moins 3 liens.
+	const notMain = /langue|language|ariane|breadcrumb|acc[eè]s rapide|skip|[ée]vitement/i;
+	const navs = [...document.querySelectorAll("nav, [role=navigation]")].filter(
+		(n) => !n.closest(FOOTER) && !notMain.test(name(n)) && n.querySelectorAll("a[href]").length >= 3,
+	);
+	const inHeader = navs.filter((n) => n.closest(HEADER));
+	const pool = inHeader.length > 0 ? inHeader : navs;
+	const count = (n: Element) => n.querySelectorAll("a[href]").length;
+	// Navigation principale : nommée comme telle, sinon celle qui a le plus de liens (en-tête d'abord).
+	const main =
+		pool.find((n) => /princip|main|primary/i.test(name(n))) ?? [...pool].sort((a, b) => count(b) - count(a))[0];
+	// Premier niveau : les liens les moins imbriqués dans des éléments de liste.
+	const depth = (a: Element) => {
+		let d = 0;
+		for (let e = a.parentElement; e && e !== main; e = e.parentElement) if (e.tagName === "LI") d++;
+		return d;
+	};
+	const navLinks = main ? [...main.querySelectorAll("a[href]")] : [];
+	const top = Math.min(...navLinks.map(depth));
+	const links = [...document.querySelectorAll("a[href], area[href]")].map((a) => ({
+		href: (a as HTMLAnchorElement).href,
+		text:
+			a.getAttribute("aria-label")?.trim() ||
+			a.textContent?.trim() ||
+			a.querySelector("img[alt]")?.getAttribute("alt")?.trim() ||
+			a.getAttribute("title")?.trim() ||
+			"",
+		zone: a.closest(FOOTER) ? "pied-de-page" : a.closest(HEADER) ? "en-tete" : "contenu",
+		topNav: navLinks.includes(a) && depth(a) === top,
+	}));
+
+	const NAMES = ["q", "query", "recherche", "rechercher", "search", "s", "keywords", "motcle", "mots-cles", "text"];
+	const named = NAMES.map((n) => `input[name="${n}"]`).join(", ");
+	const forms = [...document.forms];
+	const byRole = forms.find((f) => f.closest('[role="search"], search'));
+	const byType = forms.find((f) => f.querySelector('input[type="search"]'));
+	const byName = forms.find((f) => f.method === "get" && f.querySelector(named));
+	const form = byRole ?? byType ?? byName;
+	let search = null;
+	if (form) {
+		const input =
+			form.querySelector('input[type="search"]') ??
+			form.querySelector(named) ??
+			form.querySelector('input[name]:not([type]), input[type="text"][name]');
+		const name = input?.getAttribute("name") ?? null;
+		search = {
+			reason:
+				form === byRole
+					? 'formulaire dans une zone de recherche (role="search")'
+					: form === byType
+						? "formulaire avec un champ de type search"
+						: `formulaire GET avec un champ « ${name} »`,
+			action: form.action,
+			method: form.method,
+			field: name,
+			params: [...new FormData(form)].filter((e): e is [string, string] => typeof e[1] === "string"),
+		};
+	} else if (document.querySelector('[role="search"], search, input[type="search"]'))
+		search = { reason: "zone de recherche sans formulaire", action: null, method: "get", field: null, params: [] };
+	const label = main?.getAttribute("aria-label") || main?.id || null;
+	return { links, search, navLabel: label };
+}
+
 /** Collecte liens, navigation principale et formulaire de recherche de l'accueil (ADR-0012 §1). */
 async function collect(page: Page, url: URL, timeout: number): Promise<Collected> {
 	const homeUrl = await load(page, url, timeout);
-	// Exécuté dans la page : aucune référence au code extérieur.
-	const found = await page.evaluate(() => {
-		const FOOTER = "footer, [role=contentinfo]";
-		const HEADER = "header, [role=banner]";
-		const name = (n: Element) =>
-			`${n.getAttribute("aria-label") ?? ""} ${n.id} ${document.getElementById(n.getAttribute("aria-labelledby") ?? "")?.textContent ?? ""}`;
-		// Ni sélecteur de langue, ni fil d'Ariane, ni liens d'évitement ; au moins 3 liens.
-		const notMain = /langue|language|ariane|breadcrumb|acc[eè]s rapide|skip|[ée]vitement/i;
-		const navs = [...document.querySelectorAll("nav, [role=navigation]")].filter(
-			(n) => !n.closest(FOOTER) && !notMain.test(name(n)) && n.querySelectorAll("a[href]").length >= 3,
-		);
-		const inHeader = navs.filter((n) => n.closest(HEADER));
-		const pool = inHeader.length > 0 ? inHeader : navs;
-		const count = (n: Element) => n.querySelectorAll("a[href]").length;
-		// Navigation principale : nommée comme telle, sinon celle qui a le plus de liens (en-tête d'abord).
-		const main =
-			pool.find((n) => /princip|main|primary/i.test(name(n))) ?? [...pool].sort((a, b) => count(b) - count(a))[0];
-		// Premier niveau : les liens les moins imbriqués dans des éléments de liste.
-		const depth = (a: Element) => {
-			let d = 0;
-			for (let e = a.parentElement; e && e !== main; e = e.parentElement) if (e.tagName === "LI") d++;
-			return d;
-		};
-		const navLinks = main ? [...main.querySelectorAll("a[href]")] : [];
-		const top = Math.min(...navLinks.map(depth));
-		const links = [...document.querySelectorAll("a[href], area[href]")].map((a) => ({
-			href: (a as HTMLAnchorElement).href,
-			text:
-				a.getAttribute("aria-label")?.trim() ||
-				a.textContent?.trim() ||
-				a.querySelector("img[alt]")?.getAttribute("alt")?.trim() ||
-				a.getAttribute("title")?.trim() ||
-				"",
-			zone: a.closest(FOOTER) ? "pied-de-page" : a.closest(HEADER) ? "en-tete" : "contenu",
-			topNav: navLinks.includes(a) && depth(a) === top,
-		}));
-
-		const NAMES = ["q", "query", "recherche", "rechercher", "search", "s", "keywords", "motcle", "mots-cles", "text"];
-		const named = NAMES.map((n) => `input[name="${n}"]`).join(", ");
-		const forms = [...document.forms];
-		const byRole = forms.find((f) => f.closest('[role="search"], search'));
-		const byType = forms.find((f) => f.querySelector('input[type="search"]'));
-		const byName = forms.find((f) => f.method === "get" && f.querySelector(named));
-		const form = byRole ?? byType ?? byName;
-		let search = null;
-		if (form) {
-			const input =
-				form.querySelector('input[type="search"]') ??
-				form.querySelector(named) ??
-				form.querySelector('input[name]:not([type]), input[type="text"][name]');
-			const name = input?.getAttribute("name") ?? null;
-			search = {
-				reason:
-					form === byRole
-						? 'formulaire dans une zone de recherche (role="search")'
-						: form === byType
-							? "formulaire avec un champ de type search"
-							: `formulaire GET avec un champ « ${name} »`,
-				action: form.action,
-				method: form.method,
-				field: name,
-				params: [...new FormData(form)].filter((e): e is [string, string] => typeof e[1] === "string"),
-			};
-		} else if (document.querySelector('[role="search"], search, input[type="search"]'))
-			search = { reason: "zone de recherche sans formulaire", action: null, method: "get", field: null, params: [] };
-		const label = main?.getAttribute("aria-label") || main?.id || null;
-		return { links, search, navLabel: label };
-	});
+	const found = (await evaluateIsolated(page, `(${collectInPage})()`)) as ReturnType<typeof collectInPage>;
 	return {
 		requestedUrl: url.href,
 		homeUrl,
