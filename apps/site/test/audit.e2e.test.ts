@@ -817,6 +817,10 @@ describe("audit guidé (bout en bout)", { timeout: 60_000 }, () => {
 				await importScenario(page);
 				await showCriterion(page, "3.2");
 				await page.locator(".audit-findings summary").click();
+				// État vérifié par axe (le gate « Rampe audite Rampe » ne voit que la page chargée, ADR-0021) : section 2
+				// avec la page importée et un critère affiché, statut automatique et indices.
+				await expect(group(page, "3.2").isVisible()).resolves.toBe(true);
+				await expect(page.locator(".audit-findings").isVisible()).resolves.toBe(true);
 				if (captures) {
 					await page.locator(".audit-import").screenshot({ path: join(captures, `import-bilan-${colorScheme}.png`) });
 					await page.locator(".audit-page").screenshot({ path: join(captures, `import-critere-${colorScheme}.png`) });
@@ -2105,6 +2109,9 @@ describe("audit guidé (bout en bout)", { timeout: 60_000 }, () => {
 				await setPeriod(page);
 				await syncButton(page).click();
 				await expect.poll(() => rowHeads(page)).toHaveLength(2);
+				// Section 5 avec une année choisie : l'aperçu du plan est rendu, et axe le juge (ADR-0021).
+				await page.getByLabel("Année du plan d’action").selectOption("2027");
+				await expect(page.locator("#plan-apercu").textContent()).resolves.toBe("Aperçu du plan d’action 2027");
 				await page.getByRole("button", { name: /^Retirer l’action \d+ : Critère 8\.3 / }).click();
 				await page.getByLabel("Intitulé d’une action libre").fill("");
 				await page.getByRole("button", { name: "Ajouter l’action" }).click();
