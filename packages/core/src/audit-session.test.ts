@@ -405,9 +405,11 @@ describe("export et import d'un audit (ADR-0016)", () => {
 	});
 
 	it("rapport de la CLI donné au champ de l'audit : message qui oriente vers le bon champ", () => {
-		const e = refusal({ schemaVersion: 2, tool: { name: "@rampe/cli", version: "0.0.0" }, pages: [] });
-		expect(e.message).toBe(REPORT_GIVEN_AS_SESSION);
-		expect(e.message).toMatch(/« Importer un rapport de la CLI \(JSON\) »/);
+		for (const name of ["@rampe/cli", "@rampe/extension"]) {
+			const e = refusal({ schemaVersion: 2, tool: { name, version: "0.0.0" }, pages: [] });
+			expect(e.message).toBe(REPORT_GIVEN_AS_SESSION);
+			expect(e.message).toMatch(/« Importer un rapport de la CLI \(JSON\) »/);
+		}
 	});
 
 	it("migre une session v1 (stockage d'une ancienne version) sans perte : évaluations humaines, aucun indice", () => {

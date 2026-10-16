@@ -10,11 +10,11 @@ import {
 	field,
 	IMPACTS,
 	isObject,
+	isReportToolName,
 	MAX_FINDINGS,
 	MAX_PAGES,
 	MAX_URL,
 	object,
-	REPORT_TOOL_NAME,
 	ReportError,
 	RULE_ID,
 	SESSION_TOOL_NAME,
@@ -501,7 +501,7 @@ function parseSessionWith(
 	if (isFutureSession(root)) throw new ReportError(FUTURE_SESSION);
 	checkKeys(json, "fichier");
 	const name = toolName(root);
-	if (name === REPORT_TOOL_NAME) throw new ReportError(REPORT_GIVEN_AS_SESSION);
+	if (isReportToolName(name)) throw new ReportError(REPORT_GIVEN_AS_SESSION);
 	if (field(root, "tool") !== undefined && name !== SESSION_TOOL_NAME)
 		fail("tool.name", "ce fichier n’a pas été produit par l’audit guidé de Rampe");
 	const version = field(root, "schemaVersion");

@@ -1,107 +1,47 @@
-// Logique pure de l'audit : validation d'URL, classement des résultats axe (ADR-0011 §3), JSON et texte.
+// Logique de l'audit propre à la CLI : rapport console. Classement et JSON v2 viennent de @rampe/core (ADR-0019 §4).
 import {
 	type AuditPage,
-	type AuditReport,
 	type AuditResult,
-	type AxeRuleMapping,
-	classifyAxeRule,
-	criteriaWithDirectRule,
-	getCriterion,
-	isDirectCheck,
+	buildReport as buildCoreReport,
+	byNumber,
+	plainTitle,
 	plural,
-	REPORT_SCHEMA_VERSION,
 	type ResultKind,
 	redact,
 	rgaa,
+	selector,
 	stripControl,
-	truncate,
+	uncoveredCriteria as uncoveredFor,
 } from "@rampe/core";
 import axe from "axe-core";
 
-// Fonctions partagées avec le site (lecture d'échantillon dans le navigateur) : elles vivent dans @rampe/core.
-export { parseAuditUrl, plural, redact, stripBidi, stripControl, truncate } from "@rampe/core";
+// Fonctions partagées avec le site et l'extension : elles vivent dans @rampe/core.
+export {
+	byNumber,
+	classifyResults,
+	parseAuditUrl,
+	plainTitle,
+	plural,
+	redact,
+	selector,
+	stripBidi,
+	stripControl,
+	TITLE_MAX,
+	truncate,
+} from "@rampe/core";
 
 import pkg from "../package.json" with { type: "json" };
 
-/** Sous-ensemble d'un résultat `axe.run` (violation ou incomplete) utilisé ici. */
-export interface AxeRawResult {
-	id: string;
-	/** Description courte de la règle, en anglais. */
-	help?: string;
-	tags: string[];
-	impact?: string | null;
-	nodes: { target: unknown[]; html: string; failureSummary?: string }[];
-}
-
 // Forme du JSON : partagée avec le site (import dans l'audit guidé, ADR-0014), elle vit dans @rampe/core.
-export type { AuditPage, AuditReport, AuditResult, ResultKind } from "@rampe/core";
-
-const HTML_MAX = 500;
-/** Titre de page : borné à l'écriture, comme dans le rapport HTML. */
-export const TITLE_MAX = 300;
+export type { AuditPage, AuditReport, AuditResult, AxeRawResult, ResultKind } from "@rampe/core";
 
 /** Critères sans aucune vérification automatique directe (même décompte que le site). */
-export const uncoveredCriteria = () =>
-	rgaa.criteria.length - criteriaWithDirectRule(axe.getRules().map((r) => r.tags)).size;
+export const uncoveredCriteria = () => uncoveredFor(axe.getRules());
 
-// ADR-0011 §3 : seule une vérification directe (ni bonne pratique ni expérimentale) est une non-conformité.
-function kindOf(m: AxeRuleMapping, incomplete: boolean): ResultKind {
-	if (incomplete) return "a-verifier";
-	if (isDirectCheck(m)) return "non-conformite";
-	return m.level === "hors-rgaa" ? "bonne-pratique" : "incertain";
-}
-
-function toResult(r: AxeRawResult, incomplete: boolean): AuditResult | [] {
-	const m = classifyAxeRule(r.tags);
-	if (m.deprecated) return [];
-	return {
-		ruleId: r.id,
-		...(r.help !== undefined && { help: r.help }),
-		kind: kindOf(m, incomplete),
-		level: m.level,
-		tests: m.level === "rgaa" ? m.tests : [],
-		criteria: m.level === "hors-rgaa" ? [] : m.criteria,
-		wcag: m.level === "rgaa" ? [] : m.wcag,
-		flags: { bestPractice: m.bestPractice, experimental: m.experimental },
-		impact: r.impact ?? null,
-		nodes: r.nodes.map((n) => ({
-			target: n.target,
-			html: truncate(n.html, HTML_MAX),
-			failureSummary: n.failureSummary ?? null,
-		})),
-	};
-}
-
-/** Classe violations et résultats incomplets d'axe (ADR-0011 §3) ; les règles dépréciées sont exclues. */
-export function classifyResults(violations: AxeRawResult[], incomplete: AxeRawResult[]): AuditResult[] {
-	return [...violations.flatMap((r) => toResult(r, false)), ...incomplete.flatMap((r) => toResult(r, true))];
-}
-
-export function buildReport(input: {
-	startedAt: Date;
-	axeVersion: string;
-	browserVersion: string;
-	pages: AuditPage[];
-}): AuditReport {
-	return {
-		schemaVersion: REPORT_SCHEMA_VERSION,
-		tool: { name: pkg.name, version: pkg.version },
-		engine: { axe: input.axeVersion, browser: input.browserVersion },
-		startedAt: input.startedAt.toISOString(),
-		pages: input.pages,
-	};
-}
+export const buildReport = (input: Omit<Parameters<typeof buildCoreReport>[0], "tool">) =>
+	buildCoreReport({ ...input, tool: { name: "@rampe/cli", version: pkg.version } });
 
 // --- Sortie console ---
-
-/** Titre officiel sans les liens markdown vers le glossaire. */
-export const plainTitle = (id: string) => (getCriterion(id)?.title ?? "").replace(/\[([^\]]+)\]\([^)]*\)/g, "$1");
-
-// Cible axe : un sélecteur par niveau de cadre ; un niveau peut être un tableau (Shadow DOM).
-export const selector = (target: unknown[]) =>
-	stripControl(target.map((t) => (Array.isArray(t) ? t.join(" >>> ") : String(t))).join(" | "));
-
-export const byNumber = (a: string, b: string) => a.localeCompare(b, "en", { numeric: true });
 
 function ruleLine(r: AuditResult, detail: string, showFlags = true): string {
 	const first = r.nodes[0] ? `, ex. ${selector(r.nodes[0].target)}` : "";
