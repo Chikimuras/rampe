@@ -134,6 +134,10 @@ process.exit(code);
 /** Les trois passages de la CLI sur le site servi à `local` ; renvoie le code le plus grave. */
 async function audit(local) {
 	const pages = builtPages();
+	// Le cockpit annonce « 0 non-conformité automatique sur les N pages » : N doit être le nombre réellement audité.
+	const claim = `0 non-conformité automatique sur les ${pages.length} pages`;
+	if (!readFileSync(join(out, "cockpit/index.html"), "utf8").includes(claim))
+		throw new Error(`Le cockpit n’annonce pas « ${claim} » : corrigez le décompte dans cockpit/index.astro.`);
 	const toutes = join(tmp, "toutes.txt");
 	writeFileSync(
 		toutes,
