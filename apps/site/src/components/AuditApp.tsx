@@ -2032,7 +2032,15 @@ function Schema({
 			setAnnounce("Audit incomplet : aucune action n’est proposée tant que l’audit n’est pas terminé.");
 			return;
 		}
-		const result = proposeActions(session, r, titles);
+		let result: ReturnType<typeof proposeActions>;
+		try {
+			result = proposeActions(session, r, titles);
+		} catch {
+			setAnnounce(
+				"Mise à jour impossible : le tableau dépasserait 1 000 actions. Retirez définitivement des actions libres (Recommencer) ou regroupez-les.",
+			);
+			return;
+		}
 		if (result.session !== session) setSession(() => result.session);
 		setAnnounce(
 			result.added + result.updated === 0
@@ -2206,7 +2214,9 @@ function Schema({
 			</p>
 			{!r.complete && (
 				<p>
-					Audit incomplet : aucune action n’est proposée tant que l’audit n’est pas terminé.{" "}
+					{actions.some((a) => a.source === "audit")
+						? "Attention : l’audit n’est plus complet. Le tableau a été établi à partir d’un audit qui a changé depuis ; terminez l’audit, puis mettez le tableau à jour."
+						: "Audit incomplet : aucune action n’est proposée tant que l’audit n’est pas terminé."}{" "}
 					<a href="#audit-resultat">Terminer l’audit (section 3)</a>.
 				</p>
 			)}
@@ -2230,7 +2240,8 @@ function Schema({
 						</thead>
 						<tbody>
 							{actions.map((a) => {
-								const n = name(a);
+								// Étiquettes numérotées par ligne : deux actions libres de même intitulé restent distinctes.
+								const n = `${actions.indexOf(a) + 1} : ${name(a)}`;
 								const state = actionState(a, r);
 								const pages = (a.pages ?? []).flatMap((id) => {
 									const page = session.pages.find((x) => x.id === id);
@@ -2240,17 +2251,17 @@ function Schema({
 								return (
 									<tr key={a.id} class={a.removed ? "audit-removed" : undefined}>
 										<th scope="row">
-											{n}
+											{name(a)}
 											{pages.length > 0 && <span class="audit-help"> ({pages.join(", ")})</span>}
 											{state && <strong> Critère désormais {state}.</strong>}
 											{outside && <strong> Année cible hors période.</strong>}
 											{a.removed && <strong> Retirée.</strong>}
 										</th>
-										{choice(`Priorité de l’action : ${n}`, a.priority, "à définir", PRIORITIES, (v) =>
+										{choice(`Priorité de l’action ${n}`, a.priority, "à définir", PRIORITIES, (v) =>
 											update(a, { priority: (v || undefined) as ActionPatch["priority"] }),
 										)}
 										{choice(
-											`Année cible de l’action : ${n}`,
+											`Année cible de l’action ${n}`,
 											a.targetYear,
 											"à définir",
 											outside ? [a.targetYear as number, ...years] : years,
@@ -2259,19 +2270,19 @@ function Schema({
 										<td>
 											<input
 												type="text"
-												aria-label={`Commentaire de l’action : ${n}`}
+												aria-label={`Commentaire de l’action ${n}`}
 												value={a.comment}
 												maxLength={Math.max(MAX_NOTE, a.comment.length)}
 												onInput={(e) => update(a, { comment: (e.currentTarget as HTMLInputElement).value })}
 											/>
 										</td>
-										{choice(`Bilan de l’action : ${n}`, a.status, "à renseigner", ACTION_STATUSES, (v) =>
+										{choice(`Bilan de l’action ${n}`, a.status, "à renseigner", ACTION_STATUSES, (v) =>
 											update(a, { status: (v || undefined) as ActionPatch["status"] }),
 										)}
 										<td>
 											<button
 												type="button"
-												aria-label={`${a.removed ? "Rétablir" : "Retirer"} l’action : ${n}`}
+												aria-label={`${a.removed ? "Rétablir" : "Retirer"} l’action ${n}`}
 												onClick={() => {
 													if (update(a, { removed: !a.removed }))
 														setAnnounce(`Action ${a.removed ? "rétablie" : "retirée, gardée pour mémoire"} : ${n}`);
@@ -2338,11 +2349,13 @@ function Schema({
 
 			<section aria-labelledby="schema-apercu" class="audit-schema-preview">
 				<h3 id="schema-apercu">Aperçu du schéma pluriannuel</h3>
+				<p class="audit-help">{SCHEMA_MENTION}</p>
 				<Preview blocks={schemaBlocks(session, r)} />
 			</section>
 			{year !== undefined && (
 				<section aria-labelledby="plan-apercu" class="audit-schema-preview">
 					<h3 id="plan-apercu">Aperçu du plan d’action {year}</h3>
+					<p class="audit-help">{SCHEMA_MENTION}</p>
 					<Preview blocks={planBlocks(session, r, year)} />
 				</section>
 			)}

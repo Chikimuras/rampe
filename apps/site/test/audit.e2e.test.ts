@@ -954,6 +954,9 @@ describe("audit guidé (bout en bout)", { timeout: 60_000 }, () => {
 	// processus, lui, est saisi au clavier : c'est lui qui fait passer le taux moyen de 77,77 % à 61,11 %.
 	const [P1, P2, P3] = [1, 2, 3].map((n) => `00000000-0000-4000-8000-00000000000${n}`) as [string, string, string];
 	const PCT = "\u202f%";
+	/** Adresses nues, www., e-mail et <…> : liens http(s) ou mailto admis en Markdown, aucun autre schéma. */
+	const LINKS =
+		" https://exemple.fr/nue www.exemple.fr contact@exemple.fr <http://exemple.fr/chevrons> <javascript:alert(9)> data:text/html,x";
 	/** Tout NA sur les 3 pages, sauf 1.1, 3.2 et 8.3 (exemple chiffré du test de conformity.ts). */
 	function sessionJson(
 		patch: (evaluations: Record<string, Record<string, unknown>>, session: Record<string, unknown>) => void = () => {},
@@ -1460,7 +1463,7 @@ describe("audit guidé (bout en bout)", { timeout: 60_000 }, () => {
 			"Nom du site": "[clic](javascript:alert(2)) \u202egnp.live",
 			"Adresse du schéma pluriannuel de mise en accessibilité": "javascript:alert(3)",
 			"Formulaire de contact ou adresse e-mail": 'https://exemple.fr/"><svg onload=alert(4)>',
-			"Service à contacter": "<iframe src=javascript:alert(5)></iframe>",
+			"Service à contacter": `<iframe src=javascript:alert(5)></iframe>${LINKS}`,
 		};
 
 		it("audit complet : « partiellement », chiffres exactement égaux au calcul à la main", async () => {
@@ -1872,7 +1875,7 @@ describe("audit guidé (bout en bout)", { timeout: 60_000 }, () => {
 		const stored = async (page: Page) =>
 			JSON.parse((await page.evaluate(() => localStorage.getItem("rampe.audit.session"))) ?? "{}");
 		const control = (page: Page, kind: string, criterion: string) =>
-			page.getByLabel(new RegExp(`^${kind} de l’action : Critère ${criterion.replace(".", "\\.")} : `));
+			page.getByLabel(new RegExp(`^${kind} de l’action \\d+ : Critère ${criterion.replace(".", "\\.")} : `));
 		/** Période 2026-2028 saisie comme un utilisateur : l'année s'enregistre à la sortie du champ. */
 		async function setPeriod(page: Page) {
 			await page.getByLabel("Année de début").fill("2026");
@@ -1969,13 +1972,14 @@ describe("audit guidé (bout en bout)", { timeout: 60_000 }, () => {
 			const page = await browser.newPage();
 			await openWith(page, sessionJson());
 			await setPeriod(page);
-			const HOSTILE = '<script>alert("s")</script><img src=x onerror=alert(1)>[clic](javascript:alert(2)) ‮gnp';
+			// Adresses que satteri peut transformer en liens : seuls http(s) et mailto sont admis (README du core).
+			const HOSTILE = `<script>alert("s")</script><img src=x onerror=alert(1)>[clic](javascript:alert(2)) ‮gnp${LINKS}`;
 			await page.getByLabel("Stratégie", { exact: true }).fill(`${HOSTILE}\n# titre\n<iframe src=javascript:alert(3)>`);
 			await page.getByLabel("Intitulé d’une action libre").fill(HOSTILE);
 			await page.getByRole("button", { name: "Ajouter l’action" }).click();
 			await expect.poll(() => rowHeads(page)).toHaveLength(1);
-			await page.getByLabel(/^Commentaire de l’action : /).fill("<svg onload=alert(4)>");
-			await page.getByLabel(/^Année cible de l’action : /).selectOption("2026");
+			await page.getByLabel(/^Commentaire de l’action 1 : /).fill("<svg onload=alert(4)>");
+			await page.getByLabel(/^Année cible de l’action 1 : /).selectOption("2026");
 			await expect.poll(() => schemaPreview(page)).toContain('<script>alert("s")</script>');
 
 			for (const [button, title] of [
@@ -2016,14 +2020,25 @@ describe("audit guidé (bout en bout)", { timeout: 60_000 }, () => {
 				};
 				const elements: string[] = [];
 				const raw: string[] = [];
-				const walk = (node: { type?: string; tagName?: string; value?: string; children?: unknown[] }) => {
+				const links: string[] = [];
+				const walk = (node: {
+					type?: string;
+					tagName?: string;
+					value?: string;
+					properties?: { href?: string };
+					children?: unknown[];
+				}) => {
 					if (node.type === "element") elements.push(node.tagName ?? "");
+					if (node.tagName === "a") links.push(String(node.properties?.href));
 					if (node.type === "raw") raw.push(node.value ?? "");
 					for (const child of node.children ?? []) walk(child as typeof node);
 				};
 				walk(tree);
 				expect(raw).toEqual([]);
-				for (const tag of new Set(elements)) expect(["h1", "h2", "h3", "li", "p", "ul"]).toContain(tag);
+				for (const tag of new Set(elements)) expect(["a", "h1", "h2", "h3", "li", "p", "ul"]).toContain(tag);
+				// Non vide : satteri fait bien des liens des adresses nues, www., e-mail et <http://…> (admis).
+				expect(links.length).toBeGreaterThan(0);
+				for (const href of links) expect(href).toMatch(/^(https?:\/\/|mailto:)/);
 			}
 			await page.close();
 		});
@@ -2037,7 +2052,7 @@ describe("audit guidé (bout en bout)", { timeout: 60_000 }, () => {
 			await expect.poll(() => rowHeads(a)).toHaveLength(2);
 			await a.getByLabel("Référent accessibilité numérique").fill("Marie Durand, rattachée à la direction");
 			await control(a, "Priorité", "8.3").selectOption("basse");
-			await a.getByRole("button", { name: /^Retirer l’action : Critère 1\.1 / }).click();
+			await a.getByRole("button", { name: /^Retirer l’action \d+ : Critère 1\.1 / }).click();
 			await a.getByLabel("Intitulé d’une action libre").fill("Former l’équipe");
 			await a.getByRole("button", { name: "Ajouter l’action" }).click();
 			await a.waitForFunction(() => localStorage.getItem("rampe.audit.session")?.includes("Former l’équipe"));
@@ -2052,7 +2067,9 @@ describe("audit guidé (bout en bout)", { timeout: 60_000 }, () => {
 				const heads = await rowHeads(page);
 				expect(heads[0]).toMatch(/Retirée\.$/);
 				expect(heads[2]).toBe("Former l’équipe");
-				await expect(page.getByRole("button", { name: /^Rétablir l’action : Critère 1\.1/ }).count()).resolves.toBe(1);
+				await expect(page.getByRole("button", { name: /^Rétablir l’action \d+ : Critère 1\.1/ }).count()).resolves.toBe(
+					1,
+				);
 				const text = await schemaPreview(page);
 				expect(text).toContain("Marie Durand, rattachée à la direction");
 				expect(text).toContain("Actions retirées par l’organisme, gardées pour mémoire");
@@ -2087,7 +2104,7 @@ describe("audit guidé (bout en bout)", { timeout: 60_000 }, () => {
 				await setPeriod(page);
 				await syncButton(page).click();
 				await expect.poll(() => rowHeads(page)).toHaveLength(2);
-				await page.getByRole("button", { name: /^Retirer l’action : Critère 8\.3 / }).click();
+				await page.getByRole("button", { name: /^Retirer l’action \d+ : Critère 8\.3 / }).click();
 				await page.getByLabel("Intitulé d’une action libre").fill("");
 				await page.getByRole("button", { name: "Ajouter l’action" }).click();
 				await expect(page.getByLabel("Intitulé d’une action libre").getAttribute("aria-invalid")).resolves.toBe("true");
@@ -2130,6 +2147,84 @@ describe("audit guidé (bout en bout)", { timeout: 60_000 }, () => {
 			await page.close();
 		});
 
+		it("mention « Rampe vous aide seulement… » : dans l’interface et l’aperçu, jamais dans les fichiers", async () => {
+			const page = await browser.newPage();
+			await openWith(page, sessionJson());
+			await setPeriod(page);
+			const MENTION = "Ce document décrit la politique de votre organisme ; Rampe vous aide seulement à le structurer.";
+			await expect.poll(() => schemaPreview(page)).toContain(MENTION);
+			await expect(planPreview(page)).resolves.toContain(MENTION);
+			for (const button of [
+				"Télécharger le schéma (HTML)",
+				"Télécharger le schéma (Markdown)",
+				"Télécharger le plan d’action 2026 (HTML)",
+				"Télécharger le plan d’action 2026 (Markdown)",
+			])
+				expect((await download(page, button)).content).not.toContain("Rampe vous aide");
+			await page.close();
+		});
+
+		it("audit redevenu incomplet après une synchronisation : avertissement, et une ligne dans l’export", async () => {
+			const page = await browser.newPage();
+			await openWith(page, sessionJson());
+			await syncButton(page).click();
+			await expect.poll(() => rowHeads(page)).toHaveLength(2);
+			await page.waitForFunction(() => localStorage.getItem("rampe.audit.session")?.includes('"actions":[{'));
+			const json = await stored(page);
+			delete json.evaluations["11.1"][P1];
+			await page.evaluate((v) => localStorage.setItem("rampe.audit.session", v), JSON.stringify(json));
+			await page.reload();
+			await page.waitForSelector("astro-island:not([ssr])");
+			await expect
+				.poll(() => page.locator(".audit-schema").textContent())
+				.toContain("Attention : l’audit n’est plus complet.");
+			const md = await download(page, "Télécharger le schéma (Markdown)");
+			expect(md.content).toContain(
+				"Liste établie à partir d’un audit qui n’est plus complet : à mettre à jour une fois l’audit terminé.",
+			);
+			await page.close();
+		});
+
+		it("deux actions libres de même intitulé : étiquettes distinctes, numérotées par ligne", async () => {
+			const page = await browser.newPage();
+			await openWith(page, sessionJson());
+			for (let i = 0; i < 2; i++) {
+				await page.getByLabel("Intitulé d’une action libre").fill("Audit annuel");
+				await page.getByRole("button", { name: "Ajouter l’action" }).click();
+			}
+			await expect.poll(() => rowHeads(page)).toEqual(["Audit annuel", "Audit annuel"]);
+			const labels = await page
+				.locator(".audit-schema-table select, .audit-schema-table input, .audit-schema-table button")
+				.evaluateAll((els) => els.map((el) => el.getAttribute("aria-label")));
+			expect(new Set(labels).size).toBe(labels.length);
+			expect(labels).toContain("Priorité de l’action 2 : Audit annuel");
+			await page.close();
+		});
+
+		it("plus de 1 000 actions : la mise à jour depuis l’audit est refusée avec un message clair", async () => {
+			const page = await browser.newPage();
+			const actions = Array.from({ length: 1000 }, (_, i) => ({
+				id: `40000000-0000-4000-8000-${String(i).padStart(12, "0")}`,
+				source: "libre",
+				title: `Action ${i}`,
+				comment: "",
+				removed: false,
+			}));
+			await openWith(
+				page,
+				sessionJson((_, session) => {
+					session.schemaVersion = 4;
+					session.schema = { sections: {}, actions };
+				}),
+			);
+			const errors: string[] = [];
+			page.on("pageerror", (e) => errors.push(e.message));
+			await syncButton(page).click();
+			await expect.poll(() => live(page)).toMatch(/^Mise à jour impossible : le tableau dépasserait 1 000 actions/);
+			expect(errors).toEqual([]);
+			await page.close();
+		});
+
 		it("au clavier seul : ajouter une action libre, régler sa priorité, exporter", async () => {
 			const page = await browser.newPage();
 			await openWith(page, sessionJson());
@@ -2140,13 +2235,13 @@ describe("audit guidé (bout en bout)", { timeout: 60_000 }, () => {
 			await page.keyboard.press("Enter");
 			await expect.poll(() => rowHeads(page)).toEqual(["Former l’équipe éditoriale"]);
 			await expect.poll(() => live(page)).toBe("Action ajoutée : Former l’équipe éditoriale");
-			await tabUntil(page, "el.getAttribute('aria-label') === 'Priorité de l’action : Former l’équipe éditoriale'", {
+			await tabUntil(page, "el.getAttribute('aria-label') === 'Priorité de l’action 1 : Former l’équipe éditoriale'", {
 				back: true,
 				max: 20,
 			});
 			await page.keyboard.press("h"); // recherche par la première lettre : « haute »
 			await expect
-				.poll(() => page.getByLabel("Priorité de l’action : Former l’équipe éditoriale").inputValue())
+				.poll(() => page.getByLabel("Priorité de l’action 1 : Former l’équipe éditoriale").inputValue())
 				.toBe("haute");
 			await tabUntil(page, "el.textContent === 'Télécharger le schéma (Markdown)'", { max: 40 });
 			const md = await download(page, "", "Enter");
