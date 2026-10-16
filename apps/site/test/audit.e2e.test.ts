@@ -2299,13 +2299,11 @@ describe("audit guidé (bout en bout)", { timeout: 60_000 }, () => {
 		};
 		const importAuto = async (page: Page) => {
 			await openAudit(page);
-			await page
-				.getByLabel("Importer un audit (JSON)")
-				.setInputFiles({
-					name: "session.json",
-					mimeType: "application/json",
-					buffer: Buffer.from(await autoSession()),
-				});
+			await page.getByLabel("Importer un audit (JSON)").setInputFiles({
+				name: "session.json",
+				mimeType: "application/json",
+				buffer: Buffer.from(await autoSession()),
+			});
 			await page.locator(".audit-attribution").waitFor();
 		};
 		const banner = (page: Page) => page.locator(".audit-attribution").textContent();
@@ -2376,7 +2374,12 @@ describe("audit guidé (bout en bout)", { timeout: 60_000 }, () => {
 			expect(await page.evaluate(() => document.activeElement?.textContent)).toBe("Je reprends cet audit à mon compte");
 			expect(await result(page)).toContain(NOTICE);
 			expect(await preview(page)).toContain(`réalisé ${IA} révèle`);
-			// Persistée après rechargement.
+			// Persistée : enregistrée, puis relue après rechargement.
+			await expect
+				.poll(() =>
+					page.evaluate(() => JSON.parse(localStorage.getItem("rampe.audit.session") ?? "{}").evaluatedBy?.name),
+				)
+				.toBe("Claude");
 			await page.reload();
 			await page.waitForSelector("astro-island:not([ssr])");
 			expect(await banner(page)).toContain(NOTICE);
