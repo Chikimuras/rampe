@@ -1,10 +1,10 @@
 // Classement des résultats axe (ADR-0011 §3) et construction du rapport JSON v2, partagés par la CLI et l'extension
-// navigateur (ADR-0019 §4) : même logique, même fichier. Dépend du référentiel (via axe.ts), pas d'axe-core.
+// navigateur (ADR-0019 §4) : même logique, même fichier. Dépend des critères (criteres.ts, sans glossaire ni méthodologies), pas d'axe-core.
 import type { AuditPage, AuditReport, AuditResult, ReportToolName } from "./audit-report.ts";
 import { REPORT_SCHEMA_VERSION } from "./audit-report.ts";
 import type { ResultKind } from "./audit-session.ts";
 import { type AxeRuleMapping, classifyAxeRule, criteriaWithDirectRule, isDirectCheck } from "./axe.ts";
-import { getCriterion, rgaa } from "./rgaa.ts";
+import { baseCriteria, getBaseCriterion } from "./criteres.ts";
 import { stripControl, truncate } from "./sample-file.ts";
 
 /** Sous-ensemble d'un résultat `axe.run` (violation ou incomplete) utilisé ici. */
@@ -17,13 +17,14 @@ export interface AxeRawResult {
 	nodes: { target: unknown[]; html: string; failureSummary?: string }[];
 }
 
-const HTML_MAX = 500;
+/** Extrait HTML d'un élément en défaut, borné à l'écriture : il peut contenir des données de la page. */
+export const NODE_HTML_MAX = 500;
 /** Titre de page : borné à l'écriture. */
 export const TITLE_MAX = 300;
 
 /** Critères sans aucune vérification automatique directe, d'après les règles d'axe (`axe.getRules()`). */
 export const uncoveredCriteria = (rules: readonly { tags: readonly string[] }[]) =>
-	rgaa.criteria.length - criteriaWithDirectRule(rules.map((r) => r.tags)).size;
+	baseCriteria.length - criteriaWithDirectRule(rules.map((r) => r.tags)).size;
 
 // ADR-0011 §3 : seule une vérification directe (ni bonne pratique ni expérimentale) est une non-conformité.
 function kindOf(m: AxeRuleMapping, incomplete: boolean): ResultKind {
@@ -47,7 +48,7 @@ function toResult(r: AxeRawResult, incomplete: boolean): AuditResult | [] {
 		impact: r.impact ?? null,
 		nodes: r.nodes.map((n) => ({
 			target: n.target,
-			html: truncate(n.html, HTML_MAX),
+			html: truncate(n.html, NODE_HTML_MAX),
 			failureSummary: n.failureSummary ?? null,
 		})),
 	};
@@ -75,7 +76,7 @@ export function buildReport(input: {
 }
 
 /** Titre officiel sans les liens markdown vers le glossaire. */
-export const plainTitle = (id: string) => (getCriterion(id)?.title ?? "").replace(/\[([^\]]+)\]\([^)]*\)/g, "$1");
+export const plainTitle = (id: string) => (getBaseCriterion(id)?.title ?? "").replace(/\[([^\]]+)\]\([^)]*\)/g, "$1");
 
 // Cible axe : un sélecteur par niveau de cadre ; un niveau peut être un tableau (Shadow DOM).
 export const selector = (target: unknown[]) =>
