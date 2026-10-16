@@ -26,11 +26,11 @@ import {
 export { isObject, MAX_PAGES, MAX_SESSION_BYTES, MAX_URL, SESSION_TOOL_NAME } from "./strict.ts";
 
 /**
- * 4 : schéma pluriannuel et plan d'action (ADR-0018). 3 : champs de la déclaration d'accessibilité (ADR-0017). Une
+ * 5 : attribution de l'évaluateur, `evaluatedBy` (ADR-0022). 4 : schéma pluriannuel et plan d'action (ADR-0018). 3 : champs de la déclaration d'accessibilité (ADR-0017). Une
  * session d'une version antérieure est migrée sans perte (elle n'a pas ces champs) ; un onglet resté sur une version
  * précédente voit une session plus récente comme « future » et ne l'écrase pas, au lieu de la relire en la perdant.
  */
-export const SCHEMA_VERSION = 4;
+export const SCHEMA_VERSION = 5;
 
 /** C : conforme, NC : non conforme, NA : non applicable, NT : non testé (état initial). */
 export type Status = "C" | "NC" | "NA" | "NT";
@@ -89,7 +89,43 @@ export interface AuditSession {
 	declaration?: DeclarationFields;
 	/** Schéma pluriannuel et plan d'action (ADR-0018) ; absent : rien saisi. Opérations : schema.ts. */
 	schema?: SchemaPlan;
+	/**
+	 * Audit réalisé par une IA (ADR-0022) : affiché partout où le résultat apparaît, et retiré seulement par une action
+	 * explicite de l'utilisateur (`takeOverAudit`). Absent : évaluateur non précisé (l'utilisateur).
+	 */
+	evaluatedBy?: EvaluatedBy;
 }
+
+/** Évaluateur d'un audit réalisé par une IA (ADR-0022 §1) : jamais certifié. */
+export interface EvaluatedBy {
+	kind: "ia";
+	/** Nom de l'IA, ex. « Claude ». */
+	name: string;
+	certified: false;
+}
+/** Borne du nom de l'IA (ADR-0016 : bornes à l'écriture et à l'import). */
+export const MAX_EVALUATOR_NAME = 100;
+
+/** Attribution IA, nettoyée et bornée comme à l'import : tout ce que le modèle produit se réimporte. */
+export function setEvaluatedBy(session: AuditSession, name: string, at = now()): AuditSession {
+	const clean = stripControl(name).trim();
+	if (clean === "" || clean.length > MAX_EVALUATOR_NAME)
+		throw new Error(`Nom d’évaluateur vide ou de plus de ${MAX_EVALUATOR_NAME} caractères`);
+	return { ...session, updatedAt: at, evaluatedBy: { kind: "ia", name: clean, certified: false } };
+}
+
+/**
+ * « Je reprends cet audit à mon compte » (ADR-0022 §4) : l'utilisateur endosse chaque évaluation, l'attribution IA
+ * est retirée. Seule opération qui la retire : modifier une évaluation ne la retire pas.
+ */
+export function takeOverAudit(session: AuditSession, at = now()): AuditSession {
+	const { evaluatedBy: _removed, ...rest } = session;
+	return { ...rest, updatedAt: at };
+}
+
+/** Mention d'un audit réalisé par une IA, la même partout (bandeau, résultat). */
+export const evaluatedByNotice = (by: EvaluatedBy) =>
+	`Cet audit a été réalisé par une IA (${by.name}). Il n’est pas certifié et ne remplace pas un audit humain.`;
 
 /**
  * Volets officiels du schéma pluriannuel, dans l'ordre de la source (8 « politique », puis 6 « travaux ») ; leurs
@@ -505,7 +541,7 @@ function parseSessionWith(
 	if (field(root, "tool") !== undefined && name !== SESSION_TOOL_NAME)
 		fail("tool.name", "ce fichier n’a pas été produit par l’audit guidé de Rampe");
 	const version = field(root, "schemaVersion");
-	if (version !== 1 && version !== 2 && version !== 3 && version !== SCHEMA_VERSION)
+	if (version !== 1 && version !== 2 && version !== 3 && version !== 4 && version !== SCHEMA_VERSION)
 		fail("schemaVersion", `version ${JSON.stringify(version) ?? "absente"} non prise en charge`);
 	const v1 = version === 1;
 	const limit = (max: number) => (bounded ? max : Number.POSITIVE_INFINITY);
@@ -616,7 +652,7 @@ function parseSessionWith(
 	// Déclaration (ADR-0017), absente avant la v3. Import : textes nettoyés et tronqués, adresse rejetée au-delà de
 	// sa borne (comme une adresse de page), date et réalisation vérifiées. Relecture : types seulement ; une date
 	// abîmée retire ce seul champ (signalé par `dropped`), une réalisation inconnue reste une erreur de structure.
-	const rawDeclaration = version === 3 || version === SCHEMA_VERSION ? field(root, "declaration") : undefined;
+	const rawDeclaration = (version as number) >= 3 ? field(root, "declaration") : undefined;
 	let declaration: DeclarationFields | undefined;
 	if (rawDeclaration !== undefined) {
 		const d = object(rawDeclaration, "declaration");
@@ -644,8 +680,23 @@ function parseSessionWith(
 	}
 
 	// Schéma pluriannuel (ADR-0018), absent avant la v4. Structure et types partout ; bornes à l'import seulement.
-	const rawSchema = version === SCHEMA_VERSION ? field(root, "schema") : undefined;
+	const rawSchema = (version as number) >= 4 ? field(root, "schema") : undefined;
 	const schema = rawSchema === undefined ? undefined : parseSchema(rawSchema, known, bounded);
+
+	// Attribution (ADR-0022), absente avant la v5. Structure et valeurs fermées partout (`kind: "ia"`,
+	// `certified: false` : une attribution qui se dirait certifiée est refusée) ; nom nettoyé et borné à l'import.
+	const rawBy = version === SCHEMA_VERSION ? field(root, "evaluatedBy") : undefined;
+	let evaluatedBy: EvaluatedBy | undefined;
+	if (rawBy !== undefined) {
+		const by = object(rawBy, "evaluatedBy");
+		if (field(by, "kind") !== "ia") fail("evaluatedBy.kind", "« ia » attendu");
+		if (field(by, "certified") !== false) fail("evaluatedBy.certified", "false attendu (une IA ne certifie pas)");
+		const raw = string(field(by, "name"), "evaluatedBy.name");
+		const name = bounded ? stripControl(raw).trim() : raw;
+		if (bounded && (name === "" || name.length > MAX_EVALUATOR_NAME))
+			fail("evaluatedBy.name", `nom vide ou de plus de ${MAX_EVALUATOR_NAME} caractères`);
+		evaluatedBy = { kind: "ia", name, certified: false };
+	}
 
 	return {
 		schemaVersion: SCHEMA_VERSION,
@@ -658,6 +709,7 @@ function parseSessionWith(
 		findings,
 		...(declaration !== undefined && { declaration }),
 		...(schema !== undefined && { schema }),
+		...(evaluatedBy !== undefined && { evaluatedBy }),
 	};
 }
 

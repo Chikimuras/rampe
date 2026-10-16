@@ -7,11 +7,13 @@ import {
 	addPage,
 	createSession,
 	type DeclarationField,
+	evaluatedByNotice,
 	FUTURE_SESSION,
 	getEvaluation,
 	getFindings,
 	INVALID_SESSION,
 	isFutureSession,
+	MAX_EVALUATOR_NAME,
 	MAX_SESSION_BYTES,
 	parseSessionStrict,
 	parseStoredSession,
@@ -23,8 +25,10 @@ import {
 	serializeSession,
 	sessionFileName,
 	setDeclarationField,
+	setEvaluatedBy,
 	setEvaluation,
 	setPageProcess,
+	takeOverAudit,
 } from "./audit-session.ts";
 import { rgaa } from "./rgaa.ts";
 import { truncate } from "./sample-file.ts";
@@ -854,7 +858,72 @@ describe("déclaration d’accessibilité dans la session (ADR-0017 §4)", () =>
 		expect(stored(v2)).toEqual(full());
 		// Une v2 ne pouvait pas porter de déclaration : un champ de ce nom n'y est pas lu.
 		expect(parse({ ...v2, declaration: { organization: "x" } })).not.toHaveProperty("declaration");
-		// v4 : schéma pluriannuel (ADR-0018), testé dans schema.test.ts.
-		expect(SCHEMA_VERSION).toBe(4);
+		// v4 : schéma pluriannuel (ADR-0018), testé dans schema.test.ts ; v5 : attribution (ADR-0022), plus bas.
+		expect(SCHEMA_VERSION).toBe(5);
+	});
+});
+
+describe("attribution de l'évaluateur, evaluatedBy (ADR-0022, schemaVersion 5)", () => {
+	const ia = () => setEvaluatedBy(full(), "Claude", NOW);
+
+	it("posée par setEvaluatedBy, conservée par l'export, réimportée à l'identique (produit ⇒ réimportable)", () => {
+		const s = ia();
+		expect(s.evaluatedBy).toEqual({ kind: "ia", name: "Claude", certified: false });
+		expect(exported(s).evaluatedBy).toEqual(s.evaluatedBy);
+		expect(parse(exported(s))).toEqual(s);
+		expect(stored(exported(s))).toEqual(s);
+		// Aux bornes : le nom le plus long que le modèle accepte se réimporte aussi.
+		const long = setEvaluatedBy(full(), "x".repeat(MAX_EVALUATOR_NAME), NOW);
+		expect(parse(exported(long))).toEqual(long);
+		expect(() => setEvaluatedBy(full(), "x".repeat(MAX_EVALUATOR_NAME + 1), NOW)).toThrow();
+		expect(() => setEvaluatedBy(full(), " \u202e ", NOW)).toThrow();
+	});
+
+	it("modifier une évaluation ne la retire pas ; seule takeOverAudit la retire", () => {
+		const edited = setEvaluation(ia(), "1.1", A, { status: "NC", note: "revu" }, LATER);
+		expect(edited.evaluatedBy?.name).toBe("Claude");
+		const mine = takeOverAudit(edited, LATER);
+		expect(mine).not.toHaveProperty("evaluatedBy");
+		expect(mine.evaluations).toEqual(edited.evaluations);
+		expect(evaluatedByNotice({ kind: "ia", name: "Claude", certified: false })).toBe(
+			"Cet audit a été réalisé par une IA (Claude). Il n’est pas certifié et ne remplace pas un audit humain.",
+		);
+	});
+
+	it("migration : une session v1 à v4 est relue sans attribution, et un champ evaluatedBy n'y est pas lu", () => {
+		for (const v of [1, 2, 3, 4]) {
+			const old = { ...exported(full()), schemaVersion: v, evaluatedBy: { kind: "ia", name: "X", certified: false } };
+			expect(parse(old)).not.toHaveProperty("evaluatedBy");
+			expect(stored(old)).not.toHaveProperty("evaluatedBy");
+		}
+		expect(parse({ ...exported(full()), schemaVersion: 4 })).toEqual(full());
+	});
+
+	it("version future protégée : refus spécifique, même avec une attribution illisible", () => {
+		expect(() => stored({ ...exported(ia()), schemaVersion: SCHEMA_VERSION + 1, evaluatedBy: "?" })).toThrow(
+			FUTURE_SESSION,
+		);
+	});
+
+	it.each<[string, unknown, RegExp]>([
+		["pas un objet", "Claude", /^evaluatedBy : objet attendu/],
+		["autre nature", { kind: "humain", name: "A", certified: false }, /^evaluatedBy\.kind/],
+		["se dit certifiée", { kind: "ia", name: "Claude", certified: true }, /^evaluatedBy\.certified/],
+		["certification absente", { kind: "ia", name: "Claude" }, /^evaluatedBy\.certified/],
+		["nom absent", { kind: "ia", certified: false }, /^evaluatedBy\.name : texte attendu/],
+	])("import strict ET relecture : refuse %s", (_, evaluatedBy, detail) => {
+		expect(refusal({ ...exported(ia()), evaluatedBy }).detail).toMatch(detail);
+		expect(() => stored({ ...exported(ia()), evaluatedBy })).toThrow(INVALID_SESSION);
+	});
+
+	it("bornes à l'import seulement : nom vide ou trop long refusé à l'import, relu tel quel du stockage", () => {
+		for (const name of ["  ", "x".repeat(MAX_EVALUATOR_NAME + 1)]) {
+			const file = { ...exported(ia()), evaluatedBy: { kind: "ia", name, certified: false } };
+			expect(refusal(file).detail).toMatch(/^evaluatedBy\.name : nom vide ou de plus de 100/);
+			expect(stored(file).evaluatedBy?.name).toBe(name);
+		}
+		// Import : nom nettoyé comme les autres textes.
+		const bidi = { ...exported(ia()), evaluatedBy: { kind: "ia", name: " Cla\u202eude ", certified: false } };
+		expect(parse(bidi).evaluatedBy?.name).toBe("Claude");
 	});
 });

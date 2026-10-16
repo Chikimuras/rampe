@@ -160,6 +160,12 @@ describe("buildAutoSession", () => {
 		expect(serializeAutoSession(await buildAutoSession(sample, [f1, f3]))).toBe(once);
 	});
 
+	it("attribution IA posée (ADR-0022 §2), conservée par l'aller-retour", async () => {
+		const s = await buildAutoSession(sample, [f1]);
+		expect(s.evaluatedBy).toEqual({ kind: "ia", name: "Claude", certified: false });
+		expect(parseSessionStrict(JSON.parse(serializeAutoSession(s)), known).evaluatedBy).toEqual(s.evaluatedBy);
+	});
+
 	it("dates : celle du fragment le plus récent", async () => {
 		const s = await buildAutoSession(sample, [f1, f3]);
 		expect([s.createdAt, s.updatedAt]).toEqual(["2026-10-16T00:00:00.000Z", "2026-10-20T00:00:00.000Z"]);

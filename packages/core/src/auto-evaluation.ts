@@ -12,6 +12,7 @@ import {
 	MAX_NOTE,
 	type Status,
 	serializeSession,
+	setEvaluatedBy,
 	setEvaluation,
 } from "./audit-session.ts";
 import { baseCriteria, topics } from "./criteres.ts";
@@ -19,6 +20,8 @@ import { array, checkKeys, fail, field, object, ReportError, strictly, string } 
 
 /** Seul évaluateur admis : le cockpit affiche la mention « réalisée par une IA (Claude), non certifiée ». */
 export const AUTO_EVALUATOR = "Claude (IA)";
+/** Nom de l'IA dans l'attribution de la session (`evaluatedBy`, ADR-0022 §2). */
+export const AUTO_EVALUATOR_NAME = "Claude";
 /** Début de l'auto-évaluation : `createdAt` de la session, et son `updatedAt` tant qu'aucun fragment n'existe. */
 export const AUTO_EVALUATION_START = "2026-10-16";
 export const AUTO_STATUSES: readonly Status[] = ["C", "NC", "NA"];
@@ -181,7 +184,8 @@ export async function buildAutoSession(
 			const e = entries.get(`${c.id} ${href}`);
 			if (e) session = setEvaluation(session, c.id, ids.get(href) as string, { status: e.status, note: e.note }, at);
 		}
-	return { ...session, updatedAt: at };
+	// Attribution (ADR-0022 §2) : importée dans l'audit guidé, la session ne peut pas passer pour un audit humain.
+	return { ...setEvaluatedBy(session, AUTO_EVALUATOR_NAME, at), updatedAt: at };
 }
 
 /** Fichier versionné : la session exportée (ADR-0016 §1), indentée pour des diffs lisibles. */
