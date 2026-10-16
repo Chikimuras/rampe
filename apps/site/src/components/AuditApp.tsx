@@ -14,6 +14,8 @@ import {
 	addPage,
 	createSession,
 	type DeclarationField,
+	type EvaluatedBy,
+	evaluatedByNotice,
 	getEvaluation,
 	getFindings,
 	INVALID_SESSION,
@@ -38,8 +40,10 @@ import {
 	serializeSession,
 	sessionFileName,
 	setDeclarationField,
+	setEvaluatedBy,
 	setEvaluation,
 	setPageProcess,
+	takeOverAudit,
 } from "@rampe/core/audit-session";
 import { type Conformity, computeConformity, formatRate, processKey } from "@rampe/core/conformity";
 import {
@@ -508,6 +512,8 @@ export default function AuditApp({
 				</p>
 			)}
 
+			<Attribution session={session} setSession={setSession} setAnnounce={setAnnounce} />
+
 			<Backup session={session} setSession={setSession} setAnnounce={setAnnounce} known={known} />
 
 			<Pages session={session} setSession={setSession} setAnnounce={setAnnounce}>
@@ -695,6 +701,78 @@ export default function AuditApp({
 					Effacer cet audit et recommencer
 				</button>
 			</section>
+		</div>
+	);
+}
+
+/**
+ * Audit réalisé par une IA (ADR-0022) : bandeau permanent tant que l'attribution existe. « Je reprends cet audit à mon
+ * compte » la retire après confirmation (l'utilisateur endosse chaque évaluation) ; « Annuler » la rétablit, tant
+ * qu'il s'agit du même audit (ni recommencé ni remplacé par un import).
+ */
+function Attribution({
+	session,
+	setSession,
+	setAnnounce,
+}: {
+	session: AuditSession;
+	setSession: (update: (s: AuditSession) => AuditSession) => void;
+	setAnnounce: (message: string) => void;
+}) {
+	const [taken, setTaken] = useState<{ by: EvaluatedBy; createdAt: string } | null>(null);
+	const takeRef = useRef<HTMLButtonElement>(null);
+	const undoRef = useRef<HTMLButtonElement>(null);
+	const focus = useRef<"take" | "undo" | null>(null);
+	const by = session.evaluatedBy;
+	const canUndo = !by && taken !== null && taken.createdAt === session.createdAt;
+	useLayoutEffect(() => {
+		if (focus.current === "take") takeRef.current?.focus();
+		if (focus.current === "undo") undoRef.current?.focus();
+		focus.current = null;
+	}, [by, canUndo]);
+	if (by)
+		return (
+			<div class="audit-banner audit-attribution">
+				<p>
+					<strong>{evaluatedByNotice(by)}</strong> Le résultat, la déclaration d’accessibilité et le schéma pluriannuel
+					le mentionnent.
+				</p>
+				<button
+					type="button"
+					ref={takeRef}
+					onClick={() => {
+						if (
+							!confirm(
+								`Reprendre cet audit à votre compte ? Vous endossez alors chacune de ses évaluations, réalisées par une IA (${by.name}) : la mention disparaît du résultat, de la déclaration et du schéma. Vous pourrez annuler.`,
+							)
+						)
+							return;
+						setTaken({ by, createdAt: session.createdAt });
+						setSession((s) => takeOverAudit(s));
+						focus.current = "undo";
+						setAnnounce("Vous avez repris cet audit à votre compte : la mention de l’IA est retirée.");
+					}}
+				>
+					Je reprends cet audit à mon compte
+				</button>
+			</div>
+		);
+	if (!canUndo || !taken) return null;
+	return (
+		<div class="audit-banner audit-attribution">
+			<p>Vous avez repris à votre compte cet audit réalisé par une IA ({taken.by.name}).</p>
+			<button
+				type="button"
+				ref={undoRef}
+				onClick={() => {
+					setSession((s) => setEvaluatedBy(s, taken.by.name));
+					setTaken(null);
+					focus.current = "take";
+					setAnnounce("Reprise annulée : l’audit est de nouveau attribué à une IA.");
+				}}
+			>
+				Annuler
+			</button>
 		</div>
 	);
 }
@@ -1524,6 +1602,11 @@ function Result({
 	return (
 		<section aria-labelledby="audit-resultat" class="audit-result">
 			<h2 id="audit-resultat">3. Résultat</h2>
+			{session.evaluatedBy && (
+				<p class="audit-reminder">
+					<strong>{evaluatedByNotice(session.evaluatedBy)}</strong>
+				</p>
+			)}
 			{body}
 		</section>
 	);
@@ -1914,7 +1997,14 @@ function Declaration({
 			{DECLARATION_GROUPS.map((g) => (
 				<fieldset class="audit-declaration-group" key={g.legend}>
 					<legend>{g.legend}</legend>
-					{g.legend === "Audit" && (
+					{g.legend === "Audit" && session.evaluatedBy && (
+						<p class="audit-help">
+							L’audit a été réalisé par une IA ({session.evaluatedBy.name}) : la déclaration l’indique (« par une IA (
+							{session.evaluatedBy.name}), auto-évaluation non certifiée »), et ce choix n’est pas modifiable. Pour le
+							changer, reprenez d’abord l’audit à votre compte (en haut de la page).
+						</p>
+					)}
+					{g.legend === "Audit" && !session.evaluatedBy && (
 						<fieldset class="audit-auditby">
 							<legend>L’audit a été réalisé</legend>
 							{(
@@ -1937,6 +2027,7 @@ function Declaration({
 						</fieldset>
 					)}
 					{g.legend === "Audit" &&
+						!session.evaluatedBy &&
 						auditBy === "prestataire" &&
 						input({ field: "auditCompany", label: "Nom du prestataire" })}
 					{g.fields.map(input)}
