@@ -48,7 +48,7 @@ Chaque case cochée correspond à du code mergé sur `main` avec la CI verte. Le
 
 ## Phase 6 — Lancement
 
-- [ ] Gate CI : Rampe audite Rampe à chaque PR (0 non-conformité automatique)
+- [x] Gate CI : Rampe audite Rampe à chaque PR (0 non-conformité automatique)
 - [ ] Auto-évaluation complète des 106 critères (IA, étiquetée non certifiée) et corrections jusqu’à 100 %
 - [ ] Publication de la déclaration d’accessibilité de Rampe ⛔ engage l’éditeur, Alexandre
 - [ ] Mentions légales ⛔ l’éditeur est Alexandre
