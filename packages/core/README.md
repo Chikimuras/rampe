@@ -26,7 +26,7 @@ axe-core n’est qu’une dépendance de développement, épinglée : les tests 
 
 ## Audit guidé : session et import des résultats automatiques
 
-`audit-session.ts` est le modèle pur d’un audit manuel (ADR-0013). Il n’embarque pas le référentiel, pour que l’îlot de `/audit/` reste léger. La session (`schemaVersion: 2`) range `evaluations[critère][pageId]` = `{ status, note, source }` et `findings[critère][pageId]` = indices automatiques. `source` vaut `humain` (par défaut) ou `auto`. Une session v1 est migrée sans perte : toutes ses évaluations sont humaines, et elle n’a aucun indice.
+`audit-session.ts` est le modèle pur d’un audit manuel (ADR-0013). Il n’embarque pas le référentiel, pour que l’îlot de `/audit/` reste léger. La session (`schemaVersion: 3`) range `evaluations[critère][pageId]` = `{ status, note, source }` et `findings[critère][pageId]` = indices automatiques. `source` vaut `humain` (par défaut) ou `auto`. Une session v1 est migrée sans perte : toutes ses évaluations sont humaines, et elle n’a aucun indice. La v3 ajoute les champs de la déclaration d’accessibilité (`declaration`, voir plus bas) ; une session v2 est migrée sans perte.
 
 ### Sauvegarde : export et import d’une session (ADR-0016)
 
@@ -78,6 +78,28 @@ else formatRate(r.globalRate ?? 0); // taux en centièmes entiers (3333) → « 
 - **Échantillon** : un critère est validé s’il est conforme sur au moins une page et non conforme sur aucune, non applicable s’il l’est partout. **Taux global** = validés ÷ applicables (`null` si aucun applicable) ; **taux moyen** = moyenne des taux des pages.
 - Arrondi **exact**, sans flottant : les taux sont des centièmes de point entiers, plancher de `10000 × v ÷ a` en entiers, et le taux moyen est le plancher de la somme exacte des fractions des pages (BigInt). `formatRate` ne fait que les écrire : 99,996 → « 99,99 % », jamais « 100 % ».
 - `setPageProcess(session, pageId, nom)` (dans `audit-session.ts`) nomme le processus d’une page ; une chaîne vide le retire.
+
+## Déclaration d’accessibilité
+
+`declaration.ts` produit la déclaration d’accessibilité au **format officiel, à la lettre** (ADR-0017). Pur, sans données : l’îlot l’importe par `@rampe/core/declaration`.
+
+```ts
+import { conformityState, renderDeclaration } from "@rampe/core/declaration";
+
+const r = computeConformity(session, ids);
+conformityState(r); // { state: "totalement" | "partiellement" } ou { state: "non", reason }
+const options = { date: new Date(), rgaaVersion: rgaa.version, criterionTitles }; // titres en texte brut
+renderDeclaration(session, r, session.declaration ?? {}, { ...options, format: "html" }); // fragment à coller
+renderDeclaration(session, r, session.declaration ?? {}, { ...options, format: "html", standalone: true }); // page complète
+renderDeclaration(session, r, session.declaration ?? {}, { ...options, format: "markdown" });
+```
+
+- **Gabarit** : section « La déclaration d’accessibilité adopte obligatoirement ce format » de `src/obligations/declaration-accessibilite.md` (dépôt DINUM, commit `ca4019f`, copié le 2026-10-15, Licence Ouverte 2.0). La copie brute est `test/fixtures/declaration-format-officiel.json` ; un test vérifie que chaque phrase imposée figure **mot pour mot et dans l’ordre** dans les deux sorties, espaces insécables compris. Seuls les passages entre crochets sont remplis ; un passage vide reste affiché **entre crochets**. Si le gabarit officiel change, la copie est à refaire à la main (la synchro hebdomadaire ne couvre que le référentiel).
+- **État de conformité** (`conformityState`), règle officielle décidée sur les **entiers** (validés `v`, applicables `a`) : `v = a` → « totalement » ; `2v ≥ a` → « partiellement » ; sinon « non ». 49,996 % n’est jamais arrondi à 50 %. Audit incomplet (ADR-0015) → « non », motif « aucun résultat d’audit complet ». **Aucun critère applicable** → « non » aussi : rien n’a été mesuré, et la règle officielle classe « non conforme » l’absence de résultat « permettant de mesurer le respect des critères » (un « totalement » vrai à vide serait trompeur).
+- **Ce que Rampe remplit** : l’état, le pourcentage de critères respectés et le taux moyen (`formatRate`, seulement si l’audit est complet), la liste des critères non conformes (titre officiel et pages en « Non conforme »), les pages vérifiées, la date d’établissement (aujourd’hui, sauf date saisie), le référentiel (« RGAA, version 4.1.2 ») et la nature du service (site web). Le motif d’un état « non » sans mesure prend la place du détail des tests.
+- **Ce que l’utilisateur saisit** (`DECLARATION_FIELDS`, rangés dans `session.declaration`) : organisme, engagement, nom du site, schéma pluriannuel et plan d’action, réalisation de l’audit (interne ou prestataire), rapport, précisions sur les non-conformités, dérogations, contenus exemptés, dates, technologies, environnement de test, outils, contacts. `setDeclarationField` les nettoie (contrôles et bidi) et les borne à l’écriture (1 000 caractères, 10 000 pour une liste, 2 048 pour une adresse) ; une valeur vide retire le champ. La session passe en **v3** : l’import de fichier valide strictement ces champs (types, dates `AAAA-MM-JJ`, réalisation, bornes, textes tronqués), la relecture du stockage ne vérifie que les types et formes. Les sessions v1 et v2 sont migrées sans perte ; un onglet resté sur la version précédente voit une session v3 comme « future » et ne l’écrase pas.
+- **Sécurité** (OWASP *XSS Prevention Cheat Sheet*, « Output Encoding ») : en HTML, toute saisie est encodée (`& < > " '`) ; les liens n’acceptent que http(s) et `mailto:` (`safeUrl`, une adresse e-mail seule devient `mailto:`), sinon le passage reste à compléter. En Markdown, toute ponctuation ASCII d’une saisie est échappée (CommonMark, « Backslash escapes ») : aucune saisie n’ouvre un lien, une image, une balise ou un titre. Contrôles et bidi sont retirés au rendu, car la relecture du stockage ne modifie rien.
+- `declarationBlocks` expose le modèle intermédiaire (titres, paragraphes, listes ; texte du gabarit, saisie, passage à compléter, lien) : l’aperçu de l’îlot le rend avec Preact, qui échappe lui-même, sans `innerHTML`.
 
 ## Données
 

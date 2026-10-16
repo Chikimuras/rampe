@@ -9,9 +9,11 @@ import type { AddressInfo } from "node:net";
 import { tmpdir } from "node:os";
 import { dirname, extname, join, normalize } from "node:path";
 import { fileURLToPath } from "node:url";
+import { gzipSync } from "node:zlib";
 import { rgaa } from "@rampe/core";
 import axe from "axe-core";
 import { type Browser, chromium, type Page } from "playwright";
+import { markdownToHast } from "satteri";
 import { afterAll, beforeAll, describe, expect, it } from "vitest";
 
 const root = fileURLToPath(new URL("..", import.meta.url));
@@ -111,6 +113,29 @@ async function tabUntil(page: Page, predicate: string, { back = false, max = 80 
 	throw new Error(`Focus jamais atteint : ${predicate}`);
 }
 
+/** Clique et intercepte le téléchargement ; aucune requête réseau pendant ce temps (Blob local). */
+async function download(page: Page, button: string, press?: string) {
+	const requests: string[] = [];
+	const onRequest = (r: { url: () => string }) => {
+		if (!r.url().startsWith("blob:")) requests.push(r.url());
+	};
+	page.on("request", onRequest);
+	const [file] = await Promise.all([
+		page.waitForEvent("download"),
+		press ? page.keyboard.press(press) : page.getByRole("button", { name: button }).click(),
+	]);
+	const content = await readFile(await file.path(), "utf8");
+	page.off("request", onRequest);
+	expect(requests).toEqual([]);
+	return {
+		name: file.suggestedFilename(),
+		content,
+		get json() {
+			return JSON.parse(content);
+		},
+	};
+}
+
 describe("audit guidé (bout en bout)", { timeout: 60_000 }, () => {
 	it("seule /audit/ charge du JavaScript, et ce poids reste borné", async () => {
 		const pages: string[] = [];
@@ -126,24 +151,27 @@ describe("audit guidé (bout en bout)", { timeout: 60_000 }, () => {
 		expect(withScript).toEqual(["/audit/index.html"]);
 
 		const page = await browser.newPage();
-		const bodies: Promise<number>[] = [];
+		const bodies: Promise<[raw: number, gzip: number]>[] = [];
 		page.on("response", (r) => {
-			if (r.url().endsWith(".js")) bodies.push(r.body().then((b) => b.length));
+			if (r.url().endsWith(".js")) bodies.push(r.body().then((b) => [b.length, gzipSync(b, { level: 9 }).length]));
 		});
 		await openAudit(page);
 		await page.waitForLoadState("networkidle");
 		const files = bodies.length;
-		const js = (await Promise.all(bodies)).reduce((a, b) => a + b, 0);
+		const sizes = await Promise.all(bodies);
+		const js = sizes.reduce((a, [raw]) => a + raw, 0);
+		const gzip = sizes.reduce((a, [, z]) => a + z, 0);
 		const inline = await page.evaluate(() =>
 			[...document.querySelectorAll("script:not([src])")].reduce((n, s) => n + (s.textContent?.length ?? 0), 0),
 		);
 		console.log(
-			`/audit/ : ${files} modules JS, ${js} octets non compressés ; scripts en ligne d'Astro : ${inline} octets`,
+			`/audit/ : ${files} modules JS, ${js} octets non compressés, ${gzip} octets en gzip ; scripts en ligne d'Astro : ${inline} octets`,
 		);
 		expect(js).toBeGreaterThan(0);
-		// Budget relevé de 60 000 à 70 000 avec l'écran « Résultat » (ADR-0015) : 62 299 octets à ce moment-là ;
-		// puis à 80 000 avec la sauvegarde et la validation stricte de session (ADR-0016) : 72 128 octets.
-		expect(js).toBeLessThan(80_000);
+		// Budget mesuré en gzip, ce que le réseau transporte réellement : 40 Ko pour /audit/. Historique en octets
+		// bruts : 62 299 (« Résultat », ADR-0015), 72 128 (sauvegarde, ADR-0016), 99 345 (déclaration, ADR-0017),
+		// soit 32 683 octets en gzip à ce moment-là.
+		expect(gzip).toBeLessThan(40_000);
 		await page.close();
 	});
 
@@ -711,7 +739,7 @@ describe("audit guidé (bout en bout)", { timeout: 60_000 }, () => {
 			await expect.poll(() => group(page, "3.2").locator(".audit-auto").count()).toBe(0);
 			await page.waitForFunction(() => localStorage.getItem("rampe.audit.session")?.includes("2,0:1"));
 			const saved = JSON.parse((await stored(page)) ?? "{}");
-			expect(saved.schemaVersion).toBe(2);
+			expect(saved.schemaVersion).toBe(3);
 			const [pageId] = saved.pages.map((p: { id: string }) => p.id);
 			expect(saved.evaluations["1.1"][pageId]).toMatchObject({ status: "C", source: "humain" });
 			expect(saved.evaluations["3.2"][pageId]).toMatchObject({ status: "NC", source: "humain" });
@@ -1041,14 +1069,14 @@ describe("audit guidé (bout en bout)", { timeout: 60_000 }, () => {
 			await typeProcess(page);
 			await expect(rates(page)).resolves.toEqual([`33,33${PCT}`, `61,11${PCT}`]);
 			const region = page.getByRole("region", { name: "Résultat par page" });
-			await expect(region.evaluate((el) => el.scrollWidth > el.clientWidth)).resolves.toBe(true);
+			await expect.poll(() => region.evaluate((el) => el.scrollWidth > el.clientWidth)).toBe(true);
 			await region.focus();
 			await page.keyboard.press("ArrowRight");
 			// Défilement éventuellement animé : on attend qu'il ait eu lieu.
 			await expect.poll(() => region.evaluate((el) => el.scrollLeft)).toBeGreaterThan(0);
 			if (captures) await page.locator(".audit-result").screenshot({ path: join(captures, "resultat-320.png") });
 			expect(await axeViolations(page)).toEqual([]);
-			expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBeLessThanOrEqual(320);
+			await expect.poll(() => page.evaluate(() => document.documentElement.scrollWidth)).toBeLessThanOrEqual(320);
 			await page.close();
 		});
 
@@ -1078,22 +1106,6 @@ describe("audit guidé (bout en bout)", { timeout: 60_000 }, () => {
 			const d = new Date();
 			return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`;
 		};
-		/** Clique et intercepte le téléchargement ; aucune requête réseau pendant ce temps (Blob local). */
-		async function download(page: Page, button: string) {
-			const requests: string[] = [];
-			const onRequest = (r: { url: () => string }) => {
-				if (!r.url().startsWith("blob:")) requests.push(r.url());
-			};
-			page.on("request", onRequest);
-			const [file] = await Promise.all([
-				page.waitForEvent("download"),
-				page.getByRole("button", { name: button }).click(),
-			]);
-			const content = await readFile(await file.path(), "utf8");
-			page.off("request", onRequest);
-			expect(requests).toEqual([]);
-			return { name: file.suggestedFilename(), content, json: JSON.parse(content) };
-		}
 		/** Session complète (taux calculé) avec une note sur deux lignes et un indice de la CLI. */
 		const fullSession = () =>
 			sessionJson((ev, session) => {
@@ -1144,7 +1156,7 @@ describe("audit guidé (bout en bout)", { timeout: 60_000 }, () => {
 			const file = await download(a, "Télécharger l’audit (JSON)");
 			expect(file.name).toBe(`audit-exemple.fr-${today()}.json`);
 			expect(file.json.tool).toEqual({ name: "@rampe/site" });
-			expect(file.json.schemaVersion).toBe(2);
+			expect(file.json.schemaVersion).toBe(3);
 			await expect(live(a)).resolves.toBe(`Audit téléchargé : ${file.name}`);
 			await expect(reminder(a)).resolves.toMatch(
 				/^Cet audit n’existe que dans ce navigateur\. Dernier téléchargement : \d+ \S+ \d{4} à \d{2}:\d{2}\.$/,
@@ -1331,7 +1343,7 @@ describe("audit guidé (bout en bout)", { timeout: 60_000 }, () => {
 				["statut.json", good.replace(`"status":"NC"`, `"status":"OK"`), invalid, /statut inconnu "OK"/],
 				[
 					"futur.json",
-					good.replace(`"schemaVersion":2`, `"schemaVersion":3`),
+					good.replace(`"schemaVersion":2`, `"schemaVersion":4`),
 					/^Cet audit a été créé par une version plus récente de Rampe/,
 					null,
 				],
@@ -1394,6 +1406,425 @@ describe("audit guidé (bout en bout)", { timeout: 60_000 }, () => {
 			if (captures) await page.screenshot({ path: join(captures, "mauvais-champ.png"), fullPage: true });
 			await page.waitForTimeout(600);
 			expect(await stored(page)).toBe(before);
+			await page.close();
+		});
+	});
+
+	// Déclaration d'accessibilité (ADR-0017). Audits injectés comme pour le taux (sessionJson), saisies au clavier ou
+	// par remplissage ; chaque export est intercepté et relu (fichier HTML ouvert dans Chromium, Markdown analysé).
+	describe("déclaration d’accessibilité (ADR-0017)", () => {
+		const preview = (page: Page) => page.locator(".audit-preview");
+		const previewText = (page: Page) => preview(page).evaluate((el) => (el as HTMLElement).innerText);
+		const state = (page: Page) => page.locator(".audit-state").evaluate((el) => (el as HTMLElement).innerText);
+		const NBSP = " ";
+		/** 8.3 conforme sur l'accueil : seul 1.1 (NC sur Paiement) n'est pas validé. */
+		const twoThirds = (patch: (ev: Record<string, Record<string, unknown>>) => void = () => {}) =>
+			sessionJson((ev) => {
+				(ev["8.3"] as Record<string, unknown>)[P1] = { status: "C", note: "", source: "humain" };
+				patch(ev);
+			});
+		const HOSTILE = {
+			"Nom de l’organisme": '<script>alert("org")</script><img src=x onerror=alert(1)>',
+			"Nom du site": "[clic](javascript:alert(2)) \u202egnp.live",
+			"Adresse du schéma pluriannuel de mise en accessibilité": "javascript:alert(3)",
+			"Formulaire de contact ou adresse e-mail": 'https://exemple.fr/"><svg onload=alert(4)>',
+			"Service à contacter": "<iframe src=javascript:alert(5)></iframe>",
+		};
+
+		it("audit complet : « partiellement », chiffres exactement égaux au calcul à la main", async () => {
+			const page = await browser.newPage();
+			await openWith(page, twoThirds());
+			// Validés : 3.2 et 8.3 ; applicables : 1.1, 3.2, 8.3 → 2/3 = 66,666… → 66,66 % ; 2 × 2 ≥ 3 : partiellement.
+			// Taux moyen : Accueil 3/3, Panier 2/2 (8.3 NA), Paiement 2/3 → (100 + 100 + 66,666…) ÷ 3 = 88,888… → 88,88 %.
+			await expect
+				.poll(() => state(page))
+				.toMatch(new RegExp(`^Partiellement conforme : 66,66${PCT} des critères RGAA respectés`));
+			const text = await previewText(page);
+			expect(text).toContain(
+				`est\npartiellement conforme avec le référentiel général d’amélioration de l’accessibilité (RGAA), version 4.1.2.`,
+			);
+			expect(text).toContain(`66,66${PCT} des critères RGAA sont respectés.`);
+			expect(text).toContain(`Le taux moyen de conformité du service en ligne s’élève à 88,88${PCT}.`);
+			expect(text).toContain(
+				`Critère 1.1${NBSP}: Chaque image porteuse d’information a-t-elle une alternative textuelle${NBSP}? Page concernée${NBSP}: Paiement.`,
+			);
+			expect(text).not.toMatch(/Critère (3\.2|8\.3)/);
+			for (const p of ["Accueil", "Panier", "Paiement"]) expect(text).toContain(`${p}${NBSP}: https://exemple.fr/`);
+			// Ce que l'utilisateur doit compléter reste visible, entre crochets, et marqué.
+			expect(text).toContain("[Nom de l’organisme concerné] s’engage à rendre");
+			await expect(preview(page).locator("mark").first().textContent()).resolves.toBe("[Nom de l’organisme concerné]");
+			// L'exemple de conformity.ts : 1 validé sur 3 → 33,33 %, moins de 50 % : « non », motif en clair.
+			const other = await browser.newPage();
+			await openWith(other, sessionJson());
+			await expect
+				.poll(() => state(other))
+				.toBe(
+					`Non conforme : Moins de 50 % des critères RGAA sont respectés. Pourcentage de critères respectés : 33,33${PCT}.`,
+				);
+			await expect(previewText(other)).resolves.toContain("est\nnon conforme avec");
+			await page.close();
+			await other.close();
+		});
+
+		it("audit incomplet : « non conforme », motif, et lien vers ce qui reste à faire", async () => {
+			const page = await browser.newPage();
+			await openWith(
+				page,
+				twoThirds((ev) => delete ev["11.1"]?.[P1]),
+			);
+			await expect
+				.poll(() => state(page))
+				.toMatch(
+					/^Non conforme : aucun résultat d’audit complet\. .+terminez l’audit : 1 évaluation « non testé » et 0 statut à confirmer\./s,
+				);
+			const text = await previewText(page);
+			expect(text).toContain("est\nnon conforme avec");
+			expect(text).toContain(
+				"Aucun résultat d’audit complet permettant de mesurer le respect des critères : l’audit n’est pas terminé.",
+			);
+			expect(text).toContain("[pourcentage de critères RGAA respectés] des critères RGAA sont respectés.");
+			expect(text).not.toContain("%");
+			expect(text).not.toMatch(/totalement|partiellement conforme/);
+			// Lien vers le résultat, où se trouvent les raccourcis vers les critères restants.
+			await page.getByRole("link", { name: "Voir ce qui reste à faire (section 3)" }).click();
+			await expect.poll(() => page.evaluate(() => location.hash)).toBe("#audit-resultat");
+			await page.locator(".audit-result").getByRole("button", { name: "Afficher les critères non testés" }).click();
+			await page.waitForFunction(() => document.activeElement?.id === "audit-titre");
+			expect(await page.evaluate(() => document.activeElement?.textContent)).toMatch(/^Critère 11\.1, /);
+			// Sans aucune page : renvoi vers l'échantillon.
+			const empty = await browser.newPage();
+			await openAudit(empty);
+			await expect.poll(() => state(empty)).toMatch(/ajoutez des pages à l’échantillon \(section 1\)/);
+			await expect(empty.locator(".audit-state a").getAttribute("href")).resolves.toBe("#audit-echantillon");
+			await page.close();
+			await empty.close();
+		});
+
+		it("saisies hostiles : HTML téléchargé sans balise active (fichier ouvert dans Chromium), Markdown inerte", async () => {
+			const page = await browser.newPage();
+			await openWith(page, twoThirds());
+			for (const [label, value] of Object.entries(HOSTILE)) await page.getByLabel(label, { exact: true }).fill(value);
+			// Adresse refusée : signalée à la sortie du champ, reliée au champ.
+			await page.getByLabel("Adresse du schéma pluriannuel de mise en accessibilité").blur();
+			await expect
+				.poll(() =>
+					page.getByLabel("Adresse du schéma pluriannuel de mise en accessibilité").getAttribute("aria-invalid"),
+				)
+				.toBe("true");
+			await expect(page.locator("#declaration-schemeUrl-erreur").textContent()).resolves.toMatch(
+				/^Adresse non reconnue/,
+			);
+			await expect.poll(() => previewText(page)).toContain('<script>alert("org")</script>');
+
+			const html = await download(page, "Télécharger (HTML)");
+			expect(html.name).toMatch(/^declaration-accessibilite-exemple\.fr-\d{4}-\d{2}-\d{2}\.html$/);
+			const viewer = await browser.newPage();
+			const dialogs: string[] = [];
+			viewer.on("dialog", (d) => {
+				dialogs.push(d.message());
+				void d.dismiss();
+			});
+			await viewer.setContent(html.content, { waitUntil: "load" });
+			await viewer.waitForTimeout(300);
+			expect(dialogs).toEqual([]);
+			const parsed = await viewer.evaluate(() => ({
+				title: document.title,
+				lang: document.documentElement.lang,
+				active: document.querySelectorAll("script, img, iframe, svg, object, embed, style, link, form").length,
+				handlers: [...document.querySelectorAll("*")].flatMap((el) =>
+					[...el.attributes].filter((a) => a.name.startsWith("on")).map((a) => a.name),
+				),
+				hrefs: [...document.querySelectorAll("a")].map((a) => a.protocol),
+				tags: [...new Set([...document.body.querySelectorAll("*")].map((el) => el.localName))].sort(),
+				text: document.body.innerText,
+			}));
+			expect(parsed).toMatchObject({ title: "Déclaration d’accessibilité", lang: "fr", active: 0, handlers: [] });
+			for (const protocol of parsed.hrefs) expect(["https:", "mailto:"]).toContain(protocol);
+			expect(parsed.tags).toEqual(["a", "br", "h1", "h2", "h3", "li", "main", "p", "ul"]);
+			// Les saisies restent lisibles, comme du texte.
+			expect(parsed.text).toContain('<script>alert("org")</script><img src=x onerror=alert(1)>');
+			expect(parsed.text).toContain("[liens vers le schéma pluriannuel et vers le plan d’action");
+			expect(parsed.text).not.toMatch(/[‪-‮⁦-⁩]/);
+			await viewer.close();
+
+			const md = await download(page, "Télécharger (Markdown)");
+			expect(md.name).toMatch(/\.md$/);
+			const tree = markdownToHast(md.content, { features: { rawHtml: true }, position: false }) as {
+				children?: unknown[];
+			};
+			const elements: string[] = [];
+			const raw: string[] = [];
+			const links: string[] = [];
+			const walk = (node: {
+				type?: string;
+				tagName?: string;
+				value?: string;
+				properties?: { href?: string };
+				children?: unknown[];
+			}) => {
+				if (node.type === "element") {
+					elements.push(node.tagName ?? "");
+					if (node.tagName === "a") links.push(String(node.properties?.href));
+				}
+				if (node.type === "raw") raw.push(node.value ?? "");
+				for (const child of node.children ?? []) walk(child as typeof node);
+			};
+			walk(tree);
+			expect(
+				raw.every((r) => r === "<br>"),
+				raw.join(" "),
+			).toBe(true);
+			expect([...new Set(elements)].filter((e) => e !== "br").sort()).toEqual(["a", "h1", "h2", "h3", "li", "p", "ul"]);
+			for (const href of links) expect(href).toMatch(/^(https?:\/\/|mailto:)/);
+			await page.close();
+		});
+
+		it("saisies gardées : rechargement, puis export et import de l'audit dans un navigateur vierge", async () => {
+			const first = await browser.newContext();
+			const a = await first.newPage();
+			await openWith(a, twoThirds());
+			await a.getByLabel("Nom de l’organisme", { exact: true }).fill("Boulangerie Dupont");
+			await a.getByLabel("Par un prestataire").check();
+			await a.getByLabel("Nom du prestataire").fill("Accès Conseil");
+			await a.getByLabel("Dérogations pour charge disproportionnée, une par ligne").fill("Archives PDF\nVidéos 2015");
+			await a.getByLabel("Formulaire de contact ou adresse e-mail").fill("accessibilite@exemple.fr");
+			await a.getByLabel("Date de mise à jour (facultatif)").fill("2026-10-14");
+			await a.getByLabel("Date de mise à jour (facultatif)").blur(); // une date s'enregistre à la sortie du champ
+			await a.waitForFunction(() => localStorage.getItem("rampe.audit.session")?.includes("2026-10-14"));
+			const expected = {
+				organization: "Boulangerie Dupont",
+				auditBy: "prestataire",
+				auditCompany: "Accès Conseil",
+				derogations: "Archives PDF\nVidéos 2015",
+				contactFormUrl: "accessibilite@exemple.fr",
+				updatedOn: "2026-10-14",
+			};
+			const check = async (page: Page) => {
+				await expect
+					.poll(() => page.getByLabel("Nom de l’organisme", { exact: true }).inputValue())
+					.toBe(expected.organization);
+				await expect(page.getByLabel("Par un prestataire").isChecked()).resolves.toBe(true);
+				await expect(page.getByLabel("Nom du prestataire").inputValue()).resolves.toBe(expected.auditCompany);
+				const text = await previewText(page);
+				expect(text).toContain("Boulangerie Dupont s’engage à rendre");
+				expect(text).toContain(`L’audit de conformité réalisé par la société Accès Conseil révèle que${NBSP}:`);
+				expect(text).toContain("Archives PDF\nVidéos 2015.");
+				expect(text).toContain("Elle a été mise à jour le 14 octobre 2026.");
+				await expect(
+					preview(page).getByRole("link", { name: "accessibilite@exemple.fr" }).getAttribute("href"),
+				).resolves.toBe("mailto:accessibilite@exemple.fr");
+			};
+			await check(a);
+			expect(
+				JSON.parse((await a.evaluate(() => localStorage.getItem("rampe.audit.session"))) ?? "{}").declaration,
+			).toEqual(expected);
+			await a.reload();
+			await a.waitForSelector("astro-island:not([ssr])");
+			await check(a);
+
+			const file = await download(a, "Télécharger l’audit (JSON)");
+			expect(file.json.declaration).toEqual(expected);
+			await first.close();
+			const second = await browser.newContext();
+			const b = await second.newPage();
+			await openAudit(b);
+			await b
+				.getByLabel("Importer un audit (JSON)")
+				.setInputFiles({ name: file.name, mimeType: "application/json", buffer: Buffer.from(file.content) });
+			await check(b);
+			await second.close();
+		});
+
+		for (const colorScheme of ["light", "dark"] as const) {
+			const scheme = colorScheme === "light" ? "clair" : "sombre";
+			it(`axe : aucune violation sur la déclaration (${scheme}), adresse refusée affichée`, async () => {
+				const page = await browser.newPage({ colorScheme });
+				await openWith(page, twoThirds());
+				await page.getByLabel("Nom de l’organisme", { exact: true }).fill("Boulangerie Dupont");
+				await page.getByLabel("Page web de ses coordonnées").fill("exemple.fr/contact");
+				await page.getByLabel("Service à contacter").focus();
+				await page.locator("#declaration-contactPageUrl-erreur").waitFor();
+				await expect.poll(() => previewText(page)).toContain("Boulangerie Dupont");
+				if (captures) {
+					await page.locator(".audit-declaration").screenshot({ path: join(captures, `declaration-${scheme}.png`) });
+					await preview(page).screenshot({ path: join(captures, `declaration-apercu-${scheme}.png`) });
+				}
+				expect(await axeViolations(page)).toEqual([]);
+				await page.close();
+			});
+		}
+
+		it("axe et capture : audit incomplet (clair), et mobile 375 px sans défilement horizontal", async () => {
+			const page = await browser.newPage({ viewport: { width: 375, height: 800 } });
+			await openWith(
+				page,
+				sessionJson((ev) => delete (ev["11.1"] as Record<string, unknown>)[P1]),
+			);
+			await expect.poll(() => state(page)).toMatch(/^Non conforme : aucun résultat d’audit complet/);
+			if (captures)
+				await page.locator(".audit-declaration").screenshot({ path: join(captures, "declaration-incomplet-375.png") });
+			expect(await axeViolations(page)).toEqual([]);
+			expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBeLessThanOrEqual(375);
+			await page.close();
+		});
+
+		it("dates : saisie hors limites (10, 14, 27576) jamais enregistrée ni publiée, message relié, aucune exception", async () => {
+			const page = await browser.newPage();
+			const errors: string[] = [];
+			page.on("pageerror", (e) => errors.push(e.message));
+			await openWith(page, twoThirds());
+			const field = page.getByLabel("Date de mise à jour (facultatif)");
+			await expect(field.getAttribute("min")).resolves.toBe("1900-01-01");
+			await expect(field.getAttribute("max")).resolves.toBe("9999-12-31");
+			const stored = async () =>
+				JSON.parse((await page.evaluate(() => localStorage.getItem("rampe.audit.session"))) ?? "{}").declaration
+					?.updatedOn;
+			// Saisie du relecteur. Chromium garde 4 chiffres d'année : « 27576 » donne 7576 ; en route, le champ est passé
+			// par 0002, 0027, 0275 : aucun de ces états n'est enregistré ni publié avant la sortie du champ.
+			await field.focus();
+			for (const part of ["10", "14", "27576"]) await page.keyboard.type(part);
+			await expect.poll(() => field.inputValue()).toBe("7576-10-14");
+			await page.waitForTimeout(600);
+			expect(await stored()).toBeUndefined();
+			await expect(previewText(page)).resolves.toContain("Elle a été mise à jour le [JJ mois AAAA].");
+			await field.blur();
+			await expect.poll(stored).toBe("7576-10-14");
+			// Année hors limites (0010) : message relié au champ, valeur non enregistrée, la précédente reste.
+			await field.focus();
+			for (const part of ["10", "14", "0010"]) await page.keyboard.type(part);
+			await expect.poll(() => field.inputValue()).toBe("0010-10-14");
+			await field.blur();
+			await expect.poll(() => field.getAttribute("aria-invalid")).toBe("true");
+			await expect(page.locator("#declaration-updatedOn-erreur").textContent()).resolves.toBe(
+				"Date incomplète ou hors limites (années 1900 à 9999) : elle n’est pas enregistrée.",
+			);
+			await expect(field.getAttribute("aria-describedby")).resolves.toBe("declaration-updatedOn-erreur");
+			await page.waitForTimeout(600);
+			expect(await stored()).toBe("7576-10-14");
+			await expect(previewText(page)).resolves.not.toContain("0010");
+			// Corrigée, elle est enregistrée à la sortie du champ.
+			await field.focus();
+			await page.keyboard.type("10142026");
+			await field.blur();
+			await expect.poll(() => previewText(page)).toContain("Elle a été mise à jour le 14 octobre 2026.");
+			await expect.poll(() => field.getAttribute("aria-invalid")).toBe(null);
+			await expect.poll(stored).toBe("2026-10-14");
+			expect(errors).toEqual([]);
+			await page.close();
+		});
+
+		it("date d'établissement figée au premier téléchargement, gardée ensuite, modifiable", async () => {
+			const page = await browser.newPage();
+			await openWith(page, twoThirds());
+			const field = page.getByLabel("Date d’établissement (facultatif)");
+			await expect(field.inputValue()).resolves.toBe("");
+			await download(page, "Télécharger (Markdown)");
+			const d = new Date();
+			const today = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
+			await expect.poll(() => field.inputValue()).toBe(today);
+			await page.waitForFunction(
+				(t) => localStorage.getItem("rampe.audit.session")?.includes(`"establishedOn":"${t}"`),
+				today,
+			);
+			// Saisie par l'utilisateur : c'est elle qui fait foi, et un nouvel export ne la change pas.
+			await field.focus();
+			await page.keyboard.type("01022025");
+			await field.blur();
+			const md = await download(page, "Télécharger (Markdown)");
+			expect(md.content).toContain("Cette déclaration a été établie le 02 janvier 2025.");
+			await page.close();
+		});
+
+		it("export : une date en brouillon est enregistrée avant le document ; invalide, l'export est bloqué", async () => {
+			const page = await browser.newPage();
+			await openWith(page, twoThirds());
+			const field = page.getByLabel("Date de mise à jour (facultatif)");
+			// Nouvelle date valide, puis clic immédiat : le clic provoque la sortie du champ, le fichier a la NOUVELLE date.
+			await field.focus();
+			await page.keyboard.type("10142026");
+			const html = await download(page, "Télécharger (HTML)");
+			expect(html.content).toContain("Elle a été mise à jour le 14 octobre 2026.");
+			await field.focus();
+			await page.keyboard.type("11052026");
+			const md = await download(page, "Télécharger (Markdown)");
+			expect(md.content).toContain("Elle a été mise à jour le 05 novembre 2026.");
+			// Activation sans sortie du champ (technologie d'assistance, clic programmatique) : le focus reste dans la
+			// date, aucun « blur » ; l'export doit quand même prendre la nouvelle date.
+			await field.focus();
+			await page.keyboard.type("12242026");
+			const [noBlur] = await Promise.all([
+				page.waitForEvent("download"),
+				page.getByRole("button", { name: "Télécharger (HTML)" }).evaluate((b) => (b as HTMLButtonElement).click()),
+			]);
+			expect(await readFile(await noBlur.path(), "utf8")).toContain("Elle a été mise à jour le 24 décembre 2026.");
+			// Date invalide puis clic : aucun téléchargement, message relié, focus sur le champ ; la date publiée reste.
+			const downloads: string[] = [];
+			page.on("download", (d) => downloads.push(d.suggestedFilename()));
+			await field.focus();
+			await page.keyboard.type("10140010");
+			await page.getByRole("button", { name: "Télécharger (HTML)" }).click();
+			await expect.poll(() => page.evaluate(() => document.activeElement?.id)).toBe("declaration-updatedOn");
+			await expect.poll(() => field.getAttribute("aria-invalid")).toBe("true");
+			await expect(page.locator("#declaration-updatedOn-erreur").textContent()).resolves.toMatch(
+				/^Date incomplète ou hors limites/,
+			);
+			await expect
+				.poll(() => page.locator("[aria-live=polite]").textContent())
+				.toBe("Export impossible : une date est incomplète ou hors limites (années 1900 à 9999).");
+			await page.getByRole("button", { name: "Télécharger (Markdown)" }).click();
+			await page.waitForTimeout(800);
+			expect(downloads).toEqual([]);
+			await expect(previewText(page)).resolves.toContain("Elle a été mise à jour le 24 décembre 2026.");
+			await page.close();
+		});
+
+		it("relecture : une date de déclaration abîmée est retirée, signalée sobrement ; l'audit n'est pas mis de côté", async () => {
+			const page = await browser.newPage();
+			const json = JSON.parse(twoThirds());
+			json.schemaVersion = 3;
+			json.declaration = { organization: "Mairie", establishedOn: "0010-10-14" };
+			await openWith(page, JSON.stringify(json));
+			await expect
+				.poll(() => page.locator(".audit > p.audit-help").first().textContent())
+				.toBe(
+					"Déclaration d’accessibilité : 1 date illisible, retirée à la relecture (section 4). Le reste de l’audit est intact.",
+				);
+			await expect(page.getByLabel("Nom de l’organisme", { exact: true }).inputValue()).resolves.toBe("Mairie");
+			await expect.poll(() => page.locator(".audit-page-list li").count()).toBe(3);
+			const keys = await page.evaluate(() => Object.keys(localStorage).filter((k) => k.includes("ignoree")));
+			expect(keys).toEqual([]);
+			await page.close();
+		});
+
+		it("375 px : une adresse de page très longue ne fait pas défiler la page (libellé de note, annonce)", async () => {
+			const page = await browser.newPage({ viewport: { width: 375, height: 800 } });
+			await openAudit(page);
+			await page.getByLabel("Adresse de la page").fill(`https://exemple.fr/${"sanscoupure".repeat(30)}`);
+			await page.getByRole("button", { name: "Ajouter la page" }).click();
+			await expect.poll(() => page.locator(".audit-page-list li").count()).toBe(1);
+			await page.locator(".audit-page > label").first().waitFor();
+			await expect.poll(() => page.evaluate(() => document.documentElement.scrollWidth)).toBeLessThanOrEqual(375);
+			if (captures)
+				await page
+					.locator(".audit-page")
+					.first()
+					.screenshot({ path: join(captures, "note-url-longue-375.png") });
+			await page.close();
+		});
+
+		it("au clavier seul : remplir un champ puis télécharger la déclaration", async () => {
+			const page = await browser.newPage();
+			await openWith(page, twoThirds());
+			await page.focus("body");
+			await tabUntil(page, "el.id === 'declaration-organization'", { max: 400 });
+			await page.keyboard.type("Mairie de Clavierville");
+			await expect.poll(() => previewText(page)).toContain("Mairie de Clavierville s’engage à rendre");
+			await tabUntil(page, "el.textContent === 'Télécharger (HTML)'", { max: 60 });
+			const file = await download(page, "", "Enter");
+			expect(file.content).toContain("<p>Mairie de Clavierville s’engage à rendre");
+			await tabUntil(page, "el.textContent === 'Télécharger (Markdown)'", { max: 3 });
+			const md = await download(page, "", "Space");
+			expect(md.content).toContain("Mairie de Clavierville s’engage à rendre");
 			await page.close();
 		});
 	});

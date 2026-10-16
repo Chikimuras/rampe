@@ -18,6 +18,8 @@ const criteria: AuditCriterion[] = rgaa.criteria.map((c) => ({
 	topic: c.topic,
 	titleHtml: md(c.title),
 	titleTextHtml: renderMarkdown(c.title, { inline: true, stripLinks: true }),
+	// Texte brut pour la déclaration d'accessibilité (ADR-0017) : les liens vers le glossaire gardent leur texte.
+	titleText: c.title.replace(/\[([^\]]*)\]\([^)]*\)/g, "$1"),
 	tests: c.tests.map((t) => {
 		const [statement = "", ...conditions] = t.text;
 		return {
@@ -53,7 +55,7 @@ const criteria: AuditCriterion[] = rgaa.criteria.map((c) => ({
 	</noscript>
 
 	{/* client:load : l'outil est tout le contenu de la page, visible dès l'arrivée ; client:visible ne ferait que retarder. */}
-	<AuditApp client:load topics={topics} criteria={criteria} />
+	<AuditApp client:load topics={topics} criteria={criteria} rgaaVersion={rgaa.version} />
 </Base>
 
 <style is:global>
@@ -297,6 +299,8 @@ const criteria: AuditCriterion[] = rgaa.criteria.map((c) => ({
 	.audit-field label,
 	.audit-paste label,
 	.audit-page > label {
+		/* Une adresse sans espace (« Note sur https://… ») ne doit pas élargir la page. */
+		overflow-wrap: anywhere;
 		display: block;
 		font-weight: 600;
 		margin-bottom: 0.25rem;
@@ -497,9 +501,80 @@ const criteria: AuditCriterion[] = rgaa.criteria.map((c) => ({
 		margin-top: 0.75rem;
 	}
 	.audit-live {
+		overflow-wrap: anywhere;
 		min-height: 1.6em;
 		color: var(--muted);
 		font-size: 0.875rem;
+	}
+	/* Déclaration d'accessibilité (ADR-0017). */
+	.audit-reminder,
+	.audit-state {
+		margin: 1rem 0;
+		padding: 0.75rem 1rem;
+		border-left: 4px solid var(--accent);
+		background: var(--surface);
+		border-radius: 0 6px 6px 0;
+	}
+	.audit-reminder p,
+	.audit-state p {
+		margin: 0.25rem 0;
+	}
+	.audit-declaration-group,
+	.audit-auditby {
+		border: 1px solid var(--line);
+		border-radius: 6px;
+		margin: 1rem 0;
+		padding: 0.5rem 1rem 0.25rem;
+		min-width: 0;
+	}
+	.audit-declaration-group > legend,
+	.audit-auditby legend {
+		font-weight: 600;
+		padding: 0 0.25rem;
+	}
+	.audit-auditby label {
+		display: block;
+		padding: 0.15rem 0;
+	}
+	.audit-declaration .audit-field label {
+		margin-bottom: 0;
+	}
+	.audit-declaration .audit-field .audit-help {
+		margin: 0 0 0.25rem;
+	}
+	.audit input[type="date"] {
+		font: inherit;
+		color: var(--text);
+		background: var(--surface);
+		border: 1px solid var(--muted);
+		border-radius: 6px;
+		padding: 0.4rem 0.6rem;
+		color-scheme: light dark;
+	}
+	.audit-preview {
+		margin: 1.5rem 0 1rem;
+		padding: 0.5rem 1.25rem 1rem;
+		border: 2px solid var(--line);
+		border-radius: 6px;
+		background: var(--bg);
+		overflow-wrap: anywhere;
+	}
+	/* Passage à compléter : crochets dans le texte, et un fond, pas seulement une couleur. */
+	.audit-preview mark {
+		color: var(--text);
+		background: var(--accent-soft);
+		outline: 1px dashed var(--muted);
+	}
+	.audit-declaration-actions {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 0.5rem;
+	}
+	.audit-declaration-actions button:first-child {
+		background: var(--accent);
+		border-color: var(--accent);
+		color: var(--bg);
+		font-weight: 600;
 	}
 	:root {
 		--nc: #a3361b;

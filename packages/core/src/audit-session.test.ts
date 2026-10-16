@@ -6,6 +6,7 @@ import {
 	type AuditSession,
 	addPage,
 	createSession,
+	type DeclarationField,
 	FUTURE_SESSION,
 	getEvaluation,
 	getFindings,
@@ -21,6 +22,7 @@ import {
 	SESSION_TOOL_NAME,
 	serializeSession,
 	sessionFileName,
+	setDeclarationField,
 	setEvaluation,
 	setPageProcess,
 } from "./audit-session.ts";
@@ -419,7 +421,7 @@ describe("export et import d'un audit (ADR-0016)", () => {
 		};
 		expect(parse(JSON.parse(JSON.stringify(v1)))).toEqual({
 			...v1,
-			schemaVersion: 2,
+			schemaVersion: SCHEMA_VERSION,
 			evaluations: {
 				"1.1": { [A]: { status: "NC", note: "logo", source: "humain" } },
 				"2.1": { [A]: { status: "NT", note: "à voir", source: "humain" } },
@@ -442,14 +444,15 @@ describe("export et import d'un audit (ADR-0016)", () => {
 const fixture = (name: "main-v2" | "v1") => JSON.parse(JSON.stringify(name === "v1" ? v1Limits : mainV2));
 /** Ids de page des fixtures. */
 const FA = "11111111-1111-4111-8111-111111111111";
-const stored = (value: unknown) => parseStoredSession(value, known);
+const stored = (value: unknown, dropped?: DeclarationField[]) => parseStoredSession(value, known, dropped);
 
 describe("relecture du stockage local : structure et types, sans borne ni modification (ADR-0016)", () => {
 	it("relit sans perte une session v2 écrite par main aux valeurs limites", () => {
 		const raw = fixture("main-v2");
 		expect(raw.pages[0].url.length).toBeGreaterThan(3000);
 		expect(raw.pages[0].process.length).toBeGreaterThan(500);
-		expect(stored(raw)).toEqual(raw);
+		// Migrée en v3 (ADR-0017) : seul le numéro de version change.
+		expect(stored(raw)).toEqual({ ...raw, schemaVersion: SCHEMA_VERSION });
 		// Le même fichier importé est borné : le relire au stockage ne passe donc pas par parseSessionStrict.
 		expect(refusal(raw).detail).toMatch(/^pages\[0\]\.url : adresse de plus de 2048/);
 	});
@@ -503,11 +506,15 @@ describe("relecture du stockage local : structure et types, sans borne ni modifi
 	});
 
 	it("C2 : une version future est protégée avant tout autre contrôle, même avec un autre tool.name ou une clé interdite", () => {
-		const future = JSON.parse(`{"__proto__":{},"schemaVersion":3,"tool":{"name":"autre"},"pages":"?"}`);
+		const future = JSON.parse(
+			`{"__proto__":{},"schemaVersion":${SCHEMA_VERSION + 1},"tool":{"name":"autre"},"pages":"?"}`,
+		);
 		expect(isFutureSession(future)).toBe(true);
 		for (const parseAny of [stored, parse]) {
 			expect(() => parseAny(future)).toThrow(FUTURE_SESSION);
-			expect(() => parseAny({ ...exported(), schemaVersion: 3, tool: { name: "@rampe/cli" } })).toThrow(FUTURE_SESSION);
+			expect(() =>
+				parseAny({ ...exported(), schemaVersion: SCHEMA_VERSION + 1, tool: { name: "@rampe/cli" } }),
+			).toThrow(FUTURE_SESSION);
 		}
 	});
 });
@@ -605,7 +612,7 @@ describe("contre-relecture de la PR #18", () => {
 	it('4 : la relecture du stockage garde `process: ""` tel quel ; l\'import de fichier le retire', () => {
 		const raw = fixture("main-v2");
 		raw.pages[1].process = "";
-		expect(stored(raw)).toEqual(raw);
+		expect(stored(raw)).toEqual({ ...raw, schemaVersion: SCHEMA_VERSION });
 		const file = { ...exported(), pages: [{ ...exported().pages[0], process: "" }], evaluations: {}, findings: {} };
 		expect(parse(file).pages[0]).not.toHaveProperty("process");
 	});
@@ -711,5 +718,140 @@ describe("source et indices (ADR-0014)", () => {
 		expect(getFindings(s, "1.1", B)).toHaveLength(1);
 		expect(getFindings(s, "toString", B)).toEqual([]);
 		expect(parse(JSON.parse(serializeSession(s)))).toEqual(s);
+	});
+});
+
+describe("déclaration d’accessibilité dans la session (ADR-0017 §4)", () => {
+	const roundTrip = (s: AuditSession) => {
+		expect(parse(JSON.parse(serializeSession(s)))).toEqual(s);
+		expect(stored(JSON.parse(serializeSession(s)))).toEqual(s);
+	};
+	const declared = () => {
+		let s = full();
+		s = setDeclarationField(s, "organization", "Boulangerie Dupont ", LATER);
+		s = setDeclarationField(s, "auditBy", "prestataire", LATER);
+		s = setDeclarationField(s, "derogations", "Archives PDF\n\tavant 2010", LATER);
+		s = setDeclarationField(s, "establishedOn", "2026-10-01", LATER);
+		return setDeclarationField(s, "contactFormUrl", "contact@exemple.fr", LATER);
+	};
+
+	it("saisie rangée dans la session, datée ; une valeur vide retire le champ, puis la déclaration", () => {
+		const s = declared();
+		expect(s.declaration).toEqual({
+			organization: "Boulangerie Dupont ",
+			auditBy: "prestataire",
+			derogations: "Archives PDF\n\tavant 2010",
+			establishedOn: "2026-10-01",
+			contactFormUrl: "contact@exemple.fr",
+		});
+		expect(s.updatedAt).toBe(LATER);
+		let empty = s;
+		for (const key of Object.keys(s.declaration ?? {}) as DeclarationField[])
+			empty = setDeclarationField(empty, key, "", LATER);
+		expect(empty).not.toHaveProperty("declaration");
+		expect(createSession(NOW)).not.toHaveProperty("declaration");
+	});
+
+	it("nettoyée à l'écriture : contrôles et bidi retirés ; sauts de ligne gardés seulement dans les listes", () => {
+		let s = setDeclarationField(full(), "serviceName", "‮site\u0007\nweb⁦", LATER);
+		s = setDeclarationField(s, "technologies", "HTML\r\n‮CSS\u0000", LATER);
+		expect(s.declaration).toEqual({ serviceName: "siteweb", technologies: "HTML\nCSS" });
+	});
+
+	it("bornée à l'écriture, comme le reste (ADR-0016) ; date et réalisation de l'audit vérifiées", () => {
+		const s = full();
+		expect(() => setDeclarationField(s, "organization", "o".repeat(1000), LATER)).not.toThrow();
+		expect(() => setDeclarationField(s, "organization", "o".repeat(1001), LATER)).toThrow(/plus de 1000/);
+		expect(() => setDeclarationField(s, "tools", "t".repeat(10_001), LATER)).toThrow(/plus de 10000/);
+		expect(() => setDeclarationField(s, "reportUrl", `https://x.fr/${"u".repeat(2048)}`, LATER)).toThrow(
+			/plus de 2048/,
+		);
+		for (const bad of ["2026-02-30", "15/10/2026", "2026-13-01", "demain"])
+			expect(() => setDeclarationField(s, "updatedOn", bad, LATER), bad).toThrow(/Date invalide/);
+		expect(() => setDeclarationField(s, "auditBy", "moi", LATER)).toThrow(/inconnue/);
+		expect(() => setDeclarationField(s, "toString" as DeclarationField, "x", LATER)).toThrow(
+			/Champ de déclaration inconnu/,
+		);
+		// Une adresse en cours de frappe est gardée telle quelle : elle n'est vérifiée qu'au rendu.
+		expect(setDeclarationField(s, "contactPageUrl", "exemple.fr/cont", LATER).declaration).toEqual({
+			contactPageUrl: "exemple.fr/cont",
+		});
+	});
+
+	it("exportée et réimportée à l'identique (fichier et stockage local) ; aux bornes exactes aussi", () => {
+		roundTrip(declared());
+		let s = full();
+		s = setDeclarationField(s, "organization", "o".repeat(1000), LATER);
+		s = setDeclarationField(s, "tools", "t".repeat(10_000), LATER);
+		s = setDeclarationField(s, "reportUrl", `https://x.fr/${"u".repeat(2048 - "https://x.fr/".length)}`, LATER);
+		roundTrip(s);
+	});
+
+	it("import strict : types, dates, réalisation, adresse bornée ; textes tronqués ; clés inconnues ignorées", () => {
+		const f = () => exported(declared());
+		for (const [value, detail] of [
+			[{ ...f(), declaration: "x" }, /^declaration : objet attendu/],
+			[{ ...f(), declaration: { organization: 1 } }, /^declaration\.organization : texte attendu/],
+			[{ ...f(), declaration: { updatedOn: "2026-02-30" } }, /^declaration\.updatedOn : date invalide/],
+			[{ ...f(), declaration: { auditBy: "moi" } }, /^declaration\.auditBy : valeur inconnue "moi"/],
+			[{ ...f(), declaration: { reportUrl: "u".repeat(2049) } }, /^declaration\.reportUrl : adresse de plus de 2048/],
+			[JSON.parse(`{"declaration":{"__proto__":{"x":1}}}`), /__proto__/],
+		] as const)
+			expect(refusal({ ...f(), ...value }).detail, String(detail)).toMatch(detail);
+		const g = f();
+		g.declaration.organization = `‮Mairie\u0007 ${"m".repeat(2000)}`;
+		g.declaration.tools = `ligne 1\n\tligne 2${"t".repeat(20_000)}`;
+		g.declaration.inconnu = "x";
+		g.declaration.serviceName = "";
+		const s = parse(g);
+		expect(s.declaration?.organization).toMatch(/^Mairie m+… \(tronqué\)$/);
+		expect(s.declaration?.tools?.startsWith("ligne 1\n\tligne 2t")).toBe(true);
+		expect(s.declaration?.tools?.length).toBe(10_000 + "… (tronqué)".length);
+		expect(s.declaration).not.toHaveProperty("inconnu");
+		expect(s.declaration).not.toHaveProperty("serviceName");
+		expect(parse({ ...f(), declaration: {} })).not.toHaveProperty("declaration");
+	});
+
+	it("relecture du stockage : tolérante, sans borne ni modification", () => {
+		const raw = exported(declared());
+		raw.declaration.organization = `\t${"o".repeat(5000)}‮`;
+		raw.declaration.serviceName = "";
+		expect(stored(raw).declaration).toEqual(raw.declaration);
+		// Les types et formes restent contrôlés.
+		expect(() => stored({ ...raw, declaration: { auditBy: "moi" } })).toThrow(ReportError);
+		expect(() => stored({ ...raw, declaration: [] })).toThrow(ReportError);
+	});
+
+	it("dates : années 1900 à 9999 seulement, partout ; une saisie en cours (« 0010-10-14 ») est refusée", () => {
+		const s = full();
+		for (const bad of ["0010-10-14", "0014-10-14", "1899-12-31", "27576-10-14", "+27576-10-14"])
+			expect(() => setDeclarationField(s, "updatedOn", bad, LATER), bad).toThrow(/Date invalide/);
+		for (const good of ["1900-01-01", "2026-10-14", "9999-12-31"])
+			expect(setDeclarationField(s, "updatedOn", good, LATER).declaration?.updatedOn).toBe(good);
+		expect(refusal({ ...exported(s), declaration: { updatedOn: "0010-10-14" } }).detail).toMatch(
+			/^declaration\.updatedOn : date invalide/,
+		);
+	});
+
+	it("relecture tolérante : une date abîmée retire ce seul champ, signalé ; la session reste lisible", () => {
+		const raw = exported(declared());
+		raw.declaration.establishedOn = "0010-10-14";
+		const dropped: DeclarationField[] = [];
+		const s = stored(raw, dropped);
+		expect(dropped).toEqual(["establishedOn"]);
+		expect(s.declaration).not.toHaveProperty("establishedOn");
+		expect(s.declaration?.organization).toBe("Boulangerie Dupont ");
+		expect(s.pages).toEqual(full().pages);
+		// L'import de fichier, lui, reste strict.
+		expect(refusal(raw).detail).toMatch(/^declaration\.establishedOn : date invalide/);
+	});
+
+	it("migration sans perte : une session v1 ou v2 n'a pas de déclaration, et rien d'autre ne change", () => {
+		const v2 = { ...exported(), schemaVersion: 2 };
+		expect(parse(v2)).toEqual(full());
+		expect(stored(v2)).toEqual(full());
+		// Une v2 ne pouvait pas porter de déclaration : un champ de ce nom n'y est pas lu.
+		expect(parse({ ...v2, declaration: { organization: "x" } })).not.toHaveProperty("declaration");
+		expect(SCHEMA_VERSION).toBe(3);
 	});
 });

@@ -12,9 +12,11 @@ import {
 	type AuditSession,
 	addPage,
 	createSession,
+	type DeclarationField,
 	getEvaluation,
 	getFindings,
 	INVALID_SESSION,
+	isDay,
 	isFutureSession,
 	MAX_NOTE,
 	MAX_PAGES,
@@ -31,10 +33,23 @@ import {
 	type Status,
 	serializeSession,
 	sessionFileName,
+	setDeclarationField,
 	setEvaluation,
 	setPageProcess,
 } from "@rampe/core/audit-session";
-import { computeConformity, formatRate, processKey } from "@rampe/core/conformity";
+import { type Conformity, computeConformity, formatRate, processKey } from "@rampe/core/conformity";
+import {
+	type Block,
+	conformityState,
+	DECLARATION_URL,
+	declarationBlocks,
+	declarationFileName,
+	type Inline,
+	NON_CONFORMITY_REASONS,
+	renderDeclaration,
+	SCOPE_URL,
+	safeUrl,
+} from "@rampe/core/declaration";
 import { parseAuditUrl, parseSampleFile, plural } from "@rampe/core/sample-file";
 import type { ComponentChildren } from "preact";
 import { useEffect, useLayoutEffect, useMemo, useRef, useState } from "preact/hooks";
@@ -51,6 +66,8 @@ export interface AuditCriterion {
 	titleHtml: string;
 	/** Titre sans ses liens vers le glossaire, pour la liste (un lien ne peut pas être dans un bouton). */
 	titleTextHtml: string;
+	/** Titre officiel en texte brut, pour la déclaration d'accessibilité. */
+	titleText: string;
 	tests: { id: string; statementHtml: string; conditionsHtml: string[]; methodologyHtml: string }[];
 	href: string;
 }
@@ -106,11 +123,15 @@ function storageAvailable(): boolean {
  * Relit une valeur du stockage : structure et types contrôlés, sans borne ni modification (ADR-0016), pour ne jamais
  * écarter un audit écrit par une version précédente ; `future` : écrite par une version plus récente de Rampe.
  */
-function readStored(raw: string, known: ReadonlySet<string>): { session: AuditSession | null; future: boolean } {
+function readStored(
+	raw: string,
+	known: ReadonlySet<string>,
+	dropped: DeclarationField[] = [],
+): { session: AuditSession | null; future: boolean } {
 	let value: unknown;
 	try {
 		value = JSON.parse(raw);
-		return { session: parseStoredSession(value, known), future: false };
+		return { session: parseStoredSession(value, known, dropped), future: false };
 	} catch {
 		return { session: null, future: isFutureSession(value) };
 	}
@@ -165,7 +186,10 @@ function keepAside(raw: string): boolean {
  * `ignored` : une valeur était présente mais illisible ; elle est mise de côté, jamais réutilisée ni écrasée.
  * `future` : une version plus récente l'a écrite ; on n'y touche pas (ni mise de côté, ni écrasement).
  */
-function loadSession(known: ReadonlySet<string>): {
+function loadSession(
+	known: ReadonlySet<string>,
+	dropped: DeclarationField[],
+): {
 	session: AuditSession | null;
 	ignored: Ignored | null;
 	future: boolean;
@@ -177,16 +201,16 @@ function loadSession(known: ReadonlySet<string>): {
 		return { session: null, ignored: null, future: false };
 	}
 	if (raw === null) return { session: null, ignored: null, future: false };
-	const { session, future } = readStored(raw, known);
+	const { session, future } = readStored(raw, known, dropped);
 	if (session) return { session, ignored: null, future: false };
 	if (future) return { session: null, ignored: null, future: true };
 	return { session: null, ignored: { raw, kept: keepAside(raw) }, future: false };
 }
 
 /** Fichier fabriqué dans le navigateur (Blob et lien) : rien ne part sur le réseau. */
-function saveFile(name: string, text: string) {
+function saveFile(name: string, text: string, type = "application/json") {
 	const a = document.createElement("a");
-	a.href = URL.createObjectURL(new Blob([text], { type: "application/json" }));
+	a.href = URL.createObjectURL(new Blob([text], { type }));
 	a.download = name;
 	a.click();
 	// Révocation différée : certains navigateurs lisent le Blob après le clic.
@@ -212,7 +236,15 @@ const cleanUrl = (input: string) => {
 const sameUrl = (a: string, b: string) => a.split("#")[0] === b.split("#")[0];
 const pageName = (p: SessionPage) => p.title.trim() || p.url;
 
-export default function AuditApp({ topics, criteria }: { topics: AuditTopic[]; criteria: AuditCriterion[] }) {
+export default function AuditApp({
+	topics,
+	criteria,
+	rgaaVersion,
+}: {
+	topics: AuditTopic[];
+	criteria: AuditCriterion[];
+	rgaaVersion: string;
+}) {
 	const [session, setSession] = useState<AuditSession>(() => createSession());
 	const [ready, setReady] = useState(false);
 	const [storageOk, setStorageOk] = useState(true);
@@ -220,6 +252,8 @@ export default function AuditApp({ topics, criteria }: { topics: AuditTopic[]; c
 	const [ignored, setIgnored] = useState<Ignored | null>(null);
 	/** Session d'une version plus récente dans le stockage : plus aucune écriture, pour ne pas l'écraser. */
 	const [future, setFuture] = useState(false);
+	/** Dates de déclaration illisibles retirées à la relecture : signalées sobrement, la session reste utilisée. */
+	const [droppedDates, setDroppedDates] = useState(0);
 	/** Plus aucune écriture : session d'une version future, ou session illisible qui n'a pas pu être copiée. */
 	const frozen = future || (ignored !== null && !ignored.kept);
 	/** `null` : aucun critère de la thématique ne correspond au filtre. */
@@ -239,7 +273,9 @@ export default function AuditApp({ topics, criteria }: { topics: AuditTopic[]; c
 		const ok = storageAvailable();
 		setStorageOk(ok);
 		if (ok) {
-			const { session: stored, ignored: wasIgnored, future: isFuture } = loadSession(known);
+			const dropped: DeclarationField[] = [];
+			const { session: stored, ignored: wasIgnored, future: isFuture } = loadSession(known, dropped);
+			setDroppedDates(dropped.length);
 			if (stored) {
 				saved.current = stored;
 				setSession(stored);
@@ -303,6 +339,8 @@ export default function AuditApp({ topics, criteria }: { topics: AuditTopic[]; c
 	}, [currentId]);
 
 	const prog = useMemo(() => progress(session, criteria), [session, criteria]);
+	const ids = useMemo(() => criteria.map((c) => c.id), [criteria]);
+	const conformity = useMemo(() => computeConformity(session, ids), [session, ids]);
 	const matchesWith = (f: Filter) => (c: AuditCriterion) =>
 		f === "all" ||
 		session.pages.some((p) => {
@@ -351,12 +389,25 @@ export default function AuditApp({ topics, criteria }: { topics: AuditTopic[]; c
 		setAnnounce(message);
 	};
 	const restart = () => {
-		if (!confirm("Effacer toutes les pages et toutes les évaluations de cet audit ? Cette action est définitive."))
+		if (
+			!confirm(
+				"Effacer toutes les pages, toutes les évaluations et la déclaration de cet audit ? Cette action est définitive.",
+			)
+		)
 			return;
 		setSession(createSession());
 		const first = criteria[0];
 		if (first) show(first);
 		setAnnounce("Audit effacé : vous repartez de zéro.");
+	};
+
+	/** Raccourci depuis le résultat ou la déclaration : filtre, puis premier critère concerné. */
+	const showMissing = (f: "NT" | "auto") => {
+		setFilter(f);
+		const first = criteria.find(matchesWith(f));
+		if (first) goTo(first);
+		const n = criteria.filter(matchesWith(f)).length;
+		setAnnounce(`${plural(n, "critère")} affiché${n > 1 ? "s" : ""}${first ? ` ; critère ${first.id} affiché` : ""}`);
 	};
 
 	const criteriaList = (
@@ -425,6 +476,13 @@ export default function AuditApp({ topics, criteria }: { topics: AuditTopic[]; c
 						</button>
 					)}
 				</div>
+			)}
+
+			{droppedDates > 0 && (
+				<p class="audit-help">
+					Déclaration d’accessibilité : {plural(droppedDates, "date")} illisible{droppedDates > 1 ? "s" : ""}, retirée
+					{droppedDates > 1 ? "s" : ""} à la relecture (section 4). Le reste de l’audit est intact.
+				</p>
 			)}
 
 			<Backup session={session} setSession={setSession} setAnnounce={setAnnounce} known={known} />
@@ -587,18 +645,15 @@ export default function AuditApp({ topics, criteria }: { topics: AuditTopic[]; c
 				)}
 			</section>
 
-			<Result
+			<Result session={session} criteria={criteria} r={conformity} showMissing={showMissing} />
+
+			<Declaration
 				session={session}
+				setSession={setSession}
+				setAnnounce={setAnnounce}
 				criteria={criteria}
-				showMissing={(f) => {
-					setFilter(f);
-					const first = criteria.find(matchesWith(f));
-					if (first) goTo(first);
-					const n = criteria.filter(matchesWith(f)).length;
-					setAnnounce(
-						`${plural(n, "critère")} affiché${n > 1 ? "s" : ""}${first ? ` ; critère ${first.id} affiché` : ""}`,
-					);
-				}}
+				r={conformity}
+				rgaaVersion={rgaaVersion}
 			/>
 
 			<p aria-live="polite" class="audit-live">
@@ -1313,14 +1368,14 @@ const METHOD_URL = "https://accessibilite.numerique.gouv.fr/obligations/evaluati
 function Result({
 	session,
 	criteria,
+	r,
 	showMissing,
 }: {
 	session: AuditSession;
 	criteria: AuditCriterion[];
+	r: Conformity;
 	showMissing: (f: "NT" | "auto") => void;
 }) {
-	const ids = useMemo(() => criteria.map((c) => c.id), [criteria]);
-	const r = useMemo(() => computeConformity(session, ids), [session, ids]);
 	const rate = (value: number | null) => (value === null ? "sans objet (aucun critère applicable)" : formatRate(value));
 	let body: ComponentChildren;
 	if (session.pages.length === 0)
@@ -1441,6 +1496,439 @@ function Result({
 		<section aria-labelledby="audit-resultat" class="audit-result">
 			<h2 id="audit-resultat">3. Résultat</h2>
 			{body}
+		</section>
+	);
+}
+
+/** Champ de la déclaration : étiquette, aide courte, et nature (une ligne, une par ligne, adresse, date). */
+type DeclarationInput = { field: DeclarationField; label: string; help?: string; kind?: "lines" | "url" | "date" };
+const DECLARATION_GROUPS: { legend: string; fields: DeclarationInput[] }[] = [
+	{
+		legend: "Organisme et site",
+		fields: [
+			{ field: "organization", label: "Nom de l’organisme", help: "Tel qu’il figure dans vos mentions légales." },
+			{
+				field: "commitment",
+				label: "Ce que l’organisme s’engage à rendre accessible",
+				help: "Par exemple « son site internet » ou « ses sites internet et son application mobile ».",
+			},
+			{ field: "serviceName", label: "Nom du site", help: "Par exemple « exemple.fr » ou « Site de la boutique »." },
+			{
+				field: "schemeUrl",
+				label: "Adresse du schéma pluriannuel de mise en accessibilité",
+				help: "Document qui planifie la mise en accessibilité sur plusieurs années.",
+				kind: "url",
+			},
+			{
+				field: "actionPlanUrl",
+				label: "Adresse du plan d’action de l’année en cours",
+				help: "Avec le bilan des actions de l’année précédente.",
+				kind: "url",
+			},
+		],
+	},
+	{
+		legend: "Audit",
+		fields: [
+			{
+				field: "reportUrl",
+				label: "Adresse du rapport ou de la grille d’audit (facultatif)",
+				help: "Sinon, le détail des tests reste à compléter.",
+				kind: "url",
+			},
+			{
+				field: "testEnvironment",
+				label: "Environnement de test, une combinaison par ligne",
+				help: "Navigateur et technologie d’assistance, par exemple « Firefox et NVDA ».",
+				kind: "lines",
+			},
+			{
+				field: "tools",
+				label: "Outils utilisés, un par ligne",
+				help: "Par exemple « Rampe » ou « Colour Contrast Analyser ».",
+				kind: "lines",
+			},
+			{
+				field: "technologies",
+				label: "Technologies du site, une par ligne",
+				help: "Par exemple « HTML », « CSS », « JavaScript ».",
+				kind: "lines",
+			},
+		],
+	},
+	{
+		legend: "Contenus non accessibles",
+		fields: [
+			{
+				field: "nonConformities",
+				label: "Précisions sur les non-conformités, une par ligne",
+				help: "Rampe liste déjà les critères non conformes de l’audit. Ajoutez les contenus concernés et les alternatives proposées.",
+				kind: "lines",
+			},
+			{
+				field: "derogations",
+				label: "Dérogations pour charge disproportionnée, une par ligne",
+				help: "Chaque dérogation doit être expliquée et motivée, avec l’alternative proposée.",
+				kind: "lines",
+			},
+			{
+				field: "exemptions",
+				label: "Contenus non soumis à l’obligation, un par ligne",
+				help: "Contenus exemptés par le champ d’application officiel.",
+				kind: "lines",
+			},
+		],
+	},
+	{
+		legend: "Dates",
+		fields: [
+			{
+				field: "establishedOn",
+				label: "Date d’établissement (facultatif)",
+				help: "Fixée au premier téléchargement ou à la première copie ; modifiable.",
+				kind: "date",
+			},
+			{ field: "updatedOn", label: "Date de mise à jour (facultatif)", kind: "date" },
+		],
+	},
+	{
+		legend: "Contact",
+		fields: [
+			{
+				field: "contactFormUrl",
+				label: "Formulaire de contact ou adresse e-mail",
+				help: "Pour signaler un défaut d’accessibilité, par exemple https://exemple.fr/contact ou accessibilite@exemple.fr.",
+				kind: "url",
+			},
+			{ field: "contactEntity", label: "Service à contacter", help: "Par exemple « Service client »." },
+			{ field: "contactPageUrl", label: "Page web de ses coordonnées", kind: "url" },
+		],
+	},
+];
+const LIMITS = { lines: MAX_NOTE, url: MAX_URL, text: MAX_TITLE } as const;
+
+/** Aperçu rendu par Preact depuis le modèle : chaque saisie est du texte, échappé par Preact (jamais d'innerHTML). */
+function Inlines({ content }: { content: Inline[] }) {
+	return (
+		<>
+			{content.map((i, k) => {
+				if (i.kind === "text" || i.kind === "input") return i.text;
+				if (i.kind === "slot") return <mark key={k}>[{i.text}]</mark>;
+				if (i.kind === "link")
+					return (
+						<a key={k} href={i.href}>
+							<Inlines content={i.label} />
+						</a>
+					);
+				return <br key={k} />;
+			})}
+		</>
+	);
+}
+function Preview({ blocks }: { blocks: Block[] }) {
+	return (
+		<>
+			{blocks.map((b, k) => {
+				if (b.kind === "list")
+					return (
+						<ul key={k}>
+							{b.items.map((item, j) => (
+								<li key={j}>
+									<Inlines content={item} />
+								</li>
+							))}
+						</ul>
+					);
+				if (b.kind === "paragraph")
+					return (
+						<p key={k}>
+							<Inlines content={b.content} />
+						</p>
+					);
+				// Le titre de la déclaration est celui de l'aperçu ; les autres descendent sous lui (h4, h5).
+				if (b.level === 1) return null;
+				const H = b.level === 2 ? "h4" : "h5";
+				return (
+					<H key={k}>
+						<Inlines content={b.content} />
+					</H>
+				);
+			})}
+		</>
+	);
+}
+
+/**
+ * Déclaration d'accessibilité (ADR-0017) : Rampe remplit ce qu'il calcule depuis l'audit, l'utilisateur le reste.
+ * Saisies rangées dans la session (sauvegardées et exportées avec elle), exports fabriqués dans le navigateur.
+ */
+function Declaration({
+	session,
+	setSession,
+	setAnnounce,
+	criteria,
+	r,
+	rgaaVersion,
+}: {
+	session: AuditSession;
+	setSession: (update: (s: AuditSession) => AuditSession) => void;
+	setAnnounce: (message: string) => void;
+	criteria: AuditCriterion[];
+	r: Conformity;
+	rgaaVersion: string;
+}) {
+	const [touched, setTouched] = useState<ReadonlySet<DeclarationField>>(new Set());
+	/** Date en cours de saisie hors limites (« 0010-10-14 ») : affichée, jamais enregistrée ni publiée. */
+	const [drafts, setDrafts] = useState<Partial<Record<DeclarationField, string>>>({});
+	const fields = session.declaration ?? {};
+	const titles = useMemo(() => Object.fromEntries(criteria.map((c) => [c.id, c.titleText])), [criteria]);
+	const options = { date: new Date(), rgaaVersion, criterionTitles: titles };
+	const blocks = declarationBlocks(session, r, fields, options);
+	const state = conformityState(r);
+	const set = (field: DeclarationField, value: string) => setSession((s) => setDeclarationField(s, field, value));
+	/**
+	 * Date : la saisie reste un brouillon jusqu'à la sortie du champ (le navigateur émet chaque état intermédiaire,
+	 * « 0002-10-14 », « 2757-10-14 »…), puis n'est enregistrée que vide ou valide (1900 à 9999) ; sinon, message.
+	 */
+	const commitDate = (field: DeclarationField) => {
+		const value = drafts[field];
+		if (value === undefined || (value !== "" && !isDay(value))) return;
+		setDrafts(({ [field]: _old, ...rest }) => rest);
+		set(field, value);
+	};
+	/** Date d'établissement figée au premier export : une déclaration ne change pas de date à chaque téléchargement. */
+	/**
+	 * Avant tout export : les dates en brouillon sont validées et enregistrées (même règle qu'à la sortie du champ),
+	 * et la date d'établissement est figée si elle ne l'est pas (première copie ou premier téléchargement). Le document
+	 * est produit à partir de cet état à jour, jamais d'un état antérieur au clic. Un brouillon invalide bloque
+	 * l'export : message relié au champ, focus dessus. `null` : export bloqué.
+	 */
+	const prepare = (): AuditSession | null => {
+		const updates: [DeclarationField, string][] = [];
+		for (const [field, value] of Object.entries(drafts) as [DeclarationField, string][]) {
+			if (value !== "" && !isDay(value)) {
+				setTouched((t) => new Set(t).add(field));
+				document.getElementById(`declaration-${field}`)?.focus();
+				setAnnounce("Export impossible : une date est incomplète ou hors limites (années 1900 à 9999).");
+				return null;
+			}
+			updates.push([field, value]);
+		}
+		const apply = (s: AuditSession) => {
+			let next = updates.reduce((acc, [field, value]) => setDeclarationField(acc, field, value), s);
+			if (!next.declaration?.establishedOn) {
+				const d = new Date();
+				const pad = (n: number) => String(n).padStart(2, "0");
+				next = setDeclarationField(
+					next,
+					"establishedOn",
+					`${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`,
+				);
+			}
+			return next;
+		};
+		setDrafts({});
+		setSession(apply);
+		return apply(session);
+	};
+	const render = (current: AuditSession, format: "html" | "markdown", standalone = false) =>
+		renderDeclaration(current, r, current.declaration ?? {}, { ...options, format, standalone });
+	const download = (format: "html" | "markdown") => {
+		const current = prepare();
+		if (!current) return;
+		const ext = format === "html" ? "html" : "md";
+		const name = declarationFileName(current, new Date(), ext);
+		saveFile(name, render(current, format, true), format === "html" ? "text/html" : "text/markdown");
+		setAnnounce(`Déclaration téléchargée : ${name}`);
+	};
+	const copy = async () => {
+		const current = prepare();
+		if (!current) return;
+		try {
+			await navigator.clipboard.writeText(render(current, "html"));
+			setAnnounce("Code HTML de la déclaration copié dans le presse-papiers.");
+		} catch {
+			setAnnounce("Copie impossible dans ce navigateur : utilisez « Télécharger (HTML) ».");
+		}
+	};
+
+	const rate = r.complete && r.globalRate !== null ? formatRate(r.globalRate) : null;
+	let status: ComponentChildren;
+	if (state.state !== "non")
+		status = (
+			<p>
+				<strong>{state.state === "totalement" ? "Totalement conforme" : "Partiellement conforme"}</strong> : {rate} des
+				critères RGAA respectés (règle officielle : tous les critères pour « totalement », au moins 50 % pour «
+				partiellement »).
+			</p>
+		);
+	else if (state.reason !== "incomplete")
+		status = (
+			<p>
+				<strong>Non conforme</strong> : {NON_CONFORMITY_REASONS[state.reason]}
+				{rate && ` Pourcentage de critères respectés : ${rate}.`}
+			</p>
+		);
+	else
+		status = (
+			<p>
+				<strong>Non conforme : aucun résultat d’audit complet.</strong> La règle officielle classe « non conforme » tout
+				service sans résultat d’audit permettant de mesurer le respect des critères. Pour une déclaration « totalement »
+				ou « partiellement » conforme,{" "}
+				{session.pages.length === 0 ? (
+					<>
+						ajoutez des pages à l’échantillon (<a href="#audit-echantillon">section 1</a>), puis évaluez chaque critère.
+					</>
+				) : (
+					<>
+						terminez l’audit : {plural(!r.complete ? r.remaining : 0, "évaluation")} « non testé » et{" "}
+						{plural(!r.complete ? r.toConfirm : 0, "statut")} à confirmer.{" "}
+						<a href="#audit-resultat">Voir ce qui reste à faire (section 3)</a>.
+					</>
+				)}
+			</p>
+		);
+
+	const input = ({ field, label, help, kind }: DeclarationInput) => {
+		const id = `declaration-${field}`;
+		const value = drafts[field] ?? fields[field] ?? "";
+		const draft = drafts[field];
+		const invalid =
+			touched.has(field) &&
+			(kind === "url"
+				? value.trim() !== "" && safeUrl(value) === null
+				: draft !== undefined && draft !== "" && !isDay(draft));
+		const describedBy = [help && `${id}-aide`, invalid && `${id}-erreur`].filter(Boolean).join(" ") || undefined;
+		const common = {
+			id,
+			value,
+			"aria-describedby": describedBy,
+			"aria-invalid": invalid ? ("true" as const) : undefined,
+			onInput: (e: Event) => {
+				const v = (e.currentTarget as HTMLInputElement).value;
+				if (kind === "date") setDrafts((d) => ({ ...d, [field]: v }));
+				else set(field, v);
+			},
+			onBlur: () => {
+				if (kind === "date") commitDate(field);
+				setTouched((t) => new Set(t).add(field));
+			},
+		};
+		return (
+			<div class="audit-field" key={field}>
+				<label for={id}>{label}</label>
+				{help && (
+					<p id={`${id}-aide`} class="audit-help">
+						{help}
+					</p>
+				)}
+				{kind === "lines" ? (
+					<textarea {...common} rows={3} maxLength={Math.max(LIMITS.lines, value.length)} />
+				) : kind === "date" ? (
+					<input {...common} type="date" min="1900-01-01" max="9999-12-31" />
+				) : (
+					<input
+						{...common}
+						type="text"
+						inputMode={kind === "url" ? "url" : undefined}
+						maxLength={Math.max(kind === "url" ? LIMITS.url : LIMITS.text, value.length)}
+					/>
+				)}
+				{invalid && kind === "date" && (
+					<p id={`${id}-erreur`} class="audit-error">
+						Date incomplète ou hors limites (années 1900 à 9999) : elle n’est pas enregistrée.
+					</p>
+				)}
+				{invalid && kind === "url" && (
+					<p id={`${id}-erreur`} class="audit-error">
+						Adresse non reconnue : commencez par https:// ou saisissez une adresse e-mail. En attendant, elle reste « à
+						compléter » dans la déclaration.
+					</p>
+				)}
+			</div>
+		);
+	};
+	const auditBy = fields.auditBy ?? "";
+
+	return (
+		<section aria-labelledby="audit-declaration" class="audit-declaration">
+			<h2 id="audit-declaration">4. Déclaration d’accessibilité</h2>
+			<p>
+				La déclaration reprend le résultat de votre audit dans le{" "}
+				<a href={DECLARATION_URL}>format imposé par la réglementation</a>. Rampe remplit ce qu’il calcule (état de
+				conformité, pourcentage de critères respectés, taux moyen, critères non conformes, pages vérifiées, date
+				d’établissement, et le motif d’un état « non conforme » sans mesure) ; vous complétez le reste ci-dessous. Ce
+				qui manque reste affiché [entre crochets]. Votre organisme est-il soumis à l’obligation ? Consultez le{" "}
+				<a href={SCOPE_URL}>champ d’application officiel</a>.
+			</p>
+			<p class="audit-help">
+				Choix imposés par Rampe, qui audite un site web : « site internet », « du site web », et le référentiel « RGAA,
+				version {rgaaVersion} » de votre audit.
+			</p>
+			<div class="audit-reminder">
+				<p>
+					<strong>Cette déclaration engage votre organisme ; Rampe la met seulement en forme.</strong>
+				</p>
+				<p>
+					Validité : à mettre à jour lors d’une modification substantielle ou d’une refonte du site, 3 ans après sa
+					publication, ou 18 mois après la publication d’une nouvelle version du RGAA.
+				</p>
+			</div>
+
+			<h3>État de conformité</h3>
+			<div class="audit-state">{status}</div>
+
+			<h3>À compléter</h3>
+			<p class="audit-help">
+				Enregistré avec l’audit, dans ce navigateur, et inclus dans « Télécharger l’audit (JSON) ».
+			</p>
+			{DECLARATION_GROUPS.map((g) => (
+				<fieldset class="audit-declaration-group" key={g.legend}>
+					<legend>{g.legend}</legend>
+					{g.legend === "Audit" && (
+						<fieldset class="audit-auditby">
+							<legend>L’audit a été réalisé</legend>
+							{(
+								[
+									["interne", "En interne"],
+									["prestataire", "Par un prestataire"],
+								] as const
+							).map(([value, label]) => (
+								<label key={value}>
+									<input
+										type="radio"
+										name="declaration-auditBy"
+										value={value}
+										checked={auditBy === value}
+										onChange={() => set("auditBy", value)}
+									/>{" "}
+									{label}
+								</label>
+							))}
+						</fieldset>
+					)}
+					{g.legend === "Audit" &&
+						auditBy === "prestataire" &&
+						input({ field: "auditCompany", label: "Nom du prestataire" })}
+					{g.fields.map(input)}
+				</fieldset>
+			))}
+
+			<section aria-labelledby="audit-apercu" class="audit-preview">
+				<h3 id="audit-apercu">Aperçu de la déclaration</h3>
+				<Preview blocks={blocks} />
+			</section>
+			<p class="audit-declaration-actions">
+				<button type="button" onClick={copy}>
+					Copier le HTML
+				</button>
+				<button type="button" onClick={() => download("html")}>
+					Télécharger (HTML)
+				</button>
+				<button type="button" onClick={() => download("markdown")}>
+					Télécharger (Markdown)
+				</button>
+			</p>
 		</section>
 	);
 }
