@@ -72,25 +72,25 @@
 			"criterion": "6.2",
 			"page": "https://chikimuras.github.io/rampe/",
 			"status": "C",
-			"note": "Test 6.2.1 : DOM et arbre d’accessibilité du build examinés avec Playwright/Chromium ; tous les liens (<a href>, aucun role=\"link\") ont un contenu texte non vide entre <a> et </a>, et l’arbre d’accessibilité de Chromium ne contient aucun lien sans nom. Conforme."
+			"note": "Test 6.2.1 : Page examinée : page d’accueil (/). 9 liens <a href> (0 élément role=\"link\") relevés dans le DOM servi : 0 lien sans contenu texte entre <a> et </a>, et l’arbre d’accessibilité de Chromium ne contient aucun lien sans nom. Conforme."
 		},
 		{
 			"criterion": "6.2",
 			"page": "https://chikimuras.github.io/rampe/referentiel/",
 			"status": "C",
-			"note": "Test 6.2.1 : DOM et arbre d’accessibilité du build examinés avec Playwright/Chromium ; tous les liens (<a href>, aucun role=\"link\") ont un contenu texte non vide entre <a> et </a>, et l’arbre d’accessibilité de Chromium ne contient aucun lien sans nom. Conforme."
+			"note": "Test 6.2.1 : Page examinée : page Référentiel (/referentiel/). 131 liens <a href> (0 élément role=\"link\") relevés dans le DOM servi : 0 lien sans contenu texte entre <a> et </a>, et l’arbre d’accessibilité de Chromium ne contient aucun lien sans nom. Conforme."
 		},
 		{
 			"criterion": "6.2",
 			"page": "https://chikimuras.github.io/rampe/referentiel/1-1/",
 			"status": "C",
-			"note": "Test 6.2.1 : DOM et arbre d’accessibilité du build examinés avec Playwright/Chromium ; tous les liens (<a href>, aucun role=\"link\") ont un contenu texte non vide entre <a> et </a>, et l’arbre d’accessibilité de Chromium ne contient aucun lien sans nom. Conforme."
+			"note": "Test 6.2.1 : Page examinée : fiche du critère 1.1 (/referentiel/1-1/). 43 liens <a href> (0 élément role=\"link\") relevés dans le DOM servi : 0 lien sans contenu texte entre <a> et </a>, et l’arbre d’accessibilité de Chromium ne contient aucun lien sans nom. Conforme."
 		},
 		{
 			"criterion": "6.2",
 			"page": "https://chikimuras.github.io/rampe/referentiel/glossaire/",
 			"status": "C",
-			"note": "Test 6.2.1 : DOM et arbre d’accessibilité du build examinés avec Playwright/Chromium ; tous les liens (<a href>, aucun role=\"link\") ont un contenu texte non vide entre <a> et </a>, et l’arbre d’accessibilité de Chromium ne contient aucun lien sans nom. Conforme."
+			"note": "Test 6.2.1 : Page examinée : page Glossaire (/referentiel/glossaire/). 76 liens <a href> (0 élément role=\"link\") relevés dans le DOM servi : 0 lien sans contenu texte entre <a> et </a>, et l’arbre d’accessibilité de Chromium ne contient aucun lien sans nom. Conforme."
 		},
 		{
 			"criterion": "6.2",
@@ -102,37 +102,37 @@
 			"criterion": "6.2",
 			"page": "https://chikimuras.github.io/rampe/cockpit/",
 			"status": "C",
-			"note": "Test 6.2.1 : DOM et arbre d’accessibilité du build examinés avec Playwright/Chromium ; tous les liens (<a href>, aucun role=\"link\") ont un contenu texte non vide entre <a> et </a>, et l’arbre d’accessibilité de Chromium ne contient aucun lien sans nom. Conforme."
+			"note": "Test 6.2.1 : Page examinée : page Cockpit (/cockpit/). 39 liens <a href> (0 élément role=\"link\") relevés dans le DOM servi : 0 lien sans contenu texte entre <a> et </a>, et l’arbre d’accessibilité de Chromium ne contient aucun lien sans nom. Conforme."
 		},
 		{
 			"criterion": "6.2",
 			"page": "https://chikimuras.github.io/rampe/cockpit/adr/0011-cli-audit-playwright/",
 			"status": "C",
-			"note": "Test 6.2.1 : DOM et arbre d’accessibilité du build examinés avec Playwright/Chromium ; tous les liens (<a href>, aucun role=\"link\") ont un contenu texte non vide entre <a> et </a>, et l’arbre d’accessibilité de Chromium ne contient aucun lien sans nom. Conforme."
+			"note": "Test 6.2.1 : Page examinée : page ADR-0011 (/cockpit/adr/0011-cli-audit-playwright/). 10 liens <a href> (0 élément role=\"link\") relevés dans le DOM servi : 0 lien sans contenu texte entre <a> et </a>, et l’arbre d’accessibilité de Chromium ne contient aucun lien sans nom. Conforme."
 		},
 		{
 			"criterion": "6.2",
 			"page": "https://chikimuras.github.io/rampe/cockpit/journal/2026-10-15/",
 			"status": "C",
-			"note": "Test 6.2.1 : DOM et arbre d’accessibilité du build examinés avec Playwright/Chromium ; tous les liens (<a href>, aucun role=\"link\") ont un contenu texte non vide entre <a> et </a>, et l’arbre d’accessibilité de Chromium ne contient aucun lien sans nom. Conforme."
+			"note": "Test 6.2.1 : Page examinée : page du journal du 15/10/2026 (/cockpit/journal/2026-10-15/). 10 liens <a href> (0 élément role=\"link\") relevés dans le DOM servi : 0 lien sans contenu texte entre <a> et </a>, et l’arbre d’accessibilité de Chromium ne contient aucun lien sans nom. Conforme."
 		},
 		{
 			"criterion": "6.2",
 			"page": "https://chikimuras.github.io/rampe/cockpit/docs/roadmap/",
 			"status": "C",
-			"note": "Test 6.2.1 : DOM et arbre d’accessibilité du build examinés avec Playwright/Chromium ; tous les liens (<a href>, aucun role=\"link\") ont un contenu texte non vide entre <a> et </a>, et l’arbre d’accessibilité de Chromium ne contient aucun lien sans nom. Conforme."
+			"note": "Test 6.2.1 : Page examinée : page Roadmap (/cockpit/docs/roadmap/). 10 liens <a href> (0 élément role=\"link\") relevés dans le DOM servi : 0 lien sans contenu texte entre <a> et </a>, et l’arbre d’accessibilité de Chromium ne contient aucun lien sans nom. Conforme."
 		},
 		{
 			"criterion": "6.2",
 			"page": "https://chikimuras.github.io/rampe/referentiel/5-1/",
 			"status": "C",
-			"note": "Test 6.2.1 : DOM et arbre d’accessibilité du build examinés avec Playwright/Chromium ; tous les liens (<a href>, aucun role=\"link\") ont un contenu texte non vide entre <a> et </a>, et l’arbre d’accessibilité de Chromium ne contient aucun lien sans nom. Conforme."
+			"note": "Test 6.2.1 : Page examinée : fiche du critère 5.1 (/referentiel/5-1/). 19 liens <a href> (0 élément role=\"link\") relevés dans le DOM servi : 0 lien sans contenu texte entre <a> et </a>, et l’arbre d’accessibilité de Chromium ne contient aucun lien sans nom. Conforme."
 		},
 		{
 			"criterion": "6.2",
 			"page": "https://chikimuras.github.io/rampe/referentiel/1-9/",
 			"status": "C",
-			"note": "Test 6.2.1 : DOM et arbre d’accessibilité du build examinés avec Playwright/Chromium ; tous les liens (<a href>, aucun role=\"link\") ont un contenu texte non vide entre <a> et </a>, et l’arbre d’accessibilité de Chromium ne contient aucun lien sans nom. Conforme."
+			"note": "Test 6.2.1 : Page examinée : fiche du critère 1.9 (/referentiel/1-9/). 45 liens <a href> (0 élément role=\"link\") relevés dans le DOM servi : 0 lien sans contenu texte entre <a> et </a>, et l’arbre d’accessibilité de Chromium ne contient aucun lien sans nom. Conforme."
 		}
 	]
 }

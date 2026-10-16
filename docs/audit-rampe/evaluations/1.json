@@ -36,7 +36,7 @@
 			"criterion": "1.1",
 			"page": "https://chikimuras.github.io/rampe/cockpit/",
 			"status": "NA",
-			"note": "Tests 1.1.1 à 1.1.8 : Inventaire du DOM rendu dans Chromium (Playwright) : 0 <img>, 0 <svg>, 0 élément role=\"img\", 0 <area>, 0 <object>, 0 <embed>, 0 <canvas>, 0 <input type=\"image\">, 0 <picture>, 0 <figure>, aucune image CSS (background-image à « none » sur tous les éléments, aucun contenu ::before/::after) sur le cockpit (encadré « En attente d’Alexandre », 7 barres <progress>, listes d’ADR et de journaux avec pastilles de statut). Aucune image porteuse d’information, aucune zone d’image réactive, aucun bouton image : rien à évaluer. Non applicable."
+			"note": "Tests 1.1.1 à 1.1.8 : Inventaire du DOM rendu dans Chromium (Playwright) : 0 <img>, 0 <svg>, 0 élément role=\"img\", 0 <area>, 0 <object>, 0 <embed>, 0 <canvas>, 0 <input type=\"image\">, 0 <picture>, 0 <figure>, aucune image CSS (background-image à « none » sur tous les éléments, aucun contenu ::before/::after) sur le cockpit (encadré « En attente d’Alexandre », 7 barres <progress>, liste des ADR avec pastilles de statut « Accepted », liste des pages du journal). Aucune image porteuse d’information, aucune zone d’image réactive, aucun bouton image : rien à évaluer. Non applicable."
 		},
 		{
 			"criterion": "1.1",
@@ -102,7 +102,7 @@
 			"criterion": "1.2",
 			"page": "https://chikimuras.github.io/rampe/cockpit/",
 			"status": "NA",
-			"note": "Tests 1.2.1 à 1.2.6 : Inventaire du DOM rendu dans Chromium (Playwright) : 0 <img>, 0 <svg>, 0 élément role=\"img\", 0 <area>, 0 <object>, 0 <embed>, 0 <canvas>, 0 <input type=\"image\">, 0 <picture>, 0 <figure>, aucune image CSS (background-image à « none » sur tous les éléments, aucun contenu ::before/::after) sur le cockpit (encadré « En attente d’Alexandre », 7 barres <progress>, listes d’ADR et de journaux avec pastilles de statut). Aucune image de décoration (<img>, <area>, <object>, <svg>, <canvas>, <embed>) à vérifier. Non applicable."
+			"note": "Tests 1.2.1 à 1.2.6 : Inventaire du DOM rendu dans Chromium (Playwright) : 0 <img>, 0 <svg>, 0 élément role=\"img\", 0 <area>, 0 <object>, 0 <embed>, 0 <canvas>, 0 <input type=\"image\">, 0 <picture>, 0 <figure>, aucune image CSS (background-image à « none » sur tous les éléments, aucun contenu ::before/::after) sur le cockpit (encadré « En attente d’Alexandre », 7 barres <progress>, liste des ADR avec pastilles de statut « Accepted », liste des pages du journal). Aucune image de décoration (<img>, <area>, <object>, <svg>, <canvas>, <embed>) à vérifier. Non applicable."
 		},
 		{
 			"criterion": "1.2",
@@ -168,7 +168,7 @@
 			"criterion": "1.3",
 			"page": "https://chikimuras.github.io/rampe/cockpit/",
 			"status": "NA",
-			"note": "Tests 1.3.1 à 1.3.9 : Inventaire du DOM rendu dans Chromium (Playwright) : 0 <img>, 0 <svg>, 0 élément role=\"img\", 0 <area>, 0 <object>, 0 <embed>, 0 <canvas>, 0 <input type=\"image\">, 0 <picture>, 0 <figure>, aucune image CSS (background-image à « none » sur tous les éléments, aucun contenu ::before/::after) sur le cockpit (encadré « En attente d’Alexandre », 7 barres <progress>, listes d’ADR et de journaux avec pastilles de statut). Aucune image porteuse d’information, donc aucune alternative textuelle dont juger la pertinence ou la concision. Non applicable."
+			"note": "Tests 1.3.1 à 1.3.9 : Inventaire du DOM rendu dans Chromium (Playwright) : 0 <img>, 0 <svg>, 0 élément role=\"img\", 0 <area>, 0 <object>, 0 <embed>, 0 <canvas>, 0 <input type=\"image\">, 0 <picture>, 0 <figure>, aucune image CSS (background-image à « none » sur tous les éléments, aucun contenu ::before/::after) sur le cockpit (encadré « En attente d’Alexandre », 7 barres <progress>, liste des ADR avec pastilles de statut « Accepted », liste des pages du journal). Aucune image porteuse d’information, donc aucune alternative textuelle dont juger la pertinence ou la concision. Non applicable."
 		},
 		{
 			"criterion": "1.3",
@@ -234,7 +234,7 @@
 			"criterion": "1.4",
 			"page": "https://chikimuras.github.io/rampe/cockpit/",
 			"status": "NA",
-			"note": "Tests 1.4.1 à 1.4.7 : Inventaire du DOM rendu dans Chromium (Playwright) : 0 <img>, 0 <svg>, 0 élément role=\"img\", 0 <area>, 0 <object>, 0 <embed>, 0 <canvas>, 0 <input type=\"image\">, 0 <picture>, 0 <figure>, aucune image CSS (background-image à « none » sur tous les éléments, aucun contenu ::before/::after) sur le cockpit (encadré « En attente d’Alexandre », 7 barres <progress>, listes d’ADR et de journaux avec pastilles de statut). Aucun CAPTCHA ni image-test sur la page. Non applicable."
+			"note": "Tests 1.4.1 à 1.4.7 : Inventaire du DOM rendu dans Chromium (Playwright) : 0 <img>, 0 <svg>, 0 élément role=\"img\", 0 <area>, 0 <object>, 0 <embed>, 0 <canvas>, 0 <input type=\"image\">, 0 <picture>, 0 <figure>, aucune image CSS (background-image à « none » sur tous les éléments, aucun contenu ::before/::after) sur le cockpit (encadré « En attente d’Alexandre », 7 barres <progress>, liste des ADR avec pastilles de statut « Accepted », liste des pages du journal). Aucun CAPTCHA ni image-test sur la page. Non applicable."
 		},
 		{
 			"criterion": "1.4",
@@ -300,7 +300,7 @@
 			"criterion": "1.5",
 			"page": "https://chikimuras.github.io/rampe/cockpit/",
 			"status": "NA",
-			"note": "Tests 1.5.1 et 1.5.2 : Inventaire du DOM rendu dans Chromium (Playwright) : 0 <img>, 0 <svg>, 0 élément role=\"img\", 0 <area>, 0 <object>, 0 <embed>, 0 <canvas>, 0 <input type=\"image\">, 0 <picture>, 0 <figure>, aucune image CSS (background-image à « none » sur tous les éléments, aucun contenu ::before/::after) sur le cockpit (encadré « En attente d’Alexandre », 7 barres <progress>, listes d’ADR et de journaux avec pastilles de statut). Aucun CAPTCHA (graphique ou bouton image) sur la page. Non applicable."
+			"note": "Tests 1.5.1 et 1.5.2 : Inventaire du DOM rendu dans Chromium (Playwright) : 0 <img>, 0 <svg>, 0 élément role=\"img\", 0 <area>, 0 <object>, 0 <embed>, 0 <canvas>, 0 <input type=\"image\">, 0 <picture>, 0 <figure>, aucune image CSS (background-image à « none » sur tous les éléments, aucun contenu ::before/::after) sur le cockpit (encadré « En attente d’Alexandre », 7 barres <progress>, liste des ADR avec pastilles de statut « Accepted », liste des pages du journal). Aucun CAPTCHA (graphique ou bouton image) sur la page. Non applicable."
 		},
 		{
 			"criterion": "1.5",
@@ -366,7 +366,7 @@
 			"criterion": "1.6",
 			"page": "https://chikimuras.github.io/rampe/cockpit/",
 			"status": "NA",
-			"note": "Tests 1.6.1 à 1.6.10 : Inventaire du DOM rendu dans Chromium (Playwright) : 0 <img>, 0 <svg>, 0 élément role=\"img\", 0 <area>, 0 <object>, 0 <embed>, 0 <canvas>, 0 <input type=\"image\">, 0 <picture>, 0 <figure>, aucune image CSS (background-image à « none » sur tous les éléments, aucun contenu ::before/::after) sur le cockpit (encadré « En attente d’Alexandre », 7 barres <progress>, listes d’ADR et de journaux avec pastilles de statut). Aucune image porteuse d’information, donc aucune image nécessitant une description détaillée. Non applicable."
+			"note": "Tests 1.6.1 à 1.6.10 : Inventaire du DOM rendu dans Chromium (Playwright) : 0 <img>, 0 <svg>, 0 élément role=\"img\", 0 <area>, 0 <object>, 0 <embed>, 0 <canvas>, 0 <input type=\"image\">, 0 <picture>, 0 <figure>, aucune image CSS (background-image à « none » sur tous les éléments, aucun contenu ::before/::after) sur le cockpit (encadré « En attente d’Alexandre », 7 barres <progress>, liste des ADR avec pastilles de statut « Accepted », liste des pages du journal). Aucune image porteuse d’information, donc aucune image nécessitant une description détaillée. Non applicable."
 		},
 		{
 			"criterion": "1.6",
@@ -432,7 +432,7 @@
 			"criterion": "1.7",
 			"page": "https://chikimuras.github.io/rampe/cockpit/",
 			"status": "NA",
-			"note": "Tests 1.7.1 à 1.7.6 : Inventaire du DOM rendu dans Chromium (Playwright) : 0 <img>, 0 <svg>, 0 élément role=\"img\", 0 <area>, 0 <object>, 0 <embed>, 0 <canvas>, 0 <input type=\"image\">, 0 <picture>, 0 <figure>, aucune image CSS (background-image à « none » sur tous les éléments, aucun contenu ::before/::after) sur le cockpit (encadré « En attente d’Alexandre », 7 barres <progress>, listes d’ADR et de journaux avec pastilles de statut). Aucune image pourvue d’une description détaillée. Non applicable."
+			"note": "Tests 1.7.1 à 1.7.6 : Inventaire du DOM rendu dans Chromium (Playwright) : 0 <img>, 0 <svg>, 0 élément role=\"img\", 0 <area>, 0 <object>, 0 <embed>, 0 <canvas>, 0 <input type=\"image\">, 0 <picture>, 0 <figure>, aucune image CSS (background-image à « none » sur tous les éléments, aucun contenu ::before/::after) sur le cockpit (encadré « En attente d’Alexandre », 7 barres <progress>, liste des ADR avec pastilles de statut « Accepted », liste des pages du journal). Aucune image pourvue d’une description détaillée. Non applicable."
 		},
 		{
 			"criterion": "1.7",
@@ -498,7 +498,7 @@
 			"criterion": "1.8",
 			"page": "https://chikimuras.github.io/rampe/cockpit/",
 			"status": "NA",
-			"note": "Tests 1.8.1 à 1.8.6 : Inventaire du DOM rendu dans Chromium (Playwright) : 0 <img>, 0 <svg>, 0 élément role=\"img\", 0 <area>, 0 <object>, 0 <embed>, 0 <canvas>, 0 <input type=\"image\">, 0 <picture>, 0 <figure>, aucune image CSS (background-image à « none » sur tous les éléments, aucun contenu ::before/::after) sur le cockpit (encadré « En attente d’Alexandre », 7 barres <progress>, listes d’ADR et de journaux avec pastilles de statut). Aucune image texte : tous les textes, y compris le nom « Rampe » de l’en-tête, sont du texte stylé en HTML/CSS. Non applicable."
+			"note": "Tests 1.8.1 à 1.8.6 : Inventaire du DOM rendu dans Chromium (Playwright) : 0 <img>, 0 <svg>, 0 élément role=\"img\", 0 <area>, 0 <object>, 0 <embed>, 0 <canvas>, 0 <input type=\"image\">, 0 <picture>, 0 <figure>, aucune image CSS (background-image à « none » sur tous les éléments, aucun contenu ::before/::after) sur le cockpit (encadré « En attente d’Alexandre », 7 barres <progress>, liste des ADR avec pastilles de statut « Accepted », liste des pages du journal). Aucune image texte : tous les textes, y compris le nom « Rampe » de l’en-tête, sont du texte stylé en HTML/CSS. Non applicable."
 		},
 		{
 			"criterion": "1.8",
@@ -564,7 +564,7 @@
 			"criterion": "1.9",
 			"page": "https://chikimuras.github.io/rampe/cockpit/",
 			"status": "NA",
-			"note": "Tests 1.9.1 à 1.9.5 : Inventaire du DOM rendu dans Chromium (Playwright) : 0 <img>, 0 <svg>, 0 élément role=\"img\", 0 <area>, 0 <object>, 0 <embed>, 0 <canvas>, 0 <input type=\"image\">, 0 <picture>, 0 <figure>, aucune image CSS (background-image à « none » sur tous les éléments, aucun contenu ::before/::after) sur le cockpit (encadré « En attente d’Alexandre », 7 barres <progress>, listes d’ADR et de journaux avec pastilles de statut). Aucune image, donc aucune légende d’image ; aucun élément <figure>/<figcaption>. Non applicable."
+			"note": "Tests 1.9.1 à 1.9.5 : Inventaire du DOM rendu dans Chromium (Playwright) : 0 <img>, 0 <svg>, 0 élément role=\"img\", 0 <area>, 0 <object>, 0 <embed>, 0 <canvas>, 0 <input type=\"image\">, 0 <picture>, 0 <figure>, aucune image CSS (background-image à « none » sur tous les éléments, aucun contenu ::before/::after) sur le cockpit (encadré « En attente d’Alexandre », 7 barres <progress>, liste des ADR avec pastilles de statut « Accepted », liste des pages du journal). Aucune image, donc aucune légende d’image ; aucun élément <figure>/<figcaption>. Non applicable."
 		},
 		{
 			"criterion": "1.9",

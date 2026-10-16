@@ -36,7 +36,7 @@
 			"criterion": "2.1",
 			"page": "https://chikimuras.github.io/rampe/cockpit/",
 			"status": "NA",
-			"note": "Test 2.1.1 : Inventaire du DOM rendu dans Chromium (Playwright) : 0 <iframe>, 0 <frame> sur le cockpit (encadré « En attente d’Alexandre », 7 barres <progress>, listes d’ADR et de journaux avec pastilles de statut). Aucun cadre : non applicable."
+			"note": "Test 2.1.1 : Inventaire du DOM rendu dans Chromium (Playwright) : 0 <iframe>, 0 <frame> sur le cockpit (encadré « En attente d’Alexandre », 7 barres <progress>, liste des ADR avec pastilles de statut « Accepted », liste des pages du journal). Aucun cadre : non applicable."
 		},
 		{
 			"criterion": "2.1",
@@ -102,7 +102,7 @@
 			"criterion": "2.2",
 			"page": "https://chikimuras.github.io/rampe/cockpit/",
 			"status": "NA",
-			"note": "Test 2.2.1 : Inventaire du DOM rendu dans Chromium (Playwright) : 0 <iframe>, 0 <frame> sur le cockpit (encadré « En attente d’Alexandre », 7 barres <progress>, listes d’ADR et de journaux avec pastilles de statut), donc aucun attribut title de cadre dont juger la pertinence. Non applicable."
+			"note": "Test 2.2.1 : Inventaire du DOM rendu dans Chromium (Playwright) : 0 <iframe>, 0 <frame> sur le cockpit (encadré « En attente d’Alexandre », 7 barres <progress>, liste des ADR avec pastilles de statut « Accepted », liste des pages du journal), donc aucun attribut title de cadre dont juger la pertinence. Non applicable."
 		},
 		{
 			"criterion": "2.2",

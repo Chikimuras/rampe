@@ -90,7 +90,7 @@
 			"criterion": "12.2",
 			"page": "https://chikimuras.github.io/rampe/referentiel/glossaire/",
 			"status": "C",
-			"note": "Test 12.2.1 : comparé à l’accueil et aux autres pages de l’échantillon (même ensemble, gabarit Base.astro), le menu « Navigation principale » de le glossaire est toujours dans le <header>, en haut de page, au même emplacement (mesuré à 1280 px : x=240, y=0, largeur 800 px), avec les mêmes liens dans le même ordre, et il précède <main> dans le code source."
+			"note": "Test 12.2.1 : comparé à l’accueil et aux autres pages de l’échantillon (même ensemble, gabarit Base.astro), le menu « Navigation principale » du glossaire est toujours dans le <header>, en haut de page, au même emplacement (mesuré à 1280 px : x=240, y=0, largeur 800 px), avec les mêmes liens dans le même ordre, et il précède <main> dans le code source."
 		},
 		{
 			"criterion": "12.2",
@@ -102,7 +102,7 @@
 			"criterion": "12.2",
 			"page": "https://chikimuras.github.io/rampe/cockpit/",
 			"status": "C",
-			"note": "Test 12.2.1 : comparé à l’accueil et aux autres pages de l’échantillon (même ensemble, gabarit Base.astro), le menu « Navigation principale » de le cockpit est toujours dans le <header>, en haut de page, au même emplacement (mesuré à 1280 px : x=240, y=0, largeur 800 px), avec les mêmes liens dans le même ordre, et il précède <main> dans le code source."
+			"note": "Test 12.2.1 : comparé à l’accueil et aux autres pages de l’échantillon (même ensemble, gabarit Base.astro), le menu « Navigation principale » du cockpit est toujours dans le <header>, en haut de page, au même emplacement (mesuré à 1280 px : x=240, y=0, largeur 800 px), avec les mêmes liens dans le même ordre, et il précède <main> dans le code source."
 		},
 		{
 			"criterion": "12.2",
@@ -486,7 +486,7 @@
 			"criterion": "12.8",
 			"page": "https://chikimuras.github.io/rampe/referentiel/glossaire/",
 			"status": "C",
-			"note": "Test 12.8.1 : parcours Tab puis Maj+Tab de le glossaire : le focus suit l’ordre du code source (lien d’évitement, menu principal, puis liens du contenu), sans tabindex positif ni réordonnancement CSS (order, grid), cohérent avec l’ordre de lecture. Test 12.8.2 : aucun script n’insère ou ne met à jour de contenu sur cette page (pas d’îlot JavaScript)."
+			"note": "Test 12.8.1 : parcours Tab puis Maj+Tab du glossaire : le focus suit l’ordre du code source (lien d’évitement, menu principal, puis liens du contenu), sans tabindex positif ni réordonnancement CSS (order, grid), cohérent avec l’ordre de lecture. Test 12.8.2 : aucun script n’insère ou ne met à jour de contenu sur cette page (pas d’îlot JavaScript)."
 		},
 		{
 			"criterion": "12.8",
@@ -498,7 +498,7 @@
 			"criterion": "12.8",
 			"page": "https://chikimuras.github.io/rampe/cockpit/",
 			"status": "C",
-			"note": "Test 12.8.1 : parcours Tab puis Maj+Tab de le cockpit : le focus suit l’ordre du code source (lien d’évitement, menu principal, puis liens du contenu), sans tabindex positif ni réordonnancement CSS (order, grid), cohérent avec l’ordre de lecture. Test 12.8.2 : aucun script n’insère ou ne met à jour de contenu sur cette page (pas d’îlot JavaScript)."
+			"note": "Test 12.8.1 : parcours Tab puis Maj+Tab du cockpit : le focus suit l’ordre du code source (lien d’évitement, menu principal, puis liens du contenu), sans tabindex positif ni réordonnancement CSS (order, grid), cohérent avec l’ordre de lecture. Test 12.8.2 : aucun script n’insère ou ne met à jour de contenu sur cette page (pas d’îlot JavaScript)."
 		},
 		{
 			"criterion": "12.8",
@@ -552,7 +552,7 @@
 			"criterion": "12.9",
 			"page": "https://chikimuras.github.io/rampe/referentiel/glossaire/",
 			"status": "C",
-			"note": "Test 12.9.1 : tabulation de bout en bout de le glossaire (Playwright, Chromium) : chaque élément focalisable est atteint puis quitté, le focus sort de la page après le dernier élément, et Maj+Tab revient en arrière. Aucun piège."
+			"note": "Test 12.9.1 : tabulation de bout en bout du glossaire (Playwright, Chromium) : chaque élément focalisable est atteint puis quitté, le focus sort de la page après le dernier élément, et Maj+Tab revient en arrière. Aucun piège."
 		},
 		{
 			"criterion": "12.9",
@@ -564,7 +564,7 @@
 			"criterion": "12.9",
 			"page": "https://chikimuras.github.io/rampe/cockpit/",
 			"status": "C",
-			"note": "Test 12.9.1 : tabulation de bout en bout de le cockpit (Playwright, Chromium) : chaque élément focalisable est atteint puis quitté, le focus sort de la page après le dernier élément, et Maj+Tab revient en arrière. Aucun piège."
+			"note": "Test 12.9.1 : tabulation de bout en bout du cockpit (Playwright, Chromium) : chaque élément focalisable est atteint puis quitté, le focus sort de la page après le dernier élément, et Maj+Tab revient en arrière. Aucun piège."
 		},
 		{
 			"criterion": "12.9",

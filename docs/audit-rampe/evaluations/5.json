@@ -6,25 +6,25 @@
 			"criterion": "5.1",
 			"page": "https://chikimuras.github.io/rampe/",
 			"status": "NA",
-			"note": "Tests 5.1.1 : DOM et arbre d’accessibilité du build examinés avec Playwright/Chromium ; la page ne contient aucun élément <table> ni élément role=\"table\" ou role=\"grid\". Aucun tableau : non applicable."
+			"note": "Tests 5.1.1 : Page examinée : page d’accueil (/). DOM servi examiné (Playwright/Chromium) : 0 élément <table>, 0 élément role=\"table\" ou role=\"grid\" ; les contenus en colonnes ou en grille de la page sont des listes, pas des tableaux. Aucun tableau : non applicable."
 		},
 		{
 			"criterion": "5.1",
 			"page": "https://chikimuras.github.io/rampe/referentiel/",
 			"status": "NA",
-			"note": "Tests 5.1.1 : DOM et arbre d’accessibilité du build examinés avec Playwright/Chromium ; la page ne contient aucun élément <table> ni élément role=\"table\" ou role=\"grid\". Aucun tableau : non applicable."
+			"note": "Tests 5.1.1 : Page examinée : page Référentiel (/referentiel/). DOM servi examiné (Playwright/Chromium) : 0 élément <table>, 0 élément role=\"table\" ou role=\"grid\" ; les contenus en colonnes ou en grille de la page sont des listes, pas des tableaux. Aucun tableau : non applicable."
 		},
 		{
 			"criterion": "5.1",
 			"page": "https://chikimuras.github.io/rampe/referentiel/1-1/",
 			"status": "NA",
-			"note": "Tests 5.1.1 : DOM et arbre d’accessibilité du build examinés avec Playwright/Chromium ; la page ne contient aucun élément <table> ni élément role=\"table\" ou role=\"grid\". Aucun tableau : non applicable."
+			"note": "Tests 5.1.1 : Page examinée : fiche du critère 1.1 (/referentiel/1-1/). DOM servi examiné (Playwright/Chromium) : 0 élément <table>, 0 élément role=\"table\" ou role=\"grid\" ; les contenus en colonnes ou en grille de la page sont des listes, pas des tableaux. Aucun tableau : non applicable."
 		},
 		{
 			"criterion": "5.1",
 			"page": "https://chikimuras.github.io/rampe/referentiel/glossaire/",
 			"status": "NA",
-			"note": "Tests 5.1.1 : DOM et arbre d’accessibilité du build examinés avec Playwright/Chromium ; la page ne contient aucun élément <table> ni élément role=\"table\" ou role=\"grid\". Aucun tableau : non applicable."
+			"note": "Tests 5.1.1 : Page examinée : page Glossaire (/referentiel/glossaire/). DOM servi examiné (Playwright/Chromium) : 0 élément <table>, 0 élément role=\"table\" ou role=\"grid\" ; les contenus en colonnes ou en grille de la page sont des listes, pas des tableaux. Aucun tableau : non applicable."
 		},
 		{
 			"criterion": "5.1",
@@ -36,7 +36,7 @@
 			"criterion": "5.1",
 			"page": "https://chikimuras.github.io/rampe/cockpit/",
 			"status": "NA",
-			"note": "Tests 5.1.1 : DOM et arbre d’accessibilité du build examinés avec Playwright/Chromium ; la page ne contient aucun élément <table> ni élément role=\"table\" ou role=\"grid\". Aucun tableau : non applicable."
+			"note": "Tests 5.1.1 : Page examinée : page Cockpit (/cockpit/). DOM servi examiné (Playwright/Chromium) : 0 élément <table>, 0 élément role=\"table\" ou role=\"grid\" ; les contenus en colonnes ou en grille de la page sont des listes, pas des tableaux. Aucun tableau : non applicable."
 		},
 		{
 			"criterion": "5.1",
@@ -48,49 +48,49 @@
 			"criterion": "5.1",
 			"page": "https://chikimuras.github.io/rampe/cockpit/journal/2026-10-15/",
 			"status": "NA",
-			"note": "Tests 5.1.1 : DOM et arbre d’accessibilité du build examinés avec Playwright/Chromium ; la page ne contient aucun élément <table> ni élément role=\"table\" ou role=\"grid\". Aucun tableau : non applicable."
+			"note": "Tests 5.1.1 : Page examinée : page du journal du 15/10/2026 (/cockpit/journal/2026-10-15/). DOM servi examiné (Playwright/Chromium) : 0 élément <table>, 0 élément role=\"table\" ou role=\"grid\" ; les contenus en colonnes ou en grille de la page sont des listes, pas des tableaux. Aucun tableau : non applicable."
 		},
 		{
 			"criterion": "5.1",
 			"page": "https://chikimuras.github.io/rampe/cockpit/docs/roadmap/",
 			"status": "NA",
-			"note": "Tests 5.1.1 : DOM et arbre d’accessibilité du build examinés avec Playwright/Chromium ; la page ne contient aucun élément <table> ni élément role=\"table\" ou role=\"grid\". Aucun tableau : non applicable."
+			"note": "Tests 5.1.1 : Page examinée : page Roadmap (/cockpit/docs/roadmap/). DOM servi examiné (Playwright/Chromium) : 0 élément <table>, 0 élément role=\"table\" ou role=\"grid\" ; les contenus en colonnes ou en grille de la page sont des listes, pas des tableaux. Aucun tableau : non applicable."
 		},
 		{
 			"criterion": "5.1",
 			"page": "https://chikimuras.github.io/rampe/referentiel/5-1/",
 			"status": "NA",
-			"note": "Tests 5.1.1 : DOM et arbre d’accessibilité du build examinés avec Playwright/Chromium ; la page ne contient aucun élément <table> ni élément role=\"table\" ou role=\"grid\". Aucun tableau : non applicable."
+			"note": "Tests 5.1.1 : Page examinée : fiche du critère 5.1 (/referentiel/5-1/). DOM servi examiné (Playwright/Chromium) : 0 élément <table>, 0 élément role=\"table\" ou role=\"grid\" ; les contenus en colonnes ou en grille de la page sont des listes, pas des tableaux. Aucun tableau : non applicable."
 		},
 		{
 			"criterion": "5.1",
 			"page": "https://chikimuras.github.io/rampe/referentiel/1-9/",
 			"status": "NA",
-			"note": "Tests 5.1.1 : DOM et arbre d’accessibilité du build examinés avec Playwright/Chromium ; la page ne contient aucun élément <table> ni élément role=\"table\" ou role=\"grid\". Aucun tableau : non applicable."
+			"note": "Tests 5.1.1 : Page examinée : fiche du critère 1.9 (/referentiel/1-9/). DOM servi examiné (Playwright/Chromium) : 0 élément <table>, 0 élément role=\"table\" ou role=\"grid\" ; les contenus en colonnes ou en grille de la page sont des listes, pas des tableaux. Aucun tableau : non applicable."
 		},
 		{
 			"criterion": "5.2",
 			"page": "https://chikimuras.github.io/rampe/",
 			"status": "NA",
-			"note": "Tests 5.2.1 : DOM et arbre d’accessibilité du build examinés avec Playwright/Chromium ; la page ne contient aucun élément <table> ni élément role=\"table\" ou role=\"grid\". Aucun tableau : non applicable."
+			"note": "Tests 5.2.1 : Page examinée : page d’accueil (/). DOM servi examiné (Playwright/Chromium) : 0 élément <table>, 0 élément role=\"table\" ou role=\"grid\" ; les contenus en colonnes ou en grille de la page sont des listes, pas des tableaux. Aucun tableau : non applicable."
 		},
 		{
 			"criterion": "5.2",
 			"page": "https://chikimuras.github.io/rampe/referentiel/",
 			"status": "NA",
-			"note": "Tests 5.2.1 : DOM et arbre d’accessibilité du build examinés avec Playwright/Chromium ; la page ne contient aucun élément <table> ni élément role=\"table\" ou role=\"grid\". Aucun tableau : non applicable."
+			"note": "Tests 5.2.1 : Page examinée : page Référentiel (/referentiel/). DOM servi examiné (Playwright/Chromium) : 0 élément <table>, 0 élément role=\"table\" ou role=\"grid\" ; les contenus en colonnes ou en grille de la page sont des listes, pas des tableaux. Aucun tableau : non applicable."
 		},
 		{
 			"criterion": "5.2",
 			"page": "https://chikimuras.github.io/rampe/referentiel/1-1/",
 			"status": "NA",
-			"note": "Tests 5.2.1 : DOM et arbre d’accessibilité du build examinés avec Playwright/Chromium ; la page ne contient aucun élément <table> ni élément role=\"table\" ou role=\"grid\". Aucun tableau : non applicable."
+			"note": "Tests 5.2.1 : Page examinée : fiche du critère 1.1 (/referentiel/1-1/). DOM servi examiné (Playwright/Chromium) : 0 élément <table>, 0 élément role=\"table\" ou role=\"grid\" ; les contenus en colonnes ou en grille de la page sont des listes, pas des tableaux. Aucun tableau : non applicable."
 		},
 		{
 			"criterion": "5.2",
 			"page": "https://chikimuras.github.io/rampe/referentiel/glossaire/",
 			"status": "NA",
-			"note": "Tests 5.2.1 : DOM et arbre d’accessibilité du build examinés avec Playwright/Chromium ; la page ne contient aucun élément <table> ni élément role=\"table\" ou role=\"grid\". Aucun tableau : non applicable."
+			"note": "Tests 5.2.1 : Page examinée : page Glossaire (/referentiel/glossaire/). DOM servi examiné (Playwright/Chromium) : 0 élément <table>, 0 élément role=\"table\" ou role=\"grid\" ; les contenus en colonnes ou en grille de la page sont des listes, pas des tableaux. Aucun tableau : non applicable."
 		},
 		{
 			"criterion": "5.2",
@@ -102,7 +102,7 @@
 			"criterion": "5.2",
 			"page": "https://chikimuras.github.io/rampe/cockpit/",
 			"status": "NA",
-			"note": "Tests 5.2.1 : DOM et arbre d’accessibilité du build examinés avec Playwright/Chromium ; la page ne contient aucun élément <table> ni élément role=\"table\" ou role=\"grid\". Aucun tableau : non applicable."
+			"note": "Tests 5.2.1 : Page examinée : page Cockpit (/cockpit/). DOM servi examiné (Playwright/Chromium) : 0 élément <table>, 0 élément role=\"table\" ou role=\"grid\" ; les contenus en colonnes ou en grille de la page sont des listes, pas des tableaux. Aucun tableau : non applicable."
 		},
 		{
 			"criterion": "5.2",
@@ -114,49 +114,49 @@
 			"criterion": "5.2",
 			"page": "https://chikimuras.github.io/rampe/cockpit/journal/2026-10-15/",
 			"status": "NA",
-			"note": "Tests 5.2.1 : DOM et arbre d’accessibilité du build examinés avec Playwright/Chromium ; la page ne contient aucun élément <table> ni élément role=\"table\" ou role=\"grid\". Aucun tableau : non applicable."
+			"note": "Tests 5.2.1 : Page examinée : page du journal du 15/10/2026 (/cockpit/journal/2026-10-15/). DOM servi examiné (Playwright/Chromium) : 0 élément <table>, 0 élément role=\"table\" ou role=\"grid\" ; les contenus en colonnes ou en grille de la page sont des listes, pas des tableaux. Aucun tableau : non applicable."
 		},
 		{
 			"criterion": "5.2",
 			"page": "https://chikimuras.github.io/rampe/cockpit/docs/roadmap/",
 			"status": "NA",
-			"note": "Tests 5.2.1 : DOM et arbre d’accessibilité du build examinés avec Playwright/Chromium ; la page ne contient aucun élément <table> ni élément role=\"table\" ou role=\"grid\". Aucun tableau : non applicable."
+			"note": "Tests 5.2.1 : Page examinée : page Roadmap (/cockpit/docs/roadmap/). DOM servi examiné (Playwright/Chromium) : 0 élément <table>, 0 élément role=\"table\" ou role=\"grid\" ; les contenus en colonnes ou en grille de la page sont des listes, pas des tableaux. Aucun tableau : non applicable."
 		},
 		{
 			"criterion": "5.2",
 			"page": "https://chikimuras.github.io/rampe/referentiel/5-1/",
 			"status": "NA",
-			"note": "Tests 5.2.1 : DOM et arbre d’accessibilité du build examinés avec Playwright/Chromium ; la page ne contient aucun élément <table> ni élément role=\"table\" ou role=\"grid\". Aucun tableau : non applicable."
+			"note": "Tests 5.2.1 : Page examinée : fiche du critère 5.1 (/referentiel/5-1/). DOM servi examiné (Playwright/Chromium) : 0 élément <table>, 0 élément role=\"table\" ou role=\"grid\" ; les contenus en colonnes ou en grille de la page sont des listes, pas des tableaux. Aucun tableau : non applicable."
 		},
 		{
 			"criterion": "5.2",
 			"page": "https://chikimuras.github.io/rampe/referentiel/1-9/",
 			"status": "NA",
-			"note": "Tests 5.2.1 : DOM et arbre d’accessibilité du build examinés avec Playwright/Chromium ; la page ne contient aucun élément <table> ni élément role=\"table\" ou role=\"grid\". Aucun tableau : non applicable."
+			"note": "Tests 5.2.1 : Page examinée : fiche du critère 1.9 (/referentiel/1-9/). DOM servi examiné (Playwright/Chromium) : 0 élément <table>, 0 élément role=\"table\" ou role=\"grid\" ; les contenus en colonnes ou en grille de la page sont des listes, pas des tableaux. Aucun tableau : non applicable."
 		},
 		{
 			"criterion": "5.3",
 			"page": "https://chikimuras.github.io/rampe/",
 			"status": "NA",
-			"note": "Tests 5.3.1 : DOM et arbre d’accessibilité du build examinés avec Playwright/Chromium ; la page ne contient aucun élément <table> ni élément role=\"table\" ou role=\"grid\". Aucun tableau : non applicable."
+			"note": "Tests 5.3.1 : Page examinée : page d’accueil (/). DOM servi examiné (Playwright/Chromium) : 0 élément <table>, 0 élément role=\"table\" ou role=\"grid\" ; les contenus en colonnes ou en grille de la page sont des listes, pas des tableaux. Aucun tableau : non applicable."
 		},
 		{
 			"criterion": "5.3",
 			"page": "https://chikimuras.github.io/rampe/referentiel/",
 			"status": "NA",
-			"note": "Tests 5.3.1 : DOM et arbre d’accessibilité du build examinés avec Playwright/Chromium ; la page ne contient aucun élément <table> ni élément role=\"table\" ou role=\"grid\". Aucun tableau : non applicable."
+			"note": "Tests 5.3.1 : Page examinée : page Référentiel (/referentiel/). DOM servi examiné (Playwright/Chromium) : 0 élément <table>, 0 élément role=\"table\" ou role=\"grid\" ; les contenus en colonnes ou en grille de la page sont des listes, pas des tableaux. Aucun tableau : non applicable."
 		},
 		{
 			"criterion": "5.3",
 			"page": "https://chikimuras.github.io/rampe/referentiel/1-1/",
 			"status": "NA",
-			"note": "Tests 5.3.1 : DOM et arbre d’accessibilité du build examinés avec Playwright/Chromium ; la page ne contient aucun élément <table> ni élément role=\"table\" ou role=\"grid\". Aucun tableau : non applicable."
+			"note": "Tests 5.3.1 : Page examinée : fiche du critère 1.1 (/referentiel/1-1/). DOM servi examiné (Playwright/Chromium) : 0 élément <table>, 0 élément role=\"table\" ou role=\"grid\" ; les contenus en colonnes ou en grille de la page sont des listes, pas des tableaux. Aucun tableau : non applicable."
 		},
 		{
 			"criterion": "5.3",
 			"page": "https://chikimuras.github.io/rampe/referentiel/glossaire/",
 			"status": "NA",
-			"note": "Tests 5.3.1 : DOM et arbre d’accessibilité du build examinés avec Playwright/Chromium ; la page ne contient aucun élément <table> ni élément role=\"table\" ou role=\"grid\". Aucun tableau : non applicable."
+			"note": "Tests 5.3.1 : Page examinée : page Glossaire (/referentiel/glossaire/). DOM servi examiné (Playwright/Chromium) : 0 élément <table>, 0 élément role=\"table\" ou role=\"grid\" ; les contenus en colonnes ou en grille de la page sont des listes, pas des tableaux. Aucun tableau : non applicable."
 		},
 		{
 			"criterion": "5.3",
@@ -168,7 +168,7 @@
 			"criterion": "5.3",
 			"page": "https://chikimuras.github.io/rampe/cockpit/",
 			"status": "NA",
-			"note": "Tests 5.3.1 : DOM et arbre d’accessibilité du build examinés avec Playwright/Chromium ; la page ne contient aucun élément <table> ni élément role=\"table\" ou role=\"grid\". Aucun tableau : non applicable."
+			"note": "Tests 5.3.1 : Page examinée : page Cockpit (/cockpit/). DOM servi examiné (Playwright/Chromium) : 0 élément <table>, 0 élément role=\"table\" ou role=\"grid\" ; les contenus en colonnes ou en grille de la page sont des listes, pas des tableaux. Aucun tableau : non applicable."
 		},
 		{
 			"criterion": "5.3",
@@ -180,49 +180,49 @@
 			"criterion": "5.3",
 			"page": "https://chikimuras.github.io/rampe/cockpit/journal/2026-10-15/",
 			"status": "NA",
-			"note": "Tests 5.3.1 : DOM et arbre d’accessibilité du build examinés avec Playwright/Chromium ; la page ne contient aucun élément <table> ni élément role=\"table\" ou role=\"grid\". Aucun tableau : non applicable."
+			"note": "Tests 5.3.1 : Page examinée : page du journal du 15/10/2026 (/cockpit/journal/2026-10-15/). DOM servi examiné (Playwright/Chromium) : 0 élément <table>, 0 élément role=\"table\" ou role=\"grid\" ; les contenus en colonnes ou en grille de la page sont des listes, pas des tableaux. Aucun tableau : non applicable."
 		},
 		{
 			"criterion": "5.3",
 			"page": "https://chikimuras.github.io/rampe/cockpit/docs/roadmap/",
 			"status": "NA",
-			"note": "Tests 5.3.1 : DOM et arbre d’accessibilité du build examinés avec Playwright/Chromium ; la page ne contient aucun élément <table> ni élément role=\"table\" ou role=\"grid\". Aucun tableau : non applicable."
+			"note": "Tests 5.3.1 : Page examinée : page Roadmap (/cockpit/docs/roadmap/). DOM servi examiné (Playwright/Chromium) : 0 élément <table>, 0 élément role=\"table\" ou role=\"grid\" ; les contenus en colonnes ou en grille de la page sont des listes, pas des tableaux. Aucun tableau : non applicable."
 		},
 		{
 			"criterion": "5.3",
 			"page": "https://chikimuras.github.io/rampe/referentiel/5-1/",
 			"status": "NA",
-			"note": "Tests 5.3.1 : DOM et arbre d’accessibilité du build examinés avec Playwright/Chromium ; la page ne contient aucun élément <table> ni élément role=\"table\" ou role=\"grid\". Aucun tableau : non applicable."
+			"note": "Tests 5.3.1 : Page examinée : fiche du critère 5.1 (/referentiel/5-1/). DOM servi examiné (Playwright/Chromium) : 0 élément <table>, 0 élément role=\"table\" ou role=\"grid\" ; les contenus en colonnes ou en grille de la page sont des listes, pas des tableaux. Aucun tableau : non applicable."
 		},
 		{
 			"criterion": "5.3",
 			"page": "https://chikimuras.github.io/rampe/referentiel/1-9/",
 			"status": "NA",
-			"note": "Tests 5.3.1 : DOM et arbre d’accessibilité du build examinés avec Playwright/Chromium ; la page ne contient aucun élément <table> ni élément role=\"table\" ou role=\"grid\". Aucun tableau : non applicable."
+			"note": "Tests 5.3.1 : Page examinée : fiche du critère 1.9 (/referentiel/1-9/). DOM servi examiné (Playwright/Chromium) : 0 élément <table>, 0 élément role=\"table\" ou role=\"grid\" ; les contenus en colonnes ou en grille de la page sont des listes, pas des tableaux. Aucun tableau : non applicable."
 		},
 		{
 			"criterion": "5.4",
 			"page": "https://chikimuras.github.io/rampe/",
 			"status": "NA",
-			"note": "Tests 5.4.1 : DOM et arbre d’accessibilité du build examinés avec Playwright/Chromium ; la page ne contient aucun élément <table> ni élément role=\"table\" ou role=\"grid\". Aucun tableau : non applicable."
+			"note": "Tests 5.4.1 : Page examinée : page d’accueil (/). DOM servi examiné (Playwright/Chromium) : 0 élément <table>, 0 élément role=\"table\" ou role=\"grid\" ; les contenus en colonnes ou en grille de la page sont des listes, pas des tableaux. Aucun tableau : non applicable."
 		},
 		{
 			"criterion": "5.4",
 			"page": "https://chikimuras.github.io/rampe/referentiel/",
 			"status": "NA",
-			"note": "Tests 5.4.1 : DOM et arbre d’accessibilité du build examinés avec Playwright/Chromium ; la page ne contient aucun élément <table> ni élément role=\"table\" ou role=\"grid\". Aucun tableau : non applicable."
+			"note": "Tests 5.4.1 : Page examinée : page Référentiel (/referentiel/). DOM servi examiné (Playwright/Chromium) : 0 élément <table>, 0 élément role=\"table\" ou role=\"grid\" ; les contenus en colonnes ou en grille de la page sont des listes, pas des tableaux. Aucun tableau : non applicable."
 		},
 		{
 			"criterion": "5.4",
 			"page": "https://chikimuras.github.io/rampe/referentiel/1-1/",
 			"status": "NA",
-			"note": "Tests 5.4.1 : DOM et arbre d’accessibilité du build examinés avec Playwright/Chromium ; la page ne contient aucun élément <table> ni élément role=\"table\" ou role=\"grid\". Aucun tableau : non applicable."
+			"note": "Tests 5.4.1 : Page examinée : fiche du critère 1.1 (/referentiel/1-1/). DOM servi examiné (Playwright/Chromium) : 0 élément <table>, 0 élément role=\"table\" ou role=\"grid\" ; les contenus en colonnes ou en grille de la page sont des listes, pas des tableaux. Aucun tableau : non applicable."
 		},
 		{
 			"criterion": "5.4",
 			"page": "https://chikimuras.github.io/rampe/referentiel/glossaire/",
 			"status": "NA",
-			"note": "Tests 5.4.1 : DOM et arbre d’accessibilité du build examinés avec Playwright/Chromium ; la page ne contient aucun élément <table> ni élément role=\"table\" ou role=\"grid\". Aucun tableau : non applicable."
+			"note": "Tests 5.4.1 : Page examinée : page Glossaire (/referentiel/glossaire/). DOM servi examiné (Playwright/Chromium) : 0 élément <table>, 0 élément role=\"table\" ou role=\"grid\" ; les contenus en colonnes ou en grille de la page sont des listes, pas des tableaux. Aucun tableau : non applicable."
 		},
 		{
 			"criterion": "5.4",
@@ -234,61 +234,61 @@
 			"criterion": "5.4",
 			"page": "https://chikimuras.github.io/rampe/cockpit/",
 			"status": "NA",
-			"note": "Tests 5.4.1 : DOM et arbre d’accessibilité du build examinés avec Playwright/Chromium ; la page ne contient aucun élément <table> ni élément role=\"table\" ou role=\"grid\". Aucun tableau : non applicable."
+			"note": "Tests 5.4.1 : Page examinée : page Cockpit (/cockpit/). DOM servi examiné (Playwright/Chromium) : 0 élément <table>, 0 élément role=\"table\" ou role=\"grid\" ; les contenus en colonnes ou en grille de la page sont des listes, pas des tableaux. Aucun tableau : non applicable."
 		},
 		{
 			"criterion": "5.4",
 			"page": "https://chikimuras.github.io/rampe/cockpit/adr/0011-cli-audit-playwright/",
 			"status": "NC",
-			"note": "Test 5.4.1 : DOM et arbre d’accessibilité du build examinés avec Playwright/Chromium ; le seul tableau (Markdown rendu, dans un élément de liste de la section Décision) a 3 en-têtes <th> sur la première ligne (« Résultat axe », « Rattachement », « Présenté comme ») et 5 lignes de <td>. Il est immédiatement précédé du paragraphe « Classement des résultats, avec classifyAxeRule de @rampe/core (ADR-0008) et la règle d’honnêteté de l’ADR-0002 : », dont l’amorce en gras fait office de titre du tableau. Ce titre n’est associé au tableau ni par <caption>, ni par title, aria-label ou aria-labelledby (arbre d’accessibilité : table sans nom). Non conforme. Correction : <caption>Classement des résultats axe-core</caption> (ou aria-labelledby vers le paragraphe)."
+			"note": "Test 5.4.1 : DOM et arbre d’accessibilité du build examinés avec Playwright/Chromium ; le seul tableau (Markdown rendu, dans un élément de liste de la section Décision) a 3 en-têtes <th> sur la première ligne (« Résultat axe », « Rattachement », « Présenté comme ») et 5 lignes de <td>. Il est immédiatement précédé du paragraphe « Classement des résultats, avec classifyAxeRule de @rampe/core (ADR-0008) et la règle d’honnêteté de l’ADR-0002 : », dont l’amorce en gras fait office de titre du tableau. Ce titre n’est associé au tableau ni par <caption>, ni par title, aria-label ou aria-labelledby (arbre d’accessibilité : table sans nom). Non conforme. Correction : <caption>Classement des résultats axe-core</caption> (ou aria-labelledby vers le paragraphe). Jugement discutable, consigné (décision d’orchestrateur, délégation ADR-0001)."
 		},
 		{
 			"criterion": "5.4",
 			"page": "https://chikimuras.github.io/rampe/cockpit/journal/2026-10-15/",
 			"status": "NA",
-			"note": "Tests 5.4.1 : DOM et arbre d’accessibilité du build examinés avec Playwright/Chromium ; la page ne contient aucun élément <table> ni élément role=\"table\" ou role=\"grid\". Aucun tableau : non applicable."
+			"note": "Tests 5.4.1 : Page examinée : page du journal du 15/10/2026 (/cockpit/journal/2026-10-15/). DOM servi examiné (Playwright/Chromium) : 0 élément <table>, 0 élément role=\"table\" ou role=\"grid\" ; les contenus en colonnes ou en grille de la page sont des listes, pas des tableaux. Aucun tableau : non applicable."
 		},
 		{
 			"criterion": "5.4",
 			"page": "https://chikimuras.github.io/rampe/cockpit/docs/roadmap/",
 			"status": "NA",
-			"note": "Tests 5.4.1 : DOM et arbre d’accessibilité du build examinés avec Playwright/Chromium ; la page ne contient aucun élément <table> ni élément role=\"table\" ou role=\"grid\". Aucun tableau : non applicable."
+			"note": "Tests 5.4.1 : Page examinée : page Roadmap (/cockpit/docs/roadmap/). DOM servi examiné (Playwright/Chromium) : 0 élément <table>, 0 élément role=\"table\" ou role=\"grid\" ; les contenus en colonnes ou en grille de la page sont des listes, pas des tableaux. Aucun tableau : non applicable."
 		},
 		{
 			"criterion": "5.4",
 			"page": "https://chikimuras.github.io/rampe/referentiel/5-1/",
 			"status": "NA",
-			"note": "Tests 5.4.1 : DOM et arbre d’accessibilité du build examinés avec Playwright/Chromium ; la page ne contient aucun élément <table> ni élément role=\"table\" ou role=\"grid\". Aucun tableau : non applicable."
+			"note": "Tests 5.4.1 : Page examinée : fiche du critère 5.1 (/referentiel/5-1/). DOM servi examiné (Playwright/Chromium) : 0 élément <table>, 0 élément role=\"table\" ou role=\"grid\" ; les contenus en colonnes ou en grille de la page sont des listes, pas des tableaux. Aucun tableau : non applicable."
 		},
 		{
 			"criterion": "5.4",
 			"page": "https://chikimuras.github.io/rampe/referentiel/1-9/",
 			"status": "NA",
-			"note": "Tests 5.4.1 : DOM et arbre d’accessibilité du build examinés avec Playwright/Chromium ; la page ne contient aucun élément <table> ni élément role=\"table\" ou role=\"grid\". Aucun tableau : non applicable."
+			"note": "Tests 5.4.1 : Page examinée : fiche du critère 1.9 (/referentiel/1-9/). DOM servi examiné (Playwright/Chromium) : 0 élément <table>, 0 élément role=\"table\" ou role=\"grid\" ; les contenus en colonnes ou en grille de la page sont des listes, pas des tableaux. Aucun tableau : non applicable."
 		},
 		{
 			"criterion": "5.5",
 			"page": "https://chikimuras.github.io/rampe/",
 			"status": "NA",
-			"note": "Tests 5.5.1 : DOM et arbre d’accessibilité du build examinés avec Playwright/Chromium ; la page ne contient aucun élément <table> ni élément role=\"table\" ou role=\"grid\". Aucun tableau : non applicable."
+			"note": "Tests 5.5.1 : Page examinée : page d’accueil (/). DOM servi examiné (Playwright/Chromium) : 0 élément <table>, 0 élément role=\"table\" ou role=\"grid\" ; les contenus en colonnes ou en grille de la page sont des listes, pas des tableaux. Aucun tableau : non applicable."
 		},
 		{
 			"criterion": "5.5",
 			"page": "https://chikimuras.github.io/rampe/referentiel/",
 			"status": "NA",
-			"note": "Tests 5.5.1 : DOM et arbre d’accessibilité du build examinés avec Playwright/Chromium ; la page ne contient aucun élément <table> ni élément role=\"table\" ou role=\"grid\". Aucun tableau : non applicable."
+			"note": "Tests 5.5.1 : Page examinée : page Référentiel (/referentiel/). DOM servi examiné (Playwright/Chromium) : 0 élément <table>, 0 élément role=\"table\" ou role=\"grid\" ; les contenus en colonnes ou en grille de la page sont des listes, pas des tableaux. Aucun tableau : non applicable."
 		},
 		{
 			"criterion": "5.5",
 			"page": "https://chikimuras.github.io/rampe/referentiel/1-1/",
 			"status": "NA",
-			"note": "Tests 5.5.1 : DOM et arbre d’accessibilité du build examinés avec Playwright/Chromium ; la page ne contient aucun élément <table> ni élément role=\"table\" ou role=\"grid\". Aucun tableau : non applicable."
+			"note": "Tests 5.5.1 : Page examinée : fiche du critère 1.1 (/referentiel/1-1/). DOM servi examiné (Playwright/Chromium) : 0 élément <table>, 0 élément role=\"table\" ou role=\"grid\" ; les contenus en colonnes ou en grille de la page sont des listes, pas des tableaux. Aucun tableau : non applicable."
 		},
 		{
 			"criterion": "5.5",
 			"page": "https://chikimuras.github.io/rampe/referentiel/glossaire/",
 			"status": "NA",
-			"note": "Tests 5.5.1 : DOM et arbre d’accessibilité du build examinés avec Playwright/Chromium ; la page ne contient aucun élément <table> ni élément role=\"table\" ou role=\"grid\". Aucun tableau : non applicable."
+			"note": "Tests 5.5.1 : Page examinée : page Glossaire (/referentiel/glossaire/). DOM servi examiné (Playwright/Chromium) : 0 élément <table>, 0 élément role=\"table\" ou role=\"grid\" ; les contenus en colonnes ou en grille de la page sont des listes, pas des tableaux. Aucun tableau : non applicable."
 		},
 		{
 			"criterion": "5.5",
@@ -300,7 +300,7 @@
 			"criterion": "5.5",
 			"page": "https://chikimuras.github.io/rampe/cockpit/",
 			"status": "NA",
-			"note": "Tests 5.5.1 : DOM et arbre d’accessibilité du build examinés avec Playwright/Chromium ; la page ne contient aucun élément <table> ni élément role=\"table\" ou role=\"grid\". Aucun tableau : non applicable."
+			"note": "Tests 5.5.1 : Page examinée : page Cockpit (/cockpit/). DOM servi examiné (Playwright/Chromium) : 0 élément <table>, 0 élément role=\"table\" ou role=\"grid\" ; les contenus en colonnes ou en grille de la page sont des listes, pas des tableaux. Aucun tableau : non applicable."
 		},
 		{
 			"criterion": "5.5",
@@ -312,49 +312,49 @@
 			"criterion": "5.5",
 			"page": "https://chikimuras.github.io/rampe/cockpit/journal/2026-10-15/",
 			"status": "NA",
-			"note": "Tests 5.5.1 : DOM et arbre d’accessibilité du build examinés avec Playwright/Chromium ; la page ne contient aucun élément <table> ni élément role=\"table\" ou role=\"grid\". Aucun tableau : non applicable."
+			"note": "Tests 5.5.1 : Page examinée : page du journal du 15/10/2026 (/cockpit/journal/2026-10-15/). DOM servi examiné (Playwright/Chromium) : 0 élément <table>, 0 élément role=\"table\" ou role=\"grid\" ; les contenus en colonnes ou en grille de la page sont des listes, pas des tableaux. Aucun tableau : non applicable."
 		},
 		{
 			"criterion": "5.5",
 			"page": "https://chikimuras.github.io/rampe/cockpit/docs/roadmap/",
 			"status": "NA",
-			"note": "Tests 5.5.1 : DOM et arbre d’accessibilité du build examinés avec Playwright/Chromium ; la page ne contient aucun élément <table> ni élément role=\"table\" ou role=\"grid\". Aucun tableau : non applicable."
+			"note": "Tests 5.5.1 : Page examinée : page Roadmap (/cockpit/docs/roadmap/). DOM servi examiné (Playwright/Chromium) : 0 élément <table>, 0 élément role=\"table\" ou role=\"grid\" ; les contenus en colonnes ou en grille de la page sont des listes, pas des tableaux. Aucun tableau : non applicable."
 		},
 		{
 			"criterion": "5.5",
 			"page": "https://chikimuras.github.io/rampe/referentiel/5-1/",
 			"status": "NA",
-			"note": "Tests 5.5.1 : DOM et arbre d’accessibilité du build examinés avec Playwright/Chromium ; la page ne contient aucun élément <table> ni élément role=\"table\" ou role=\"grid\". Aucun tableau : non applicable."
+			"note": "Tests 5.5.1 : Page examinée : fiche du critère 5.1 (/referentiel/5-1/). DOM servi examiné (Playwright/Chromium) : 0 élément <table>, 0 élément role=\"table\" ou role=\"grid\" ; les contenus en colonnes ou en grille de la page sont des listes, pas des tableaux. Aucun tableau : non applicable."
 		},
 		{
 			"criterion": "5.5",
 			"page": "https://chikimuras.github.io/rampe/referentiel/1-9/",
 			"status": "NA",
-			"note": "Tests 5.5.1 : DOM et arbre d’accessibilité du build examinés avec Playwright/Chromium ; la page ne contient aucun élément <table> ni élément role=\"table\" ou role=\"grid\". Aucun tableau : non applicable."
+			"note": "Tests 5.5.1 : Page examinée : fiche du critère 1.9 (/referentiel/1-9/). DOM servi examiné (Playwright/Chromium) : 0 élément <table>, 0 élément role=\"table\" ou role=\"grid\" ; les contenus en colonnes ou en grille de la page sont des listes, pas des tableaux. Aucun tableau : non applicable."
 		},
 		{
 			"criterion": "5.6",
 			"page": "https://chikimuras.github.io/rampe/",
 			"status": "NA",
-			"note": "Tests 5.6.1 à 5.6.4 : DOM et arbre d’accessibilité du build examinés avec Playwright/Chromium ; la page ne contient aucun élément <table> ni élément role=\"table\" ou role=\"grid\". Aucun tableau : non applicable."
+			"note": "Tests 5.6.1 à 5.6.4 : Page examinée : page d’accueil (/). DOM servi examiné (Playwright/Chromium) : 0 élément <table>, 0 élément role=\"table\" ou role=\"grid\" ; les contenus en colonnes ou en grille de la page sont des listes, pas des tableaux. Aucun tableau : non applicable."
 		},
 		{
 			"criterion": "5.6",
 			"page": "https://chikimuras.github.io/rampe/referentiel/",
 			"status": "NA",
-			"note": "Tests 5.6.1 à 5.6.4 : DOM et arbre d’accessibilité du build examinés avec Playwright/Chromium ; la page ne contient aucun élément <table> ni élément role=\"table\" ou role=\"grid\". Aucun tableau : non applicable."
+			"note": "Tests 5.6.1 à 5.6.4 : Page examinée : page Référentiel (/referentiel/). DOM servi examiné (Playwright/Chromium) : 0 élément <table>, 0 élément role=\"table\" ou role=\"grid\" ; les contenus en colonnes ou en grille de la page sont des listes, pas des tableaux. Aucun tableau : non applicable."
 		},
 		{
 			"criterion": "5.6",
 			"page": "https://chikimuras.github.io/rampe/referentiel/1-1/",
 			"status": "NA",
-			"note": "Tests 5.6.1 à 5.6.4 : DOM et arbre d’accessibilité du build examinés avec Playwright/Chromium ; la page ne contient aucun élément <table> ni élément role=\"table\" ou role=\"grid\". Aucun tableau : non applicable."
+			"note": "Tests 5.6.1 à 5.6.4 : Page examinée : fiche du critère 1.1 (/referentiel/1-1/). DOM servi examiné (Playwright/Chromium) : 0 élément <table>, 0 élément role=\"table\" ou role=\"grid\" ; les contenus en colonnes ou en grille de la page sont des listes, pas des tableaux. Aucun tableau : non applicable."
 		},
 		{
 			"criterion": "5.6",
 			"page": "https://chikimuras.github.io/rampe/referentiel/glossaire/",
 			"status": "NA",
-			"note": "Tests 5.6.1 à 5.6.4 : DOM et arbre d’accessibilité du build examinés avec Playwright/Chromium ; la page ne contient aucun élément <table> ni élément role=\"table\" ou role=\"grid\". Aucun tableau : non applicable."
+			"note": "Tests 5.6.1 à 5.6.4 : Page examinée : page Glossaire (/referentiel/glossaire/). DOM servi examiné (Playwright/Chromium) : 0 élément <table>, 0 élément role=\"table\" ou role=\"grid\" ; les contenus en colonnes ou en grille de la page sont des listes, pas des tableaux. Aucun tableau : non applicable."
 		},
 		{
 			"criterion": "5.6",
@@ -366,7 +366,7 @@
 			"criterion": "5.6",
 			"page": "https://chikimuras.github.io/rampe/cockpit/",
 			"status": "NA",
-			"note": "Tests 5.6.1 à 5.6.4 : DOM et arbre d’accessibilité du build examinés avec Playwright/Chromium ; la page ne contient aucun élément <table> ni élément role=\"table\" ou role=\"grid\". Aucun tableau : non applicable."
+			"note": "Tests 5.6.1 à 5.6.4 : Page examinée : page Cockpit (/cockpit/). DOM servi examiné (Playwright/Chromium) : 0 élément <table>, 0 élément role=\"table\" ou role=\"grid\" ; les contenus en colonnes ou en grille de la page sont des listes, pas des tableaux. Aucun tableau : non applicable."
 		},
 		{
 			"criterion": "5.6",
@@ -378,49 +378,49 @@
 			"criterion": "5.6",
 			"page": "https://chikimuras.github.io/rampe/cockpit/journal/2026-10-15/",
 			"status": "NA",
-			"note": "Tests 5.6.1 à 5.6.4 : DOM et arbre d’accessibilité du build examinés avec Playwright/Chromium ; la page ne contient aucun élément <table> ni élément role=\"table\" ou role=\"grid\". Aucun tableau : non applicable."
+			"note": "Tests 5.6.1 à 5.6.4 : Page examinée : page du journal du 15/10/2026 (/cockpit/journal/2026-10-15/). DOM servi examiné (Playwright/Chromium) : 0 élément <table>, 0 élément role=\"table\" ou role=\"grid\" ; les contenus en colonnes ou en grille de la page sont des listes, pas des tableaux. Aucun tableau : non applicable."
 		},
 		{
 			"criterion": "5.6",
 			"page": "https://chikimuras.github.io/rampe/cockpit/docs/roadmap/",
 			"status": "NA",
-			"note": "Tests 5.6.1 à 5.6.4 : DOM et arbre d’accessibilité du build examinés avec Playwright/Chromium ; la page ne contient aucun élément <table> ni élément role=\"table\" ou role=\"grid\". Aucun tableau : non applicable."
+			"note": "Tests 5.6.1 à 5.6.4 : Page examinée : page Roadmap (/cockpit/docs/roadmap/). DOM servi examiné (Playwright/Chromium) : 0 élément <table>, 0 élément role=\"table\" ou role=\"grid\" ; les contenus en colonnes ou en grille de la page sont des listes, pas des tableaux. Aucun tableau : non applicable."
 		},
 		{
 			"criterion": "5.6",
 			"page": "https://chikimuras.github.io/rampe/referentiel/5-1/",
 			"status": "NA",
-			"note": "Tests 5.6.1 à 5.6.4 : DOM et arbre d’accessibilité du build examinés avec Playwright/Chromium ; la page ne contient aucun élément <table> ni élément role=\"table\" ou role=\"grid\". Aucun tableau : non applicable."
+			"note": "Tests 5.6.1 à 5.6.4 : Page examinée : fiche du critère 5.1 (/referentiel/5-1/). DOM servi examiné (Playwright/Chromium) : 0 élément <table>, 0 élément role=\"table\" ou role=\"grid\" ; les contenus en colonnes ou en grille de la page sont des listes, pas des tableaux. Aucun tableau : non applicable."
 		},
 		{
 			"criterion": "5.6",
 			"page": "https://chikimuras.github.io/rampe/referentiel/1-9/",
 			"status": "NA",
-			"note": "Tests 5.6.1 à 5.6.4 : DOM et arbre d’accessibilité du build examinés avec Playwright/Chromium ; la page ne contient aucun élément <table> ni élément role=\"table\" ou role=\"grid\". Aucun tableau : non applicable."
+			"note": "Tests 5.6.1 à 5.6.4 : Page examinée : fiche du critère 1.9 (/referentiel/1-9/). DOM servi examiné (Playwright/Chromium) : 0 élément <table>, 0 élément role=\"table\" ou role=\"grid\" ; les contenus en colonnes ou en grille de la page sont des listes, pas des tableaux. Aucun tableau : non applicable."
 		},
 		{
 			"criterion": "5.7",
 			"page": "https://chikimuras.github.io/rampe/",
 			"status": "NA",
-			"note": "Tests 5.7.1 à 5.7.5 : DOM et arbre d’accessibilité du build examinés avec Playwright/Chromium ; la page ne contient aucun élément <table> ni élément role=\"table\" ou role=\"grid\". Aucun tableau : non applicable."
+			"note": "Tests 5.7.1 à 5.7.5 : Page examinée : page d’accueil (/). DOM servi examiné (Playwright/Chromium) : 0 élément <table>, 0 élément role=\"table\" ou role=\"grid\" ; les contenus en colonnes ou en grille de la page sont des listes, pas des tableaux. Aucun tableau : non applicable."
 		},
 		{
 			"criterion": "5.7",
 			"page": "https://chikimuras.github.io/rampe/referentiel/",
 			"status": "NA",
-			"note": "Tests 5.7.1 à 5.7.5 : DOM et arbre d’accessibilité du build examinés avec Playwright/Chromium ; la page ne contient aucun élément <table> ni élément role=\"table\" ou role=\"grid\". Aucun tableau : non applicable."
+			"note": "Tests 5.7.1 à 5.7.5 : Page examinée : page Référentiel (/referentiel/). DOM servi examiné (Playwright/Chromium) : 0 élément <table>, 0 élément role=\"table\" ou role=\"grid\" ; les contenus en colonnes ou en grille de la page sont des listes, pas des tableaux. Aucun tableau : non applicable."
 		},
 		{
 			"criterion": "5.7",
 			"page": "https://chikimuras.github.io/rampe/referentiel/1-1/",
 			"status": "NA",
-			"note": "Tests 5.7.1 à 5.7.5 : DOM et arbre d’accessibilité du build examinés avec Playwright/Chromium ; la page ne contient aucun élément <table> ni élément role=\"table\" ou role=\"grid\". Aucun tableau : non applicable."
+			"note": "Tests 5.7.1 à 5.7.5 : Page examinée : fiche du critère 1.1 (/referentiel/1-1/). DOM servi examiné (Playwright/Chromium) : 0 élément <table>, 0 élément role=\"table\" ou role=\"grid\" ; les contenus en colonnes ou en grille de la page sont des listes, pas des tableaux. Aucun tableau : non applicable."
 		},
 		{
 			"criterion": "5.7",
 			"page": "https://chikimuras.github.io/rampe/referentiel/glossaire/",
 			"status": "NA",
-			"note": "Tests 5.7.1 à 5.7.5 : DOM et arbre d’accessibilité du build examinés avec Playwright/Chromium ; la page ne contient aucun élément <table> ni élément role=\"table\" ou role=\"grid\". Aucun tableau : non applicable."
+			"note": "Tests 5.7.1 à 5.7.5 : Page examinée : page Glossaire (/referentiel/glossaire/). DOM servi examiné (Playwright/Chromium) : 0 élément <table>, 0 élément role=\"table\" ou role=\"grid\" ; les contenus en colonnes ou en grille de la page sont des listes, pas des tableaux. Aucun tableau : non applicable."
 		},
 		{
 			"criterion": "5.7",
@@ -432,7 +432,7 @@
 			"criterion": "5.7",
 			"page": "https://chikimuras.github.io/rampe/cockpit/",
 			"status": "NA",
-			"note": "Tests 5.7.1 à 5.7.5 : DOM et arbre d’accessibilité du build examinés avec Playwright/Chromium ; la page ne contient aucun élément <table> ni élément role=\"table\" ou role=\"grid\". Aucun tableau : non applicable."
+			"note": "Tests 5.7.1 à 5.7.5 : Page examinée : page Cockpit (/cockpit/). DOM servi examiné (Playwright/Chromium) : 0 élément <table>, 0 élément role=\"table\" ou role=\"grid\" ; les contenus en colonnes ou en grille de la page sont des listes, pas des tableaux. Aucun tableau : non applicable."
 		},
 		{
 			"criterion": "5.7",
@@ -444,49 +444,49 @@
 			"criterion": "5.7",
 			"page": "https://chikimuras.github.io/rampe/cockpit/journal/2026-10-15/",
 			"status": "NA",
-			"note": "Tests 5.7.1 à 5.7.5 : DOM et arbre d’accessibilité du build examinés avec Playwright/Chromium ; la page ne contient aucun élément <table> ni élément role=\"table\" ou role=\"grid\". Aucun tableau : non applicable."
+			"note": "Tests 5.7.1 à 5.7.5 : Page examinée : page du journal du 15/10/2026 (/cockpit/journal/2026-10-15/). DOM servi examiné (Playwright/Chromium) : 0 élément <table>, 0 élément role=\"table\" ou role=\"grid\" ; les contenus en colonnes ou en grille de la page sont des listes, pas des tableaux. Aucun tableau : non applicable."
 		},
 		{
 			"criterion": "5.7",
 			"page": "https://chikimuras.github.io/rampe/cockpit/docs/roadmap/",
 			"status": "NA",
-			"note": "Tests 5.7.1 à 5.7.5 : DOM et arbre d’accessibilité du build examinés avec Playwright/Chromium ; la page ne contient aucun élément <table> ni élément role=\"table\" ou role=\"grid\". Aucun tableau : non applicable."
+			"note": "Tests 5.7.1 à 5.7.5 : Page examinée : page Roadmap (/cockpit/docs/roadmap/). DOM servi examiné (Playwright/Chromium) : 0 élément <table>, 0 élément role=\"table\" ou role=\"grid\" ; les contenus en colonnes ou en grille de la page sont des listes, pas des tableaux. Aucun tableau : non applicable."
 		},
 		{
 			"criterion": "5.7",
 			"page": "https://chikimuras.github.io/rampe/referentiel/5-1/",
 			"status": "NA",
-			"note": "Tests 5.7.1 à 5.7.5 : DOM et arbre d’accessibilité du build examinés avec Playwright/Chromium ; la page ne contient aucun élément <table> ni élément role=\"table\" ou role=\"grid\". Aucun tableau : non applicable."
+			"note": "Tests 5.7.1 à 5.7.5 : Page examinée : fiche du critère 5.1 (/referentiel/5-1/). DOM servi examiné (Playwright/Chromium) : 0 élément <table>, 0 élément role=\"table\" ou role=\"grid\" ; les contenus en colonnes ou en grille de la page sont des listes, pas des tableaux. Aucun tableau : non applicable."
 		},
 		{
 			"criterion": "5.7",
 			"page": "https://chikimuras.github.io/rampe/referentiel/1-9/",
 			"status": "NA",
-			"note": "Tests 5.7.1 à 5.7.5 : DOM et arbre d’accessibilité du build examinés avec Playwright/Chromium ; la page ne contient aucun élément <table> ni élément role=\"table\" ou role=\"grid\". Aucun tableau : non applicable."
+			"note": "Tests 5.7.1 à 5.7.5 : Page examinée : fiche du critère 1.9 (/referentiel/1-9/). DOM servi examiné (Playwright/Chromium) : 0 élément <table>, 0 élément role=\"table\" ou role=\"grid\" ; les contenus en colonnes ou en grille de la page sont des listes, pas des tableaux. Aucun tableau : non applicable."
 		},
 		{
 			"criterion": "5.8",
 			"page": "https://chikimuras.github.io/rampe/",
 			"status": "NA",
-			"note": "Tests 5.8.1 : DOM et arbre d’accessibilité du build examinés avec Playwright/Chromium ; la page ne contient aucun élément <table> ni élément role=\"table\" ou role=\"grid\". Aucun tableau : non applicable."
+			"note": "Tests 5.8.1 : Page examinée : page d’accueil (/). DOM servi examiné (Playwright/Chromium) : 0 élément <table>, 0 élément role=\"table\" ou role=\"grid\" ; les contenus en colonnes ou en grille de la page sont des listes, pas des tableaux. Aucun tableau : non applicable."
 		},
 		{
 			"criterion": "5.8",
 			"page": "https://chikimuras.github.io/rampe/referentiel/",
 			"status": "NA",
-			"note": "Tests 5.8.1 : DOM et arbre d’accessibilité du build examinés avec Playwright/Chromium ; la page ne contient aucun élément <table> ni élément role=\"table\" ou role=\"grid\". Aucun tableau : non applicable."
+			"note": "Tests 5.8.1 : Page examinée : page Référentiel (/referentiel/). DOM servi examiné (Playwright/Chromium) : 0 élément <table>, 0 élément role=\"table\" ou role=\"grid\" ; les contenus en colonnes ou en grille de la page sont des listes, pas des tableaux. Aucun tableau : non applicable."
 		},
 		{
 			"criterion": "5.8",
 			"page": "https://chikimuras.github.io/rampe/referentiel/1-1/",
 			"status": "NA",
-			"note": "Tests 5.8.1 : DOM et arbre d’accessibilité du build examinés avec Playwright/Chromium ; la page ne contient aucun élément <table> ni élément role=\"table\" ou role=\"grid\". Aucun tableau : non applicable."
+			"note": "Tests 5.8.1 : Page examinée : fiche du critère 1.1 (/referentiel/1-1/). DOM servi examiné (Playwright/Chromium) : 0 élément <table>, 0 élément role=\"table\" ou role=\"grid\" ; les contenus en colonnes ou en grille de la page sont des listes, pas des tableaux. Aucun tableau : non applicable."
 		},
 		{
 			"criterion": "5.8",
 			"page": "https://chikimuras.github.io/rampe/referentiel/glossaire/",
 			"status": "NA",
-			"note": "Tests 5.8.1 : DOM et arbre d’accessibilité du build examinés avec Playwright/Chromium ; la page ne contient aucun élément <table> ni élément role=\"table\" ou role=\"grid\". Aucun tableau : non applicable."
+			"note": "Tests 5.8.1 : Page examinée : page Glossaire (/referentiel/glossaire/). DOM servi examiné (Playwright/Chromium) : 0 élément <table>, 0 élément role=\"table\" ou role=\"grid\" ; les contenus en colonnes ou en grille de la page sont des listes, pas des tableaux. Aucun tableau : non applicable."
 		},
 		{
 			"criterion": "5.8",
@@ -498,7 +498,7 @@
 			"criterion": "5.8",
 			"page": "https://chikimuras.github.io/rampe/cockpit/",
 			"status": "NA",
-			"note": "Tests 5.8.1 : DOM et arbre d’accessibilité du build examinés avec Playwright/Chromium ; la page ne contient aucun élément <table> ni élément role=\"table\" ou role=\"grid\". Aucun tableau : non applicable."
+			"note": "Tests 5.8.1 : Page examinée : page Cockpit (/cockpit/). DOM servi examiné (Playwright/Chromium) : 0 élément <table>, 0 élément role=\"table\" ou role=\"grid\" ; les contenus en colonnes ou en grille de la page sont des listes, pas des tableaux. Aucun tableau : non applicable."
 		},
 		{
 			"criterion": "5.8",
@@ -510,25 +510,25 @@
 			"criterion": "5.8",
 			"page": "https://chikimuras.github.io/rampe/cockpit/journal/2026-10-15/",
 			"status": "NA",
-			"note": "Tests 5.8.1 : DOM et arbre d’accessibilité du build examinés avec Playwright/Chromium ; la page ne contient aucun élément <table> ni élément role=\"table\" ou role=\"grid\". Aucun tableau : non applicable."
+			"note": "Tests 5.8.1 : Page examinée : page du journal du 15/10/2026 (/cockpit/journal/2026-10-15/). DOM servi examiné (Playwright/Chromium) : 0 élément <table>, 0 élément role=\"table\" ou role=\"grid\" ; les contenus en colonnes ou en grille de la page sont des listes, pas des tableaux. Aucun tableau : non applicable."
 		},
 		{
 			"criterion": "5.8",
 			"page": "https://chikimuras.github.io/rampe/cockpit/docs/roadmap/",
 			"status": "NA",
-			"note": "Tests 5.8.1 : DOM et arbre d’accessibilité du build examinés avec Playwright/Chromium ; la page ne contient aucun élément <table> ni élément role=\"table\" ou role=\"grid\". Aucun tableau : non applicable."
+			"note": "Tests 5.8.1 : Page examinée : page Roadmap (/cockpit/docs/roadmap/). DOM servi examiné (Playwright/Chromium) : 0 élément <table>, 0 élément role=\"table\" ou role=\"grid\" ; les contenus en colonnes ou en grille de la page sont des listes, pas des tableaux. Aucun tableau : non applicable."
 		},
 		{
 			"criterion": "5.8",
 			"page": "https://chikimuras.github.io/rampe/referentiel/5-1/",
 			"status": "NA",
-			"note": "Tests 5.8.1 : DOM et arbre d’accessibilité du build examinés avec Playwright/Chromium ; la page ne contient aucun élément <table> ni élément role=\"table\" ou role=\"grid\". Aucun tableau : non applicable."
+			"note": "Tests 5.8.1 : Page examinée : fiche du critère 5.1 (/referentiel/5-1/). DOM servi examiné (Playwright/Chromium) : 0 élément <table>, 0 élément role=\"table\" ou role=\"grid\" ; les contenus en colonnes ou en grille de la page sont des listes, pas des tableaux. Aucun tableau : non applicable."
 		},
 		{
 			"criterion": "5.8",
 			"page": "https://chikimuras.github.io/rampe/referentiel/1-9/",
 			"status": "NA",
-			"note": "Tests 5.8.1 : DOM et arbre d’accessibilité du build examinés avec Playwright/Chromium ; la page ne contient aucun élément <table> ni élément role=\"table\" ou role=\"grid\". Aucun tableau : non applicable."
+			"note": "Tests 5.8.1 : Page examinée : fiche du critère 1.9 (/referentiel/1-9/). DOM servi examiné (Playwright/Chromium) : 0 élément <table>, 0 élément role=\"table\" ou role=\"grid\" ; les contenus en colonnes ou en grille de la page sont des listes, pas des tableaux. Aucun tableau : non applicable."
 		}
 	]
 }

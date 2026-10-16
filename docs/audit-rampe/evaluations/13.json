@@ -90,7 +90,7 @@
 			"criterion": "13.2",
 			"page": "https://chikimuras.github.io/rampe/referentiel/glossaire/",
 			"status": "C",
-			"note": "Test 13.2.1 : à l’ouverture de le glossaire (Playwright, écoute de l’événement popup), aucune nouvelle fenêtre ne s’ouvre ; aucun lien target, aucun window.open dans le code du site."
+			"note": "Test 13.2.1 : à l’ouverture du glossaire (Playwright, écoute de l’événement popup), aucune nouvelle fenêtre ne s’ouvre ; aucun lien target, aucun window.open dans le code du site."
 		},
 		{
 			"criterion": "13.2",
@@ -102,7 +102,7 @@
 			"criterion": "13.2",
 			"page": "https://chikimuras.github.io/rampe/cockpit/",
 			"status": "C",
-			"note": "Test 13.2.1 : à l’ouverture de le cockpit (Playwright, écoute de l’événement popup), aucune nouvelle fenêtre ne s’ouvre ; aucun lien target, aucun window.open dans le code du site."
+			"note": "Test 13.2.1 : à l’ouverture du cockpit (Playwright, écoute de l’événement popup), aucune nouvelle fenêtre ne s’ouvre ; aucun lien target, aucun window.open dans le code du site."
 		},
 		{
 			"criterion": "13.2",
@@ -270,67 +270,67 @@
 			"criterion": "13.5",
 			"page": "https://chikimuras.github.io/rampe/",
 			"status": "NA",
-			"note": "Test 13.5.1 : analyse de tous les caractères non alphanumériques du texte de la page d’accueil : ni art ASCII, ni émoticône, ni émoji, ni syntaxe cryptique (seuls ©, ›, × ou du code HTML cité et expliqué par le texte officiel). Contenu visé absent : non applicable."
+			"note": "Test 13.5.1 : Page examinée : page d’accueil (/). Caractères non alphanumériques relevés dans tout le texte : « © » (mention de la licence) seulement. Ce sont des signes typographiques ou mathématiques usuels et du code cité : ni art ASCII, ni émoticône, ni émoji, ni syntaxe cryptique. Contenu visé absent : non applicable."
 		},
 		{
 			"criterion": "13.5",
 			"page": "https://chikimuras.github.io/rampe/referentiel/",
 			"status": "NA",
-			"note": "Test 13.5.1 : analyse de tous les caractères non alphanumériques du texte de la page Référentiel : ni art ASCII, ni émoticône, ni émoji, ni syntaxe cryptique (seuls ©, ›, × ou du code HTML cité et expliqué par le texte officiel). Contenu visé absent : non applicable."
+			"note": "Test 13.5.1 : Page examinée : page Référentiel (/referentiel/). Caractères non alphanumériques relevés dans tout le texte : « © » (2, mentions de licence) ; le texte contient aussi des accents combinants (texte non normalisé NFC), invisibles à l’écran. Ce sont des signes typographiques ou mathématiques usuels et du code cité : ni art ASCII, ni émoticône, ni émoji, ni syntaxe cryptique. Contenu visé absent : non applicable."
 		},
 		{
 			"criterion": "13.5",
 			"page": "https://chikimuras.github.io/rampe/referentiel/1-1/",
 			"status": "NA",
-			"note": "Test 13.5.1 : analyse de tous les caractères non alphanumériques du texte de la fiche du critère 1.1 : ni art ASCII, ni émoticône, ni émoji, ni syntaxe cryptique (seuls ©, ›, × ou du code HTML cité et expliqué par le texte officiel). Contenu visé absent : non applicable."
+			"note": "Test 13.5.1 : Page examinée : fiche du critère 1.1 (/referentiel/1-1/). Caractères non alphanumériques relevés dans tout le texte : « › » (fil d’Ariane), « © », et les signes < > = des balises citées en <code> (<img>, role=\"img\"…) dans le texte officiel. Ce sont des signes typographiques ou mathématiques usuels et du code cité : ni art ASCII, ni émoticône, ni émoji, ni syntaxe cryptique. Contenu visé absent : non applicable."
 		},
 		{
 			"criterion": "13.5",
 			"page": "https://chikimuras.github.io/rampe/referentiel/glossaire/",
 			"status": "NA",
-			"note": "Test 13.5.1 : analyse de tous les caractères non alphanumériques du texte de le glossaire : ni art ASCII, ni émoticône, ni émoji, ni syntaxe cryptique (seuls ©, ›, ×, et les opérateurs ≤ et ^ de la formule officielle de luminance ou du code HTML cité et expliqué par le texte officiel). Contenu visé absent : non applicable."
+			"note": "Test 13.5.1 : Page examinée : page Glossaire (/referentiel/glossaire/). Caractères non alphanumériques relevés dans tout le texte : « © », les signes < > = des balises citées, « + », « ≤ » et « ^ » de la formule officielle de luminance, « • » et « \\* » cités comme marqueurs de liste, des accents graves ` autour de « autocomplete » et « ‘ » cité comme guillemet manquant. Ce sont des signes typographiques ou mathématiques usuels et du code cité : ni art ASCII, ni émoticône, ni émoji, ni syntaxe cryptique. Contenu visé absent : non applicable."
 		},
 		{
 			"criterion": "13.5",
 			"page": "https://chikimuras.github.io/rampe/audit/",
 			"status": "NA",
-			"note": "Test 13.5.1 : analyse de tous les caractères non alphanumériques du texte de l’audit guidé : ni art ASCII, ni émoticône, ni émoji, ni syntaxe cryptique (seuls ©, ›, × ou du code HTML cité et expliqué par le texte officiel). Contenu visé absent : non applicable."
+			"note": "Test 13.5.1 : Page examinée : audit guidé (/audit/). Caractères non alphanumériques relevés dans tout le texte : « © » et « ° » (« loi n° 2005-102 »), dans l’état vierge et après import d’un audit, et, dans les tests dépliés, les signes < > = des balises citées en <code> par le texte officiel. Ce sont des signes typographiques ou mathématiques usuels et du code cité : ni art ASCII, ni émoticône, ni émoji, ni syntaxe cryptique. Contenu visé absent : non applicable."
 		},
 		{
 			"criterion": "13.5",
 			"page": "https://chikimuras.github.io/rampe/cockpit/",
 			"status": "NA",
-			"note": "Test 13.5.1 : analyse de tous les caractères non alphanumériques du texte de le cockpit : ni art ASCII, ni émoticône, ni émoji, ni syntaxe cryptique (seuls ©, ›, × ou du code HTML cité et expliqué par le texte officiel). Contenu visé absent : non applicable."
+			"note": "Test 13.5.1 : Page examinée : page Cockpit (/cockpit/). Caractères non alphanumériques relevés dans tout le texte : « © », « $ » (« 5 $ de frais »), « × » et « ÷ » de la formule affichée (« 11 pages × 106 critères », « critères respectés ÷ critères applicables ») et « + » (« Playwright + axe-core »). Ce sont des signes typographiques ou mathématiques usuels et du code cité : ni art ASCII, ni émoticône, ni émoji, ni syntaxe cryptique. Contenu visé absent : non applicable."
 		},
 		{
 			"criterion": "13.5",
 			"page": "https://chikimuras.github.io/rampe/cockpit/adr/0011-cli-audit-playwright/",
 			"status": "C",
-			"note": "Test 13.5.1 : contenu cryptique trouvé sur la page ADR-0011 (analyse de tous les caractères non alphanumériques du texte) : un émoji ⛔ dans « La publication npm est bloquée tant qu’il n’existe pas de compte npm (⛔ Alexandre). » : le contexte adjacent (« bloquée tant que… ») indique que la tâche attend une action d’Alexandre. Une définition est donnée dans le contexte adjacent. Les flèches → et ← (« axe → WCAG », « ← Cockpit ») sont des signes typographiques usuels, pas des contenus cryptiques."
+			"note": "Test 13.5.1 : Page examinée : page ADR-0011 (/cockpit/adr/0011-cli-audit-playwright/). Contenu cryptique trouvé : un émoji ⛔ dans « La publication npm est bloquée tant qu’il n’existe pas de compte npm (⛔ Alexandre). » ; le contexte adjacent (« bloquée tant que… ») dit que la tâche attend une action d’Alexandre : une définition est donnée dans le contexte. Autres caractères : « ← » (lien « ← Cockpit »), « + » (« Playwright + axe-core »), « · » (séparateurs de la ligne de métadonnées), « © » : signes typographiques usuels."
 		},
 		{
 			"criterion": "13.5",
 			"page": "https://chikimuras.github.io/rampe/cockpit/journal/2026-10-15/",
 			"status": "C",
-			"note": "Test 13.5.1 : contenu cryptique trouvé sur la page du journal du 2026-10-15 (analyse de tous les caractères non alphanumériques du texte) : quatre ⛔ : sous le titre « Cockpit — Section « En attente d’Alexandre » », « les tâches ⛔ non faites de la roadmap » (le titre adjacent dit qu’elles attendent Alexandre) ; dans « un ⛔ tapé avec un sélecteur d’emoji (⛔️) », le symbole est cité comme caractère, défini par la phrase. Une définition est donnée dans le contexte adjacent. Les flèches → et ← (« axe → WCAG », « ← Cockpit ») sont des signes typographiques usuels, pas des contenus cryptiques."
+			"note": "Test 13.5.1 : Page examinée : page du journal du 15/10/2026 (/cockpit/journal/2026-10-15/). Contenu cryptique trouvé : quatre ⛔ (« les tâches ⛔ non faites de la roadmap », dans la section « Cockpit — Section « En attente d’Alexandre » » dont le titre dit qu’elles attendent Alexandre ; « un ⛔ tapé avec un sélecteur d’emoji (⛔️) », où le symbole est cité comme caractère). Une définition est donnée dans le contexte adjacent. Autres caractères : « → » (« axe → WCAG → RGAA »), « ← », « ≈ » (« ≈ 15 Ko »), « ≥ » (« HTTP ≥ 400 »), « × » (« « Conforme » ×N »), « ÷ », « = », « < > » (« rampe audit <url> »), « + », « $ », « © » : signes typographiques ou mathématiques usuels."
 		},
 		{
 			"criterion": "13.5",
 			"page": "https://chikimuras.github.io/rampe/cockpit/docs/roadmap/",
 			"status": "C",
-			"note": "Test 13.5.1 : contenu cryptique trouvé sur la page Roadmap (analyse de tous les caractères non alphanumériques du texte) : sept ⛔ : la phrase d’introduction « Les ⛔ signalent un besoin d’action humaine. », et chaque tâche ⛔ est suivie immédiatement de l’action humaine attendue (« compte npm (gratuit) à créer par Alexandre », « 5 $ de frais d’inscription : dépense à valider »…). Une définition est donnée dans le contexte adjacent. Les flèches → et ← (« axe → WCAG », « ← Cockpit ») sont des signes typographiques usuels, pas des contenus cryptiques."
+			"note": "Test 13.5.1 : Page examinée : page Roadmap (/cockpit/docs/roadmap/). Contenu cryptique trouvé : sept ⛔, définis par la phrase d’introduction « Les ⛔ signalent un besoin d’action humaine. », et chaque tâche ⛔ est suivie de l’action attendue (« compte npm (gratuit) à créer par Alexandre »…). Une définition est donnée dans le contexte adjacent. Autres caractères : « → » (« règles axe-core → critères RGAA »), « ← » (lien « ← Cockpit »), « < > » (« rampe audit <url> »), « + », « $ », « © » : signes typographiques usuels."
 		},
 		{
 			"criterion": "13.5",
 			"page": "https://chikimuras.github.io/rampe/referentiel/5-1/",
 			"status": "NA",
-			"note": "Test 13.5.1 : analyse de tous les caractères non alphanumériques du texte de la fiche du critère 5.1 : ni art ASCII, ni émoticône, ni émoji, ni syntaxe cryptique (seuls ©, ›, × ou du code HTML cité et expliqué par le texte officiel). Contenu visé absent : non applicable."
+			"note": "Test 13.5.1 : Page examinée : fiche du critère 5.1 (/referentiel/5-1/). Caractères non alphanumériques relevés dans tout le texte : « › » (fil d’Ariane) et « © » seulement. Ce sont des signes typographiques ou mathématiques usuels et du code cité : ni art ASCII, ni émoticône, ni émoji, ni syntaxe cryptique. Contenu visé absent : non applicable."
 		},
 		{
 			"criterion": "13.5",
 			"page": "https://chikimuras.github.io/rampe/referentiel/1-9/",
 			"status": "NA",
-			"note": "Test 13.5.1 : analyse de tous les caractères non alphanumériques du texte de la fiche du critère 1.9 : ni art ASCII, ni émoticône, ni émoji, ni syntaxe cryptique (seuls ©, ›, × ou du code HTML cité et expliqué par le texte officiel). Contenu visé absent : non applicable."
+			"note": "Test 13.5.1 : Page examinée : fiche du critère 1.9 (/referentiel/1-9/). Caractères non alphanumériques relevés dans tout le texte : « › » (fil d’Ariane), « © », et les signes < > = des balises citées en <code> dans le texte officiel. Ce sont des signes typographiques ou mathématiques usuels et du code cité : ni art ASCII, ni émoticône, ni émoji, ni syntaxe cryptique. Contenu visé absent : non applicable."
 		},
 		{
 			"criterion": "13.6",
@@ -558,7 +558,7 @@
 			"criterion": "13.9",
 			"page": "https://chikimuras.github.io/rampe/audit/",
 			"status": "C",
-			"note": "Test 13.9.1 : l’audit guidé consultée en portrait (375×812) puis en paysage (812×375) : aucun verrouillage d’orientation (pas de media query orientation, pas de Screen Orientation API), pas de défilement horizontal, et le même contenu dans les deux modes (sous 700 px de large, la liste des critères est repliée dans un <details> « Critères de la thématique », sans perte de contenu)."
+			"note": "Test 13.9.1 : l’audit guidé consulté en portrait (375×812) puis en paysage (812×375) : aucun verrouillage d’orientation (pas de media query orientation, pas de Screen Orientation API), pas de défilement horizontal, et le même contenu dans les deux modes (sous 700 px de large, la liste des critères est repliée dans un <details> « Critères de la thématique », sans perte de contenu)."
 		},
 		{
 			"criterion": "13.9",
@@ -684,7 +684,7 @@
 			"criterion": "13.11",
 			"page": "https://chikimuras.github.io/rampe/referentiel/glossaire/",
 			"status": "C",
-			"note": "Test 13.11.1 : les actions de le glossaire déclenchées au pointeur sont des liens natifs (et des <summary> le cas échéant), activés au relâchement du pointeur ; aucun gestionnaire mousedown, pointerdown ou touchstart dans le code du site."
+			"note": "Test 13.11.1 : les actions du glossaire déclenchées au pointeur sont des liens natifs (et des <summary> le cas échéant), activés au relâchement du pointeur ; aucun gestionnaire mousedown, pointerdown ou touchstart dans le code du site."
 		},
 		{
 			"criterion": "13.11",
@@ -696,7 +696,7 @@
 			"criterion": "13.11",
 			"page": "https://chikimuras.github.io/rampe/cockpit/",
 			"status": "C",
-			"note": "Test 13.11.1 : les actions de le cockpit déclenchées au pointeur sont des liens natifs (et des <summary> le cas échéant), activés au relâchement du pointeur ; aucun gestionnaire mousedown, pointerdown ou touchstart dans le code du site."
+			"note": "Test 13.11.1 : les actions du cockpit déclenchées au pointeur sont des liens natifs (et des <summary> le cas échéant), activés au relâchement du pointeur ; aucun gestionnaire mousedown, pointerdown ou touchstart dans le code du site."
 		},
 		{
 			"criterion": "13.11",
