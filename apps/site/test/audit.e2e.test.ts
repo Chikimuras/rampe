@@ -1384,7 +1384,7 @@ describe("audit guidé (bout en bout)", { timeout: 60_000 }, () => {
 				["statut.json", good.replace(`"status":"NC"`, `"status":"OK"`), invalid, /statut inconnu "OK"/],
 				[
 					"futur.json",
-					good.replace(`"schemaVersion":2`, `"schemaVersion":5`),
+					good.replace(`"schemaVersion":2`, `"schemaVersion":6`),
 					/^Cet audit a été créé par une version plus récente de Rampe/,
 					null,
 				],
