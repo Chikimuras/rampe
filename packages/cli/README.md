@@ -22,8 +22,13 @@ Le binaire est `src/cli.ts`, exécuté tel quel par Node ≥ 22.18 (suppression 
 | `--html <fichier>` | écrit un rapport HTML lisible par un non-expert (voir plus bas) ; mêmes règles que `--json` : jamais d’écrasement, dossier vérifié avant l’audit, ni le fichier d’échantillon ni le fichier `--json` |
 | `--timeout <ms>` | durée maximale de tout l’audit d’une page : chargement, injection et analyse (défaut : 60 000) ; au-delà, la page est fermée et la CLI sort en 2 |
 | `--echantillon <fichier>` | audite les pages d’un fichier d’échantillon au lieu d’une seule URL (voir plus bas) |
+| `--theme clair\|sombre` | préférence de couleurs du navigateur (`prefers-color-scheme`) pendant l’audit (défaut : `clair`) : un défaut de contraste propre au thème sombre n’apparaît qu’avec `sombre` |
+| `--largeur <px>` | largeur de la fenêtre, de 200 à 3 840 px, hauteur 720 (défaut : 1 280) ; `--largeur 375` audite la mise en page mobile |
+| `--strict` | sort aussi en 1 sur un résultat « rattachement incertain » ou « à vérifier » (les bonnes pratiques hors RGAA ne comptent jamais) ; la console dit alors pourquoi |
 
-Codes de sortie : **0** aucune non-conformité détectée, **1** au moins une non-conformité détectée (pratique en CI), **2** erreur d’usage ou page injoignable.
+Codes de sortie : **0** aucune non-conformité détectée, **1** au moins une non-conformité détectée (pratique en CI ; avec `--strict`, ou un résultat incertain ou à vérifier), **2** erreur d’usage ou page injoignable.
+
+`--strict` ne change pas ce que Rampe présente comme non-conformité (ADR-0011 §3) : il sert à un site qui veut n’avoir **aucun** signalement, comme celui de Rampe lui-même (ADR-0021). Thème et largeur s’appliquent à chaque page, y compris avec `--echantillon`. Pour couvrir plusieurs thèmes ou largeurs, lancez plusieurs audits.
 
 ## Auditer un échantillon de pages (ADR-0012)
 
@@ -66,7 +71,7 @@ Garde-fous : seuls les liens **de même origine** que l’accueil (après redire
 
 `rampe audit --echantillon <fichier>` vérifie d’abord tout le fichier (http(s) uniquement, toutes les adresses sur la même origine que la première ; sinon erreur avec le numéro de ligne), puis audite les pages **une à une**, dans un seul Chromium, chaque page dans un contexte neuf. `--timeout` s’applique alors à chaque page. Une page qui répond avec un statut HTTP ≥ 400 est en erreur (« HTTP 404 »), pas auditée. La console affiche un bloc par page puis une synthèse (« N pages auditées, M en erreur ») : critères avec une non-conformité détectée sur au moins une page, pages en erreur, et le rappel que les 106 critères demandent une vérification humaine.
 
-Codes de sortie avec `--echantillon` : **0** aucune non-conformité détectée, **1** une non-conformité détectée sur au moins une page, **2** au moins une page en erreur (indiquée en console et dans `error` du JSON ; les autres pages sont quand même auditées) ou fichier invalide.
+Codes de sortie avec `--echantillon` : **0** aucune non-conformité détectée, **1** une non-conformité détectée sur au moins une page (avec `--strict` : ou un résultat incertain ou à vérifier), **2** au moins une page en erreur (indiquée en console et dans `error` du JSON ; les autres pages sont quand même auditées) ou fichier invalide.
 
 Sous Ubuntu 23.10 ou plus récent, Chromium peut refuser de démarrer (« No usable sandbox! ») : AppArmor y interdit les espaces de noms utilisateur dont son bac à sable a besoin. Rampe ne désactive jamais ce bac à sable ; suivez plutôt la [documentation de Chromium](https://chromium.googlesource.com/chromium/src/+/main/docs/security/apparmor-userns-restrictions.md) (profil AppArmor ciblé, comme dans `.github/workflows/ci.yml`).
 
@@ -191,4 +196,4 @@ Le titre de page est borné à 300 caractères dans le JSON (« … (tronqué) �
 
 ## Tests
 
-`pnpm --filter @rampe/cli test` lance les tests unitaires et des tests de bout en bout : la vraie CLI audite les pages de `test/fixtures/` servies par un serveur `node:http` local (défauts connus aux critères 1.1, 3.2, 8.3 et 11.1 ; page propre ; `region` seule ; boucle infinie ; départ vers `about:blank` ; CSP `script-src 'none'` ; page piège qui falsifie `window.axe` et casse des primitives JavaScript, et accueil piège qui fausse la collecte de l’échantillon ; redirection vers une autre origine avec identifiants dans l’URL). Un mini-site local (`test/fixtures/site-accueil.html` et des pages générées) sert à enchaîner `rampe echantillon` puis `rampe audit --echantillon` : pages types et raisons, page manquante signalée, JSON multi-pages, page en erreur et codes de sortie. Il faut Chromium (commande ci-dessus). Les pages de test sont exclues de Biome, puisqu’elles sont fautives exprès.
+`pnpm --filter @rampe/cli test` lance les tests unitaires et des tests de bout en bout : la vraie CLI audite les pages de `test/fixtures/` servies par un serveur `node:http` local (défauts connus aux critères 1.1, 3.2, 8.3 et 11.1 ; page propre ; `region` seule, aussi en `--strict` ; défauts de contraste propres au thème sombre et à la fenêtre étroite (`--theme`, `--largeur`) ; boucle infinie ; départ vers `about:blank` ; CSP `script-src 'none'` ; page piège qui falsifie `window.axe` et casse des primitives JavaScript, et accueil piège qui fausse la collecte de l’échantillon ; redirection vers une autre origine avec identifiants dans l’URL). Un mini-site local (`test/fixtures/site-accueil.html` et des pages générées) sert à enchaîner `rampe echantillon` puis `rampe audit --echantillon` : pages types et raisons, page manquante signalée, JSON multi-pages, page en erreur et codes de sortie. Il faut Chromium (commande ci-dessus). Les pages de test sont exclues de Biome, puisqu’elles sont fautives exprès.

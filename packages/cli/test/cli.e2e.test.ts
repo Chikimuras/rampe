@@ -42,6 +42,7 @@ const FIXTURES = new Set([
 	"ifr-fake",
 	"navdrift",
 	"docwrite",
+	"media",
 ]);
 const json = join(tmpdir(), `rampe-e2e-${process.pid}.json`);
 const html = join(tmpdir(), `rampe-e2e-${process.pid}.html`);
@@ -194,6 +195,48 @@ describe("rampe audit (bout en bout)", { timeout: 60_000 }, () => {
 		expect(results.map((r) => [r.ruleId, r.kind])).toEqual([["region", "incertain"]]);
 		expect(stdout).toContain("Aucune non-conformité détectée automatiquement");
 		expect(stdout).toContain("règle indicative d’axe : à confirmer par une personne");
+	});
+
+	it("--strict : un résultat incertain (region) fait aussi sortir en 1, avec l'explication", async () => {
+		const { code, stdout, stderr } = await run("audit", `${base}/region`, "--strict");
+		expect(code, stderr).toBe(1);
+		expect(stdout).toContain("Aucune non-conformité détectée automatiquement");
+		expect(stdout).toContain("Mode --strict");
+	});
+
+	it("--theme sombre audite la page en prefers-color-scheme: dark", async () => {
+		const contrast = async (...args: string[]) => {
+			const { code, stderr } = await run("audit", `${base}/media`, "--json", json, ...args);
+			const nc = (await readReport()).pages[0]?.results.filter((r) => r.kind === "non-conformite") ?? [];
+			return { code, stderr, rules: nc.map((r) => [r.ruleId, r.nodes.map((n) => n.target.join(" "))]) };
+		};
+		const clair = await contrast();
+		expect(clair.code, clair.stderr).toBe(0);
+		expect((await contrast("--theme", "clair")).code).toBe(0);
+		const sombre = await contrast("--theme", "sombre");
+		expect(sombre.code, sombre.stderr).toBe(1);
+		expect(sombre.rules).toEqual([["color-contrast", ["h1", "p"]]]);
+	});
+
+	it("--largeur fixe la largeur de la fenêtre (hauteur 720)", async () => {
+		const { code, stderr } = await run("audit", `${base}/media`, "--json", json, "--largeur", "375");
+		expect(code, stderr).toBe(1);
+		const nc = (await readReport()).pages[0]?.results.filter((r) => r.kind === "non-conformite") ?? [];
+		expect(nc.map((r) => [r.ruleId, r.nodes.map((n) => n.target.join(" "))])).toEqual([["color-contrast", ["p"]]]);
+	});
+
+	it("refuse un thème, une largeur ou une option d'audit invalides avec le code 2", async () => {
+		for (const args of [
+			["audit", `${base}/propre`, "--theme", "bleu"],
+			["audit", `${base}/propre`, "--largeur", "100"],
+			["audit", `${base}/propre`, "--largeur", "12.5"],
+			["echantillon", `${base}/propre`, "--strict"],
+			["echantillon", `${base}/propre`, "--theme", "sombre"],
+		]) {
+			const { code, stderr } = await run(...args);
+			expect(code, args.join(" ")).toBe(2);
+			expect(stderr).toMatch(/--theme|--largeur|--strict/);
+		}
 	});
 
 	it("borne toute l'opération par --timeout, même si la page bloque son fil principal", async () => {
