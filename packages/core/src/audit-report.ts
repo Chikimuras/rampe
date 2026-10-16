@@ -22,12 +22,13 @@ import {
 	fail,
 	field,
 	IMPACTS,
+	isReportToolName,
 	MAX_FINDINGS,
 	MAX_PAGES,
 	MAX_URL,
 	object,
-	REPORT_TOOL_NAME,
 	ReportError,
+	type ReportToolName,
 	RULE_ID,
 	SESSION_TOOL_NAME,
 	strictly,
@@ -69,14 +70,14 @@ export interface AuditPage {
 
 export interface AuditReport {
 	schemaVersion: typeof REPORT_SCHEMA_VERSION;
-	tool: { name: string; version: string };
+	tool: { name: ReportToolName; version: string };
 	engine: { axe: string; browser: string };
 	startedAt: string;
 	pages: AuditPage[];
 }
 
 export const REPORT_SCHEMA_VERSION = 2;
-export { MAX_FINDINGS, MAX_REPORT_BYTES, REPORT_TOOL_NAME, ReportError } from "./strict.ts";
+export { MAX_FINDINGS, MAX_REPORT_BYTES, REPORT_TOOL_NAMES, ReportError, type ReportToolName } from "./strict.ts";
 
 /** Rapport validé : seuls les champs utilisés par l'import, nettoyés et bornés. */
 export interface ImportableReport {
@@ -101,10 +102,10 @@ const MAX_ERROR = 500;
 const MAX_HELP = 300;
 
 export const INVALID_REPORT =
-	"Ce fichier n’est pas un rapport de la CLI Rampe, ou il a été modifié. Rien n’a été importé.";
+	"Ce fichier n’est pas un rapport automatique de Rampe (CLI ou extension), ou il a été modifié. Rien n’a été importé.";
 /** Audit complet donné au champ du rapport (ADR-0016) : on oriente vers le bon champ. */
 export const SESSION_GIVEN_AS_REPORT =
-	"Ce fichier est un audit Rampe complet (téléchargé depuis l’audit guidé), pas un rapport de la CLI : importez-le avec le champ « Importer un audit (JSON) », section « Sauvegarde de l’audit ». Rien n’a été importé.";
+	"Ce fichier est un audit Rampe complet (téléchargé depuis l’audit guidé), pas un rapport automatique : importez-le avec le champ « Importer un audit (JSON) », section « Sauvegarde de l’audit ». Rien n’a été importé.";
 
 /**
  * Valide un rapport JSON de la CLI (ADR-0014 §4), déjà désérialisé par `JSON.parse` seul.
@@ -123,7 +124,7 @@ function parseReport(json: unknown, knownCriteria: ReadonlySet<string>): Importa
 	if (version !== REPORT_SCHEMA_VERSION)
 		fail("schemaVersion", `version ${JSON.stringify(version) ?? "absente"} non prise en charge (attendu : 2)`);
 	const name = field(object(field(root, "tool"), "tool"), "name");
-	if (name !== REPORT_TOOL_NAME) fail("tool.name", `ce fichier n’a pas été produit par la CLI Rampe`);
+	if (!isReportToolName(name)) fail("tool.name", "ce fichier n’a été produit ni par la CLI ni par l’extension Rampe");
 	let site = "";
 	let findings = 0;
 	const pages = array(field(root, "pages"), "pages", MAX_PAGES).map((rawPage, i) => {

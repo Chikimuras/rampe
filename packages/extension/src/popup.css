@@ -1,0 +1,119 @@
+:root {
+	color-scheme: light dark;
+	--fond: #ffffff;
+	--texte: #1a1a1a;
+	--discret: #4a4a4a;
+	--accent: #0b4f9c;
+	--accent-texte: #ffffff;
+	--bord: #767676;
+	--alerte: #a4161a;
+}
+
+@media (prefers-color-scheme: dark) {
+	:root {
+		--fond: #161616;
+		--texte: #f2f2f2;
+		--discret: #c8c8c8;
+		--accent: #8cc4ff;
+		--accent-texte: #0a0a0a;
+		--bord: #9a9a9a;
+		--alerte: #ff9b9b;
+	}
+}
+
+body {
+	margin: 0;
+	min-width: 20rem;
+	max-width: 32rem;
+	background: var(--fond);
+	color: var(--texte);
+	font:
+		0.9375rem / 1.5 system-ui,
+		sans-serif;
+}
+
+main {
+	padding: 0.75rem 1rem 1rem;
+}
+
+h1 {
+	font-size: 1.125rem;
+	margin: 0 0 0.5rem;
+}
+
+h2 {
+	font-size: 1.0625rem;
+	margin: 1rem 0 0.25rem;
+}
+
+h3 {
+	font-size: 1rem;
+	margin: 1rem 0 0.25rem;
+	padding-top: 0.5rem;
+	border-top: 1px solid var(--bord);
+}
+
+h4 {
+	font-size: 0.9375rem;
+	margin: 0.5rem 0 0.125rem;
+}
+
+ul {
+	margin: 0;
+	padding-left: 1.25rem;
+}
+
+button {
+	font: inherit;
+	font-weight: 600;
+	padding: 0.4rem 0.9rem;
+	border: 2px solid var(--accent);
+	border-radius: 0.25rem;
+	background: var(--accent);
+	color: var(--accent-texte);
+	cursor: pointer;
+}
+
+button:disabled {
+	cursor: progress;
+	opacity: 0.75;
+}
+
+button:focus-visible {
+	outline: 3px solid var(--texte);
+	outline-offset: 2px;
+}
+
+#telecharger {
+	margin-top: 1rem;
+}
+
+#etat {
+	min-height: 1.5em;
+}
+
+/* Sélecteurs, adresses et identifiants venus de la page peuvent être très longs : jamais de défilement horizontal. */
+li,
+code,
+#etat,
+#detail {
+	overflow-wrap: anywhere;
+}
+
+.erreur {
+	color: var(--alerte);
+	font-weight: 600;
+}
+
+.aide,
+.rappel,
+#page {
+	color: var(--discret);
+	overflow-wrap: anywhere;
+}
+
+.rappel {
+	margin-top: 1rem;
+	padding-top: 0.5rem;
+	border-top: 1px solid var(--bord);
+}

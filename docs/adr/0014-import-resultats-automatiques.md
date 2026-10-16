@@ -24,7 +24,7 @@ La CLI produit un JSON v2 (ADR-0011, ADR-0012) qui contient, pour chaque page, d
 4. **Validation stricte à la frontière** (OWASP *Input Validation Cheat Sheet* : validation par liste blanche du type, de la forme et des bornes ; OWASP *Deserialization Cheat Sheet* : ne jamais faire confiance à une structure désérialisée) :
    - taille maximale du fichier : 20 Mo ;
    - `JSON.parse` est la seule désérialisation ; aucun `eval` ni `new Function` ;
-   - `schemaVersion` égal à 2 et `tool.name` égal à `@rampe/cli` (le nom du paquet, que la CLI écrit depuis sa première version) ;
+   - `schemaVersion` égal à 2 et `tool.name` dans la **liste fermée** `@rampe/cli`, `@rampe/extension` : le nom du paquet qui a écrit le rapport, la CLI depuis sa première version, l’extension navigateur depuis l’ADR-0019 (qui élargit ce point) ;
    - chaque champ utilisé est validé en type et en bornes : URL http(s), critères **existants dans le référentiel**, classes connues, nombres positifs, au plus 50 000 indices par fichier (au-delà, l’audit ne tiendrait plus dans le stockage du navigateur). La structure, les URL, les critères, les classes et les nombres font rejeter le fichier ;
    - les textes seulement affichés (titre de page, message d’erreur de page, description de règle) sont **tronqués**, marqués « … (tronqué) », plutôt que rejetés : un site au titre démesuré ne doit pas rendre son rapport inimportable. La CLI borne déjà le titre à 300 caractères ;
    - les propriétés inconnues sont ignorées ;

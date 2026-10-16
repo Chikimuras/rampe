@@ -670,7 +670,7 @@ describe("audit guidé (bout en bout)", { timeout: 60_000 }, () => {
 	});
 
 	describe("import d'un rapport de la CLI (ADR-0014)", () => {
-		const IMPORT_LABEL = "Importer un rapport de la CLI (JSON)";
+		const IMPORT_LABEL = "Importer un rapport automatique (CLI ou extension, JSON)";
 		const live = (page: Page) => page.locator("[aria-live=polite]").textContent();
 		const stored = (page: Page) => page.evaluate(() => localStorage.getItem("rampe.audit.session"));
 		const group = (page: Page, criterion: string) =>
@@ -856,7 +856,8 @@ describe("audit guidé (bout en bout)", { timeout: 60_000 }, () => {
 			const before = await stored(page);
 			const input = page.getByLabel(IMPORT_LABEL);
 			const hostile = JSON.parse(await readFile(reportPath, "utf8"));
-			const invalid = "Ce fichier n’est pas un rapport de la CLI Rampe, ou il a été modifié. Rien n’a été importé.";
+			const invalid =
+				"Ce fichier n’est pas un rapport automatique de Rampe (CLI ou extension), ou il a été modifié. Rien n’a été importé.";
 			const cases: [string, Buffer, string | RegExp, RegExp | null][] = [
 				[
 					"proto.json",
@@ -1113,7 +1114,7 @@ describe("audit guidé (bout en bout)", { timeout: 60_000 }, () => {
 
 	describe("sauvegarde : export et import de l'audit en JSON (ADR-0016)", () => {
 		const SESSION_LABEL = "Importer un audit (JSON)";
-		const REPORT_LABEL = "Importer un rapport de la CLI (JSON)";
+		const REPORT_LABEL = "Importer un rapport automatique (CLI ou extension, JSON)";
 		const live = (page: Page) => page.locator("[aria-live=polite]").textContent();
 		const stored = (page: Page) => page.evaluate(() => localStorage.getItem("rampe.audit.session"));
 		const reminder = (page: Page) => page.locator(".audit-backup > p").first().textContent();
@@ -1429,13 +1430,13 @@ describe("audit guidé (bout en bout)", { timeout: 60_000 }, () => {
 			await expect
 				.poll(() => page.locator("#audit-session-erreur > p").textContent())
 				.toBe(
-					"Ce fichier est un rapport de la CLI Rampe, pas un audit complet : importez-le avec le champ « Importer un rapport de la CLI (JSON) », section « 1. Pages de l’échantillon ». Rien n’a été importé.",
+					"Ce fichier est un rapport automatique de Rampe (CLI ou extension), pas un audit complet : importez-le avec le champ « Importer un rapport automatique (CLI ou extension, JSON) », section « 1. Pages de l’échantillon ». Rien n’a été importé.",
 				);
 			await page.getByLabel(REPORT_LABEL).setInputFiles(asFile(sessionJson()));
 			await expect
 				.poll(() => page.locator("#audit-rapport-erreur > p").textContent())
 				.toBe(
-					"Ce fichier est un audit Rampe complet (téléchargé depuis l’audit guidé), pas un rapport de la CLI : importez-le avec le champ « Importer un audit (JSON) », section « Sauvegarde de l’audit ». Rien n’a été importé.",
+					"Ce fichier est un audit Rampe complet (téléchargé depuis l’audit guidé), pas un rapport automatique : importez-le avec le champ « Importer un audit (JSON) », section « Sauvegarde de l’audit ». Rien n’a été importé.",
 				);
 			await expect.poll(() => dialog(page).count()).toBe(0);
 			if (captures) await page.screenshot({ path: join(captures, "mauvais-champ.png"), fullPage: true });

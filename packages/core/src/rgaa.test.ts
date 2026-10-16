@@ -3,6 +3,7 @@ import criteres from "../data/rgaa/criteres.json" with { type: "json" };
 import glossaire from "../data/rgaa/glossaire.json" with { type: "json" };
 import methodologies from "../data/rgaa/methodologies.json" with { type: "json" };
 import source from "../data/rgaa/source.json" with { type: "json" };
+import { baseCriteria, getBaseCriterion } from "./criteres.ts";
 import { getCriterion, getGlossaryEntry, parseWcagRef, rgaa } from "./index.ts";
 
 // Liens markdown internes `[texte](#ancre)`.
@@ -108,5 +109,11 @@ describe("référentiel RGAA", () => {
 		expect(c?.wcag).toContainEqual({ sc: "1.1.1", name: "Non-text Content", level: "A" });
 		expect(c?.tests[0]?.id).toBe("1.1.1");
 		expect(getCriterion("99.1")).toBeUndefined();
+	});
+
+	it("criteres.ts (sans glossaire ni méthodologies) donne exactement les mêmes critères, méthodologies en moins", () => {
+		const strip = rgaa.criteria.map((c) => ({ ...c, tests: c.tests.map(({ methodology: _, ...t }) => t) }));
+		expect(baseCriteria).toEqual(strip);
+		expect(getBaseCriterion("1.1")?.title).toBe(getCriterion("1.1")?.title);
 	});
 });

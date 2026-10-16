@@ -29,7 +29,8 @@ jobs:
           node-version: 22
           cache: pnpm
       - run: pnpm install --frozen-lockfile
-      # Chromium pour les tests de bout en bout de la CLI (ADR-0011 §5) et de /audit/ (ADR-0013 §5), même version de Playwright.
+      # Chromium pour les tests de bout en bout de la CLI (ADR-0011 §5), de /audit/ (ADR-0013 §5) et de l'extension
+      # (ADR-0019 §7), même version de Playwright.
       - run: pnpm --filter @rampe/cli exec playwright install --with-deps chromium
       # Ubuntu 24.04 interdit par AppArmor les espaces de noms utilisateur dont le bac à sable de Chromium a besoin.
       # Profil ciblé sur les seuls binaires Playwright plutôt que --no-sandbox ou un sysctl global (ADR-0011 §6) :
@@ -42,6 +43,15 @@ jobs:
           sudo apparmor_parser -r /etc/apparmor.d/playwright-chromium
       - run: pnpm check
       - run: pnpm build
+      # Archive de l'extension navigateur, pour un test manuel (ADR-0019 §7). Aucune permission supplémentaire :
+      # l'envoi d'artefacts passe par le jeton d'exécution du job, pas par GITHUB_TOKEN.
+      - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          path: packages/extension/rampe-extension.zip
+          # Le .zip est déjà l'archive de l'extension : envoyé tel quel, sans second zip autour.
+          archive: false
+          if-no-files-found: error
+          retention-days: 30
       - if: github.ref == 'refs/heads/main'
         uses: actions/upload-pages-artifact@fc324d3547104276b827a68afc52ff2a11cc49c9 # v5.0.0
         with:
