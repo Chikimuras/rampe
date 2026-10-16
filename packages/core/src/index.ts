@@ -1,6 +1,7 @@
 export * from "./audit-report.ts";
 export * from "./audit-session.ts";
 export * from "./axe.ts";
+export * from "./axe-results.ts";
 export * from "./conformity.ts";
 export * from "./declaration.ts";
 export * from "./rgaa.ts";

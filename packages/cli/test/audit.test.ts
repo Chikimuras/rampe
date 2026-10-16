@@ -1,4 +1,3 @@
-import { REPORT_TOOL_NAME } from "@rampe/core";
 import { describe, expect, it } from "vitest";
 import {
 	type AxeRawResult,
@@ -145,7 +144,7 @@ describe("buildReport", () => {
 	it("a la forme versionnée attendue", () => {
 		expect(report).toMatchObject({
 			schemaVersion: 2,
-			tool: { name: REPORT_TOOL_NAME, version: expect.any(String) },
+			tool: { name: "@rampe/cli", version: expect.any(String) },
 			engine: { axe: "4.14.0", browser: "156.0" },
 			startedAt: "2026-10-15T10:00:00.000Z",
 			pages: [{ url: "https://exemple.fr", finalUrl: "https://exemple.fr/", title: "Accueil", warnings: [] }],

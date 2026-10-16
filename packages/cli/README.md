@@ -177,7 +177,7 @@ Le fichier `--json` s’importe dans la page `/audit/` du site Rampe, pour ne pa
 ```sh
 pnpm exec rampe echantillon https://exemple.fr/ --sortie echantillon.txt   # 1. proposer l’échantillon
 pnpm exec rampe audit --echantillon echantillon.txt --json rapport.json     # 2. audit automatique
-# 3. Sur /audit/ : « Importer un rapport de la CLI (JSON) », choisir rapport.json
+# 3. Sur /audit/ : « Importer un rapport automatique (CLI ou extension, JSON) », choisir rapport.json
 ```
 
 - Les pages du rapport absentes de l’audit sont ajoutées. Elles sont rapprochées par adresse, sans fragment ni identifiants. Les pages en erreur ne sont pas importées et sont listées dans le bilan.

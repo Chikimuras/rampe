@@ -48,8 +48,15 @@ export const MAX_FINDINGS = 50_000;
 export const MAX_URL = 2048;
 export const RULE_ID = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
 export const IMPACTS = ["minor", "moderate", "serious", "critical"];
-/** `tool.name` écrit par la CLI (nom de son paquet) et par l'export de l'audit guidé (ADR-0016 §1). */
-export const REPORT_TOOL_NAME = "@rampe/cli";
+/**
+ * `tool.name` admis dans un rapport automatique : nom du paquet qui l'a écrit, la CLI (ADR-0011) ou l'extension
+ * navigateur (ADR-0019). Liste fermée (ADR-0014 §4).
+ */
+export const REPORT_TOOL_NAMES = ["@rampe/cli", "@rampe/extension"] as const;
+export type ReportToolName = (typeof REPORT_TOOL_NAMES)[number];
+export const isReportToolName = (name: unknown): name is ReportToolName =>
+	(REPORT_TOOL_NAMES as readonly unknown[]).includes(name);
+/** `tool.name` écrit par l'export de l'audit guidé (ADR-0016 §1). */
 export const SESSION_TOOL_NAME = "@rampe/site";
 
 const MAX_DEPTH = 64;

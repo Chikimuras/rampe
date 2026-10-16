@@ -1073,15 +1073,15 @@ function ImportReport({
 
 	return (
 		<div class="audit-import">
-			<h3>Rapport de la CLI : reprendre les résultats de l’audit automatique</h3>
+			<h3>Rapport automatique (CLI ou extension) : reprendre les résultats de l’audit automatique</h3>
 			<p id="audit-rapport-aide">
-				Fichier écrit par <code>rampe audit --json</code> (20 Mo au plus). Les pages manquantes sont ajoutées. Les
-				non-conformités détectées sont proposées « à confirmer » sur les critères encore non testés ; les autres
-				résultats deviennent des indices. Vos évaluations déjà saisies ne sont jamais modifiées. Pour reprendre un audit
-				complet téléchargé depuis Rampe, utilisez plutôt « Importer un audit (JSON) », section « Sauvegarde de l’audit
-				».
+				Fichier écrit par <code>rampe audit --json</code> ou téléchargé depuis l’extension navigateur de Rampe (20 Mo au
+				plus). Les pages manquantes sont ajoutées. Les non-conformités détectées sont proposées « à confirmer » sur les
+				critères encore non testés ; les autres résultats deviennent des indices. Vos évaluations déjà saisies ne sont
+				jamais modifiées. Pour reprendre un audit complet téléchargé depuis Rampe, utilisez plutôt « Importer un audit
+				(JSON) », section « Sauvegarde de l’audit ».
 			</p>
-			<label for="audit-rapport">Importer un rapport de la CLI (JSON)</label>
+			<label for="audit-rapport">Importer un rapport automatique (CLI ou extension, JSON)</label>
 			<input
 				id="audit-rapport"
 				ref={inputRef}
@@ -1312,7 +1312,7 @@ function Backup({
 				<p id="audit-session-aide">
 					Fichier <code>audit-….json</code> téléchargé avec le bouton ci-dessus, dans ce navigateur ou un autre (64 Mo
 					au plus). Il remplace l’audit en cours. Pour les résultats de l’audit automatique, utilisez plutôt « Rapport
-					de la CLI », section « 1. Pages de l’échantillon ».
+					automatique », section « 1. Pages de l’échantillon ».
 				</p>
 				<label for="audit-session">Importer un audit (JSON)</label>
 				<input

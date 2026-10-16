@@ -6,7 +6,6 @@ import {
 	importAutomaticResults,
 	MAX_FINDINGS,
 	parseAuditReport,
-	REPORT_TOOL_NAME,
 	ReportError,
 	SESSION_GIVEN_AS_REPORT,
 } from "./audit-report.ts";
@@ -45,7 +44,7 @@ const result = (ruleId: string, kind: AuditResult["kind"], criteria: string[], n
 // Pages volontairement peu typées : les tests y glissent des valeurs hostiles.
 const report = (pages: Record<string, unknown>[]): AuditReport => ({
 	schemaVersion: 2,
-	tool: { name: REPORT_TOOL_NAME, version: "0.0.0" },
+	tool: { name: "@rampe/cli", version: "0.0.0" },
 	engine: { axe: "4.14.0", browser: "156" },
 	startedAt: NOW,
 	pages: pages.map((p) => ({
@@ -113,6 +112,11 @@ describe("parseAuditReport : validation stricte (ADR-0014 §4)", () => {
 		expect(r.pages[2]).toMatchObject({ title: "", error: "HTTP 404" });
 	});
 
+	it("accepte les deux outils de la liste fermée : la CLI et l'extension (ADR-0019)", () => {
+		for (const name of ["@rampe/cli", "@rampe/extension"])
+			expect(parse({ ...sample, tool: { name, version: "0.0.0" } }).pages).toHaveLength(3);
+	});
+
 	it("ignore les propriétés inconnues ; accepte un rapport sans `help` (fichier plus ancien)", () => {
 		const { help: _, ...old } = result("image-alt", "non-conformite", ["1.1"]);
 		const r = parse({ ...report([{ results: [{ ...old, extra: { x: 1 } }] }]), inconnu: true });
@@ -143,7 +147,8 @@ describe("parseAuditReport : validation stricte (ADR-0014 §4)", () => {
 		["schemaVersion 1", { ...sample, schemaVersion: 1 }, /^schemaVersion : version 1 non prise en charge/],
 		["schemaVersion 3", { ...sample, schemaVersion: 3 }, /^schemaVersion : version 3/],
 		["schemaVersion absent", { ...sample, schemaVersion: undefined }, /version absente/],
-		["un autre outil", { ...sample, tool: { name: "rampe", version: "1" } }, /^tool\.name : .*CLI Rampe/],
+		["un autre outil", { ...sample, tool: { name: "rampe", version: "1" } }, /^tool\.name : .*CLI .*extension Rampe/],
+		["un outil voisin", { ...sample, tool: { name: "@rampe/extension-x" } }, /^tool\.name/],
 		[
 			"un critère inexistant 99.1",
 			report([{ results: [result("x", "incertain", ["99.1"])] }]),

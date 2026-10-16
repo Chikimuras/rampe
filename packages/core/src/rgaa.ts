@@ -1,46 +1,19 @@
 // Modèle normalisé du référentiel RGAA (ADR-0007). Le reste du code ne lit jamais le JSON brut.
-import criteres from "../data/rgaa/criteres.json" with { type: "json" };
+
 import glossaire from "../data/rgaa/glossaire.json" with { type: "json" };
 import methodologies from "../data/rgaa/methodologies.json" with { type: "json" };
 import source from "../data/rgaa/source.json" with { type: "json" };
+import { type BaseCriterion, type BaseTest, baseCriteria, topics } from "./criteres.ts";
 
-export type WcagLevel = "A" | "AA" | "AAA";
+export * from "./criteres.ts";
 
-/** Référence à un critère de succès WCAG, ex. `{ sc: "1.1.1", name: "Non-text Content", level: "A" }`. */
-export interface WcagRef {
-	sc: string;
-	name: string;
-	level: WcagLevel;
-}
-
-/** Paragraphe (markdown) ou liste à puces, tels que fournis par la source officielle. */
-export type Note = string | { ul: string[] };
-
-export interface Topic {
-	number: number;
-	title: string;
-}
-
-export interface Test {
-	/** ex. "1.1.1" */
-	id: string;
-	/** Énoncé (markdown) ; les éléments suivants sont les conditions à vérifier, s'il y en a. */
-	text: string[];
+export interface Test extends BaseTest {
 	/** Méthodologie de test (markdown). */
 	methodology: string;
 }
 
-export interface Criterion {
-	/** ex. "1.1" */
-	id: string;
-	topic: number;
-	/** Titre markdown d'origine, avec ses liens `[texte](#ancre)` vers le glossaire. */
-	title: string;
+export interface Criterion extends BaseCriterion {
 	tests: Test[];
-	wcag: WcagRef[];
-	techniques: string[];
-	particularCases?: Note[];
-	technicalNote?: Note[];
 }
 
 export interface GlossaryEntry {
@@ -50,33 +23,7 @@ export interface GlossaryEntry {
 	body: string;
 }
 
-// Forme des fichiers officiels : la vérification de type échoue si elle ne correspond plus.
-interface RawCriteres {
-	topics: {
-		topic: string;
-		number: number;
-		criteria: {
-			criterium: {
-				number: number;
-				title: string;
-				tests: Partial<Record<string, string[]>>;
-				references: { wcag?: string[]; techniques?: string[] }[];
-				particularCases?: Note[];
-				technicalNote?: Note[];
-			};
-		}[];
-	}[];
-}
-
-const rawCriteres: RawCriteres = criteres;
 const rawMethodologies: Record<string, string> = methodologies;
-
-/** Analyse une référence telle qu'écrite dans le RGAA : "1.1.1 Non-text Content (A)". */
-export function parseWcagRef(ref: string): WcagRef {
-	const m = /^(\d+\.\d+\.\d+) (.+) \((A|AA|AAA)\)$/.exec(ref);
-	if (!m) throw new Error(`Référence WCAG illisible : ${ref}`);
-	return { sc: m[1] as string, name: m[2] as string, level: m[3] as WcagLevel };
-}
 
 /**
  * Ancre d'une entrée du glossaire, dérivée de son titre : accents retirés, minuscules,
@@ -93,26 +40,10 @@ function slugify(title: string): string {
 		.replace(/^-|-$/g, "");
 }
 
-const topics: Topic[] = rawCriteres.topics.map((t) => ({ number: t.number, title: t.topic }));
-
-const criteria: Criterion[] = rawCriteres.topics.flatMap((t) =>
-	t.criteria.map(({ criterium: c }): Criterion => {
-		const id = `${t.number}.${c.number}`;
-		const criterion: Criterion = {
-			id,
-			topic: t.number,
-			title: c.title,
-			tests: Object.entries(c.tests).flatMap(([n, text]) =>
-				text ? [{ id: `${id}.${n}`, text, methodology: rawMethodologies[`${id}.${n}`] ?? "" }] : [],
-			),
-			wcag: c.references.flatMap((r) => r.wcag ?? []).map(parseWcagRef),
-			techniques: c.references.flatMap((r) => r.techniques ?? []),
-		};
-		if (c.particularCases) criterion.particularCases = c.particularCases;
-		if (c.technicalNote) criterion.technicalNote = c.technicalNote;
-		return criterion;
-	}),
-);
+const criteria: Criterion[] = baseCriteria.map((c) => ({
+	...c,
+	tests: c.tests.map((t) => ({ ...t, methodology: rawMethodologies[t.id] ?? "" })),
+}));
 
 const glossary: GlossaryEntry[] = glossaire.glossary.map((e) => ({ anchor: slugify(e.title), ...e }));
 

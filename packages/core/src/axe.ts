@@ -1,5 +1,5 @@
 // Rattachement des règles axe-core au RGAA à partir de leurs étiquettes (ADR-0008).
-import { rgaa } from "./rgaa.ts";
+import { baseCriteria } from "./criteres.ts";
 
 /** Informations portées par les trois niveaux. */
 interface AxeRuleFlags {
@@ -39,11 +39,11 @@ const sortIds = (ids: Iterable<string>): string[] =>
 
 const criterionOf = (testId: string) => testId.slice(0, testId.lastIndexOf("."));
 
-const testIds = new Set(rgaa.criteria.flatMap((c) => c.tests.map((t) => t.id)));
+const testIds = new Set(baseCriteria.flatMap((c) => c.tests.map((t) => t.id)));
 
 // Critère de succès WCAG → critères RGAA qui le référencent.
 const criteriaBySc = new Map<string, string[]>();
-for (const c of rgaa.criteria) {
+for (const c of baseCriteria) {
 	for (const { sc } of c.wcag) criteriaBySc.set(sc, [...(criteriaBySc.get(sc) ?? []), c.id]);
 }
 
