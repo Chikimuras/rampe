@@ -34,10 +34,11 @@ const waiting = blockedLines.map((l) => {
 	const [, task, reason] = l.match(blockedRe) ?? [];
 	return { task, reason };
 });
-// Rampe audité par Rampe (ADR-0021). Pages construites : accueil, audit guidé, cockpit, référentiel, glossaire, une
-// fiche par critère, une page par ADR, entrée de journal et document. `pnpm audit:rampe` vérifie que ce nombre est
-// celui des pages qu'il a construites et auditées : il échoue sinon.
-const builtPages = 5 + rgaa.criteria.length + adrs.length + journal.length + docs.length;
+// Rampe audité par Rampe (ADR-0021). Pages construites : chaque page fixe de src/pages (sans paramètre de route),
+// plus les routes dynamiques : une fiche par critère, une page par ADR, entrée de journal et document.
+// `pnpm audit:rampe` vérifie que ce nombre est celui des pages qu'il a construites et auditées : il échoue sinon.
+const fixedPages = Object.keys(import.meta.glob("../**/*.astro")).filter((path) => !path.includes("[")).length;
+const builtPages = fixedPages + rgaa.criteria.length + adrs.length + journal.length + docs.length;
 // Auto-évaluation : docs/audit-rampe/session.json, généré par `pnpm auto-evaluation` (vérifié en CI), relu ici avec la
 // validation stricte de l'import (ADR-0016) ; un fichier invalide casse le build.
 const criterionIds = rgaa.criteria.map((c) => c.id);
