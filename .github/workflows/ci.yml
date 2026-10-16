@@ -18,6 +18,8 @@ concurrency:
 jobs:
   check:
     runs-on: ubuntu-latest
+    # Borne le job : un Chromium ou un serveur bloqué ne doit pas occuper un runner pendant 6 h.
+    timeout-minutes: 30
     steps:
       # Actions épinglées par SHA — OWASP Top 10 CI/CD, CICD-SEC-3.
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
@@ -43,11 +45,12 @@ jobs:
           sudo apparmor_parser -r /etc/apparmor.d/playwright-chromium
       - run: pnpm check
       - run: pnpm build
-      # Rampe audite Rampe (ADR-0021 §1) : la vraie CLI audite l'échantillon du site construit, servi en local.
-      # Toute non-conformité automatique fait échouer la CI (code 1 de la CLI), et le site n'est pas déployé.
+      # Rampe audite Rampe (ADR-0021 §1) : la vraie CLI, en --strict, audite toutes les pages construites (thèmes
+      # clair puis sombre) et l'échantillon versionné en 375 px. Tout signalement (non-conformité, incertain, à vérifier)
+      # fait échouer la CI, et le site n'est pas déployé.
       - id: audit-rampe
         run: pnpm audit:rampe
-      # Rapports JSON et HTML conservés, surtout utiles quand l'audit échoue. Même action épinglée que plus bas.
+      # Rapports JSON et HTML de chaque passage, surtout utiles quand l'audit échoue. Même action épinglée que plus bas.
       - if: ${{ !cancelled() && steps.audit-rampe.outcome != 'skipped' }}
         uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:
