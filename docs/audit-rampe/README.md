@@ -36,14 +36,17 @@ Total attendu : **106 critères × nombre de pages de l’échantillon** (11 pag
 
 Validation stricte (`parseFragment`, `packages/core/src/auto-evaluation.ts`), tout ou rien :
 
-- nom du fichier : `<thématique>.json`, 1 à 13 ; tout autre fichier du dossier est refusé ;
+- dossier : uniquement des fichiers ordinaires `<thématique>.json`, 1 à 13 ; un lien symbolique, un dossier ou tout autre nom est refusé (seul `.DS_Store` est toléré, et ignoré) ;
+- texte en **UTF-8 strict** et en **forme canonique** : exactement `JSON.stringify(valeur, null, "\t")` suivi d’un saut de ligne (indentation par tabulations, clés uniques, pas de BOM). Une clé en double (`"status": "NC", "status": "C"`), que `JSON.parse` résoudrait en silence, est donc refusée. Le script ne réécrit jamais un fragment : `JSON.stringify(fragment, null, "\t") + "\n"` produit la bonne forme ;
 - clés autorisées seulement (`evaluator`, `date`, `entries` ; `criterion`, `page`, `status`, `note`), `__proto__`, `constructor` et `prototype` refusées partout ;
-- `evaluator` : exactement `"Claude (IA)"` ; `date` : `AAAA-MM-JJ` qui existe au calendrier ;
+- `evaluator` : exactement `"Claude (IA)"` ; `date` : `AAAA-MM-JJ` qui existe au calendrier, pas dans le futur ;
 - `criterion` : critère du référentiel, **de la thématique du fichier** ;
 - `page` : une adresse de `echantillon.txt`, écrite exactement comme elle (forme normalisée, avec la barre finale) ;
 - `status` : `C`, `NC` ou `NA` (jamais `NT` : une évaluation absente est « non testée ») ;
-- `note` : non vide, au plus 10 000 caractères, sans caractère de contrôle ni de direction, et **citant au moins un test du critère** par son numéro (`1.1.1`) ;
+- `note` : au moins 40 caractères, au plus 10 000, sans caractère de contrôle ni de direction, et **citant au moins un test du critère** par son numéro (`1.1.1`, pas le préfixe d’un autre numéro comme `1.1.10` ; un point final de phrase est permis) ;
 - au plus une entrée par couple (critère, page).
+
+Ces contrôles sont **syntaxiques** : ils garantissent qu’une justification existe, cite un test et a une longueur minimale, pas qu’elle est juste. La **relecture humaine des notes** reste attendue, en important `session.json` dans l’audit guidé.
 
 ## Construction de la session
 

@@ -10,9 +10,14 @@ import { join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { isDeepStrictEqual } from "node:util";
 import { parseSessionStrict, progress } from "../packages/core/src/audit-session.ts";
-import { buildAutoSession, parseFragment, serializeAutoSession } from "../packages/core/src/auto-evaluation.ts";
+import {
+	buildAutoSession,
+	fragmentFiles,
+	parseFragment,
+	serializeAutoSession,
+} from "../packages/core/src/auto-evaluation.ts";
 import { computeConformity, formatRate } from "../packages/core/src/conformity.ts";
-import { baseCriteria, topics } from "../packages/core/src/criteres.ts";
+import { baseCriteria } from "../packages/core/src/criteres.ts";
 import { parseSampleFile } from "../packages/core/src/sample-file.ts";
 import { ReportError } from "../packages/core/src/strict.ts";
 
@@ -23,12 +28,11 @@ const verify = process.argv.includes("--verifier");
 
 try {
 	const sample = parseSampleFile(readFileSync(join(dir, "echantillon.txt"), "utf8")).urls.map((u) => u.href);
-	const names = existsSync(evaluations) ? readdirSync(evaluations).sort() : [];
-	const fragments = names.map((name) => {
-		const topic = topics.find((t) => name === `${t.number}.json`)?.number;
-		if (topic === undefined) throw new Error(`${name} : fichier inattendu (attendu : <thématique 1 à 13>.json)`);
+	const today = new Date().toISOString().slice(0, 10);
+	const files = existsSync(evaluations) ? readdirSync(evaluations, { withFileTypes: true }) : [];
+	const fragments = fragmentFiles(files).map(({ name, topic }) => {
 		try {
-			return parseFragment(JSON.parse(readFileSync(join(evaluations, name), "utf8")), topic, sample);
+			return parseFragment(readFileSync(join(evaluations, name)), topic, sample, today);
 		} catch (e) {
 			throw new Error(`${name} : ${e instanceof ReportError ? `${e.message} ${e.detail ?? ""}` : e.message}`);
 		}
