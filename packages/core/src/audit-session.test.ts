@@ -852,6 +852,7 @@ describe("déclaration d’accessibilité dans la session (ADR-0017 §4)", () =>
 		expect(stored(v2)).toEqual(full());
 		// Une v2 ne pouvait pas porter de déclaration : un champ de ce nom n'y est pas lu.
 		expect(parse({ ...v2, declaration: { organization: "x" } })).not.toHaveProperty("declaration");
-		expect(SCHEMA_VERSION).toBe(3);
+		// v4 : schéma pluriannuel (ADR-0018), testé dans schema.test.ts.
+		expect(SCHEMA_VERSION).toBe(4);
 	});
 });

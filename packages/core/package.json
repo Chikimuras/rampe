@@ -8,6 +8,7 @@
 		"./audit-session": "./src/audit-session.ts",
 		"./conformity": "./src/conformity.ts",
 		"./declaration": "./src/declaration.ts",
+		"./schema": "./src/schema.ts",
 		"./sample-file": "./src/sample-file.ts"
 	},
 	"scripts": {

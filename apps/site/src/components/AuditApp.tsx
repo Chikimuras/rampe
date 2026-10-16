@@ -9,6 +9,7 @@ import {
 	ReportError,
 } from "@rampe/core/audit-report";
 import {
+	ACTION_STATUSES,
 	type AuditSession,
 	addPage,
 	createSession,
@@ -21,14 +22,17 @@ import {
 	MAX_NOTE,
 	MAX_PAGES,
 	MAX_PROCESS,
+	MAX_SECTION,
 	MAX_SESSION_BYTES,
 	MAX_TITLE,
 	MAX_URL,
+	PRIORITIES,
 	parseSessionStrict,
 	parseStoredSession,
 	progress,
 	type ResultKind,
 	removePage,
+	type SchemaAction,
 	type SessionPage,
 	type Status,
 	serializeSession,
@@ -51,6 +55,25 @@ import {
 	safeUrl,
 } from "@rampe/core/declaration";
 import { parseAuditUrl, parseSampleFile, plural } from "@rampe/core/sample-file";
+import {
+	type ActionPatch,
+	actionState,
+	addFreeAction,
+	periodYears,
+	planBlocks,
+	planFileName,
+	proposeActions,
+	renderAnnualPlan,
+	renderSchema,
+	SCHEMA_MENTION,
+	SCHEMA_URL,
+	schemaBlocks,
+	schemaFileName,
+	setSchemaPeriod,
+	setSchemaSection,
+	updateAction,
+	VOLETS,
+} from "@rampe/core/schema";
 import type { ComponentChildren } from "preact";
 import { useEffect, useLayoutEffect, useMemo, useRef, useState } from "preact/hooks";
 
@@ -391,7 +414,7 @@ export default function AuditApp({
 	const restart = () => {
 		if (
 			!confirm(
-				"Effacer toutes les pages, toutes les évaluations et la déclaration de cet audit ? Cette action est définitive.",
+				"Effacer toutes les pages, toutes les évaluations, la déclaration et le schéma pluriannuel de cet audit ? Cette action est définitive.",
 			)
 		)
 			return;
@@ -655,6 +678,8 @@ export default function AuditApp({
 				r={conformity}
 				rgaaVersion={rgaaVersion}
 			/>
+
+			<Schema session={session} setSession={setSession} setAnnounce={setAnnounce} criteria={criteria} r={conformity} />
 
 			<p aria-live="polite" class="audit-live">
 				{announce}
@@ -1322,9 +1347,13 @@ function Backup({
 				class="audit-dialog"
 				aria-labelledby="audit-remplacer-titre"
 				aria-describedby="audit-remplacer-texte"
-				onClose={() => {
+				onClose={(e) => {
 					setPending(null);
-					inputRef.current?.focus();
+					// L'événement `close` arrive après coup (tâche du navigateur) : on ne rend le focus au champ que s'il est
+					// resté dans la boîte ou perdu, jamais s'il est déjà ailleurs (« Annuler cet import », par exemple).
+					const active = document.activeElement;
+					if (!active || active === document.body || (e.currentTarget as HTMLElement).contains(active))
+						inputRef.current?.focus();
 				}}
 			>
 				{pending && (
@@ -1516,13 +1545,13 @@ const DECLARATION_GROUPS: { legend: string; fields: DeclarationInput[] }[] = [
 			{
 				field: "schemeUrl",
 				label: "Adresse du schéma pluriannuel de mise en accessibilité",
-				help: "Document qui planifie la mise en accessibilité sur plusieurs années.",
+				help: "Document qui planifie la mise en accessibilité sur plusieurs années : rédigez-le avec la section 5, publiez-le sur votre site, puis indiquez son adresse ici.",
 				kind: "url",
 			},
 			{
 				field: "actionPlanUrl",
 				label: "Adresse du plan d’action de l’année en cours",
-				help: "Avec le bilan des actions de l’année précédente.",
+				help: "Avec le bilan des actions de l’année précédente (section 5), publié sur votre site.",
 				kind: "url",
 			},
 		],
@@ -1928,6 +1957,425 @@ function Declaration({
 				<button type="button" onClick={() => download("markdown")}>
 					Télécharger (Markdown)
 				</button>
+			</p>
+		</section>
+	);
+}
+
+const YEAR_ERROR =
+	"Année incomplète ou hors limites (1900 à 9999, période terminée au plus tard en 9999) : elle n’est pas enregistrée.";
+
+/**
+ * Schéma pluriannuel et plan d'action (ADR-0018) : un guide de rédaction qui suit la liste officielle, et un tableau
+ * d'actions pré-rempli depuis l'audit. Rampe n'écrit aucun texte de politique ; tout est rangé dans la session.
+ */
+function Schema({
+	session,
+	setSession,
+	setAnnounce,
+	criteria,
+	r,
+}: {
+	session: AuditSession;
+	setSession: (update: (s: AuditSession) => AuditSession) => void;
+	setAnnounce: (message: string) => void;
+	criteria: AuditCriterion[];
+	r: Conformity;
+}) {
+	const p = session.schema;
+	const years = periodYears(p);
+	/** Année de début en cours de saisie : enregistrée à la sortie du champ, ou avant un export, si elle est valide. */
+	const [startDraft, setStartDraft] = useState<string | undefined>(undefined);
+	const [startInvalid, setStartInvalid] = useState(false);
+	const [newTitle, setNewTitle] = useState("");
+	const [newInvalid, setNewInvalid] = useState(false);
+	const [chosenYear, setChosenYear] = useState<number | null>(null);
+	const thisYear = new Date().getFullYear();
+	const year =
+		chosenYear !== null && years.includes(chosenYear) ? chosenYear : years.includes(thisYear) ? thisYear : years[0];
+	const titles = useMemo(() => Object.fromEntries(criteria.map((c) => [c.id, c.titleText])), [criteria]);
+	const actions = p?.actions ?? [];
+
+	/** Opération vérifiée sur l'état courant (un refus est annoncé, rien n'est écrit), puis appliquée. */
+	const apply = (op: (s: AuditSession) => AuditSession, refused?: string) => {
+		try {
+			op(session);
+		} catch (e) {
+			setAnnounce(refused ?? (e as Error).message);
+			return false;
+		}
+		setSession(op);
+		return true;
+	};
+	/** `null` : année refusée ; `undefined` : champ vide. */
+	const parseStart = (value: string) => {
+		const v = value.trim();
+		if (v === "") return undefined;
+		const n = Number(v);
+		return /^\d{4}$/.test(v) && n >= 1900 && n + (p?.duration ?? 1) - 1 <= 9999 ? n : null;
+	};
+	const commitStart = (): AuditSession | null => {
+		if (startDraft === undefined) return session;
+		const n = parseStart(startDraft);
+		if (n === null) {
+			setStartInvalid(true);
+			return null;
+		}
+		const op = (s: AuditSession) => setSchemaPeriod(s, n, s.schema?.duration);
+		setStartDraft(undefined);
+		setStartInvalid(false);
+		setSession(op);
+		return op(session);
+	};
+	const sync = () => {
+		if (!r.complete) {
+			setAnnounce("Audit incomplet : aucune action n’est proposée tant que l’audit n’est pas terminé.");
+			return;
+		}
+		let result: ReturnType<typeof proposeActions>;
+		try {
+			result = proposeActions(session, r, titles);
+		} catch {
+			setAnnounce(
+				"Mise à jour impossible : le tableau dépasserait 1 000 actions. Retirez définitivement des actions libres (Recommencer) ou regroupez-les.",
+			);
+			return;
+		}
+		if (result.session !== session) setSession(() => result.session);
+		setAnnounce(
+			result.added + result.updated === 0
+				? "Tableau déjà à jour : aucune action ajoutée ni modifiée."
+				: `${plural(result.added, "action")} ajoutée${result.added > 1 ? "s" : ""}, ${plural(result.updated, "action")} mise${result.updated > 1 ? "s" : ""} à jour.`,
+		);
+	};
+	const addAction = (e: Event) => {
+		e.preventDefault();
+		if (!newTitle.trim()) {
+			setNewInvalid(true);
+			document.getElementById("schema-nouvelle-action")?.focus();
+			return;
+		}
+		if (apply((s) => addFreeAction(s, newTitle))) {
+			setAnnounce(`Action ajoutée : ${newTitle.trim()}`);
+			setNewTitle("");
+			setNewInvalid(false);
+		}
+	};
+	const update = (a: SchemaAction, patch: ActionPatch) => apply((s) => updateAction(s, a.id, patch));
+	/** Liste de choix d'une ligne du tableau, étiquetée par l'action ; la première option est « vide ». */
+	const choice = (
+		label: string,
+		value: string | number | undefined,
+		empty: string,
+		options: readonly (string | number)[],
+		set: (value: string) => void,
+	) => (
+		<td>
+			<select
+				aria-label={label}
+				value={value ?? ""}
+				onChange={(e) => set((e.currentTarget as HTMLSelectElement).value)}
+			>
+				<option value="">{empty}</option>
+				{options.map((v) => (
+					<option key={v} value={v}>
+						{v}
+					</option>
+				))}
+			</select>
+		</td>
+	);
+	const name = (a: SchemaAction) => (a.source === "audit" ? `Critère ${a.criterion} : ${a.title}` : a.title);
+	const download = (doc: "schema" | "plan", format: "html" | "markdown") => {
+		const current = commitStart();
+		if (!current) {
+			document.getElementById("schema-debut")?.focus();
+			setAnnounce("Export impossible : l’année de début est incomplète ou hors limites.");
+			return;
+		}
+		const ext = format === "html" ? "html" : "md";
+		const options = { format, standalone: true } as const;
+		const planYear = periodYears(current.schema).includes(year as number) ? year : periodYears(current.schema)[0];
+		if (doc === "plan" && planYear === undefined) return;
+		const [file, content] =
+			doc === "schema"
+				? [schemaFileName(current, new Date(), ext), renderSchema(current, r, options)]
+				: [
+						planFileName(current, planYear as number, new Date(), ext),
+						renderAnnualPlan(planYear as number, current, r, options),
+					];
+		saveFile(file, content, format === "html" ? "text/html" : "text/markdown");
+		setAnnounce(`${doc === "schema" ? "Schéma pluriannuel" : "Plan d’action"} téléchargé : ${file}`);
+	};
+
+	const startValue = startDraft ?? (p?.startYear !== undefined ? String(p.startYear) : "");
+	const voletField = (id: (typeof VOLETS)[number]["id"], label: string, description: string) => {
+		const value = p?.sections[id] ?? "";
+		return (
+			<div class="audit-field" key={id}>
+				<label for={`schema-${id}`}>{label}</label>
+				<p id={`schema-${id}-aide`} class="audit-help">
+					Consigne officielle : le schéma présente {description}.
+				</p>
+				<textarea
+					id={`schema-${id}`}
+					aria-describedby={`schema-${id}-aide`}
+					rows={3}
+					value={value}
+					maxLength={Math.max(MAX_SECTION, value.length)}
+					onInput={(e) => apply((s) => setSchemaSection(s, id, (e.currentTarget as HTMLTextAreaElement).value))}
+				/>
+			</div>
+		);
+	};
+
+	return (
+		<section aria-labelledby="audit-schema" class="audit-schema">
+			<h2 id="audit-schema">5. Schéma pluriannuel et plan d’action</h2>
+			<p>
+				Le <a href={SCHEMA_URL}>schéma pluriannuel</a> présente, pour trois ans au plus, la politique d’accessibilité de
+				votre organisme et ses travaux de mise en conformité, planifiés chaque année dans un plan d’action. Rampe suit
+				la liste officielle des volets et pré-remplit seulement le tableau des mesures correctives depuis votre audit.
+				Publiez le schéma et le plan de l’année en cours sur votre site, puis indiquez leurs adresses dans la
+				déclaration (section 4).
+			</p>
+			<div class="audit-reminder">
+				<p>
+					<strong>{SCHEMA_MENTION}</strong>
+				</p>
+			</div>
+
+			<fieldset class="audit-declaration-group">
+				<legend>Période du schéma</legend>
+				<div class="audit-field">
+					<label for="schema-debut">Année de début</label>
+					<input
+						id="schema-debut"
+						type="text"
+						inputMode="numeric"
+						autoComplete="off"
+						maxLength={4}
+						value={startValue}
+						aria-invalid={startInvalid ? "true" : undefined}
+						aria-describedby={startInvalid ? "schema-debut-erreur" : undefined}
+						onInput={(e) => setStartDraft((e.currentTarget as HTMLInputElement).value)}
+						onBlur={commitStart}
+					/>
+					{startInvalid && (
+						<p id="schema-debut-erreur" class="audit-error">
+							{YEAR_ERROR}
+						</p>
+					)}
+				</div>
+				<div class="audit-field">
+					<label for="schema-duree">Durée</label>
+					<select
+						id="schema-duree"
+						value={p?.duration ?? ""}
+						onChange={(e) => {
+							const v = (e.currentTarget as HTMLSelectElement).value;
+							apply(
+								(s) => setSchemaPeriod(s, s.schema?.startYear, v ? Number(v) : undefined),
+								"Durée refusée : la période se terminerait après 9999.",
+							);
+						}}
+					>
+						<option value="">à choisir</option>
+						<option value="1">1 an</option>
+						<option value="2">2 ans</option>
+						<option value="3">3 ans (au plus)</option>
+					</select>
+				</div>
+			</fieldset>
+
+			<h3>Volets du schéma</h3>
+			<p class="audit-help">
+				Un champ par volet de la liste officielle, dans son ordre. Un volet vide reste « à compléter » dans le document.
+			</p>
+			{(["politique", "travaux"] as const).map((part) => (
+				<fieldset class="audit-declaration-group" key={part}>
+					<legend>
+						{part === "politique" ? "Politique d’accessibilité numérique" : "Travaux de mise en conformité"}
+					</legend>
+					{VOLETS.filter((v) => v.part === part).map((v) => voletField(v.id, v.label, v.description))}
+				</fieldset>
+			))}
+
+			<h3>Mesures correctives : tableau d’actions</h3>
+			<p class="audit-help">
+				Chaque critère non validé de l’audit devient une action proposée. Fixez sa priorité (consigne officielle :
+				traiter d’abord les contenus les plus consultés et les services les plus utilisés) et son année cible dans la
+				période. Retirer une action la garde visible, pour qu’aucune non-conformité ne disparaisse en silence.
+			</p>
+			<p class="audit-result-actions">
+				<button type="button" onClick={sync}>
+					Mettre à jour depuis l’audit
+				</button>
+			</p>
+			{!r.complete && (
+				<p>
+					{actions.some((a) => a.source === "audit")
+						? "Attention : l’audit n’est plus complet. Le tableau a été établi à partir d’un audit qui a changé depuis ; terminez l’audit, puis mettez le tableau à jour."
+						: "Audit incomplet : aucune action n’est proposée tant que l’audit n’est pas terminé."}{" "}
+					<a href="#audit-resultat">Terminer l’audit (section 3)</a>.
+				</p>
+			)}
+			{years.length === 0 && actions.length > 0 && (
+				<p class="audit-help">Choisissez d’abord la période : les années cibles en dépendent.</p>
+			)}
+			{actions.length > 0 && (
+				// biome-ignore lint/a11y/noNoninteractiveTabindex: une zone qui défile doit être atteignable au clavier (règle axe scrollable-region-focusable, WCAG 2.1.1).
+				<section class="audit-table audit-schema-table" aria-labelledby="schema-actions-titre" tabIndex={0}>
+					<table>
+						<caption id="schema-actions-titre">Actions de mise en conformité ({actions.length})</caption>
+						<thead>
+							<tr>
+								<th scope="col">Action</th>
+								<th scope="col">Priorité</th>
+								<th scope="col">Année cible</th>
+								<th scope="col">Commentaire</th>
+								<th scope="col">Bilan</th>
+								<th scope="col">Retrait</th>
+							</tr>
+						</thead>
+						<tbody>
+							{actions.map((a) => {
+								// Étiquettes numérotées par ligne : deux actions libres de même intitulé restent distinctes.
+								const n = `${actions.indexOf(a) + 1} : ${name(a)}`;
+								const state = actionState(a, r);
+								const pages = (a.pages ?? []).flatMap((id) => {
+									const page = session.pages.find((x) => x.id === id);
+									return page ? [pageName(page)] : [];
+								});
+								const outside = a.targetYear !== undefined && !years.includes(a.targetYear);
+								return (
+									<tr key={a.id} class={a.removed ? "audit-removed" : undefined}>
+										<th scope="row">
+											{name(a)}
+											{pages.length > 0 && <span class="audit-help"> ({pages.join(", ")})</span>}
+											{state && <strong> Critère désormais {state}.</strong>}
+											{outside && <strong> Année cible hors période.</strong>}
+											{a.removed && <strong> Retirée.</strong>}
+										</th>
+										{choice(`Priorité de l’action ${n}`, a.priority, "à définir", PRIORITIES, (v) =>
+											update(a, { priority: (v || undefined) as ActionPatch["priority"] }),
+										)}
+										{choice(
+											`Année cible de l’action ${n}`,
+											a.targetYear,
+											"à définir",
+											outside ? [a.targetYear as number, ...years] : years,
+											(v) => update(a, { targetYear: v ? Number(v) : undefined }),
+										)}
+										<td>
+											<input
+												type="text"
+												aria-label={`Commentaire de l’action ${n}`}
+												value={a.comment}
+												maxLength={Math.max(MAX_NOTE, a.comment.length)}
+												onInput={(e) => update(a, { comment: (e.currentTarget as HTMLInputElement).value })}
+											/>
+										</td>
+										{choice(`Bilan de l’action ${n}`, a.status, "à renseigner", ACTION_STATUSES, (v) =>
+											update(a, { status: (v || undefined) as ActionPatch["status"] }),
+										)}
+										<td>
+											<button
+												type="button"
+												aria-label={`${a.removed ? "Rétablir" : "Retirer"} l’action ${n}`}
+												onClick={() => {
+													if (update(a, { removed: !a.removed }))
+														setAnnounce(`Action ${a.removed ? "rétablie" : "retirée, gardée pour mémoire"} : ${n}`);
+												}}
+											>
+												{a.removed ? "Rétablir" : "Retirer"}
+											</button>
+										</td>
+									</tr>
+								);
+							})}
+						</tbody>
+					</table>
+				</section>
+			)}
+			<form class="audit-add" onSubmit={addAction} noValidate>
+				<div class="audit-field">
+					<label for="schema-nouvelle-action">Intitulé d’une action libre</label>
+					<p id="schema-nouvelle-action-aide" class="audit-help">
+						Par exemple « Former l’équipe éditoriale » ou « Sous-titrer les vidéos ».
+					</p>
+					<input
+						id="schema-nouvelle-action"
+						type="text"
+						value={newTitle}
+						maxLength={MAX_TITLE}
+						aria-invalid={newInvalid ? "true" : undefined}
+						aria-describedby={`schema-nouvelle-action-aide${newInvalid ? " schema-nouvelle-action-erreur" : ""}`}
+						onInput={(e) => setNewTitle((e.currentTarget as HTMLInputElement).value)}
+					/>
+					{newInvalid && (
+						<p id="schema-nouvelle-action-erreur" class="audit-error">
+							Saisissez l’intitulé de l’action.
+						</p>
+					)}
+				</div>
+				<button type="submit">Ajouter l’action</button>
+			</form>
+
+			<h3>Plan d’action annuel</h3>
+			{year === undefined ? (
+				<p>Choisissez la période du schéma : le plan d’action d’une année en découle.</p>
+			) : (
+				<div class="audit-field">
+					<label for="schema-annee">Année du plan d’action</label>
+					<p id="schema-annee-aide" class="audit-help">
+						Le plan reprend les actions de cette année ; son bilan reprend la colonne « Bilan » des actions de l’année
+						précédente.
+					</p>
+					<select
+						id="schema-annee"
+						aria-describedby="schema-annee-aide"
+						value={year}
+						onChange={(e) => setChosenYear(Number((e.currentTarget as HTMLSelectElement).value))}
+					>
+						{years.map((y) => (
+							<option key={y} value={y}>
+								{y}
+							</option>
+						))}
+					</select>
+				</div>
+			)}
+
+			<section aria-labelledby="schema-apercu" class="audit-schema-preview">
+				<h3 id="schema-apercu">Aperçu du schéma pluriannuel</h3>
+				<p class="audit-help">{SCHEMA_MENTION}</p>
+				<Preview blocks={schemaBlocks(session, r)} />
+			</section>
+			{year !== undefined && (
+				<section aria-labelledby="plan-apercu" class="audit-schema-preview">
+					<h3 id="plan-apercu">Aperçu du plan d’action {year}</h3>
+					<p class="audit-help">{SCHEMA_MENTION}</p>
+					<Preview blocks={planBlocks(session, r, year)} />
+				</section>
+			)}
+			<p class="audit-declaration-actions">
+				<button type="button" onClick={() => download("schema", "html")}>
+					Télécharger le schéma (HTML)
+				</button>
+				<button type="button" onClick={() => download("schema", "markdown")}>
+					Télécharger le schéma (Markdown)
+				</button>
+				{year !== undefined && (
+					<>
+						<button type="button" onClick={() => download("plan", "html")}>
+							Télécharger le plan d’action {year} (HTML)
+						</button>
+						<button type="button" onClick={() => download("plan", "markdown")}>
+							Télécharger le plan d’action {year} (Markdown)
+						</button>
+					</>
+				)}
 			</p>
 		</section>
 	);

@@ -37,7 +37,7 @@ Chaque case cochée correspond à du code mergé sur `main` avec la CI verte. Le
 ## Phase 4 — Livrables légaux
 
 - [x] Générateur de déclaration d’accessibilité
-- [ ] Générateur de schéma pluriannuel
+- [x] Générateur de schéma pluriannuel
 
 ## Phase 5 — Audit sans installation
 

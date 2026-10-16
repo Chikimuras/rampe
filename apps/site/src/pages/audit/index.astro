@@ -536,10 +536,12 @@ const criteria: AuditCriterion[] = rgaa.criteria.map((c) => ({
 		display: block;
 		padding: 0.15rem 0;
 	}
-	.audit-declaration .audit-field label {
+	.audit-declaration .audit-field label,
+	.audit-schema .audit-field label {
 		margin-bottom: 0;
 	}
-	.audit-declaration .audit-field .audit-help {
+	.audit-declaration .audit-field .audit-help,
+	.audit-schema .audit-field .audit-help {
 		margin: 0 0 0.25rem;
 	}
 	.audit input[type="date"] {
@@ -551,7 +553,8 @@ const criteria: AuditCriterion[] = rgaa.criteria.map((c) => ({
 		padding: 0.4rem 0.6rem;
 		color-scheme: light dark;
 	}
-	.audit-preview {
+	.audit-preview,
+	.audit-schema-preview {
 		margin: 1.5rem 0 1rem;
 		padding: 0.5rem 1.25rem 1rem;
 		border: 2px solid var(--line);
@@ -560,7 +563,8 @@ const criteria: AuditCriterion[] = rgaa.criteria.map((c) => ({
 		overflow-wrap: anywhere;
 	}
 	/* Passage à compléter : crochets dans le texte, et un fond, pas seulement une couleur. */
-	.audit-preview mark {
+	.audit-preview mark,
+	.audit-schema-preview mark {
 		color: var(--text);
 		background: var(--accent-soft);
 		outline: 1px dashed var(--muted);
@@ -575,6 +579,30 @@ const criteria: AuditCriterion[] = rgaa.criteria.map((c) => ({
 		border-color: var(--accent);
 		color: var(--bg);
 		font-weight: 600;
+	}
+	/* Schéma pluriannuel (ADR-0018). */
+	.audit select {
+		font: inherit;
+		color: var(--text);
+		background: var(--surface);
+		border: 1px solid var(--muted);
+		border-radius: 6px;
+		padding: 0.3rem 0.5rem;
+		max-width: 100%;
+	}
+	.audit #schema-debut {
+		width: 7rem;
+	}
+	.audit-schema-table th[scope="row"] {
+		min-width: 14rem;
+		font-weight: 400;
+	}
+	.audit .audit-schema-table input[type="text"] {
+		min-width: 12rem;
+	}
+	.audit-schema-table .audit-removed th,
+	.audit-schema-table .audit-removed td {
+		background: var(--surface);
 	}
 	:root {
 		--nc: #a3361b;
