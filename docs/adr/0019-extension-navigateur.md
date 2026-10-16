@@ -12,13 +12,13 @@ Une PME ne lancera pas une CLI. Pour « l’audit sans installation » (phase 5)
 ## Décision
 
 1. **Manifest V3**, un seul code source compatible Chromium et Firefox (`packages/extension`). Le code est construit et testé dans le dépôt. La publication dans les magasins est une tâche distincte (⛔ comptes et dépense).
-2. **Permissions minimales** (principe du moindre privilège) : `activeTab` et `scripting` uniquement.
+2. **Permissions minimales** (principe du moindre privilège ; OWASP *Browser Extension Vulnerabilities Cheat Sheet*, § 1 « Permissions Overreach ») : `activeTab` et `scripting` uniquement.
    - **Aucune** permission d’hôte (`host_permissions`) ;
    - aucun script de contenu permanent ;
    - aucun accès à l’historique, aux onglets ou aux cookies.
 
    L’extension n’agit que sur l’onglet courant, **au clic de l’utilisateur**.
-3. **Aucune donnée ne quitte le navigateur** : aucun appel réseau, aucune télémétrie, aucun stockage distant. Ce que fait la page est déclaré dans `manifest.json`, avec une CSP d’extension stricte (`script-src 'self'`). axe-core est **embarqué** dans l’extension, jamais chargé à distance (OWASP *Third Party JavaScript Management Cheat Sheet*).
+3. **Aucune donnée ne quitte le navigateur** : aucun appel réseau, aucune télémétrie, aucun stockage distant. Ce que fait la page est déclaré dans `manifest.json`, avec une CSP d’extension stricte : `default-src 'none'; script-src 'self'; object-src 'none'`, plus `style-src 'self'`, `img-src 'self'`, `base-uri 'none'` et `form-action 'none'` (OWASP *Browser Extension Vulnerabilities Cheat Sheet*, § 8 « Lack of Content Security Policy » ; `default-src 'none'` coupe aussi toute connexion, § 2 « Data Leakage »). axe-core est **embarqué** dans l’extension, jamais chargé à distance (même cheat sheet, § 6 « Malicious Updates » ; OWASP *Third Party JavaScript Management Cheat Sheet*). Les données de la page ne sont affichées qu’en texte (`textContent`, § 3 « Cross-Site Scripting »).
 4. **Même logique que la CLI** :
    - axe-core 4.14.0, en configuration par défaut ;
    - classement par `@rampe/core` (ADR-0008, ADR-0011, `isDirectCheck`) ;

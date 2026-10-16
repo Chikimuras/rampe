@@ -23,7 +23,7 @@
 
 body {
 	margin: 0;
-	min-width: 22rem;
+	min-width: 20rem;
 	max-width: 32rem;
 	background: var(--fond);
 	color: var(--texte);
@@ -88,8 +88,16 @@ button:focus-visible {
 	margin-top: 1rem;
 }
 
-#etat:empty {
-	display: none;
+#etat {
+	min-height: 1.5em;
+}
+
+/* Sélecteurs, adresses et identifiants venus de la page peuvent être très longs : jamais de défilement horizontal. */
+li,
+code,
+#etat,
+#detail {
+	overflow-wrap: anywhere;
 }
 
 .erreur {

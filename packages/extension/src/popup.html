@@ -15,14 +15,20 @@
 				navigateur.
 			</p>
 			<button type="button" id="analyser">Analyser cette page</button>
+			<!-- Région toujours présente (jamais display:none), pour que chaque état soit annoncé. -->
 			<p id="etat" role="status" aria-live="polite"></p>
+			<details id="detail" hidden>
+				<summary>Détail technique</summary>
+				<code id="detail-texte"></code>
+			</details>
 			<section id="resultats" aria-labelledby="resultats-titre" hidden>
 				<h2 id="resultats-titre">Résultats</h2>
 				<p id="page"></p>
 				<div id="categories"></div>
 				<button type="button" id="telecharger">Télécharger le rapport (JSON)</button>
+				<p class="aide" id="partage"></p>
 				<p class="aide">
-					Ce fichier s’importe dans l’audit guidé de Rampe (champ « Importer un rapport de la CLI (JSON) »).
+					Ce fichier s’importe dans l’audit guidé de Rampe (champ « Importer un rapport automatique (CLI ou extension, JSON) »).
 				</p>
 			</section>
 			<p class="rappel" id="rappel"></p>

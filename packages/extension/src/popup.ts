@@ -1,15 +1,25 @@
 // Panneau de l'extension (ADR-0019) : analyse l'onglet courant au clic, affiche les résultats par critère RGAA,
 // propose le rapport JSON v2. Tout texte venu de la page est inséré comme TEXTE (textContent), jamais comme HTML
 // (OWASP Cross Site Scripting Prevention Cheat Sheet, « Safe Sinks »).
-import { type AuditReport, type AuditResult, plainTitle, plural, rgaa, selector, stripControl } from "@rampe/core";
+// Points d'entrée légers de @rampe/core : ni glossaire ni méthodologies dans le panneau.
+import type { AuditReport, AuditResult } from "@rampe/core/audit-report";
+import { NODE_HTML_MAX, plainTitle, selector } from "@rampe/core/axe-results";
+import { baseCriteria } from "@rampe/core/criteres";
+import { plural, stripControl } from "@rampe/core/sample-file";
 import {
+	browserFromBrands,
 	browserName,
 	buildExtensionReport,
 	CATEGORIES,
+	checkContentType,
 	checkTabUrl,
+	explainError,
 	groupByCriterion,
+	NO_RESULT,
 	type PageRun,
 	reportFileName,
+	summary,
+	withTimeout,
 } from "./report.ts";
 
 /** Critères sans vérification automatique directe : calculé au build depuis axe-core (vite.config.ts). */
@@ -34,7 +44,10 @@ const $ = (id: string) => document.getElementById(id) as HTMLElement;
 const analyse = $("analyser") as HTMLButtonElement;
 const status = $("etat");
 const section = $("resultats");
+const technical = $("detail") as HTMLDetailsElement;
 let report: AuditReport | null = null;
+/** Analyse en cours : le bouton reste focalisable (aria-disabled) pour que le focus ne se perde pas. */
+let running = false;
 
 /** Élément dont les enfants sont des nœuds ou du texte (jamais interprété comme HTML). */
 function el(tag: string, attrs: Record<string, string>, ...children: (Node | string)[]) {
@@ -45,7 +58,10 @@ function el(tag: string, attrs: Record<string, string>, ...children: (Node | str
 }
 
 $("rappel").textContent =
-	`Les ${rgaa.criteria.length} critères demandent une vérification humaine ; ${__RAMPE_UNCOVERED__} n’en ont aucune vérification automatique directe. Ce résultat ne mesure pas la conformité et ne la certifie pas : aucun score n’est calculé.`;
+	`Les ${baseCriteria.length} critères demandent une vérification humaine ; ${__RAMPE_UNCOVERED__} n’en ont aucune vérification automatique directe. Ce résultat ne mesure pas la conformité et ne la certifie pas : aucun score n’est calculé.`;
+
+$("partage").textContent =
+	`Avant de partager ce rapport, relisez-le : il contient l’adresse de la page avec ses paramètres, et des extraits du code de la page (jusqu’à ${NODE_HTML_MAX} caractères par élément en défaut), qui peuvent contenir des données personnelles.`;
 
 /** Exécuté dans l'onglet (monde isolé de l'extension) : la page ne peut ni lire ni modifier axe. */
 async function runAxe(): Promise<PageRun> {
@@ -109,46 +125,72 @@ function render(rep: AuditReport) {
 	section.hidden = false;
 }
 
-function summary(rep: AuditReport) {
-	const results = rep.pages[0]?.results ?? [];
-	const nc = results.filter((r) => r.kind === "non-conformite");
-	const criteria = new Set(nc.flatMap((r) => r.criteria)).size;
-	return nc.length === 0
-		? "Analyse terminée : aucune non-conformité détectée automatiquement. Vérifiez quand même chaque critère à la main."
-		: `Analyse terminée : ${plural(nc.length, "règle")} en non-conformité, sur ${plural(criteria, "critère")}.`;
-}
-
-function say(text: string, error = false) {
+function say(text: string, error = false, detail: string | null = null) {
 	status.textContent = text;
 	status.classList.toggle("erreur", error);
+	technical.hidden = detail === null;
+	technical.open = false;
+	$("detail-texte").textContent = detail ?? "";
+}
+
+/** Version complète du navigateur si Chromium la donne (comparable à la CLI), sinon celle de l'agent utilisateur. */
+async function browserVersion() {
+	const data = (
+		navigator as {
+			userAgentData?: {
+				getHighEntropyValues(h: string[]): Promise<{ fullVersionList?: { brand: string; version: string }[] }>;
+			};
+		}
+	).userAgentData;
+	const full = await data?.getHighEntropyValues(["fullVersionList"]).catch(() => undefined);
+	return browserFromBrands(full?.fullVersionList) ?? browserName(navigator.userAgent);
+}
+
+async function analyseTab() {
+	const [tab] = await api().tabs.query({ active: true, currentWindow: true });
+	checkTabUrl(tab?.url);
+	const target = { tabId: tab?.id as number };
+	const startedAt = new Date();
+	const state = { started: false };
+	try {
+		const [probe] = await api().scripting.executeScript({ target, func: () => document.contentType });
+		state.started = true;
+		checkContentType(probe?.result ?? "");
+		// axe-core embarqué, jamais chargé à distance (ADR-0019 §3) ; injecté au clic seulement (activeTab).
+		await api().scripting.executeScript({ target, files: ["axe.min.js"] });
+		const [injection] = await api().scripting.executeScript({ target, func: runAxe });
+		// Le navigateur renvoie un résultat vide quand le document a été remplacé pendant l'analyse.
+		if (!injection?.result) throw new Error(NO_RESULT);
+		return buildExtensionReport({
+			version: api().runtime.getManifest().version,
+			startedAt,
+			browser: await browserVersion(),
+			run: injection.result,
+		});
+	} catch (e) {
+		throw Object.assign(new Error(), { explained: explainError(e, state.started) });
+	}
 }
 
 analyse.addEventListener("click", async () => {
-	analyse.disabled = true;
+	if (running) return;
+	running = true;
+	analyse.setAttribute("aria-disabled", "true");
 	section.hidden = true;
 	report = null;
 	say("Analyse en cours…");
 	try {
-		const [tab] = await api().tabs.query({ active: true, currentWindow: true });
-		checkTabUrl(tab?.url);
-		const tabId = tab?.id as number;
-		const startedAt = new Date();
-		// axe-core embarqué, jamais chargé à distance (ADR-0019 §3) ; injecté au clic seulement (activeTab).
-		await api().scripting.executeScript({ target: { tabId }, files: ["axe.min.js"] });
-		const [injection] = await api().scripting.executeScript({ target: { tabId }, func: runAxe });
-		if (!injection?.result) throw new Error("L’analyse n’a renvoyé aucun résultat.");
-		report = buildExtensionReport({
-			version: api().runtime.getManifest().version,
-			startedAt,
-			browser: browserName(navigator.userAgent),
-			run: injection.result,
-		});
-		render(report);
-		say(summary(report));
+		const rep = await withTimeout(analyseTab());
+		report = rep;
+		render(rep);
+		say(summary(rep));
 	} catch (e) {
-		say(stripControl((e as Error).message || "L’analyse a échoué."), true);
+		const { message, detail } =
+			(e as { explained?: ReturnType<typeof explainError> }).explained ?? explainError(e, false);
+		say(stripControl(message), true, detail && stripControl(detail));
 	} finally {
-		analyse.disabled = false;
+		running = false;
+		analyse.removeAttribute("aria-disabled");
 	}
 });
 

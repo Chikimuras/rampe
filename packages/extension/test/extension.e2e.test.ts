@@ -37,7 +37,22 @@ const TYPES: Record<string, string> = {
 };
 // Page hostile : balisage dans le titre et dans un identifiant, qui doivent rester du texte dans le panneau.
 const HOSTILE = `<!doctype html><html lang="fr"><head><title>&lt;img src=x onerror=alert(1)&gt;</title></head>
-<body><main><h1>Hostile</h1><input id="&lt;img src=x onerror=alert(2)&gt;"></main></body></html>`;
+<body><main><h1>Hostile</h1><input id="&lt;img src=x onerror=alert(2)&gt;">
+<img id="${"tres-long-identifiant".repeat(40)}" src="data:image/gif;base64,R0lGODlhAQABAAAAACw="></main></body></html>`;
+// Page lourde : axe met plusieurs secondes à l'analyser, le temps d'y naviguer pendant l'analyse.
+const LOURDE = `<!doctype html><html lang="fr"><head><title>Page lourde</title></head><body><main><h1>Lourde</h1>${'<p style="color:#999">texte <a href="#x">lien</a></p>'.repeat(15_000)}</main></body></html>`;
+// Bloque son fil principal 1 s après le chargement (le temps de lire son titre) : aucun script ne peut plus y finir.
+const BOUCLE = `<!doctype html><html lang="fr"><head><title>Boucle infinie</title>
+<script>addEventListener("load", () => setTimeout(() => { for (;;) {} }, 1000));</script></head><body><main><h1>Boucle</h1></main></body></html>`;
+// Plus petit PDF valide : servi en http, ce n'est pas une page HTML.
+const PDF =
+	"%PDF-1.4\n1 0 obj<</Type/Catalog/Pages 2 0 R>>endobj 2 0 obj<</Type/Pages/Kids[]/Count 0>>endobj\ntrailer<</Root 1 0 R>>\n%%EOF\n";
+const FIXTURES = {
+	defauts: "Page avec défauts connus",
+	hostile: "<img src=x onerror=alert(1)>",
+	boucle: "Boucle infinie",
+	lourde: "Page lourde",
+} as const;
 
 let tmp: string;
 let ext: string;
@@ -74,6 +89,9 @@ beforeAll(async () => {
 		const html = { "content-type": "text/html; charset=utf-8" };
 		if (path === "/fixture/defauts") return res.writeHead(200, html).end(await readFile(defauts));
 		if (path === "/fixture/hostile") return res.writeHead(200, html).end(HOSTILE);
+		if (path === "/fixture/boucle") return res.writeHead(200, html).end(BOUCLE);
+		if (path === "/fixture/lourde") return res.writeHead(200, html).end(LOURDE);
+		if (path === "/fixture/document.pdf") return res.writeHead(200, { "content-type": "application/pdf" }).end(PDF);
 		if (!path.startsWith("/rampe/")) return res.writeHead(404).end();
 		// normalize + préfixe : aucune requête ne sort du dossier de build.
 		let file = normalize(join(siteOut, path.slice("/rampe/".length)));
@@ -109,13 +127,11 @@ afterAll(async () => {
 
 let n = 0;
 /** Ouvre une page de test sous une adresse unique (pour retrouver son onglet sans ambiguïté). */
-async function openFixture(name: "defauts" | "hostile") {
+async function openFixture(name: keyof typeof FIXTURES, hash = "") {
 	const page = await ctx.newPage();
-	const url = `${origin}/fixture/${name}?onglet=${++n}`;
+	const url = `${origin}/fixture/${name}?onglet=${++n}${hash}`;
 	await page.goto(url);
-	await expect(page.title()).resolves.toBe(
-		name === "defauts" ? "Page avec défauts connus" : "<img src=x onerror=alert(1)>",
-	);
+	await expect(page.title()).resolves.toBe(FIXTURES[name]);
 	return { page, url };
 }
 
@@ -183,7 +199,7 @@ describe("extension navigateur (bout en bout)", { timeout: 90_000 }, () => {
 	});
 
 	it("analyse l'onglet au clavier, range les résultats par critère, sans aucune requête réseau, rapport importable", async () => {
-		const { page, url } = await openFixture("defauts");
+		const { page, url } = await openFixture("defauts", "#haut");
 		await clickAction(url);
 		const popup = await openPopup({ url });
 		await expect(popup.locator("#rappel").textContent()).resolves.toMatch(
@@ -204,6 +220,13 @@ describe("extension navigateur (bout en bout)", { timeout: 90_000 }, () => {
 		await expect
 			.poll(() => status(popup), { timeout: 30_000 })
 			.toMatch(/^Analyse terminée : \d+ règles en non-conformité/);
+		// Le focus reste sur le bouton pendant et après l'analyse (aria-disabled, jamais disabled).
+		await expect(popup.evaluate(() => document.activeElement?.id)).resolves.toBe("analyser");
+		await expect(popup.locator("#analyser").getAttribute("aria-disabled")).resolves.toBeNull();
+		// Avertissement avant partage (OWASP User Privacy Protection Cheat Sheet).
+		await expect(popup.locator("#partage").textContent()).resolves.toMatch(
+			/^Avant de partager ce rapport, relisez-le : il contient l’adresse de la page avec ses paramètres, et des extraits du code de la page \(jusqu’à 500 caractères/,
+		);
 
 		const nc = popup.locator("section:has(> h3:text-is('Non-conformités détectées')) h4");
 		const criteria = (await nc.allTextContents()).map((t) => t.split(" — ")[0]);
@@ -231,6 +254,9 @@ describe("extension navigateur (bout en bout)", { timeout: 90_000 }, () => {
 		expect(hits.slice(hitsBefore)).toEqual([]);
 
 		expect(report).toMatchObject({ schemaVersion: 2, tool: { name: "@rampe/extension", version: "0.1.0" } });
+		// Fragment retiré, requête gardée.
+		expect(report.pages[0].url).toBe(url.replace("#haut", ""));
+		expect(JSON.stringify(report)).not.toContain("#haut");
 		expect(Object.keys(report)).toEqual(["schemaVersion", "tool", "engine", "startedAt", "pages"]);
 		expect(report.engine.axe).toBe(axe.version);
 		const parsed = parseAuditReport(report, new Set(rgaa.criteria.map((c) => c.id)));
@@ -251,7 +277,7 @@ describe("extension navigateur (bout en bout)", { timeout: 90_000 }, () => {
 		await audit.goto(`${origin}/rampe/audit/`);
 		await expect(audit.title()).resolves.toBe("Audit guidé · Rampe");
 		await audit.waitForSelector("astro-island:not([ssr])");
-		await audit.getByLabel("Importer un rapport de la CLI (JSON)").setInputFiles(file);
+		await audit.getByLabel("Importer un rapport automatique (CLI ou extension, JSON)").setInputFiles(file);
 		await audit.locator(".audit-import-summary").waitFor();
 		await expect(audit.locator("[aria-live=polite]").textContent()).resolves.toMatch(
 			new RegExp(
@@ -290,6 +316,71 @@ describe("extension navigateur (bout en bout)", { timeout: 90_000 }, () => {
 			String.raw`#\<img\ src\=x\ onerror\=alert\(2\)\>`,
 		);
 		await expect(popup.locator("img").count()).resolves.toBe(0);
+		// Sélecteur de 840 caractères sans espace : jamais de défilement horizontal du panneau.
+		await expect(popup.locator("#categories").textContent()).resolves.toContain("tres-long-identifiant".repeat(40));
+		for (const width of [350, 420, 800]) {
+			await popup.setViewportSize({ width, height: 700 });
+			const overflow = await popup.evaluate(
+				() => document.documentElement.scrollWidth - document.documentElement.clientWidth,
+			);
+			expect(overflow, `${width} px`).toBe(0);
+		}
+		await Promise.all([popup.close(), page.close()]);
+	});
+
+	it("document non HTML (PDF servi en http) : refusé avec un message clair, sans y injecter axe", async () => {
+		const page = await ctx.newPage();
+		const url = `${origin}/fixture/document.pdf?onglet=${++n}`;
+		await page.goto(url).catch(() => {}); // le visionneur PDF peut interrompre la navigation de Playwright
+		await expect.poll(() => page.url()).toBe(url);
+		await clickAction(url);
+		const popup = await openPopup({ url });
+		await popup.getByRole("button", { name: "Analyser cette page" }).click();
+		await expect
+			.poll(() => status(popup))
+			.toMatch(/^Rampe n’analyse que les pages HTML\. Ce document est de type « application\/pdf »/);
+		await expect(popup.locator("#detail").isHidden()).resolves.toBe(true);
+		await Promise.all([popup.close(), page.close()]);
+	});
+
+	it("page bloquée par un script : arrêt au bout de 60 s, message clair, bouton de nouveau utilisable", async () => {
+		const { page, url } = await openFixture("boucle");
+		await clickAction(url);
+		const popup = await ctx.newPage();
+		// Horloge simulée du panneau : les 60 s passent sans attendre.
+		await popup.clock.install();
+		await popup.goto(`chrome-extension://${id}/popup.html`);
+		await popup.evaluate(async (url) => {
+			type Api = { tabs: { query: (q: object) => Promise<unknown[]> } };
+			const g = globalThis as unknown as { chrome: Api; browser?: Api };
+			const target = (await g.chrome.tabs.query({})).find((t) => (t as { url?: string }).url === url);
+			for (const a of [g.chrome, g.browser]) if (a) a.tabs.query = async () => [target];
+		}, url);
+		await popup.getByRole("button", { name: "Analyser cette page" }).click();
+		await expect.poll(() => status(popup)).toBe("Analyse en cours…");
+		await expect(popup.locator("#analyser").getAttribute("aria-disabled")).resolves.toBe("true");
+		await popup.clock.fastForward(60_000);
+		await expect.poll(() => status(popup)).toMatch(/^L’analyse a dépassé 60 secondes : la page est peut-être bloquée/);
+		await expect(popup.locator("#analyser").getAttribute("aria-disabled")).resolves.toBeNull();
+		await popup.close();
+		await page.close({ runBeforeUnload: false });
+	});
+
+	it("navigation pendant l'analyse : message en français, détail technique replié", async () => {
+		const { page, url } = await openFixture("lourde");
+		await clickAction(url);
+		const popup = await openPopup({ url });
+		await popup.getByRole("button", { name: "Analyser cette page" }).click();
+		await expect.poll(() => status(popup)).toBe("Analyse en cours…");
+		await popup.waitForTimeout(500); // axe est lancé ; la page lourde le retient plusieurs secondes
+		await page.goto(`${origin}/fixture/defauts?onglet=${++n}`);
+		await expect
+			.poll(() => status(popup), { timeout: 30_000 })
+			.toBe("La page a changé pendant l’analyse : relancez-la.");
+		const detail = popup.locator("#detail");
+		await expect(detail.isVisible()).resolves.toBe(true);
+		await expect(detail.getAttribute("open")).resolves.toBeNull();
+		await expect(popup.locator("#detail-texte").textContent()).resolves.not.toBe("");
 		await Promise.all([popup.close(), page.close()]);
 	});
 

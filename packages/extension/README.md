@@ -33,7 +33,9 @@ Le module reste chargé jusqu’à la fermeture de Firefox. Son identifiant, `ex
 1. Ouvrir la page à analyser.
 2. Cliquer sur l’icône de Rampe dans la barre d’outils, puis sur **« Analyser cette page »**.
 3. Lire les résultats, groupés par critère RGAA dans les catégories de la CLI : non-conformité détectée, rattachement incertain, à vérifier par un humain, bonne pratique.
-4. **« Télécharger le rapport (JSON) »** produit un rapport v2, de la même structure que celui de la CLI (`tool.name` : `@rampe/extension`). Il s’importe dans l’audit guidé du site, champ « Importer un rapport de la CLI (JSON) » (ADR-0014).
+4. **« Télécharger le rapport (JSON) »** produit un rapport v2, de la même structure que celui de la CLI (`tool.name` : `@rampe/extension`). Il s’importe dans l’audit guidé du site, champ « Importer un rapport automatique (CLI ou extension, JSON) » (ADR-0014).
+
+> **Avant de partager un rapport, relisez-le.** Il contient l’adresse de la page **avec ses paramètres** (la partie après `?`, gardée parce qu’elle peut être nécessaire pour retrouver la page) et des **extraits du code de la page**, jusqu’à 500 caractères par élément en défaut : ils peuvent contenir des données personnelles (nom affiché, adresse e-mail, numéro de dossier…). Le fragment (`#…`) et les identifiants éventuels de l’adresse sont retirés (OWASP *User Privacy Protection Cheat Sheet*). Le panneau rappelle cet avertissement à côté du bouton.
 
 Aucun score n’est calculé : les 106 critères demandent une vérification humaine, et une partie n’a aucune vérification automatique directe (le panneau donne le nombre).
 
@@ -42,13 +44,15 @@ Aucun score n’est calculé : les 106 critères demandent une vérification hum
 - **Permissions : `activeTab` et `scripting`, rien d’autre.** Aucune permission d’hôte, aucun script de contenu permanent, aucun script de fond, aucun accès à l’historique, aux onglets ou aux cookies. L’extension n’agit que sur l’onglet courant, **au clic** sur son icône : sans ce clic, elle ne voit même pas l’adresse de l’onglet.
 - **Aucune donnée envoyée.** Aucun appel réseau, aucune télémétrie, aucun stockage distant. La CSP des pages de l’extension (`default-src 'none'; script-src 'self'; object-src 'none'…`) interdit toute connexion depuis le panneau, et le rapport est un fichier construit dans le navigateur. Firefox affiche « aucune collecte de données » (`data_collection_permissions`).
 - **axe-core est embarqué** (`axe.min.js`, copié tel que publié, avec sa licence MPL-2.0), jamais chargé à distance. Il s’exécute dans le monde isolé de l’extension : la page analysée ne peut ni le lire ni le modifier.
-- **Pages refusées** avec un message clair : pages internes du navigateur (`chrome://`, `about:`…), pages d’extensions, fichiers locaux (`file://`) et magasins d’extensions.
+- **Pages refusées** avec un message clair : pages internes du navigateur (`chrome://`, `about:`…), pages d’extensions, fichiers locaux (`file://`), magasins d’extensions, et documents qui ne sont pas du HTML (`document.contentType` autre que `text/html` ou `application/xhtml+xml` : PDF, image, texte brut…).
+- **Délai maximal** : une analyse s’arrête au bout de 60 secondes (page bloquée par un script), avec un message ; le bouton redevient utilisable. Une page qui change pendant l’analyse (navigation, fermeture) donne « La page a changé pendant l’analyse : relancez-la. », avec le message technique du navigateur replié sous « Détail technique ».
+- **Version du navigateur** dans le rapport (`engine.browser`) : sous Chromium, la version complète (`navigator.userAgentData`, ex. « Chrome 156.0.8078.4 », comparable à celle de la CLI) ; à défaut, celle de l’agent utilisateur, que Chromium réduit (« Chrome 156.0.0.0 ») ; sous Firefox, celle de l’agent utilisateur (« Firefox 140.0 »).
 - Les textes venus de la page (titre, sélecteurs, descriptions) sont affichés comme du texte, jamais interprétés comme du HTML.
-- Limite : seul le cadre principal est analysé (comme la CLI), pas le contenu des `iframe`.
+- Limite : seul le cadre principal est analysé (comme la CLI), pas le contenu des `iframe` ; le résumé le signale quand axe en trouve (règle `frame-tested`).
 
 ## Développement
 
-- `src/report.ts` : refus des pages, rapport v2, regroupement par critère (logique pure, classement par `@rampe/core`) ;
+- `src/report.ts` : refus des pages, rapport v2, regroupement par critère, délai, messages d’erreur (logique pure, classement par `@rampe/core`). Le panneau n’importe que les points d’entrée légers de `@rampe/core` (`axe-results`, `criteres`, `sample-file`, `audit-report`) : ni glossaire ni méthodologies (`popup.js` : 189 Ko, 34 Ko en gzip) ;
 - `src/popup.ts`, `src/popup.html`, `src/popup.css` : le panneau ;
 - `public/manifest.json` : le manifeste ;
 - `vite.config.ts` : build (Vite, déjà présent dans le dépôt via Astro), copie d’axe-core.
@@ -62,6 +66,8 @@ Pas de script de fond : le panneau injecte lui-même axe-core avec `chrome.scrip
   1. accorde `activeTab` à l’onglet testé comme un clic sur l’icône, par la commande CDP `Extensions.triggerAction` (drapeau `--enable-unsafe-extension-debugging`) ;
   2. ouvre `popup.html` dans un onglet et y remplace la seule fonction `chrome.tabs.query` (« quel est l’onglet courant ? ») par l’onglet testé. Le reste est réel : sans l’étape 1, le navigateur refuse l’injection, ce que le test vérifie aussi.
 
-  Il vérifie ensuite les résultats (critères 1.1, 3.2, 8.3, 11.1), l’absence de toute requête réseau, le téléchargement du rapport et son import dans l’audit guidé (site construit pour le test), et passe axe sur le panneau, en clair et en sombre. Captures facultatives : `RAMPE_CAPTURES=<dossier>`.
+  Il vérifie ensuite les résultats (critères 1.1, 3.2, 8.3, 11.1), l’absence de toute requête réseau, le téléchargement du rapport et son import dans l’audit guidé (site construit pour le test), passe axe sur le panneau, en clair et en sombre, et couvre : focus après l’analyse, pas de défilement horizontal à 350, 420 et 800 px, PDF refusé, page bloquée (horloge simulée du panneau : `page.clock`), navigation pendant l’analyse. Captures facultatives : `RAMPE_CAPTURES=<dossier>`.
+
+L’archive `rampe-extension.zip` est faite par la commande `zip` (présente sous macOS et Linux, pas sous Windows : y construire avec WSL, ou prendre l’artefact de la CI). Elle n’est pas reproductible octet pour octet (dates des fichiers) ; son contenu, lui, ne dépend que des sources.
 
 `@rampe/site` est une dépendance de développement : pnpm lance ainsi les tests du site avant ceux-ci, et les deux builds d’Astro ne tournent pas en même temps.
