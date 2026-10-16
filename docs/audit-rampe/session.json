@@ -1,0 +1,73 @@
+{
+	"schemaVersion": 5,
+	"tool": {
+		"name": "@rampe/site"
+	},
+	"site": "https://chikimuras.github.io",
+	"createdAt": "2026-10-16T00:00:00.000Z",
+	"updatedAt": "2026-10-16T00:00:00.000Z",
+	"pages": [
+		{
+			"url": "https://chikimuras.github.io/rampe/",
+			"title": "/rampe/",
+			"id": "b40ea3a9-7fcb-8d14-a267-58c4dbe9a714"
+		},
+		{
+			"url": "https://chikimuras.github.io/rampe/referentiel/",
+			"title": "/rampe/referentiel/",
+			"id": "90f9053e-f3c3-807f-bd92-a8ead6635904"
+		},
+		{
+			"url": "https://chikimuras.github.io/rampe/referentiel/1-1/",
+			"title": "/rampe/referentiel/1-1/",
+			"id": "941fb64f-34c5-8f48-a65e-c2f4b0e7a415"
+		},
+		{
+			"url": "https://chikimuras.github.io/rampe/referentiel/glossaire/",
+			"title": "/rampe/referentiel/glossaire/",
+			"id": "51c2acda-6f11-8914-8e64-bfc2f63b3300"
+		},
+		{
+			"url": "https://chikimuras.github.io/rampe/audit/",
+			"title": "/rampe/audit/",
+			"id": "7b5c2334-fc82-8fe9-8dff-fc86fdb124fb"
+		},
+		{
+			"url": "https://chikimuras.github.io/rampe/cockpit/",
+			"title": "/rampe/cockpit/",
+			"id": "a18c6ed5-61ad-8f1a-8f55-0ace023663c0"
+		},
+		{
+			"url": "https://chikimuras.github.io/rampe/cockpit/adr/0011-cli-audit-playwright/",
+			"title": "/rampe/cockpit/adr/0011-cli-audit-playwright/",
+			"id": "9bd2d817-3fc8-82cd-be1a-81b1c77ca59b"
+		},
+		{
+			"url": "https://chikimuras.github.io/rampe/cockpit/journal/2026-10-15/",
+			"title": "/rampe/cockpit/journal/2026-10-15/",
+			"id": "3ca1f546-4af3-8c98-9b9a-ddc8cf792868"
+		},
+		{
+			"url": "https://chikimuras.github.io/rampe/cockpit/docs/roadmap/",
+			"title": "/rampe/cockpit/docs/roadmap/",
+			"id": "cd8fc4d9-ebdc-8ef1-9fe2-4653e906add5"
+		},
+		{
+			"url": "https://chikimuras.github.io/rampe/referentiel/5-1/",
+			"title": "/rampe/referentiel/5-1/",
+			"id": "f9ee4c9a-62c3-8652-9ad2-509098fbd295"
+		},
+		{
+			"url": "https://chikimuras.github.io/rampe/referentiel/1-9/",
+			"title": "/rampe/referentiel/1-9/",
+			"id": "b0eac881-6aa4-815f-9358-b0735f0a0aaa"
+		}
+	],
+	"evaluations": {},
+	"findings": {},
+	"evaluatedBy": {
+		"kind": "ia",
+		"name": "Claude",
+		"certified": false
+	}
+}

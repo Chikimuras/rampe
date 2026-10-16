@@ -382,6 +382,21 @@ const byCalendar = (actions: SchemaAction[]) =>
 		)
 		.map(({ a }) => a);
 
+/**
+ * Le schéma ne cite aucun taux, mais ses actions « audit » sont des résultats de l'audit : s'il a été réalisé par une
+ * IA, ils le disent (ADR-0022 §3).
+ */
+const iaNotice = (session: AuditSession, actions: readonly SchemaAction[]): Block[] =>
+	session.evaluatedBy && actions.some((a) => a.source === "audit")
+		? [
+				paragraph(
+					text("Actions issues d’un audit réalisé par une IA ("),
+					input(session.evaluatedBy.name),
+					text("), auto-évaluation non certifiée : elle ne remplace pas un audit humain."),
+				),
+			]
+		: [];
+
 /** Schéma pluriannuel, bloc par bloc : chaque volet officiel cité, la saisie de l'organisme, ou « à compléter ». */
 export function schemaBlocks(session: AuditSession, result: Conformity): Block[] {
 	const p = session.schema;
@@ -415,6 +430,7 @@ export function schemaBlocks(session: AuditSession, result: Conformity): Block[]
 						),
 					),
 				);
+			blocks.push(...iaNotice(session, actions));
 			if (active.length > 0) {
 				blocks.push(paragraph(text(`Calendrier des actions${NB}:`)), {
 					kind: "list",
@@ -450,6 +466,7 @@ export function planBlocks(session: AuditSession, result: Conformity, year: numb
 				`Plan d’action annuel du schéma pluriannuel de mise en accessibilité numérique${period ? ` (${period.replace(/ \(.*\)$/, "")})` : ""}.`,
 			),
 		),
+		...iaNotice(session, [...planned, ...previous, ...postponed]),
 		heading(2, `Actions prévues en ${year}`),
 		planned.length > 0
 			? { kind: "list", items: planned.map((a) => actionLine(session, a, result, false)) }

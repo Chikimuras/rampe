@@ -188,8 +188,11 @@ export function declarationBlocks(
 				];
 
 	const auditBy = value("auditBy");
-	const auditor: Inline[] =
-		auditBy === "interne"
+	// Audit réalisé par une IA (ADR-0022 §3) : la réalisation est imposée, quelle que soit la saisie, tant que
+	// l'attribution existe.
+	const auditor: Inline[] = session.evaluatedBy
+		? [text("par une IA ("), input(session.evaluatedBy.name), text("), auto-évaluation non certifiée")]
+		: auditBy === "interne"
 			? [text("en interne")]
 			: auditBy === "prestataire"
 				? [text("par la société "), or("auditCompany", "nom de la société")]

@@ -1,5 +1,9 @@
 ---
 import { getCollection } from "astro:content";
+import { rgaa } from "@rampe/core";
+import { parseSessionStrict, progress } from "@rampe/core/audit-session";
+import { computeConformity, formatRate } from "@rampe/core/conformity";
+import sessionText from "../../../../../docs/audit-rampe/session.json?raw";
 import Base from "../../layouts/Base.astro";
 import { url } from "../../lib/url";
 
@@ -30,6 +34,19 @@ const waiting = blockedLines.map((l) => {
 	const [, task, reason] = l.match(blockedRe) ?? [];
 	return { task, reason };
 });
+// Rampe audité par Rampe (ADR-0021). Pages construites : chaque page fixe de src/pages (sans paramètre de route),
+// plus les routes dynamiques : une fiche par critère, une page par ADR, entrée de journal et document.
+// `pnpm audit:rampe` vérifie que ce nombre est celui des pages qu'il a construites et auditées : il échoue sinon.
+// `import.meta.glob` de Vite exclut le fichier qui l'appelle : + 1 pour cette page.
+const fixedPages = Object.keys(import.meta.glob("../**/*.astro")).filter((path) => !path.includes("[")).length + 1;
+const builtPages = fixedPages + rgaa.criteria.length + adrs.length + journal.length + docs.length;
+// Auto-évaluation : docs/audit-rampe/session.json, généré par `pnpm auto-evaluation` (vérifié en CI), relu ici avec la
+// validation stricte de l'import (ADR-0016) ; un fichier invalide casse le build.
+const criterionIds = rgaa.criteria.map((c) => c.id);
+const autoSession = parseSessionStrict(JSON.parse(sessionText), new Set(criterionIds));
+const autoTotal = progress(autoSession, rgaa.criteria).total;
+const autoConformity = computeConformity(autoSession, criterionIds);
+const rate = (r: number | null) => (r === null ? "sans objet" : formatRate(r));
 const fr = (d: Date) =>
 	d.toLocaleDateString("fr-FR", {
 		day: "numeric",
@@ -75,6 +92,37 @@ const fr = (d: Date) =>
 		}
 	</ul>
 	<p><a href={url("cockpit/docs/roadmap/")}>Voir la roadmap détaillée</a></p>
+
+	<section aria-labelledby="rampe-audite">
+		<h2 id="rampe-audite">Rampe audité par Rampe</h2>
+		<h3>Gate automatique</h3>
+		<p>0 non-conformité automatique sur les {builtPages} pages, en clair et en sombre.</p>
+		<p>
+			La CI audite chaque page construite avec la CLI de Rampe en mode strict, à chaque modification : le site n’est publié
+			que si ce résultat tient (<a href={url("cockpit/adr/0021-rampe-audite-rampe/")}>ADR-0021</a>).
+		</p>
+		<h3>Auto-évaluation des 106 critères</h3>
+		<p><strong>Auto-évaluation réalisée par une IA (Claude), non certifiée : elle ne remplace pas un audit humain.</strong></p>
+		<p>
+			{autoTotal.total - autoTotal.remaining} évaluations sur {autoTotal.total} ({autoSession.pages.length} pages de
+			l’échantillon × {criterionIds.length} critères).
+		</p>
+		{
+			autoConformity.complete ? (
+				<ul>
+					<li>Taux global (critères respectés ÷ critères applicables) : {rate(autoConformity.globalRate)}</li>
+					<li>Taux moyen (moyenne des taux de chaque page) : {rate(autoConformity.averageRate)}</li>
+				</ul>
+			) : (
+				<p>Aucun taux n’est affiché tant que l’auto-évaluation n’est pas complète.</p>
+			)
+		}
+		<p>
+			<a href={url("cockpit/session.json")} download="rampe-auto-evaluation.json">Télécharger l’auto-évaluation (JSON)</a>,
+			puis importez-la dans <a href={url("audit/")}>l’audit guidé</a> (champ « Importer un audit (JSON) ») pour relire
+			chaque évaluation et sa justification.
+		</p>
+	</section>
 
 	<h2 id="journal">Journal de bord</h2>
 	<ul>

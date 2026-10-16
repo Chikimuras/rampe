@@ -13,7 +13,8 @@
 		"test": "pnpm -r --if-present test",
 		"build": "pnpm -r build",
 		"check": "pnpm lint && pnpm typecheck && pnpm test",
-		"audit:rampe": "node scripts/audit-rampe.mjs"
+		"audit:rampe": "node scripts/audit-rampe.mjs",
+		"auto-evaluation": "node scripts/auto-evaluation.mjs"
 	},
 	"devDependencies": {
 		"@rampe/cli": "workspace:*",

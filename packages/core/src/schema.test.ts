@@ -11,7 +11,9 @@ import {
 	type SchemaAction,
 	type Status,
 	serializeSession,
+	setEvaluatedBy,
 	setEvaluation,
+	takeOverAudit,
 } from "./audit-session.ts";
 import { computeConformity } from "./conformity.ts";
 import { rgaa } from "./rgaa.ts";
@@ -562,12 +564,32 @@ describe("saisies hostiles neutralisées, en HTML comme en Markdown", () => {
 	});
 });
 
+describe("audit réalisé par une IA (ADR-0022 §3) : le schéma ne cite pas de taux, ses actions « audit » le disent", () => {
+	const NOTICE =
+		"Actions issues d’un audit réalisé par une IA (Claude), auto-évaluation non certifiée : elle ne remplace pas un audit humain.";
+	const ia = () => setEvaluatedBy(filled(), "Claude", LATER);
+
+	it("schéma et plan d'action, Markdown et HTML : mention présente ; aucun taux cité", () => {
+		for (const out of [md(ia()), html(ia()), renderAnnualPlan(2026, ia(), conformity(ia()), { format: "markdown" })]) {
+			expect(out).toContain(NOTICE);
+			expect(out).not.toMatch(/\d\u202f%/);
+		}
+	});
+
+	it("sans attribution, ou sans action issue de l'audit : pas de mention", () => {
+		expect(md(filled())).not.toContain("par une IA");
+		const free = setEvaluatedBy(createSession(NOW), "Claude", LATER);
+		expect(md(free)).not.toContain("par une IA");
+		expect(md(takeOverAudit(ia(), LATER))).not.toContain("par une IA");
+	});
+});
+
 // ---------------------------------------------------------------------------------------------------------------
-// Session : schemaVersion 4, migration, import strict, relecture tolérante (ADR-0016, ADR-0018 §5).
+// Session : schéma (depuis la v4), migration, import strict, relecture tolérante (ADR-0016, ADR-0018 §5).
 // ---------------------------------------------------------------------------------------------------------------
-describe("schéma dans la session (schemaVersion 4)", () => {
+describe("schéma dans la session (depuis schemaVersion 4)", () => {
 	it("aller-retour export → import et relecture du stockage : identique", () => {
-		expect(SCHEMA_VERSION).toBe(4);
+		expect(SCHEMA_VERSION).toBe(5);
 		roundTrip(filled());
 	});
 
@@ -580,9 +602,16 @@ describe("schéma dans la session (schemaVersion 4)", () => {
 		for (const v of [1, 2]) expect(stored({ ...exported(audit()), schemaVersion: v })).not.toHaveProperty("schema");
 	});
 
-	it("version future (5) : refus spécifique, avant tout autre contrôle", () => {
-		expect(() => stored({ ...exported(filled()), schemaVersion: 5, schema: "?" })).toThrow(FUTURE_SESSION);
-		expect(refusal({ ...exported(filled()), schemaVersion: 5 }).message).toBe(FUTURE_SESSION);
+	it("migration sans perte : une session v4 garde son schéma", () => {
+		const v4 = { ...exported(filled()), schemaVersion: 4 };
+		expect(parse(v4)).toEqual(filled());
+		expect(stored(v4)).toEqual(filled());
+	});
+
+	it("version future : refus spécifique, avant tout autre contrôle", () => {
+		const future = SCHEMA_VERSION + 1;
+		expect(() => stored({ ...exported(filled()), schemaVersion: future, schema: "?" })).toThrow(FUTURE_SESSION);
+		expect(refusal({ ...exported(filled()), schemaVersion: future }).message).toBe(FUTURE_SESSION);
 	});
 
 	it("import strict : structure, types et bornes ; tout ou rien", () => {

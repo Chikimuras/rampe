@@ -11,6 +11,7 @@ import { dirname, extname, join, normalize } from "node:path";
 import { fileURLToPath } from "node:url";
 import { gzipSync } from "node:zlib";
 import { rgaa } from "@rampe/core";
+import { AUTO_EVALUATOR, buildAutoSession, parseFragment, serializeAutoSession } from "@rampe/core/auto-evaluation";
 import axe from "axe-core";
 import { type Browser, chromium, type Page } from "playwright";
 import { markdownToHast } from "satteri";
@@ -753,7 +754,7 @@ describe("audit guidé (bout en bout)", { timeout: 60_000 }, () => {
 			await expect.poll(() => group(page, "3.2").locator(".audit-auto").count()).toBe(0);
 			await page.waitForFunction(() => localStorage.getItem("rampe.audit.session")?.includes("2,0:1"));
 			const saved = JSON.parse((await stored(page)) ?? "{}");
-			expect(saved.schemaVersion).toBe(4);
+			expect(saved.schemaVersion).toBe(5);
 			const [pageId] = saved.pages.map((p: { id: string }) => p.id);
 			expect(saved.evaluations["1.1"][pageId]).toMatchObject({ status: "C", source: "humain" });
 			expect(saved.evaluations["3.2"][pageId]).toMatchObject({ status: "NC", source: "humain" });
@@ -1178,7 +1179,7 @@ describe("audit guidé (bout en bout)", { timeout: 60_000 }, () => {
 			const file = await download(a, "Télécharger l’audit (JSON)");
 			expect(file.name).toBe(`audit-exemple.fr-${today()}.json`);
 			expect(file.json.tool).toEqual({ name: "@rampe/site" });
-			expect(file.json.schemaVersion).toBe(4);
+			expect(file.json.schemaVersion).toBe(5);
 			await expect(live(a)).resolves.toBe(`Audit téléchargé : ${file.name}`);
 			await expect(reminder(a)).resolves.toMatch(
 				/^Cet audit n’existe que dans ce navigateur\. Dernier téléchargement : \d+ \S+ \d{4} à \d{2}:\d{2}\.$/,
@@ -1383,7 +1384,7 @@ describe("audit guidé (bout en bout)", { timeout: 60_000 }, () => {
 				["statut.json", good.replace(`"status":"NC"`, `"status":"OK"`), invalid, /statut inconnu "OK"/],
 				[
 					"futur.json",
-					good.replace(`"schemaVersion":2`, `"schemaVersion":5`),
+					good.replace(`"schemaVersion":2`, `"schemaVersion":6`),
 					/^Cet audit a été créé par une version plus récente de Rampe/,
 					null,
 				],
@@ -2084,7 +2085,7 @@ describe("audit guidé (bout en bout)", { timeout: 60_000 }, () => {
 			await a.waitForSelector("astro-island:not([ssr])");
 			await check(a);
 			const file = await download(a, "Télécharger l’audit (JSON)");
-			expect(file.json.schemaVersion).toBe(4);
+			expect(file.json.schemaVersion).toBe(5);
 			expect(file.json.schema.actions).toHaveLength(3);
 			await first.close();
 			const second = await browser.newContext();
@@ -2256,6 +2257,132 @@ describe("audit guidé (bout en bout)", { timeout: 60_000 }, () => {
 			expect(md.content).toContain(
 				`- Former l’équipe éditoriale. Priorité${NBSP}: haute. Année cible${NBSP}: [à définir].`,
 			);
+			await page.close();
+		});
+	});
+
+	describe("audit réalisé par une IA : attribution (ADR-0022)", () => {
+		const NOTICE =
+			"Cet audit a été réalisé par une IA (Claude). Il n’est pas certifié et ne remplace pas un audit humain.";
+		const IA = "par une IA (Claude), auto-évaluation non certifiée";
+		const SAMPLE = ["https://exemple.fr/", "https://exemple.fr/contact/"];
+		/** Session d'auto-évaluation COMPLÈTE, fabriquée par la vraie construction (fragments canoniques validés). */
+		const autoSession = async () => {
+			const fragments = rgaa.topics.map((t) =>
+				parseFragment(
+					new TextEncoder().encode(
+						`${JSON.stringify(
+							{
+								evaluator: AUTO_EVALUATOR,
+								date: "2026-10-16",
+								entries: rgaa.criteria
+									.filter((c) => c.topic === t.number)
+									.flatMap((c) =>
+										SAMPLE.map((page) => ({
+											criterion: c.id,
+											page,
+											status: c.id === "1.1" ? "NC" : "C",
+											note: `Test ${c.id}.1 appliqué à chaque élément concerné de la page.`,
+										})),
+									),
+							},
+							null,
+							"\t",
+						)}\n`,
+					),
+					t.number,
+					SAMPLE,
+					"2026-10-16",
+				),
+			);
+			return serializeAutoSession(await buildAutoSession(SAMPLE, fragments));
+		};
+		const importAuto = async (page: Page) => {
+			await openAudit(page);
+			await page.getByLabel("Importer un audit (JSON)").setInputFiles({
+				name: "session.json",
+				mimeType: "application/json",
+				buffer: Buffer.from(await autoSession()),
+			});
+			await page.locator(".audit-attribution").waitFor();
+		};
+		const banner = (page: Page) => page.locator(".audit-attribution").textContent();
+		const result = (page: Page) => page.locator(".audit-result").evaluate((el) => (el as HTMLElement).innerText);
+		const preview = (page: Page) => page.locator(".audit-preview").evaluate((el) => (el as HTMLElement).innerText);
+
+		for (const colorScheme of ["light", "dark"] as const) {
+			const scheme = colorScheme === "light" ? "clair" : "sombre";
+			it(`import : bandeau, Résultat et déclaration portent la mention ; axe sans violation (${scheme})`, async () => {
+				const page = await browser.newPage({ colorScheme });
+				await importAuto(page);
+				expect(await banner(page)).toContain(NOTICE);
+				// Complet : le taux est affiché, et la mention l'accompagne.
+				await expect.poll(() => page.locator(".audit-rate").count()).toBe(2);
+				expect(await result(page)).toContain(NOTICE);
+				expect(await preview(page)).toContain(`L’audit de conformité réalisé ${IA} révèle que`);
+				// Verrouillé : pas de choix « en interne / prestataire » tant que l'attribution existe.
+				expect(await page.getByRole("radio", { name: "En interne" }).count()).toBe(0);
+				expect(await axeViolations(page)).toEqual([]);
+				if (captures) await page.locator(".audit-attribution").screenshot({ path: join(captures, `ia-${scheme}.png`) });
+				await page.close();
+			});
+		}
+
+		it("exports de la déclaration (HTML, Markdown) et de l'audit : l'attribution y est", async () => {
+			const page = await browser.newPage();
+			await importAuto(page);
+			expect((await download(page, "Télécharger (HTML)")).content).toContain(`réalisé ${IA} révèle`);
+			expect((await download(page, "Télécharger (Markdown)")).content).toContain(`réalisé ${IA} révèle`);
+			expect((await download(page, "Télécharger l’audit (JSON)")).json.evaluatedBy).toEqual({
+				kind: "ia",
+				name: "Claude",
+				certified: false,
+			});
+			await page.close();
+		});
+
+		it("reprise : confirmation refusée → rien ne change ; acceptée → mention retirée ; Annuler → rétablie", async () => {
+			const page = await browser.newPage();
+			await importAuto(page);
+			const take = page.getByRole("button", { name: "Je reprends cet audit à mon compte" });
+			const messages: string[] = [];
+			page.once("dialog", (d) => {
+				messages.push(d.message());
+				d.dismiss();
+			});
+			await take.click();
+			expect(messages[0]).toMatch(/endossez alors chacune de ses évaluations/);
+			expect(await banner(page)).toContain(NOTICE);
+
+			page.once("dialog", (d) => d.accept());
+			await take.click();
+			await expect.poll(() => banner(page)).toContain("Vous avez repris à votre compte");
+			// Le focus suit : il est sur « Annuler », pas perdu sur le corps de la page.
+			expect(await page.evaluate(() => document.activeElement?.textContent)).toBe("Annuler");
+			expect(await result(page)).not.toContain("par une IA");
+			expect(await preview(page)).not.toContain(IA);
+			await page.getByRole("radio", { name: "En interne" }).check();
+			await expect.poll(() => preview(page)).toContain("L’audit de conformité réalisé en interne révèle que");
+			expect(await axeViolations(page)).toEqual([]);
+			// Retirée aussi de ce qui est enregistré.
+			await expect
+				.poll(() => page.evaluate(() => JSON.parse(localStorage.getItem("rampe.audit.session") ?? "{}").evaluatedBy))
+				.toBeUndefined();
+
+			await page.getByRole("button", { name: "Annuler", exact: true }).click();
+			await expect.poll(() => banner(page)).toContain(NOTICE);
+			expect(await page.evaluate(() => document.activeElement?.textContent)).toBe("Je reprends cet audit à mon compte");
+			expect(await result(page)).toContain(NOTICE);
+			expect(await preview(page)).toContain(`réalisé ${IA} révèle`);
+			// Persistée : enregistrée, puis relue après rechargement.
+			await expect
+				.poll(() =>
+					page.evaluate(() => JSON.parse(localStorage.getItem("rampe.audit.session") ?? "{}").evaluatedBy?.name),
+				)
+				.toBe("Claude");
+			await page.reload();
+			await page.waitForSelector("astro-island:not([ssr])");
+			expect(await banner(page)).toContain(NOTICE);
 			await page.close();
 		});
 	});

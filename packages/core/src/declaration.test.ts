@@ -6,7 +6,9 @@ import {
 	createSession,
 	type DeclarationFields,
 	type Status,
+	setEvaluatedBy,
 	setEvaluation,
+	takeOverAudit,
 } from "./audit-session.ts";
 import { type Conformity, computeConformity } from "./conformity.ts";
 import {
@@ -332,6 +334,33 @@ describe("golden : le texte officiel, à une liste fermée de remplacements prè
 				["[url d’une page avec les coordonnées de l’entité]", "[contact\\@exemple\\.fr](mailto:contact@exemple.fr)"],
 			]),
 		);
+	});
+});
+
+describe("audit réalisé par une IA (ADR-0022 §3)", () => {
+	const ia = setEvaluatedBy(audit(EXAMPLE), "Claude", NOW);
+	const IA = "par une IA (Claude), auto-évaluation non certifiée";
+
+	it("golden : le passage « réalisé […] » est rempli par l'attribution, seul remplacement en plus", () => {
+		expect(render(ia, FULL_FIELDS)).toBe(
+			render(audit(EXAMPLE), FULL_FIELDS).replace("réalisé par la société Acces SARL révèle", `réalisé ${IA} révèle`),
+		);
+		// Champs vides : le passage n'est pas « à compléter », il est imposé.
+		const md = render(ia, {});
+		expect(md).toContain(`L’audit de conformité réalisé ${IA} révèle que\u00a0:`);
+		expect(md).not.toContain("[en interne / par la société NNN]");
+	});
+
+	it("verrouillé : la saisie « en interne » ou « prestataire » ne l'emporte pas, en Markdown comme en HTML", () => {
+		for (const fields of [{ auditBy: "interne" }, { auditBy: "prestataire", auditCompany: "Acces SARL" }] as const) {
+			expect(render(ia, fields)).toContain(`réalisé ${IA} révèle`);
+			expect(render(ia, fields, "html")).toContain(`réalisé ${IA} révèle`);
+			expect(render(ia, fields)).not.toMatch(/en interne|Acces SARL/);
+		}
+	});
+
+	it("reprise par l'humain : la saisie de l'utilisateur revient", () => {
+		expect(render(takeOverAudit(ia, NOW), { auditBy: "interne" })).toContain("réalisé en interne révèle");
 	});
 });
 
