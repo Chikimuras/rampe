@@ -162,7 +162,6 @@ describe("volets officiels : la liste de la DINUM, mot pour mot, dans l'ordre, s
 		const expected = [
 			"# Schéma pluriannuel de mise en accessibilité numérique",
 			"Période : [à compléter : année de début et durée, de 1 à 3 ans].",
-			SCHEMA_MENTION,
 			"## Politique d’accessibilité numérique",
 			...POLICY.map((d, i) => volet(LABELS[i] as string, d)),
 			"## Travaux de mise en conformité",
@@ -172,6 +171,12 @@ describe("volets officiels : la liste de la DINUM, mot pour mot, dans l'ordre, s
 			"Ce document décrit la politique de votre organisme ; Rampe vous aide seulement à le structurer.",
 		);
 		expect(md(createSession(NOW))).toBe(`${expected}\n`);
+		// La mention est pour l'utilisateur (interface et aperçu), jamais dans le document qu'il publie.
+		for (const out of [
+			html(createSession(NOW)),
+			renderAnnualPlan(2026, createSession(NOW), conformity(createSession(NOW)), { format: "markdown" }),
+		])
+			expect(out).not.toContain("Rampe vous aide");
 	});
 
 	it("HTML : chaque volet officiel figure en entier, dans l'ordre", () => {
@@ -424,7 +429,7 @@ describe("rendu du schéma pluriannuel", () => {
 		const out = html(filled());
 		expect(out).toMatch(/^<!doctype html>\n<html lang="fr">/);
 		expect(out).toContain("<title>Schéma pluriannuel de mise en accessibilité numérique</title>");
-		expect(out).toContain(`<p>${SCHEMA_MENTION}</p>`);
+		expect(out).not.toContain(SCHEMA_MENTION);
 		expect(out).toContain("<h1>Schéma pluriannuel de mise en accessibilité numérique</h1>");
 		// Fragment : commence au h2, pour se coller sous le h1 d'une page existante.
 		const fragment = renderSchema(filled(), conformity(filled()), { format: "html" });
@@ -448,7 +453,7 @@ describe("rendu du plan d'action annuel", () => {
 		expect(out).toContain(
 			"Plan d’action annuel du schéma pluriannuel de mise en accessibilité numérique (de 2026 à 2028).",
 		);
-		expect(out).toContain(SCHEMA_MENTION);
+		expect(out).not.toContain(SCHEMA_MENTION);
 		const planned = out.slice(out.indexOf("## Actions prévues en 2027"), out.indexOf("## Bilan"));
 		expect(planned).toContain("Critère 8.3");
 		expect(planned).toContain("Former l’équipe éditoriale");
@@ -471,6 +476,49 @@ describe("rendu du plan d'action annuel", () => {
 		expect(plan(2026)).toContain("Aucune action n’était prévue en 2025 : pas de bilan à faire.");
 	});
 
+	it("report : une action « reportée » qui change d'année reste au bilan de son année d'origine", () => {
+		let s = filled();
+		const id = s.schema?.actions[0]?.id as string; // 1.1, prévue en 2026
+		s = updateAction(s, id, { status: "reportée" }, LATER);
+		s = updateAction(s, id, { targetYear: 2027 }, LATER);
+		expect(s.schema?.actions[0]).toMatchObject({ targetYear: 2027, postponedFrom: [2026] });
+		expect(s.schema?.actions[0]).not.toHaveProperty("status"); // nouveau bilan, pour 2027
+		const p2027 = renderAnnualPlan(2027, s, conformity(s), { format: "markdown" });
+		expect(p2027).not.toContain("Aucune action n’était prévue en 2026");
+		const review = p2027.slice(p2027.indexOf("## Bilan"));
+		expect(review).toContain(`Critère 1.1${NB}:`);
+		expect(review).toContain(`Bilan${NB}: reportée en 2027.`);
+		expect(p2027.slice(0, p2027.indexOf("## Bilan"))).toContain("Critère 1.1"); // prévue en 2027
+		// Reportée encore, de 2027 à 2028 : les deux bilans la gardent.
+		s = updateAction(s, id, { status: "reportée" }, LATER);
+		s = updateAction(s, id, { targetYear: 2028 }, LATER);
+		expect(s.schema?.actions[0]?.postponedFrom).toEqual([2026, 2027]);
+		expect(renderAnnualPlan(2027, s, conformity(s), { format: "markdown" })).toContain(`Bilan${NB}: reportée en 2028.`);
+		const p2028 = renderAnnualPlan(2028, s, conformity(s), { format: "markdown" });
+		expect(p2028.slice(p2028.indexOf("## Bilan"))).toContain(`Bilan${NB}: reportée en 2028.`);
+		// Année cible retirée : « année à définir » ; ramenée à une année d'origine, ce n'est plus un report depuis elle.
+		s = updateAction(s, id, { status: "reportée" }, LATER);
+		s = updateAction(s, id, { targetYear: undefined }, LATER);
+		expect(renderAnnualPlan(2027, s, conformity(s), { format: "markdown" })).toContain(
+			`Bilan${NB}: reportée en [année à définir].`,
+		);
+		s = updateAction(s, id, { targetYear: 2026 }, LATER);
+		expect(s.schema?.actions[0]?.postponedFrom).toEqual([2027, 2028]);
+		roundTrip(s);
+		// Changer l'année d'une action qui n'est pas « reportée » n'est pas un report.
+		const other = updateAction(filled(), id, { targetYear: 2027 }, LATER);
+		expect(other.schema?.actions[0]).not.toHaveProperty("postponedFrom");
+		expect(other.schema?.actions[0]?.status).toBe("faite");
+	});
+
+	it("audit redevenu incomplet après une synchronisation : le volet le signale", () => {
+		const s = setEvaluation(filled(), "11.1", P1, { status: "NT" }, NOW);
+		expect(md(s)).toContain(
+			"Liste établie à partir d’un audit qui n’est plus complet : à mettre à jour une fois l’audit terminé.",
+		);
+		expect(md(filled())).not.toContain("plus complet");
+	});
+
 	it("HTML autonome : titre de la page = année du plan", () => {
 		const out = renderAnnualPlan(2027, filled(), conformity(filled()), { format: "html", standalone: true });
 		expect(out).toContain("<title>Plan d’action 2027</title>");
@@ -482,7 +530,10 @@ describe("rendu du plan d'action annuel", () => {
 // Sécurité : OWASP XSS Prevention Cheat Sheet, « Output Encoding ».
 // ---------------------------------------------------------------------------------------------------------------
 describe("saisies hostiles neutralisées, en HTML comme en Markdown", () => {
-	const HOSTILE = "<script>alert(1)</script><img src=x onerror=alert(2)>[clic](javascript:alert(3))\n# titre\n- puce";
+	// Adresses nues, www., e-mail, <http://…> : un lecteur Markdown peut en faire des liens http(s) ou mailto, ce
+	// qui est admis (README) ; aucun autre schéma. En HTML, aucun lien.
+	const HOSTILE =
+		"<script>alert(1)</script><img src=x onerror=alert(2)>[clic](javascript:alert(3)) https://exemple.fr/nue www.exemple.fr contact@exemple.fr <http://exemple.fr/chevrons> <javascript:alert(9)> data:text/html,x\n# titre\n- puce";
 	const hostile = () => {
 		let s = setSchemaPeriod(createSession(NOW), 2026, 1, LATER);
 		s = setSchemaSection(s, "strategy", HOSTILE, LATER);
@@ -558,6 +609,8 @@ describe("schéma dans la session (schemaVersion 4)", () => {
 			[action({ targetYear: 10_000 }), /^schema\.actions\[0\]\.targetYear : année/],
 			[action({ removed: "non" }), /^schema\.actions\[0\]\.removed/],
 			[action({ status: "abandonnée" }), /^schema\.actions\[0\]\.status/],
+			[action({ postponedFrom: 2026 }), /^schema\.actions\[0\]\.postponedFrom : liste/],
+			[action({ postponedFrom: [1899] }), /^schema\.actions\[0\]\.postponedFrom\[0\] : année/],
 			[action({ title: 3 }), /^schema\.actions\[0\]\.title : texte/],
 			[JSON.parse(`{"schema":{"__proto__":{}}}`), /__proto__/],
 		] as const)

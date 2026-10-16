@@ -38,7 +38,7 @@ import { stripControl, truncate } from "./sample-file.ts";
 
 /** Page officielle du schéma pluriannuel. */
 export const SCHEMA_URL = "https://accessibilite.numerique.gouv.fr/obligations/schema-pluriannuel/";
-/** Rappel affiché dans l'interface et dans chaque document produit (ADR-0018, « Conséquences »). */
+/** Rappel affiché dans l'interface et en tête des aperçus, jamais dans les documents exportés (ADR-0018, « Conséquences »). */
 export const SCHEMA_MENTION =
 	"Ce document décrit la politique de votre organisme ; Rampe vous aide seulement à le structurer.";
 
@@ -241,6 +241,23 @@ export function updateAction(session: AuditSession, id: string, patch: ActionPat
 			throw new Error(`Commentaire de plus de ${MAX_NOTE} caractères`);
 	}
 	if (typeof next.removed !== "boolean") throw new Error("Retrait : vrai ou faux attendu");
+	// Report (ADR-0018 §4) : une action au bilan « reportée » qui change d'année cible garde son année d'origine, dont
+	// le bilan la listera « reportée en … » ; son bilan repart de zéro pour la nouvelle année.
+	if (
+		"targetYear" in patch &&
+		patch.targetYear !== current.targetYear &&
+		current.status === "reportée" &&
+		current.targetYear !== undefined
+	) {
+		const from = (current.postponedFrom ?? []).filter((y) => y !== patch.targetYear);
+		next.postponedFrom = from.includes(current.targetYear) ? from : [...from, current.targetYear];
+		if (!("status" in patch)) delete next.status;
+	} else if (patch.targetYear !== undefined && current.postponedFrom?.includes(patch.targetYear)) {
+		// Revenue à une année d'où elle avait été reportée : ce n'est plus un report depuis cette année-là.
+		const from = current.postponedFrom.filter((y) => y !== patch.targetYear);
+		if (from.length > 0) next.postponedFrom = from;
+		else delete next.postponedFrom;
+	}
 	return withSchema(
 		session,
 		{ ...p, actions: p.actions.map((a) => (a.id === id ? (next as unknown as SchemaAction) : a)) },
@@ -376,7 +393,6 @@ export function schemaBlocks(session: AuditSession, result: Conformity): Block[]
 			...(period ? [text(period)] : [slot("à compléter : année de début et durée, de 1 à 3 ans")]),
 			text("."),
 		),
-		paragraph(text(SCHEMA_MENTION)),
 	];
 	for (const v of VOLETS) {
 		if (v.id === "strategy") blocks.push(heading(2, "Politique d’accessibilité numérique"));
@@ -389,10 +405,14 @@ export function schemaBlocks(session: AuditSession, result: Conformity): Block[]
 			const actions = p?.actions ?? [];
 			const active = byCalendar(actions.filter((a) => !a.removed));
 			const removed = actions.filter((a) => a.removed);
-			if (!result.complete && !actions.some((a) => a.source === "audit"))
+			if (!result.complete)
 				blocks.push(
 					paragraph(
-						text("L’audit n’est pas complet : aucune action n’a encore été proposée à partir de ses résultats."),
+						text(
+							actions.some((a) => a.source === "audit")
+								? "Liste établie à partir d’un audit qui n’est plus complet : à mettre à jour une fois l’audit terminé."
+								: "L’audit n’est pas complet : aucune action n’a encore été proposée à partir de ses résultats.",
+						),
 					),
 				);
 			if (active.length > 0) {
@@ -421,6 +441,7 @@ export function planBlocks(session: AuditSession, result: Conformity, year: numb
 	const actions = (session.schema?.actions ?? []).filter((a) => !a.removed);
 	const planned = byCalendar(actions.filter((a) => a.targetYear === year));
 	const previous = byCalendar(actions.filter((a) => a.targetYear === year - 1));
+	const postponed = byCalendar(actions.filter((a) => a.targetYear !== year - 1 && a.postponedFrom?.includes(year - 1)));
 	const period = periodText(session.schema);
 	return [
 		heading(1, planTitle(year)),
@@ -429,21 +450,28 @@ export function planBlocks(session: AuditSession, result: Conformity, year: numb
 				`Plan d’action annuel du schéma pluriannuel de mise en accessibilité numérique${period ? ` (${period.replace(/ \(.*\)$/, "")})` : ""}.`,
 			),
 		),
-		paragraph(text(SCHEMA_MENTION)),
 		heading(2, `Actions prévues en ${year}`),
 		planned.length > 0
 			? { kind: "list", items: planned.map((a) => actionLine(session, a, result, false)) }
 			: paragraph(text("Aucune action prévue pour cette année.")),
 		heading(2, `Bilan de l’année précédente (${year - 1})`),
-		previous.length > 0
+		previous.length + postponed.length > 0
 			? {
 					kind: "list",
-					items: previous.map((a) => [
-						...actionLine(session, a, result, false),
-						text(` Bilan${NB}: `),
-						a.status ? text(a.status) : slot("à compléter : faite, en cours ou reportée"),
-						text("."),
-					]),
+					items: [
+						...previous.map((a) => [
+							...actionLine(session, a, result, false),
+							text(` Bilan${NB}: `),
+							a.status ? text(a.status) : slot("à compléter : faite, en cours ou reportée"),
+							text("."),
+						]),
+						...postponed.map((a) => [
+							...actionLine(session, a, result, false),
+							text(` Bilan${NB}: reportée en `),
+							a.targetYear !== undefined ? text(String(a.targetYear)) : slot("année à définir"),
+							text("."),
+						]),
+					],
 				}
 			: paragraph(text(`Aucune action n’était prévue en ${year - 1} : pas de bilan à faire.`)),
 	];

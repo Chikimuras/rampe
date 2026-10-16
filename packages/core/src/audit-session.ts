@@ -135,6 +135,11 @@ export interface SchemaAction {
 	/** Retrait gardé et visible (ADR-0018 §2) : une non-conformité ne disparaît jamais en silence. */
 	removed: boolean;
 	status?: ActionStatus;
+	/**
+	 * Années d'où l'action a été reportée (ADR-0018 §4) : leur bilan la liste « reportée en <année cible> ». Rempli
+	 * quand une action au bilan « reportée » change d'année cible.
+	 */
+	postponedFrom?: number[];
 }
 
 export interface SchemaPlan {
@@ -148,6 +153,8 @@ export interface SchemaPlan {
 /** Bornes du schéma (ADR-0016) : à l'écriture et à l'import, jamais à la relecture du stockage. */
 export const MAX_ACTIONS = 1000;
 export const MAX_SECTION = 10_000;
+/** Années distinctes possibles (1900 à 9999) : borne des reports d'une action. */
+export const MAX_YEARS = 8100;
 export const isYear = (n: unknown): n is number =>
 	Number.isInteger(n) && (n as number) >= 1900 && (n as number) <= 9999;
 
@@ -722,6 +729,13 @@ function parseSchema(raw: unknown, known: ReadonlySet<string>, bounded: boolean)
 		const removed = field(a, "removed");
 		if (typeof removed !== "boolean") fail(`${at}.removed`, "vrai ou faux attendu");
 		const status = oneOf(field(a, "status"), ACTION_STATUSES, `${at}.status`, "bilan");
+		const rawPostponed = field(a, "postponedFrom");
+		const postponedFrom =
+			rawPostponed === undefined
+				? undefined
+				: array(rawPostponed, `${at}.postponedFrom`, limit(MAX_YEARS)).map(
+						(y, k) => year(y, `${at}.postponedFrom[${k}]`) as number,
+					);
 		return {
 			id,
 			source: source as SchemaAction["source"],
@@ -733,6 +747,7 @@ function parseSchema(raw: unknown, known: ReadonlySet<string>, bounded: boolean)
 			comment,
 			removed: removed as boolean,
 			...(status !== undefined && { status }),
+			...(postponedFrom !== undefined && { postponedFrom }),
 		};
 	});
 
