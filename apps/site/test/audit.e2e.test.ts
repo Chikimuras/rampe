@@ -739,7 +739,7 @@ describe("audit guidé (bout en bout)", { timeout: 60_000 }, () => {
 			await expect.poll(() => group(page, "3.2").locator(".audit-auto").count()).toBe(0);
 			await page.waitForFunction(() => localStorage.getItem("rampe.audit.session")?.includes("2,0:1"));
 			const saved = JSON.parse((await stored(page)) ?? "{}");
-			expect(saved.schemaVersion).toBe(3);
+			expect(saved.schemaVersion).toBe(4);
 			const [pageId] = saved.pages.map((p: { id: string }) => p.id);
 			expect(saved.evaluations["1.1"][pageId]).toMatchObject({ status: "C", source: "humain" });
 			expect(saved.evaluations["3.2"][pageId]).toMatchObject({ status: "NC", source: "humain" });
@@ -1156,7 +1156,7 @@ describe("audit guidé (bout en bout)", { timeout: 60_000 }, () => {
 			const file = await download(a, "Télécharger l’audit (JSON)");
 			expect(file.name).toBe(`audit-exemple.fr-${today()}.json`);
 			expect(file.json.tool).toEqual({ name: "@rampe/site" });
-			expect(file.json.schemaVersion).toBe(3);
+			expect(file.json.schemaVersion).toBe(4);
 			await expect(live(a)).resolves.toBe(`Audit téléchargé : ${file.name}`);
 			await expect(reminder(a)).resolves.toMatch(
 				/^Cet audit n’existe que dans ce navigateur\. Dernier téléchargement : \d+ \S+ \d{4} à \d{2}:\d{2}\.$/,
@@ -1343,7 +1343,7 @@ describe("audit guidé (bout en bout)", { timeout: 60_000 }, () => {
 				["statut.json", good.replace(`"status":"NC"`, `"status":"OK"`), invalid, /statut inconnu "OK"/],
 				[
 					"futur.json",
-					good.replace(`"schemaVersion":2`, `"schemaVersion":4`),
+					good.replace(`"schemaVersion":2`, `"schemaVersion":5`),
 					/^Cet audit a été créé par une version plus récente de Rampe/,
 					null,
 				],
@@ -1486,7 +1486,7 @@ describe("audit guidé (bout en bout)", { timeout: 60_000 }, () => {
 			expect(text).not.toContain("%");
 			expect(text).not.toMatch(/totalement|partiellement conforme/);
 			// Lien vers le résultat, où se trouvent les raccourcis vers les critères restants.
-			await page.getByRole("link", { name: "Voir ce qui reste à faire (section 3)" }).click();
+			await page.getByRole("link", { name: "Terminer l’audit (section 3)" }).click();
 			await expect.poll(() => page.evaluate(() => location.hash)).toBe("#audit-resultat");
 			await page.locator(".audit-result").getByRole("button", { name: "Afficher les critères non testés" }).click();
 			await page.waitForFunction(() => document.activeElement?.id === "audit-titre");
@@ -1825,6 +1825,302 @@ describe("audit guidé (bout en bout)", { timeout: 60_000 }, () => {
 			await tabUntil(page, "el.textContent === 'Télécharger (Markdown)'", { max: 3 });
 			const md = await download(page, "", "Space");
 			expect(md.content).toContain("Mairie de Clavierville s’engage à rendre");
+			await page.close();
+		});
+	});
+
+	describe("schéma pluriannuel et plan d’action (ADR-0018)", () => {
+		const NBSP = "\u00a0";
+		const schemaPreview = (page: Page) =>
+			page.locator("#schema-apercu + *").evaluate((el) => (el as HTMLElement).parentElement?.innerText ?? "");
+		const planPreview = (page: Page) =>
+			page.locator("#plan-apercu + *").evaluate((el) => (el as HTMLElement).parentElement?.innerText ?? "");
+		const rowHeads = (page: Page) => page.locator(".audit-schema-table tbody th").allTextContents();
+		const live = (page: Page) => page.locator("[aria-live=polite]").textContent();
+		const stored = async (page: Page) =>
+			JSON.parse((await page.evaluate(() => localStorage.getItem("rampe.audit.session"))) ?? "{}");
+		const control = (page: Page, kind: string, criterion: string) =>
+			page.getByLabel(new RegExp(`^${kind} de l’action : Critère ${criterion.replace(".", "\\.")} : `));
+		/** Période 2026-2028 saisie comme un utilisateur : l'année s'enregistre à la sortie du champ. */
+		async function setPeriod(page: Page) {
+			await page.getByLabel("Année de début").fill("2026");
+			await page.getByLabel("Année de début").blur();
+			await page.getByLabel("Durée").selectOption("3");
+			await page.waitForFunction(() =>
+				/"startYear":2026,"duration":3/.test(localStorage.getItem("rampe.audit.session") ?? ""),
+			);
+		}
+		const syncButton = (page: Page) => page.getByRole("button", { name: "Mettre à jour depuis l’audit" });
+
+		it("2 critères non validés : 2 actions ; réglages ; resynchronisation idempotente ; critère corrigé marqué ; plan filtré", async () => {
+			const page = await browser.newPage();
+			// sessionJson : 1.1 non conforme sur Paiement, 8.3 sur Accueil ; 3.2 validé.
+			await openWith(page, sessionJson());
+			await setPeriod(page);
+			await syncButton(page).click();
+			await expect.poll(() => live(page)).toBe("2 actions ajoutées, 0 action mise à jour.");
+			const heads = await rowHeads(page);
+			expect(heads).toHaveLength(2);
+			expect(heads[0]).toMatch(/^Critère 1\.1 : Chaque image porteuse d’information .*\(Paiement\)$/);
+			expect(heads[1]).toMatch(/^Critère 8\.3 : .*\(Accueil\)$/);
+
+			await control(page, "Priorité", "1.1").selectOption("haute");
+			await control(page, "Année cible", "1.1").selectOption("2026");
+			await control(page, "Bilan", "1.1").selectOption("faite");
+			await control(page, "Priorité", "8.3").selectOption("moyenne");
+			await control(page, "Année cible", "8.3").selectOption("2027");
+			await control(page, "Commentaire", "8.3").fill("Avec la refonte");
+			await page.waitForFunction(() => localStorage.getItem("rampe.audit.session")?.includes("Avec la refonte"));
+			const before = (await stored(page)).schema;
+
+			// Relancer : rien n'est dupliqué ni modifié.
+			await syncButton(page).click();
+			await expect.poll(() => live(page)).toBe("Tableau déjà à jour : aucune action ajoutée ni modifiée.");
+			await page.waitForTimeout(600);
+			expect((await stored(page)).schema).toEqual(before);
+			expect(await rowHeads(page)).toHaveLength(2);
+			await expect(control(page, "Priorité", "1.1").inputValue()).resolves.toBe("haute");
+
+			// 8.3 corrigé sur l'accueil (seule page où il échouait) : l'action reste, marquée.
+			const json = await stored(page);
+			json.evaluations["8.3"][P1] = { status: "C", note: "", source: "humain" };
+			await page.evaluate((v) => localStorage.setItem("rampe.audit.session", v), JSON.stringify(json));
+			await page.reload();
+			await page.waitForSelector("astro-island:not([ssr])");
+			await expect
+				.poll(() => rowHeads(page))
+				.toEqual([expect.any(String), expect.stringMatching(/Critère désormais validé\.$/)]);
+			await syncButton(page).click();
+			await expect.poll(() => live(page)).toBe("Tableau déjà à jour : aucune action ajoutée ni modifiée.");
+			expect(await rowHeads(page)).toHaveLength(2);
+			await expect(control(page, "Priorité", "8.3").inputValue()).resolves.toBe("moyenne");
+			await expect.poll(() => schemaPreview(page)).toContain("(critère désormais validé)");
+
+			// Plan de 2027 : seulement les actions de 2027 ; bilan de 2026.
+			await page.getByLabel("Année du plan d’action").selectOption("2027");
+			const plan = await planPreview(page);
+			expect(plan).toContain("Aperçu du plan d’action 2027");
+			const planned = plan.slice(plan.indexOf("Actions prévues en 2027"), plan.indexOf("Bilan de l’année précédente"));
+			expect(planned).toContain("Critère 8.3");
+			expect(planned).not.toContain("Critère 1.1");
+			expect(plan.slice(plan.indexOf("Bilan de l’année précédente (2026)"))).toContain(
+				`Critère 1.1${NBSP}: Chaque image porteuse d’information a-t-elle une alternative textuelle${NBSP}? Page concernée${NBSP}: Paiement. Priorité${NBSP}: haute. Bilan${NBSP}: faite.`,
+			);
+			const md = await download(page, "Télécharger le plan d’action 2027 (Markdown)");
+			expect(md.name).toMatch(/^plan-action-2027-exemple\.fr-\d{4}-\d{2}-\d{2}\.md$/);
+			expect(md.content.startsWith("# Plan d’action 2027\n")).toBe(true);
+			if (captures) await page.locator(".audit-schema").screenshot({ path: join(captures, "schema-actions.png") });
+			await page.close();
+		});
+
+		it("audit incomplet : aucune action inventée, renvoi vers l’audit", async () => {
+			const page = await browser.newPage();
+			await openWith(
+				page,
+				sessionJson((ev) => delete (ev["11.1"] as Record<string, unknown>)[P1]),
+			);
+			await syncButton(page).click();
+			await expect
+				.poll(() => live(page))
+				.toBe("Audit incomplet : aucune action n’est proposée tant que l’audit n’est pas terminé.");
+			await expect(page.locator(".audit-schema-table").count()).resolves.toBe(0);
+			await expect(
+				page.locator(".audit-schema").getByRole("link", { name: "Terminer l’audit (section 3)" }).getAttribute("href"),
+			).resolves.toBe("#audit-resultat");
+			await expect(schemaPreview(page)).resolves.toContain(
+				"L’audit n’est pas complet : aucune action n’a encore été proposée à partir de ses résultats.",
+			);
+			await page.close();
+		});
+
+		it("saisies hostiles : schéma et plan téléchargés sans balise active (HTML ouvert dans Chromium), Markdown inerte", async () => {
+			const page = await browser.newPage();
+			await openWith(page, sessionJson());
+			await setPeriod(page);
+			const HOSTILE = '<script>alert("s")</script><img src=x onerror=alert(1)>[clic](javascript:alert(2)) ‮gnp';
+			await page.getByLabel("Stratégie", { exact: true }).fill(`${HOSTILE}\n# titre\n<iframe src=javascript:alert(3)>`);
+			await page.getByLabel("Intitulé d’une action libre").fill(HOSTILE);
+			await page.getByRole("button", { name: "Ajouter l’action" }).click();
+			await expect.poll(() => rowHeads(page)).toHaveLength(1);
+			await page.getByLabel(/^Commentaire de l’action : /).fill("<svg onload=alert(4)>");
+			await page.getByLabel(/^Année cible de l’action : /).selectOption("2026");
+			await expect.poll(() => schemaPreview(page)).toContain('<script>alert("s")</script>');
+
+			for (const [button, title] of [
+				["Télécharger le schéma (HTML)", "Schéma pluriannuel de mise en accessibilité numérique"],
+				["Télécharger le plan d’action 2026 (HTML)", "Plan d’action 2026"],
+			] as const) {
+				const file = await download(page, button);
+				const viewer = await browser.newPage();
+				const dialogs: string[] = [];
+				viewer.on("dialog", (d) => {
+					dialogs.push(d.message());
+					void d.dismiss();
+				});
+				await viewer.setContent(file.content, { waitUntil: "load" });
+				await viewer.waitForTimeout(300);
+				expect(dialogs).toEqual([]);
+				const parsed = await viewer.evaluate(() => ({
+					title: document.title,
+					lang: document.documentElement.lang,
+					active: document.querySelectorAll("script, img, iframe, svg, object, embed, style, link, form, a").length,
+					handlers: [...document.querySelectorAll("*")].flatMap((el) =>
+						[...el.attributes].filter((a) => a.name.startsWith("on")).map((a) => a.name),
+					),
+					tags: [...new Set([...document.body.querySelectorAll("*")].map((el) => el.localName))].sort(),
+					text: document.body.innerText,
+				}));
+				expect(parsed).toMatchObject({ title, lang: "fr", active: 0, handlers: [] });
+				for (const tag of parsed.tags) expect(["h1", "h2", "h3", "li", "main", "p", "ul"]).toContain(tag);
+				expect(parsed.text).toContain('<script>alert("s")</script><img src=x onerror=alert(1)>');
+				expect(parsed.text).not.toMatch(/[‪-‮⁦-⁩]/);
+				await viewer.close();
+			}
+
+			for (const button of ["Télécharger le schéma (Markdown)", "Télécharger le plan d’action 2026 (Markdown)"]) {
+				const md = await download(page, button);
+				const tree = markdownToHast(md.content, { features: { rawHtml: true }, position: false }) as {
+					children?: unknown[];
+				};
+				const elements: string[] = [];
+				const raw: string[] = [];
+				const walk = (node: { type?: string; tagName?: string; value?: string; children?: unknown[] }) => {
+					if (node.type === "element") elements.push(node.tagName ?? "");
+					if (node.type === "raw") raw.push(node.value ?? "");
+					for (const child of node.children ?? []) walk(child as typeof node);
+				};
+				walk(tree);
+				expect(raw).toEqual([]);
+				for (const tag of new Set(elements)) expect(["h1", "h2", "h3", "li", "p", "ul"]).toContain(tag);
+			}
+			await page.close();
+		});
+
+		it("saisies gardées : rechargement, puis export et import de l’audit dans un navigateur vierge", async () => {
+			const first = await browser.newContext();
+			const a = await first.newPage();
+			await openWith(a, sessionJson());
+			await setPeriod(a);
+			await syncButton(a).click();
+			await expect.poll(() => rowHeads(a)).toHaveLength(2);
+			await a.getByLabel("Référent accessibilité numérique").fill("Marie Durand, rattachée à la direction");
+			await control(a, "Priorité", "8.3").selectOption("basse");
+			await a.getByRole("button", { name: /^Retirer l’action : Critère 1\.1 / }).click();
+			await a.getByLabel("Intitulé d’une action libre").fill("Former l’équipe");
+			await a.getByRole("button", { name: "Ajouter l’action" }).click();
+			await a.waitForFunction(() => localStorage.getItem("rampe.audit.session")?.includes("Former l’équipe"));
+			const check = async (page: Page) => {
+				await expect.poll(() => rowHeads(page)).toHaveLength(3);
+				await expect(page.getByLabel("Année de début").inputValue()).resolves.toBe("2026");
+				await expect(page.getByLabel("Durée").inputValue()).resolves.toBe("3");
+				await expect(page.getByLabel("Référent accessibilité numérique").inputValue()).resolves.toBe(
+					"Marie Durand, rattachée à la direction",
+				);
+				await expect(control(page, "Priorité", "8.3").inputValue()).resolves.toBe("basse");
+				const heads = await rowHeads(page);
+				expect(heads[0]).toMatch(/Retirée\.$/);
+				expect(heads[2]).toBe("Former l’équipe");
+				await expect(page.getByRole("button", { name: /^Rétablir l’action : Critère 1\.1/ }).count()).resolves.toBe(1);
+				const text = await schemaPreview(page);
+				expect(text).toContain("Marie Durand, rattachée à la direction");
+				expect(text).toContain("Actions retirées par l’organisme, gardées pour mémoire");
+			};
+			await check(a);
+			await a.reload();
+			await a.waitForSelector("astro-island:not([ssr])");
+			await check(a);
+			const file = await download(a, "Télécharger l’audit (JSON)");
+			expect(file.json.schemaVersion).toBe(4);
+			expect(file.json.schema.actions).toHaveLength(3);
+			await first.close();
+			const second = await browser.newContext();
+			const b = await second.newPage();
+			await openAudit(b);
+			await b
+				.getByLabel("Importer un audit (JSON)")
+				.setInputFiles({ name: file.name, mimeType: "application/json", buffer: Buffer.from(file.content) });
+			await check(b);
+			await second.close();
+		});
+
+		for (const [colorScheme, width] of [
+			["light", 1280],
+			["dark", 1280],
+			["light", 375],
+		] as const) {
+			const name = `${colorScheme === "light" ? "clair" : "sombre"}${width === 375 ? ", 375 px" : ""}`;
+			it(`axe : aucune violation sur le schéma et le plan (${name})`, async () => {
+				const page = await browser.newPage({ colorScheme, viewport: { width, height: 900 } });
+				await openWith(page, sessionJson());
+				await setPeriod(page);
+				await syncButton(page).click();
+				await expect.poll(() => rowHeads(page)).toHaveLength(2);
+				await page.getByRole("button", { name: /^Retirer l’action : Critère 8\.3 / }).click();
+				await page.getByLabel("Intitulé d’une action libre").fill("");
+				await page.getByRole("button", { name: "Ajouter l’action" }).click();
+				await expect(page.getByLabel("Intitulé d’une action libre").getAttribute("aria-invalid")).resolves.toBe("true");
+				await page.getByLabel("Année de début").fill("10");
+				await page.getByLabel("Année de début").blur();
+				await page.locator("#schema-debut-erreur").waitFor();
+				if (captures) {
+					await page
+						.locator(".audit-schema")
+						.screenshot({ path: join(captures, `schema-${colorScheme}-${width}.png`) });
+				}
+				expect(await axeViolations(page)).toEqual([]);
+				expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBeLessThanOrEqual(width);
+				await page.close();
+			});
+		}
+
+		it("année de début invalide : jamais enregistrée ; l’export est bloqué, focus sur le champ", async () => {
+			const page = await browser.newPage();
+			await openWith(page, sessionJson());
+			await setPeriod(page);
+			const downloads: string[] = [];
+			page.on("download", (d) => downloads.push(d.suggestedFilename()));
+			await page.getByLabel("Année de début").fill("0010");
+			await page.getByRole("button", { name: "Télécharger le schéma (HTML)" }).click();
+			await expect.poll(() => page.evaluate(() => document.activeElement?.id)).toBe("schema-debut");
+			await expect.poll(() => live(page)).toBe("Export impossible : l’année de début est incomplète ou hors limites.");
+			await page.waitForTimeout(600);
+			expect(downloads).toEqual([]);
+			expect((await stored(page)).schema.startYear).toBe(2026);
+			// Corrigée sans quitter le champ : l'export l'enregistre avant de produire le document.
+			await page.getByLabel("Année de début").fill("2027");
+			const [file] = await Promise.all([
+				page.waitForEvent("download"),
+				page
+					.getByRole("button", { name: "Télécharger le schéma (Markdown)" })
+					.evaluate((b) => (b as HTMLButtonElement).click()),
+			]);
+			expect(await readFile(await file.path(), "utf8")).toContain("Période : de 2027 à 2029 (3 ans).");
+			await page.close();
+		});
+
+		it("au clavier seul : ajouter une action libre, régler sa priorité, exporter", async () => {
+			const page = await browser.newPage();
+			await openWith(page, sessionJson());
+			await setPeriod(page);
+			await page.focus("body");
+			await tabUntil(page, "el.id === 'schema-nouvelle-action'", { max: 600 });
+			await page.keyboard.type("Former l’équipe éditoriale");
+			await page.keyboard.press("Enter");
+			await expect.poll(() => rowHeads(page)).toEqual(["Former l’équipe éditoriale"]);
+			await expect.poll(() => live(page)).toBe("Action ajoutée : Former l’équipe éditoriale");
+			await tabUntil(page, "el.getAttribute('aria-label') === 'Priorité de l’action : Former l’équipe éditoriale'", {
+				back: true,
+				max: 20,
+			});
+			await page.keyboard.press("h"); // recherche par la première lettre : « haute »
+			await expect
+				.poll(() => page.getByLabel("Priorité de l’action : Former l’équipe éditoriale").inputValue())
+				.toBe("haute");
+			await tabUntil(page, "el.textContent === 'Télécharger le schéma (Markdown)'", { max: 40 });
+			const md = await download(page, "", "Enter");
+			expect(md.content).toContain(
+				`- Former l’équipe éditoriale. Priorité${NBSP}: haute. Année cible${NBSP}: [à définir].`,
+			);
 			await page.close();
 		});
 	});
