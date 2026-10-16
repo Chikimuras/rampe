@@ -40,8 +40,13 @@ let report: { pages: { results: { kind: string; criteria: string[] }[] }[] };
 beforeAll(async () => {
 	out = await mkdtemp(join(tmpdir(), "rampe-site-"));
 	await new Promise<void>((resolve, reject) =>
-		execFile(process.execPath, [astro, "build", "--outDir", out], { cwd: root }, (error, _o, stderr) =>
-			error ? reject(new Error(stderr)) : resolve(),
+		// NODE_ENV : vitest le fixe à « test », ce qui donnerait le JSX de développement (jsxDEV, chemins des sources).
+		// Le budget se mesure sur le build de production, celui que la CI publie.
+		execFile(
+			process.execPath,
+			[astro, "build", "--outDir", out],
+			{ cwd: root, env: { ...process.env, NODE_ENV: "production" } },
+			(error, _o, stderr) => (error ? reject(new Error(stderr)) : resolve()),
 		),
 	);
 	server = createServer(async (req, res) => {
@@ -168,9 +173,18 @@ describe("audit guidé (bout en bout)", { timeout: 60_000 }, () => {
 			`/audit/ : ${files} modules JS, ${js} octets non compressés, ${gzip} octets en gzip ; scripts en ligne d'Astro : ${inline} octets`,
 		);
 		expect(js).toBeGreaterThan(0);
+		// Build de production : ni JSX de développement, ni chemin absolu de la machine de build dans le bundle.
+		for (const name of await readdir(join(out, "_astro"))) {
+			if (!name.endsWith(".js")) continue;
+			const code = await readFile(join(out, "_astro", name), "utf8");
+			expect(code.includes("jsxDEV"), `${name} : jsxDEV`).toBe(false);
+			expect(code.includes(root.replace(/\/$/, "")), `${name} : chemin absolu`).toBe(false);
+		}
 		// Budget mesuré en gzip, ce que le réseau transporte réellement : 40 Ko pour /audit/. Historique en octets
-		// bruts : 62 299 (« Résultat », ADR-0015), 72 128 (sauvegarde, ADR-0016), 99 345 (déclaration, ADR-0017),
-		// soit 32 683 octets en gzip à ce moment-là.
+		// bruts, mesuré jusqu'à l'ADR-0017 sur un build en NODE_ENV=test (JSX de développement, plus lourd) :
+		// 62 299 (« Résultat », ADR-0015), 72 128 (sauvegarde, ADR-0016), 99 345 (déclaration, ADR-0017), soit
+		// 32 683 octets en gzip. Depuis le schéma pluriannuel (ADR-0018), build de production : 108 290 octets bruts,
+		// 37 461 en gzip.
 		expect(gzip).toBeLessThan(40_000);
 		await page.close();
 	});
