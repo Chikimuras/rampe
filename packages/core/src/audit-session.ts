@@ -417,9 +417,9 @@ export function progress(
 export const INVALID_SESSION = "Ce fichier n’est pas un audit Rampe, ou il a été modifié. Rien n’a été importé.";
 export const FUTURE_SESSION =
 	"Cet audit a été créé par une version plus récente de Rampe : rechargez la page, puis importez-le à nouveau. Rien n’a été importé.";
-/** Rapport de la CLI donné au champ de l'audit : on oriente vers le bon champ. */
+/** Rapport automatique (CLI ou extension) donné au champ de l'audit : on oriente vers le bon champ. */
 export const REPORT_GIVEN_AS_SESSION =
-	"Ce fichier est un rapport de la CLI Rampe, pas un audit complet : importez-le avec le champ « Importer un rapport de la CLI (JSON) », section « 1. Pages de l’échantillon ». Rien n’a été importé.";
+	"Ce fichier est un rapport automatique de Rampe (CLI ou extension), pas un audit complet : importez-le avec le champ « Importer un rapport automatique (CLI ou extension, JSON) », section « 1. Pages de l’échantillon ». Rien n’a été importé.";
 
 /**
  * Session écrite par une version plus récente de Rampe (onglet resté sur l'ancienne version pendant un

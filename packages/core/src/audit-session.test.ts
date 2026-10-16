@@ -408,7 +408,7 @@ describe("export et import d'un audit (ADR-0016)", () => {
 		for (const name of ["@rampe/cli", "@rampe/extension"]) {
 			const e = refusal({ schemaVersion: 2, tool: { name, version: "0.0.0" }, pages: [] });
 			expect(e.message).toBe(REPORT_GIVEN_AS_SESSION);
-			expect(e.message).toMatch(/« Importer un rapport de la CLI \(JSON\) »/);
+			expect(e.message).toMatch(/« Importer un rapport automatique \(CLI ou extension, JSON\) »/);
 		}
 	});
 

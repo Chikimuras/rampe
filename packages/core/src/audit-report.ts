@@ -102,10 +102,10 @@ const MAX_ERROR = 500;
 const MAX_HELP = 300;
 
 export const INVALID_REPORT =
-	"Ce fichier n’est pas un rapport de la CLI Rampe, ou il a été modifié. Rien n’a été importé.";
+	"Ce fichier n’est pas un rapport automatique de Rampe (CLI ou extension), ou il a été modifié. Rien n’a été importé.";
 /** Audit complet donné au champ du rapport (ADR-0016) : on oriente vers le bon champ. */
 export const SESSION_GIVEN_AS_REPORT =
-	"Ce fichier est un audit Rampe complet (téléchargé depuis l’audit guidé), pas un rapport de la CLI : importez-le avec le champ « Importer un audit (JSON) », section « Sauvegarde de l’audit ». Rien n’a été importé.";
+	"Ce fichier est un audit Rampe complet (téléchargé depuis l’audit guidé), pas un rapport automatique : importez-le avec le champ « Importer un audit (JSON) », section « Sauvegarde de l’audit ». Rien n’a été importé.";
 
 /**
  * Valide un rapport JSON de la CLI (ADR-0014 §4), déjà désérialisé par `JSON.parse` seul.
