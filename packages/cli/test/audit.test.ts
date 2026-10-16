@@ -3,6 +3,7 @@ import {
 	type AxeRawResult,
 	buildReport,
 	classifyResults,
+	exitCodeFor,
 	formatReport,
 	formatSynthesis,
 	parseAuditUrl,
@@ -279,5 +280,32 @@ describe("formatSynthesis", () => {
 		expect(text).toContain("1 page en erreur, non auditée :\n  - https://***:***@exemple.fr/lent");
 		expect(text).not.toContain("secret");
 		expect(text).toContain("Les 106 critères demandent une vérification humaine.");
+	});
+});
+
+describe("exitCodeFor", () => {
+	const page = (...results: ReturnType<typeof classifyResults>) => ({
+		url: "https://exemple.fr/",
+		finalUrl: "https://exemple.fr/",
+		title: "T",
+		warnings: [],
+		results,
+		error: null,
+	});
+	const nc = classifyResults([raw("image-alt", ["RGAA-1.1.1"])], []);
+	const incertain = classifyResults([raw("region", ["best-practice", "RGAA-9.2.1"])], []);
+	const aVerifier = classifyResults([], [raw("color-contrast", ["wcag2aa", "wcag143", "RGAA-3.2.1"])]);
+	const bonnePratique = classifyResults([raw("landmark-one-main", ["best-practice"])], []);
+
+	it("par défaut, seule une non-conformité donne 1 (ADR-0011 §4)", () => {
+		expect(exitCodeFor([page(), page(...nc)], false)).toBe(1);
+		expect(exitCodeFor([page(...incertain, ...aVerifier, ...bonnePratique)], false)).toBe(0);
+	});
+
+	it("en strict, un résultat incertain ou à vérifier donne aussi 1, jamais une bonne pratique", () => {
+		expect(exitCodeFor([page(...incertain)], true)).toBe(1);
+		expect(exitCodeFor([page(...aVerifier)], true)).toBe(1);
+		expect(exitCodeFor([page(...nc)], true)).toBe(1);
+		expect(exitCodeFor([page(...bonnePratique), page()], true)).toBe(0);
 	});
 });

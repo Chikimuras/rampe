@@ -94,6 +94,16 @@ export const uncoveredCriteria = () => uncoveredFor(axe.getRules());
 export const buildReport = (input: Omit<Parameters<typeof buildCoreReport>[0], "tool">) =>
 	buildCoreReport({ ...input, tool: { name: "@rampe/cli", version: pkg.version } });
 
+/**
+ * Code de sortie des pages auditées (hors pages en erreur) : 1 dès une non-conformité (ADR-0011 §4). Avec `strict`,
+ * aussi dès un résultat « incertain » ou « à vérifier » : utile en CI sur un site qu'on veut sans aucun signalement.
+ * Les bonnes pratiques hors RGAA ne comptent jamais.
+ */
+export function exitCodeFor(pages: AuditPage[], strict: boolean): 0 | 1 {
+	const failing: ResultKind[] = strict ? ["non-conformite", "incertain", "a-verifier"] : ["non-conformite"];
+	return pages.some((p) => p.results.some((r) => failing.includes(r.kind))) ? 1 : 0;
+}
+
 // --- Sortie console ---
 
 function ruleLine(r: AuditResult, detail: string, showFlags = true): string {

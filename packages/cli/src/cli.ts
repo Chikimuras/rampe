@@ -12,6 +12,7 @@ import {
 	type AuditPage,
 	buildReport,
 	classifyResults,
+	exitCodeFor,
 	formatPage,
 	formatReport,
 	formatSynthesis,
@@ -35,8 +36,8 @@ import {
 import { renderHtmlReport } from "./rapport.ts";
 
 const USAGE = `Usage :
-  rampe audit <url> [--json <fichier>] [--html <fichier>] [--timeout <ms>]
-  rampe audit --echantillon <fichier> [--json <fichier>] [--html <fichier>] [--timeout <ms>]
+  rampe audit <url> [--json <fichier>] [--html <fichier>] [--timeout <ms>] [--theme clair|sombre] [--largeur <px>] [--strict]
+  rampe audit --echantillon <fichier> [mêmes options]
   rampe echantillon <url> [--sortie <fichier>] [--max <n>] [--graine <n>] [--timeout <ms>]
 
 audit
@@ -45,6 +46,9 @@ audit
   --json <fichier>       écrit aussi le résultat détaillé en JSON
   --html <fichier>       écrit aussi un rapport HTML lisible par un non-expert
   --timeout <ms>         durée maximale de l’audit d’une page : chargement, injection et analyse (défaut : 60000)
+  --theme clair|sombre   préférence de couleurs du navigateur, prefers-color-scheme (défaut : clair)
+  --largeur <px>         largeur de la fenêtre, de 200 à 3840 ; hauteur 720 (défaut : 1280)
+  --strict               sort aussi en 1 sur un résultat « rattachement incertain » ou « à vérifier »
 
 echantillon : propose un échantillon de pages selon la méthode RGAA, à relire et modifier
   <url>                  page d’accueil du site
@@ -53,7 +57,8 @@ echantillon : propose un échantillon de pages selon la méthode RGAA, à relire
   --graine <n>           graine du tirage au hasard, pour rejouer le même échantillon
   --timeout <ms>         durée maximale du chargement de l’accueil (défaut : 60000)
 
-Codes de sortie : 0 aucune non-conformité détectée, 1 non-conformité(s) détectée(s), 2 erreur
+Codes de sortie : 0 aucune non-conformité détectée, 1 non-conformité(s) détectée(s) (avec --strict : ou résultat
+incertain ou à vérifier), 2 erreur
 (avec --echantillon : 2 dès qu’une page est en erreur, les autres pages étant quand même auditées).`;
 
 function integer(value: string | undefined, fallback: number, option: string, min: number, max: number): number {
@@ -75,6 +80,9 @@ function parseCli(argv: string[]) {
 			sortie: { type: "string" },
 			max: { type: "string" },
 			graine: { type: "string" },
+			theme: { type: "string" },
+			largeur: { type: "string" },
+			strict: { type: "boolean" },
 			help: { type: "boolean", short: "h" },
 		},
 	});
@@ -90,7 +98,7 @@ function parseCli(argv: string[]) {
 	};
 	if (command === "echantillon") {
 		if (!target || rest.length > 0) throw new Error("Commande attendue : rampe echantillon <url>");
-		refuse(["json", "html", "echantillon"]);
+		refuse(["json", "html", "echantillon", "theme", "largeur", "strict"]);
 		return {
 			command,
 			url: parseAuditUrl(target),
@@ -103,6 +111,8 @@ function parseCli(argv: string[]) {
 	if (command !== "audit" || rest.length > 0 || Boolean(target) === Boolean(values.echantillon))
 		throw new Error("Commande attendue : rampe audit <url> ou rampe audit --echantillon <fichier>");
 	refuse(["sortie", "max", "graine"]);
+	const theme = values.theme ?? "clair";
+	if (theme !== "clair" && theme !== "sombre") throw new Error("--theme attend « clair » ou « sombre ».");
 	return {
 		command,
 		url: target ? parseAuditUrl(target) : null,
@@ -110,7 +120,18 @@ function parseCli(argv: string[]) {
 		json: values.json,
 		html: values.html,
 		timeout,
+		view: {
+			colorScheme: theme === "sombre" ? "dark" : "light",
+			viewport: { width: integer(values.largeur, 1280, "--largeur", 200, 3840), height: 720 },
+		} satisfies View,
+		strict: values.strict ?? false,
 	} as const;
+}
+
+/** Conditions d'affichage de chaque page auditée : thème du navigateur et taille de la fenêtre. */
+interface View {
+	colorScheme: "light" | "dark";
+	viewport: { width: number; height: number };
 }
 
 const isHttp = (href: string) => /^https?:$/.test(new URL(href).protocol);
@@ -129,8 +150,14 @@ async function withBrowser<T>(fn: (browser: Browser) => Promise<T>): Promise<T> 
  * Exécute `fn` dans une page neuve (donc un contexte neuf) bornée par un délai global : une page qui bloque son fil
  * principal (boucle infinie) bloquerait aussi axe.run. Au dépassement, la page est fermée.
  */
-async function onFreshPage<T>(browser: Browser, timeout: number, what: string, fn: (page: Page) => Promise<T>) {
-	const page = await browser.newPage();
+async function onFreshPage<T>(
+	browser: Browser,
+	timeout: number,
+	what: string,
+	fn: (page: Page) => Promise<T>,
+	view?: View,
+) {
+	const page = await browser.newPage(view);
 	let timer: NodeJS.Timeout | undefined;
 	try {
 		const work = fn(page);
@@ -340,19 +367,33 @@ interface Outputs {
 	html: string | undefined;
 }
 
-async function auditOne(url: URL, out: Outputs, timeout: number): Promise<number> {
+interface AuditOptions {
+	timeout: number;
+	view: View;
+	strict: boolean;
+}
+
+/** Code de sortie des pages auditées ; en mode strict, dit pourquoi il vaut 1 sans non-conformité. */
+function exitCode(pages: AuditPage[], strict: boolean): number {
+	const code = exitCodeFor(pages, strict);
+	if (code === 1 && exitCodeFor(pages, false) === 0)
+		console.log("\nMode --strict : des résultats « rattachement incertain » ou « à vérifier » font sortir en 1.");
+	return code;
+}
+
+async function auditOne(url: URL, out: Outputs, { timeout, view, strict }: AuditOptions): Promise<number> {
 	const startedAt = new Date();
 	return withBrowser(async (browser) => {
-		const auditPage = await onFreshPage(browser, timeout, "audit", (page) => inspect(page, url, timeout));
+		const auditPage = await onFreshPage(browser, timeout, "audit", (page) => inspect(page, url, timeout), view);
 		for (const w of auditPage.warnings) console.error(`Avertissement : ${stripControl(w)}`);
 		console.log(formatReport(auditPage, uncoveredCriteria()));
 		await writeOutputs(out, startedAt, browser, [auditPage]);
-		return auditPage.results.some((r) => r.kind === "non-conformite") ? 1 : 0;
+		return exitCode([auditPage], strict);
 	});
 }
 
 /** Audite les pages une à une dans un seul navigateur, chacune dans un contexte neuf (ADR-0012 §3 et §4). */
-async function auditSample(file: string, out: Outputs, timeout: number): Promise<number> {
+async function auditSample(file: string, out: Outputs, { timeout, view, strict }: AuditOptions): Promise<number> {
 	const { urls, warnings } = parseSampleFile(await readFile(file, "utf8"));
 	for (const w of warnings) console.error(`Avertissement : ${w}`);
 	const startedAt = new Date();
@@ -362,7 +403,7 @@ async function auditSample(file: string, out: Outputs, timeout: number): Promise
 			console.log(`\n=== Page ${i + 1}/${urls.length} : ${redact(url.href)} ===`);
 			let auditPage: AuditPage;
 			try {
-				auditPage = await onFreshPage(browser, timeout, "audit", (page) => inspect(page, url, timeout));
+				auditPage = await onFreshPage(browser, timeout, "audit", (page) => inspect(page, url, timeout), view);
 			} catch (e) {
 				const error = clean(e).split("\n")[0] ?? "";
 				console.error(`Erreur sur ${redact(url.href)} : ${error}`);
@@ -375,7 +416,7 @@ async function auditSample(file: string, out: Outputs, timeout: number): Promise
 		console.log(`\n${formatSynthesis(pages, uncoveredCriteria())}`);
 		await writeOutputs(out, startedAt, browser, pages);
 		if (pages.some((p) => p.error !== null)) return 2;
-		return pages.some((p) => p.results.some((r) => r.kind === "non-conformite")) ? 1 : 0;
+		return exitCode(pages, strict);
 	});
 }
 
@@ -433,8 +474,8 @@ try {
 		o.command === "echantillon"
 			? await sample(o.url, o.sortie, o.max, o.seed, o.timeout)
 			: o.url
-				? await auditOne(o.url, o, o.timeout)
-				: await auditSample(o.file as string, o, o.timeout);
+				? await auditOne(o.url, o, o)
+				: await auditSample(o.file as string, o, o);
 } catch (e) {
 	console.error(`Erreur : ${clean(e)}`);
 	process.exitCode = 2;

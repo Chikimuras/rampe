@@ -1,0 +1,59 @@
+# Échantillon RGAA du site de Rampe (ADR-0012, ADR-0021 §1)
+#
+# Point de départ : `rampe echantillon http://127.0.0.1:<port>/rampe/ --graine 2021` sur le site servi par
+# `pnpm audit:rampe --servir` (accueil + les 3 rubriques de la navigation principale), puis complété à la main
+# selon la méthode. Il n'est pas régénéré en CI. Le gate l'audite en 375 px ; il sert aussi à l'auto-évaluation.
+# Les adresses sont celles de production : `pnpm audit:rampe` (scripts/audit-rampe.mjs) les réécrit vers le build
+# local, et refuse toute adresse hors de https://chikimuras.github.io/rampe/.
+# Une page retirée du site fait échouer le gate (HTTP 404, code 2) : mettez alors l'échantillon à jour.
+#
+# Pages types de la méthode qui N'EXISTENT PAS ENCORE sur le site (à ajouter dès qu'elles existent) :
+#   contact — n'existe pas encore
+#   mentions légales — n'existe pas encore (avec la déclaration : ⛔ Alexandre, ADR-0021 §3)
+#   accessibilité (déclaration) — n'existe pas encore (obligation légale ; publication : ⛔ Alexandre, ADR-0021 §3)
+#   plan du site — n'existe pas encore
+#   aide — n'existe pas encore
+#   authentification — sans objet tant que le site n'a pas de compte (ADR-0005 : pas de backend)
+#   recherche — n'existe pas encore
+#   processus — aucun formulaire en plusieurs pages : l'audit guidé est une seule page (ci-dessous)
+#   documents téléchargeables — les fichiers produits par l'audit guidé (JSON, déclaration) sont générés dans le
+#     navigateur ; ils s'évaluent à la main
+
+# accueil — page indiquée en entrée
+https://chikimuras.github.io/rampe/
+
+# rubrique — lien « Référentiel » de la navigation principale
+https://chikimuras.github.io/rampe/referentiel/
+
+# contenu particulier — une fiche de critère (texte officiel, tests, méthodologie, liens vers le glossaire)
+https://chikimuras.github.io/rampe/referentiel/1-1/
+
+# contenu particulier — le glossaire (très longue page, ancres)
+https://chikimuras.github.io/rampe/referentiel/glossaire/
+
+# rubrique — lien « Audit guidé » de la navigation principale ; seule page avec du JavaScript (îlot Preact,
+# formulaires) : le service principal de Rampe
+https://chikimuras.github.io/rampe/audit/
+
+# rubrique — liens « Cockpit », « ADR » et « Journal » de la navigation principale
+https://chikimuras.github.io/rampe/cockpit/
+
+# contenu particulier — une page ADR du cockpit (Markdown rendu, avec un tableau)
+https://chikimuras.github.io/rampe/cockpit/adr/0011-cli-audit-playwright/
+
+# contenu particulier — une page du journal
+https://chikimuras.github.io/rampe/cockpit/journal/2026-10-15/
+
+# contenu particulier — une page de documentation (feuille de route : listes de tâches converties en statuts)
+https://chikimuras.github.io/rampe/cockpit/docs/roadmap/
+
+# hasard — 2 pages sur 11, soit 18 % (au moins 10 % exigés). Méthode, rejouable :
+#   liste de départ : chaque dossier contenant un index.html dans le build (137 pages), moins les 9 pages ci-dessus
+#   choisies à la main (dans leur version d'origine : ADR-0021 au lieu de l'ADR-0011), triée par ordre
+#   alphabétique : 128 pages ;
+#   générateur : mulberry32 (celui de `rampe echantillon`), graine 2021 ;
+#   tirage : index = floor(aléa × 128), sans remise, jusqu'à 2 pages distinctes.
+https://chikimuras.github.io/rampe/referentiel/5-1/
+
+# hasard — second tirage de la même méthode
+https://chikimuras.github.io/rampe/referentiel/1-9/

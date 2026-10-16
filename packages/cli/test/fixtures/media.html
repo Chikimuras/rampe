@@ -1,0 +1,21 @@
+<!doctype html>
+<html lang="fr">
+	<head>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<title>Défauts selon le thème et la largeur</title>
+		<style>
+			body { background: #fff; color: #000; }
+			/* Contraste insuffisant (3.2) seulement en thème sombre : --theme sombre doit le voir, le défaut non. */
+			@media (prefers-color-scheme: dark) { body { background: #000; color: #333; } }
+			/* Contraste insuffisant seulement en fenêtre étroite : --largeur 375 doit le voir, le défaut non. */
+			@media (max-width: 500px) { .etroit { color: #ccc; } }
+		</style>
+	</head>
+	<body>
+		<main>
+			<h1>Défauts selon le thème et la largeur</h1>
+			<p class="etroit">Texte lisible sur grand écran seulement.</p>
+		</main>
+	</body>
+</html>
