@@ -44,6 +44,9 @@ jobs:
             '  userns,' '}' | sudo tee /etc/apparmor.d/playwright-chromium
           sudo apparmor_parser -r /etc/apparmor.d/playwright-chromium
       - run: pnpm check
+      # Auto-évaluation de Rampe (ADR-0021 §2) : fragments validés strictement, et docs/audit-rampe/session.json
+      # identique à ce qu'ils produisent.
+      - run: pnpm auto-evaluation --verifier
       - run: pnpm build
       # Rampe audite Rampe (ADR-0021 §1) : la vraie CLI, en --strict, audite toutes les pages construites (thèmes
       # clair puis sombre) et l'échantillon versionné en 375 px. Tout signalement (non-conformité, incertain, à vérifier)
