@@ -17,6 +17,14 @@ export interface AxeRawResult {
 	nodes: { target: unknown[]; html: string; failureSummary?: string }[];
 }
 
+/**
+ * Options d'exécution d'axe, communes à la CLI et à l'extension (ADR-0020) : `iframes: false`. Avec la valeur par
+ * défaut, axe interroge les iframes par `postMessage`, et une page hostile peut répondre depuis un cadre de même
+ * origine pour faire passer ses non-conformités en « à vérifier » ou en ajouter de fausses. Les iframes ne sont pas
+ * analysées par Rampe : toute réponse d'un cadre serait forgée. `frame-tested` reste signalé (à vérifier).
+ */
+export const AXE_RUN_OPTIONS = { iframes: false } as const;
+
 /** Extrait HTML d'un élément en défaut, borné à l'écriture : il peut contenir des données de la page. */
 export const NODE_HTML_MAX = 500;
 /** Titre de page : borné à l'écriture. */

@@ -27,7 +27,8 @@ const pkg = fileURLToPath(new URL("..", import.meta.url));
 const vite = fileURLToPath(new URL("../node_modules/vite/bin/vite.js", import.meta.url));
 const site = fileURLToPath(new URL("../../../apps/site/", import.meta.url));
 const astro = join(site, "node_modules/astro/bin/astro.mjs");
-const defauts = fileURLToPath(new URL("../../cli/test/fixtures/defauts.html", import.meta.url));
+const cliFixtures = fileURLToPath(new URL("../../cli/test/fixtures/", import.meta.url));
+const defauts = join(cliFixtures, "defauts.html");
 // Captures d'écran facultatives, pour la relecture humaine : RAMPE_CAPTURES=<dossier>.
 const captures = process.env.RAMPE_CAPTURES;
 const TYPES: Record<string, string> = {
@@ -52,7 +53,12 @@ const FIXTURES = {
 	hostile: "<img src=x onerror=alert(1)>",
 	boucle: "Boucle infinie",
 	lourde: "Page lourde",
+	// Pages de la CLI (ADR-0020) : témoin à iframe muette, pièges dont l'iframe répond à la messagerie d'axe.
+	"ifr-honest": "Iframe honnete",
+	"ifr-null": "Piege iframe ifr-null",
+	"ifr-fake": "Piege iframe ifr-fake",
 } as const;
+const IFRAMES = new Set(["ifr-honest", "ifr-null", "ifr-fake"]);
 
 let tmp: string;
 let ext: string;
@@ -90,6 +96,10 @@ beforeAll(async () => {
 		if (path === "/fixture/defauts") return res.writeHead(200, html).end(await readFile(defauts));
 		if (path === "/fixture/hostile") return res.writeHead(200, html).end(HOSTILE);
 		if (path === "/fixture/boucle") return res.writeHead(200, html).end(BOUCLE);
+		const name = path.slice("/fixture/".length);
+		// Noms fixes : aucun chemin venu de la requête n'atteint le disque.
+		if (path.startsWith("/fixture/") && IFRAMES.has(name))
+			return res.writeHead(200, html).end(await readFile(join(cliFixtures, `${name}.html`)));
 		if (path === "/fixture/lourde") return res.writeHead(200, html).end(LOURDE);
 		if (path === "/fixture/document.pdf") return res.writeHead(200, { "content-type": "application/pdf" }).end(PDF);
 		if (!path.startsWith("/rampe/")) return res.writeHead(404).end();
@@ -286,6 +296,28 @@ describe("extension navigateur (bout en bout)", { timeout: 90_000 }, () => {
 		);
 		await expect(audit.locator(".audit-page-list li").textContent()).resolves.toContain("Page avec défauts connus");
 		await Promise.all([audit.close(), popup.close(), page.close()]);
+	});
+
+	it("une iframe qui répond à la messagerie d'axe ne change pas le résultat (ADR-0020, iframes: false)", async () => {
+		const results = async (name: keyof typeof FIXTURES) => {
+			const { page, url } = await openFixture(name);
+			await clickAction(url);
+			const popup = await openPopup({ url });
+			await popup.getByRole("button", { name: "Analyser cette page" }).click();
+			await expect.poll(() => status(popup), { timeout: 30_000 }).toMatch(/^Analyse terminée/);
+			const [download] = await Promise.all([
+				popup.waitForEvent("download"),
+				popup.getByRole("button", { name: "Télécharger le rapport (JSON)" }).click(),
+			]);
+			const report = JSON.parse(await readFile(await download.path(), "utf8"));
+			const text = await status(popup);
+			await Promise.all([popup.close(), page.close()]);
+			return { text, results: report.pages[0].results as { ruleId: string; kind: string }[] };
+		};
+		const witness = await results("ifr-honest");
+		expect(witness.text).toMatch(/^Analyse terminée : 4 règles en non-conformité/);
+		expect(witness.results.find((r) => r.ruleId === "frame-tested")?.kind).toBe("a-verifier");
+		for (const trap of ["ifr-null", "ifr-fake"] as const) expect(await results(trap), trap).toEqual(witness);
 	});
 
 	it("le panneau ne peut joindre aucun serveur : la CSP bloque toute connexion", async () => {

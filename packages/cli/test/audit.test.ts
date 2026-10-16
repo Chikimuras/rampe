@@ -23,20 +23,23 @@ const raw = (id: string, tags: string[], nodes = [node(`#${id}`)]): AxeRawResult
 describe("parseAxeOutput", () => {
 	it("relit un résultat axe bien formé", () => {
 		const r = raw("image-alt", ["wcag2a"]);
-		expect(parseAxeOutput(JSON.stringify({ violations: [r], incomplete: [] }))).toEqual({
-			violations: [r],
-			incomplete: [],
-		});
+		const shadow = { ...raw("label", []), nodes: [{ target: [["#hote", "input"]], html: "<input>" }] };
+		const ok = { title: "Titre", violations: [r], incomplete: [shadow] };
+		expect(parseAxeOutput(JSON.stringify(ok))).toEqual(ok);
 	});
 
+	const out = (o: object) => JSON.stringify({ title: "T", violations: [], incomplete: [], ...o });
 	it.each([
-		["non-chaîne", { violations: [], incomplete: [] }],
+		["non-chaîne", { title: "T", violations: [], incomplete: [] }],
 		["JSON invalide", "{"],
-		["sans incomplete", JSON.stringify({ violations: [] })],
-		["règle sans id", JSON.stringify({ violations: [{ tags: [], nodes: [] }], incomplete: [] })],
+		["sans titre", JSON.stringify({ violations: [], incomplete: [] })],
+		["sans incomplete", JSON.stringify({ title: "T", violations: [] })],
+		["règle sans id", out({ violations: [{ tags: [], nodes: [] }] })],
+		["nœud sans html", out({ incomplete: [{ id: "x", tags: [], nodes: [{ target: [] }] }] })],
+		["cible objet", out({ violations: [{ id: "x", tags: [], nodes: [{ target: [{}], html: "<x>" }] }] })],
 		[
-			"nœud sans html",
-			JSON.stringify({ violations: [], incomplete: [{ id: "x", tags: [], nodes: [{ target: [] }] }] }),
+			"cible imbriquée objet",
+			out({ violations: [{ id: "x", tags: [], nodes: [{ target: [["a", {}]], html: "<x>" }] }] }),
 		],
 	])("refuse un résultat %s", (_, value) => {
 		expect(() => parseAxeOutput(value)).toThrow("résultat d’axe-core illisible");

@@ -28,7 +28,21 @@ const runCli = (...args: string[]) =>
 		});
 	});
 
-const FIXTURES = new Set(["propre", "defauts", "region", "boucle", "quitte", "csp", "titre-long", "hostile"]);
+const FIXTURES = new Set([
+	"propre",
+	"defauts",
+	"region",
+	"boucle",
+	"quitte",
+	"csp",
+	"titre-long",
+	"hostile",
+	"ifr-honest",
+	"ifr-null",
+	"ifr-fake",
+	"navdrift",
+	"docwrite",
+]);
 const json = join(tmpdir(), `rampe-e2e-${process.pid}.json`);
 const html = join(tmpdir(), `rampe-e2e-${process.pid}.html`);
 let server: Server;
@@ -121,6 +135,33 @@ describe("rampe audit (bout en bout)", { timeout: 60_000 }, () => {
 		expect(report.pages[0]?.error).toBeNull();
 		expect(nonConformities(report)).toEqual(attendu);
 		for (const id of ["1.1", "3.2", "8.3", "11.1"]) expect(stdout).toContain(`Critère ${id} — `);
+	});
+
+	it("une iframe qui répond à la messagerie d'axe ne change pas le résultat (ADR-0020, iframes: false)", async () => {
+		// Témoin : même page, iframe muette. Pièges : l'iframe répond à axe par postMessage, soit en faisant passer les
+		// non-conformités en « à vérifier » (ifr-null), soit en ajoutant un faux élément en défaut (ifr-fake).
+		const witness = await run("audit", `${base}/ifr-honest`, "--json", json);
+		expect(witness.code, witness.stderr).toBe(1);
+		const expected = (await readReport()).pages[0]?.results;
+		expect(expected?.find((r) => r.ruleId === "frame-tested")?.kind).toBe("a-verifier");
+		for (const trap of ["ifr-null", "ifr-fake"]) {
+			const { code, stdout, stderr } = await run("audit", `${base}/${trap}`, "--json", json);
+			expect(code, `${trap} : ${stderr}`).toBe(1);
+			expect(stdout).not.toContain("Aucune non-conformité");
+			expect((await readReport()).pages[0]?.results, trap).toEqual(expected);
+		}
+	});
+
+	it("sort en 2 si la page navigue pendant l'analyse", async () => {
+		const { code, stderr } = await run("audit", `${base}/navdrift`);
+		expect(code).toBe(2);
+		expect(stderr).toContain("La page a navigué pendant l’analyse : audit impossible.");
+	});
+
+	it("titre lu avec l'analyse : une page qui se réécrit pendant l'analyse ne change pas le titre", async () => {
+		const { code, stderr } = await run("audit", `${base}/docwrite`, "--json", json);
+		expect(code, stderr).toBe(1);
+		expect((await readReport()).pages[0]?.title).toBe("Piege docwrite");
 	});
 
 	it("borne le titre de la page à 300 caractères dans le JSON", async () => {

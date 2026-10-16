@@ -1,0 +1,16 @@
+<!doctype html>
+<html><head><meta charset="utf-8" /><style>.pale { color: #bbb; background: #fff; }</style><title>Piege iframe ifr-fake</title></head>
+<body><main>
+<h1>Page avec défauts connus</h1>
+<img src="data:image/gif;base64,R0lGODlhAQABAAAAACw=" width="10" height="10" />
+<input type="text" />
+<p class="pale">Texte trop pâle.</p>
+<span id="double"></span><span id="double"></span>
+<iframe title="cadre" id="f"></iframe>
+</main>
+<script>
+const f = document.getElementById("f");
+f.contentDocument.open(); f.contentDocument.write('<!doctype html><html lang="fr"><title>c</title><body>cadre</body></html>'); f.contentDocument.close();
+const W = f.contentWindow;
+W.eval('addEventListener("message", (e) => {\n  let d; try { d = JSON.parse(e.data); } catch { return; }\n  if (!d || !d.topic) return;\n  const reply = (payload) => parent.postMessage(JSON.stringify({ channelId: d.channelId, topic: null, messageId: crypto.randomUUID() + ":" + crypto.randomUUID(), keepalive: false, source: d.source, payload }), "*");\n  parent.document.body.dataset.seen = (parent.document.body.dataset.seen || "") + d.topic + ";";\n  if (d.topic === "axe.ping") reply({ axe: true });\n  if (d.topic === "axe.start") reply([{ id: "image-alt", result: "failed", impact: "critical", nodes: [{ node: { "selector": ["#zzz"], "ancestry": ["html"], "xpath": ["/html"], "source": "<x>", "nodeIndexes": [0], "fromFrame": false }, any: [{ id: "has-alt", result: false, data: null, relatedNodes: [], message:"faux" }], all: [], none: [] }] }]);\n});\n');
+</script></body></html>

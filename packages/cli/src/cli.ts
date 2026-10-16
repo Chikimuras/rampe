@@ -5,6 +5,7 @@ import { existsSync } from "node:fs";
 import { readFile, writeFile } from "node:fs/promises";
 import { dirname, resolve } from "node:path";
 import { parseArgs } from "node:util";
+import { AXE_RUN_OPTIONS } from "@rampe/core";
 import axe from "axe-core";
 import { type Browser, chromium, type Page } from "playwright";
 import {
@@ -174,19 +175,26 @@ const originWarning = (url: URL, finalUrl: string) =>
 async function evaluateIsolated(page: Page, expression: string): Promise<unknown> {
 	const cdp = await page.context().newCDPSession(page);
 	try {
-		const { frameTree } = await cdp.send("Page.getFrameTree");
-		// ponytail: cadre principal seulement ; les iframes demanderont un monde isolé par cadre.
-		const { executionContextId } = await cdp.send("Page.createIsolatedWorld", {
-			frameId: frameTree.frame.id,
-			worldName: "rampe",
-			grantUniveralAccess: false,
-		});
-		const { result, exceptionDetails } = await cdp.send("Runtime.evaluate", {
-			expression,
-			contextId: executionContextId,
-			awaitPromise: true,
-			returnByValue: true,
-		});
+		let response: Awaited<ReturnType<typeof cdp.send<"Runtime.evaluate">>>;
+		try {
+			const { frameTree } = await cdp.send("Page.getFrameTree");
+			// ponytail: cadre principal seulement ; les iframes demanderont un monde isolé par cadre.
+			const { executionContextId } = await cdp.send("Page.createIsolatedWorld", {
+				frameId: frameTree.frame.id,
+				worldName: "rampe",
+				grantUniveralAccess: false,
+			});
+			response = await cdp.send("Runtime.evaluate", {
+				expression,
+				contextId: executionContextId,
+				awaitPromise: true,
+				returnByValue: true,
+			});
+		} catch {
+			// Monde isolé détruit : la page a navigué (ou s'est fermée) pendant l'évaluation.
+			throw new Error("La page a navigué pendant l’analyse : audit impossible.");
+		}
+		const { result, exceptionDetails } = response;
 		if (exceptionDetails)
 			throw new Error(
 				`échec du script de Rampe dans la page : ${exceptionDetails.exception?.description ?? exceptionDetails.text}`,
@@ -197,11 +205,16 @@ async function evaluateIsolated(page: Page, expression: string): Promise<unknown
 	}
 }
 
-/** Configuration par défaut d'axe.run (sans règles expérimentales) ; résultat sérialisé dans le monde isolé, validé ici. */
+/**
+ * Règles par défaut d'axe.run (sans règles expérimentales), options communes avec l'extension (`AXE_RUN_OPTIONS` :
+ * jamais d'interrogation des iframes, ADR-0020). Le titre est lu dans la même évaluation, avant l'analyse : une page
+ * qui se réécrit pendant l'analyse ne change pas le titre du rapport. Résultat sérialisé dans le monde isolé, validé ici.
+ */
 const AXE_RUN = `${axe.source}
 ;(async () => {
-	const r = await axe.run();
-	return JSON.stringify({ violations: r.violations, incomplete: r.incomplete });
+	const title = document.title;
+	const r = await axe.run(document, ${JSON.stringify(AXE_RUN_OPTIONS)});
+	return JSON.stringify({ title, violations: r.violations, incomplete: r.incomplete });
 })()`;
 
 /** Charge la page et lance axe-core. */
@@ -213,7 +226,7 @@ async function inspect(page: Page, url: URL, timeout: number): Promise<AuditPage
 	return {
 		url: redact(url.href),
 		finalUrl: redact(finalUrl),
-		title: truncate(await page.title(), TITLE_MAX),
+		title: truncate(raw.title, TITLE_MAX),
 		warnings: originWarning(url, finalUrl),
 		results: classifyResults(raw.violations, raw.incomplete),
 		error: null,
