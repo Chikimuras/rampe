@@ -1,0 +1,930 @@
+{
+	"evaluator": "Claude (IA)",
+	"date": "2026-10-16",
+	"entries": [
+		{
+			"criterion": "10.1",
+			"page": "https://chikimuras.github.io/rampe/",
+			"status": "C",
+			"note": "Tests 10.1.1, 10.1.2 et 10.1.3 : DOM examiné : aucun élément basefont, big, blink, center, font, marquee, s, strike, tt (u non recherché : HTML5) ; aucun attribut de présentation (align, bgcolor, border, color, width/height hors img/svg/canvas…, size hors select). Styles désactivés : aucune espace utilisée entre les lettres d’un mot ni pour simuler tableau, colonnes ou marges. Toute la présentation passe par les feuilles de style."
+		},
+		{
+			"criterion": "10.1",
+			"page": "https://chikimuras.github.io/rampe/referentiel/",
+			"status": "C",
+			"note": "Tests 10.1.1, 10.1.2 et 10.1.3 : DOM examiné : aucun élément basefont, big, blink, center, font, marquee, s, strike, tt (u non recherché : HTML5) ; aucun attribut de présentation (align, bgcolor, border, color, width/height hors img/svg/canvas…, size hors select). Styles désactivés : aucune espace utilisée entre les lettres d’un mot ni pour simuler tableau, colonnes ou marges. Toute la présentation passe par les feuilles de style."
+		},
+		{
+			"criterion": "10.1",
+			"page": "https://chikimuras.github.io/rampe/referentiel/1-1/",
+			"status": "C",
+			"note": "Tests 10.1.1, 10.1.2 et 10.1.3 : DOM examiné : aucun élément basefont, big, blink, center, font, marquee, s, strike, tt (u non recherché : HTML5) ; aucun attribut de présentation (align, bgcolor, border, color, width/height hors img/svg/canvas…, size hors select). Styles désactivés : aucune espace utilisée entre les lettres d’un mot ni pour simuler tableau, colonnes ou marges. Toute la présentation passe par les feuilles de style."
+		},
+		{
+			"criterion": "10.1",
+			"page": "https://chikimuras.github.io/rampe/referentiel/glossaire/",
+			"status": "C",
+			"note": "Tests 10.1.1, 10.1.2 et 10.1.3 : DOM examiné : aucun élément basefont, big, blink, center, font, marquee, s, strike, tt (u non recherché : HTML5) ; aucun attribut de présentation (align, bgcolor, border, color, width/height hors img/svg/canvas…, size hors select). Styles désactivés : aucune espace utilisée entre les lettres d’un mot ni pour simuler tableau, colonnes ou marges. Toute la présentation passe par les feuilles de style."
+		},
+		{
+			"criterion": "10.1",
+			"page": "https://chikimuras.github.io/rampe/audit/",
+			"status": "C",
+			"note": "Tests 10.1.1, 10.1.2 et 10.1.3 : DOM examiné (états interactifs examinés : vierge, audit complet importé (2 pages, 106 critères, taux et tableau d’actions affichés), audit effacé puis rapport automatique importé (statuts « à confirmer », indices dépliés), boîte de dialogue « Remplacer l’audit en cours ? » ouverte) : aucun élément basefont, big, blink, center, font, marquee, s, strike, tt (u non recherché : HTML5) ; aucun attribut de présentation (align, bgcolor, border, color, width/height hors img/svg/canvas…, size hors select). Styles désactivés : aucune espace utilisée entre les lettres d’un mot ni pour simuler tableau, colonnes ou marges. Toute la présentation passe par les feuilles de style."
+		},
+		{
+			"criterion": "10.1",
+			"page": "https://chikimuras.github.io/rampe/cockpit/",
+			"status": "C",
+			"note": "Tests 10.1.1, 10.1.2 et 10.1.3 : DOM examiné : aucun élément basefont, big, blink, center, font, marquee, s, strike, tt (u non recherché : HTML5) ; aucun attribut de présentation (align, bgcolor, border, color, width/height hors img/svg/canvas…, size hors select). Styles désactivés : aucune espace utilisée entre les lettres d’un mot ni pour simuler tableau, colonnes ou marges. Toute la présentation passe par les feuilles de style."
+		},
+		{
+			"criterion": "10.1",
+			"page": "https://chikimuras.github.io/rampe/cockpit/adr/0011-cli-audit-playwright/",
+			"status": "C",
+			"note": "Tests 10.1.1, 10.1.2 et 10.1.3 : DOM examiné : aucun élément basefont, big, blink, center, font, marquee, s, strike, tt (u non recherché : HTML5) ; aucun attribut de présentation (align, bgcolor, border, color, width/height hors img/svg/canvas…, size hors select). Styles désactivés : aucune espace utilisée entre les lettres d’un mot ni pour simuler tableau, colonnes ou marges. Toute la présentation passe par les feuilles de style."
+		},
+		{
+			"criterion": "10.1",
+			"page": "https://chikimuras.github.io/rampe/cockpit/journal/2026-10-15/",
+			"status": "C",
+			"note": "Tests 10.1.1, 10.1.2 et 10.1.3 : DOM examiné : aucun élément basefont, big, blink, center, font, marquee, s, strike, tt (u non recherché : HTML5) ; aucun attribut de présentation (align, bgcolor, border, color, width/height hors img/svg/canvas…, size hors select). Styles désactivés : aucune espace utilisée entre les lettres d’un mot ni pour simuler tableau, colonnes ou marges. Toute la présentation passe par les feuilles de style."
+		},
+		{
+			"criterion": "10.1",
+			"page": "https://chikimuras.github.io/rampe/cockpit/docs/roadmap/",
+			"status": "C",
+			"note": "Tests 10.1.1, 10.1.2 et 10.1.3 : DOM examiné : aucun élément basefont, big, blink, center, font, marquee, s, strike, tt (u non recherché : HTML5) ; aucun attribut de présentation (align, bgcolor, border, color, width/height hors img/svg/canvas…, size hors select). Styles désactivés : aucune espace utilisée entre les lettres d’un mot ni pour simuler tableau, colonnes ou marges. Toute la présentation passe par les feuilles de style."
+		},
+		{
+			"criterion": "10.1",
+			"page": "https://chikimuras.github.io/rampe/referentiel/5-1/",
+			"status": "C",
+			"note": "Tests 10.1.1, 10.1.2 et 10.1.3 : DOM examiné : aucun élément basefont, big, blink, center, font, marquee, s, strike, tt (u non recherché : HTML5) ; aucun attribut de présentation (align, bgcolor, border, color, width/height hors img/svg/canvas…, size hors select). Styles désactivés : aucune espace utilisée entre les lettres d’un mot ni pour simuler tableau, colonnes ou marges. Toute la présentation passe par les feuilles de style."
+		},
+		{
+			"criterion": "10.1",
+			"page": "https://chikimuras.github.io/rampe/referentiel/1-9/",
+			"status": "C",
+			"note": "Tests 10.1.1, 10.1.2 et 10.1.3 : DOM examiné : aucun élément basefont, big, blink, center, font, marquee, s, strike, tt (u non recherché : HTML5) ; aucun attribut de présentation (align, bgcolor, border, color, width/height hors img/svg/canvas…, size hors select). Styles désactivés : aucune espace utilisée entre les lettres d’un mot ni pour simuler tableau, colonnes ou marges. Toute la présentation passe par les feuilles de style."
+		},
+		{
+			"criterion": "10.2",
+			"page": "https://chikimuras.github.io/rampe/",
+			"status": "C",
+			"note": "Test 10.2.1 : feuilles de style et attributs style retirés du DOM : texte restitué identique à la version stylée (longueurs de innerText égales à quelques espaces près), aucune propriété CSS content porteuse de texte, aucune image de fond, aucune information portée par la seule CSS."
+		},
+		{
+			"criterion": "10.2",
+			"page": "https://chikimuras.github.io/rampe/referentiel/",
+			"status": "C",
+			"note": "Test 10.2.1 : feuilles de style et attributs style retirés du DOM : texte restitué identique à la version stylée (longueurs de innerText égales à quelques espaces près), aucune propriété CSS content porteuse de texte, aucune image de fond, aucune information portée par la seule CSS."
+		},
+		{
+			"criterion": "10.2",
+			"page": "https://chikimuras.github.io/rampe/referentiel/1-1/",
+			"status": "C",
+			"note": "Test 10.2.1 : feuilles de style et attributs style retirés du DOM : texte restitué identique à la version stylée (longueurs de innerText égales à quelques espaces près), aucune propriété CSS content porteuse de texte, aucune image de fond, aucune information portée par la seule CSS."
+		},
+		{
+			"criterion": "10.2",
+			"page": "https://chikimuras.github.io/rampe/referentiel/glossaire/",
+			"status": "C",
+			"note": "Test 10.2.1 : feuilles de style et attributs style retirés du DOM : texte restitué identique à la version stylée (longueurs de innerText égales à quelques espaces près), aucune propriété CSS content porteuse de texte, aucune image de fond, aucune information portée par la seule CSS."
+		},
+		{
+			"criterion": "10.2",
+			"page": "https://chikimuras.github.io/rampe/audit/",
+			"status": "C",
+			"note": "Test 10.2.1 : feuilles de style et attributs style retirés du DOM (état vierge et audit complet) : texte restitué identique à la version stylée (longueurs de innerText égales à quelques espaces près), aucune propriété CSS content porteuse de texte, aucune image de fond, aucune information portée par la seule CSS."
+		},
+		{
+			"criterion": "10.2",
+			"page": "https://chikimuras.github.io/rampe/cockpit/",
+			"status": "C",
+			"note": "Test 10.2.1 : feuilles de style et attributs style retirés du DOM : texte restitué identique à la version stylée (longueurs de innerText égales à quelques espaces près), aucune propriété CSS content porteuse de texte, aucune image de fond, aucune information portée par la seule CSS (les barres <progress> gardent leur libellé « 5/5 »… et leur aria-label)."
+		},
+		{
+			"criterion": "10.2",
+			"page": "https://chikimuras.github.io/rampe/cockpit/adr/0011-cli-audit-playwright/",
+			"status": "C",
+			"note": "Test 10.2.1 : feuilles de style et attributs style retirés du DOM : texte restitué identique à la version stylée (longueurs de innerText égales à quelques espaces près), aucune propriété CSS content porteuse de texte, aucune image de fond, aucune information portée par la seule CSS."
+		},
+		{
+			"criterion": "10.2",
+			"page": "https://chikimuras.github.io/rampe/cockpit/journal/2026-10-15/",
+			"status": "C",
+			"note": "Test 10.2.1 : feuilles de style et attributs style retirés du DOM : texte restitué identique à la version stylée (longueurs de innerText égales à quelques espaces près), aucune propriété CSS content porteuse de texte, aucune image de fond, aucune information portée par la seule CSS."
+		},
+		{
+			"criterion": "10.2",
+			"page": "https://chikimuras.github.io/rampe/cockpit/docs/roadmap/",
+			"status": "C",
+			"note": "Test 10.2.1 : feuilles de style et attributs style retirés du DOM : texte restitué identique à la version stylée (longueurs de innerText égales à quelques espaces près), aucune propriété CSS content porteuse de texte, aucune image de fond, aucune information portée par la seule CSS."
+		},
+		{
+			"criterion": "10.2",
+			"page": "https://chikimuras.github.io/rampe/referentiel/5-1/",
+			"status": "C",
+			"note": "Test 10.2.1 : feuilles de style et attributs style retirés du DOM : texte restitué identique à la version stylée (longueurs de innerText égales à quelques espaces près), aucune propriété CSS content porteuse de texte, aucune image de fond, aucune information portée par la seule CSS."
+		},
+		{
+			"criterion": "10.2",
+			"page": "https://chikimuras.github.io/rampe/referentiel/1-9/",
+			"status": "C",
+			"note": "Test 10.2.1 : feuilles de style et attributs style retirés du DOM : texte restitué identique à la version stylée (longueurs de innerText égales à quelques espaces près), aucune propriété CSS content porteuse de texte, aucune image de fond, aucune information portée par la seule CSS."
+		},
+		{
+			"criterion": "10.3",
+			"page": "https://chikimuras.github.io/rampe/",
+			"status": "C",
+			"note": "Test 10.3.1 : sans styles, l’ordre du code suit l’ordre visuel : lien d’évitement, en-tête et navigation, contenu principal, pied de page. Aucune propriété order, float, ni positionnement qui réordonne le contenu (seul le lien d’évitement est en position absolue) : lecture compréhensible."
+		},
+		{
+			"criterion": "10.3",
+			"page": "https://chikimuras.github.io/rampe/referentiel/",
+			"status": "C",
+			"note": "Test 10.3.1 : sans styles, l’ordre du code suit l’ordre visuel : lien d’évitement, en-tête et navigation, contenu principal, pied de page. Aucune propriété order, float, ni positionnement qui réordonne le contenu (seul le lien d’évitement est en position absolue) : lecture compréhensible."
+		},
+		{
+			"criterion": "10.3",
+			"page": "https://chikimuras.github.io/rampe/referentiel/1-1/",
+			"status": "C",
+			"note": "Test 10.3.1 : sans styles, l’ordre du code suit l’ordre visuel : lien d’évitement, en-tête et navigation, contenu principal, pied de page. Aucune propriété order, float, ni positionnement qui réordonne le contenu (seul le lien d’évitement est en position absolue) : lecture compréhensible."
+		},
+		{
+			"criterion": "10.3",
+			"page": "https://chikimuras.github.io/rampe/referentiel/glossaire/",
+			"status": "C",
+			"note": "Test 10.3.1 : sans styles, l’ordre du code suit l’ordre visuel : lien d’évitement, en-tête et navigation, contenu principal, pied de page. Aucune propriété order, float, ni positionnement qui réordonne le contenu (seul le lien d’évitement est en position absolue) : lecture compréhensible."
+		},
+		{
+			"criterion": "10.3",
+			"page": "https://chikimuras.github.io/rampe/audit/",
+			"status": "C",
+			"note": "Test 10.3.1 : sans styles, l’ordre du code suit l’ordre visuel : lien d’évitement, en-tête et navigation, contenu principal (sections 1 à 5 de l’audit dans l’ordre), pied de page. Aucune propriété order, float, ni positionnement qui réordonne le contenu (seul le lien d’évitement est en position absolue) : lecture compréhensible."
+		},
+		{
+			"criterion": "10.3",
+			"page": "https://chikimuras.github.io/rampe/cockpit/",
+			"status": "C",
+			"note": "Test 10.3.1 : sans styles, l’ordre du code suit l’ordre visuel : lien d’évitement, en-tête et navigation, contenu principal, pied de page. Aucune propriété order, float, ni positionnement qui réordonne le contenu (seul le lien d’évitement est en position absolue) : lecture compréhensible."
+		},
+		{
+			"criterion": "10.3",
+			"page": "https://chikimuras.github.io/rampe/cockpit/adr/0011-cli-audit-playwright/",
+			"status": "C",
+			"note": "Test 10.3.1 : sans styles, l’ordre du code suit l’ordre visuel : lien d’évitement, en-tête et navigation, contenu principal, pied de page. Aucune propriété order, float, ni positionnement qui réordonne le contenu (seul le lien d’évitement est en position absolue) : lecture compréhensible."
+		},
+		{
+			"criterion": "10.3",
+			"page": "https://chikimuras.github.io/rampe/cockpit/journal/2026-10-15/",
+			"status": "C",
+			"note": "Test 10.3.1 : sans styles, l’ordre du code suit l’ordre visuel : lien d’évitement, en-tête et navigation, contenu principal, pied de page. Aucune propriété order, float, ni positionnement qui réordonne le contenu (seul le lien d’évitement est en position absolue) : lecture compréhensible."
+		},
+		{
+			"criterion": "10.3",
+			"page": "https://chikimuras.github.io/rampe/cockpit/docs/roadmap/",
+			"status": "C",
+			"note": "Test 10.3.1 : sans styles, l’ordre du code suit l’ordre visuel : lien d’évitement, en-tête et navigation, contenu principal, pied de page. Aucune propriété order, float, ni positionnement qui réordonne le contenu (seul le lien d’évitement est en position absolue) : lecture compréhensible."
+		},
+		{
+			"criterion": "10.3",
+			"page": "https://chikimuras.github.io/rampe/referentiel/5-1/",
+			"status": "C",
+			"note": "Test 10.3.1 : sans styles, l’ordre du code suit l’ordre visuel : lien d’évitement, en-tête et navigation, contenu principal, pied de page. Aucune propriété order, float, ni positionnement qui réordonne le contenu (seul le lien d’évitement est en position absolue) : lecture compréhensible."
+		},
+		{
+			"criterion": "10.3",
+			"page": "https://chikimuras.github.io/rampe/referentiel/1-9/",
+			"status": "C",
+			"note": "Test 10.3.1 : sans styles, l’ordre du code suit l’ordre visuel : lien d’évitement, en-tête et navigation, contenu principal, pied de page. Aucune propriété order, float, ni positionnement qui réordonne le contenu (seul le lien d’évitement est en position absolue) : lecture compréhensible."
+		},
+		{
+			"criterion": "10.4",
+			"page": "https://chikimuras.github.io/rampe/",
+			"status": "C",
+			"note": "Tests 10.4.1 et 10.4.2 : zoom graphique 200 % simulé (fenêtre de 1280 px ramenée à 640 px CSS) en thème clair et sombre : aucun débordement horizontal du document (scrollWidth = 640), aucun texte rogné par un overflow hidden, aucun chevauchement observé ; tout le texte est agrandi (tailles en rem/em, aucune image texte ni canvas)."
+		},
+		{
+			"criterion": "10.4",
+			"page": "https://chikimuras.github.io/rampe/referentiel/",
+			"status": "C",
+			"note": "Tests 10.4.1 et 10.4.2 : zoom graphique 200 % simulé (fenêtre de 1280 px ramenée à 640 px CSS) en thème clair et sombre : aucun débordement horizontal du document (scrollWidth = 640), aucun texte rogné par un overflow hidden, aucun chevauchement observé ; tout le texte est agrandi (tailles en rem/em, aucune image texte ni canvas)."
+		},
+		{
+			"criterion": "10.4",
+			"page": "https://chikimuras.github.io/rampe/referentiel/1-1/",
+			"status": "C",
+			"note": "Tests 10.4.1 et 10.4.2 : zoom graphique 200 % simulé (fenêtre de 1280 px ramenée à 640 px CSS) en thème clair et sombre : aucun débordement horizontal du document (scrollWidth = 640), aucun texte rogné par un overflow hidden, aucun chevauchement observé ; tout le texte est agrandi (tailles en rem/em, aucune image texte ni canvas)."
+		},
+		{
+			"criterion": "10.4",
+			"page": "https://chikimuras.github.io/rampe/referentiel/glossaire/",
+			"status": "C",
+			"note": "Tests 10.4.1 et 10.4.2 : zoom graphique 200 % simulé (fenêtre de 1280 px ramenée à 640 px CSS) en thème clair et sombre : aucun débordement horizontal du document (scrollWidth = 640), aucun texte rogné par un overflow hidden, aucun chevauchement observé ; tout le texte est agrandi (tailles en rem/em, aucune image texte ni canvas)."
+		},
+		{
+			"criterion": "10.4",
+			"page": "https://chikimuras.github.io/rampe/audit/",
+			"status": "C",
+			"note": "Tests 10.4.1 et 10.4.2 : zoom graphique 200 % simulé (fenêtre de 1280 px ramenée à 640 px CSS) en thème clair et sombre (états interactifs examinés : vierge, audit complet importé (2 pages, 106 critères, taux et tableau d’actions affichés), audit effacé puis rapport automatique importé (statuts « à confirmer », indices dépliés), boîte de dialogue « Remplacer l’audit en cours ? » ouverte) : aucun débordement horizontal du document (scrollWidth = 640), aucun texte rogné par un overflow hidden, aucun chevauchement observé ; tout le texte est agrandi (tailles en rem/em, aucune image texte ni canvas) ; le tableau d’actions défile dans sa propre zone (tableau de données)."
+		},
+		{
+			"criterion": "10.4",
+			"page": "https://chikimuras.github.io/rampe/cockpit/",
+			"status": "C",
+			"note": "Tests 10.4.1 et 10.4.2 : zoom graphique 200 % simulé (fenêtre de 1280 px ramenée à 640 px CSS) en thème clair et sombre : aucun débordement horizontal du document (scrollWidth = 640), aucun texte rogné par un overflow hidden, aucun chevauchement observé ; tout le texte est agrandi (tailles en rem/em, aucune image texte ni canvas)."
+		},
+		{
+			"criterion": "10.4",
+			"page": "https://chikimuras.github.io/rampe/cockpit/adr/0011-cli-audit-playwright/",
+			"status": "C",
+			"note": "Tests 10.4.1 et 10.4.2 : zoom graphique 200 % simulé (fenêtre de 1280 px ramenée à 640 px CSS) en thème clair et sombre : aucun débordement horizontal du document (scrollWidth = 640), aucun texte rogné par un overflow hidden, aucun chevauchement observé ; tout le texte est agrandi (tailles en rem/em, aucune image texte ni canvas)."
+		},
+		{
+			"criterion": "10.4",
+			"page": "https://chikimuras.github.io/rampe/cockpit/journal/2026-10-15/",
+			"status": "C",
+			"note": "Tests 10.4.1 et 10.4.2 : zoom graphique 200 % simulé (fenêtre de 1280 px ramenée à 640 px CSS) en thème clair et sombre : aucun débordement horizontal du document (scrollWidth = 640), aucun texte rogné par un overflow hidden, aucun chevauchement observé ; tout le texte est agrandi (tailles en rem/em, aucune image texte ni canvas)."
+		},
+		{
+			"criterion": "10.4",
+			"page": "https://chikimuras.github.io/rampe/cockpit/docs/roadmap/",
+			"status": "C",
+			"note": "Tests 10.4.1 et 10.4.2 : zoom graphique 200 % simulé (fenêtre de 1280 px ramenée à 640 px CSS) en thème clair et sombre : aucun débordement horizontal du document (scrollWidth = 640), aucun texte rogné par un overflow hidden, aucun chevauchement observé ; tout le texte est agrandi (tailles en rem/em, aucune image texte ni canvas)."
+		},
+		{
+			"criterion": "10.4",
+			"page": "https://chikimuras.github.io/rampe/referentiel/5-1/",
+			"status": "C",
+			"note": "Tests 10.4.1 et 10.4.2 : zoom graphique 200 % simulé (fenêtre de 1280 px ramenée à 640 px CSS) en thème clair et sombre : aucun débordement horizontal du document (scrollWidth = 640), aucun texte rogné par un overflow hidden, aucun chevauchement observé ; tout le texte est agrandi (tailles en rem/em, aucune image texte ni canvas)."
+		},
+		{
+			"criterion": "10.4",
+			"page": "https://chikimuras.github.io/rampe/referentiel/1-9/",
+			"status": "C",
+			"note": "Tests 10.4.1 et 10.4.2 : zoom graphique 200 % simulé (fenêtre de 1280 px ramenée à 640 px CSS) en thème clair et sombre : aucun débordement horizontal du document (scrollWidth = 640), aucun texte rogné par un overflow hidden, aucun chevauchement observé ; tout le texte est agrandi (tailles en rem/em, aucune image texte ni canvas)."
+		},
+		{
+			"criterion": "10.5",
+			"page": "https://chikimuras.github.io/rampe/",
+			"status": "C",
+			"note": "Tests 10.5.1, 10.5.2 et 10.5.3 : body déclare background:var(--bg) et color:var(--text) dans les deux thèmes (prefers-color-scheme) ; chaque élément qui déclare une couleur de texte (liens, .muted, méta, compteurs, statuts) hérite d’un fond calculé, et chaque fond déclaré (encadrés, pastilles de statut, pre) s’accompagne d’une couleur héritée ou déclarée. Aucune image de fond (10.5.3 sans objet)."
+		},
+		{
+			"criterion": "10.5",
+			"page": "https://chikimuras.github.io/rampe/referentiel/",
+			"status": "C",
+			"note": "Tests 10.5.1, 10.5.2 et 10.5.3 : body déclare background:var(--bg) et color:var(--text) dans les deux thèmes (prefers-color-scheme) ; chaque élément qui déclare une couleur de texte (liens, .muted, méta, compteurs, statuts) hérite d’un fond calculé, et chaque fond déclaré (encadrés, pastilles de statut, pre) s’accompagne d’une couleur héritée ou déclarée. Aucune image de fond (10.5.3 sans objet)."
+		},
+		{
+			"criterion": "10.5",
+			"page": "https://chikimuras.github.io/rampe/referentiel/1-1/",
+			"status": "C",
+			"note": "Tests 10.5.1, 10.5.2 et 10.5.3 : body déclare background:var(--bg) et color:var(--text) dans les deux thèmes (prefers-color-scheme) ; chaque élément qui déclare une couleur de texte (liens, .muted, méta, compteurs, statuts) hérite d’un fond calculé, et chaque fond déclaré (encadrés, pastilles de statut, pre) s’accompagne d’une couleur héritée ou déclarée. Aucune image de fond (10.5.3 sans objet)."
+		},
+		{
+			"criterion": "10.5",
+			"page": "https://chikimuras.github.io/rampe/referentiel/glossaire/",
+			"status": "C",
+			"note": "Tests 10.5.1, 10.5.2 et 10.5.3 : body déclare background:var(--bg) et color:var(--text) dans les deux thèmes (prefers-color-scheme) ; chaque élément qui déclare une couleur de texte (liens, .muted, méta, compteurs, statuts) hérite d’un fond calculé, et chaque fond déclaré (encadrés, pastilles de statut, pre) s’accompagne d’une couleur héritée ou déclarée. Aucune image de fond (10.5.3 sans objet)."
+		},
+		{
+			"criterion": "10.5",
+			"page": "https://chikimuras.github.io/rampe/audit/",
+			"status": "C",
+			"note": "Tests 10.5.1, 10.5.2 et 10.5.3 : body déclare background:var(--bg) et color:var(--text) dans les deux thèmes (prefers-color-scheme) ; chaque élément qui déclare une couleur de texte (liens, .muted, boutons, champs, .audit-error, mark de l’aperçu, dialog) hérite d’un fond calculé, et chaque fond déclaré (boutons, champs, encadrés, dialog, mark) s’accompagne d’une couleur héritée ou déclarée. Aucune image de fond (10.5.3 sans objet)."
+		},
+		{
+			"criterion": "10.5",
+			"page": "https://chikimuras.github.io/rampe/cockpit/",
+			"status": "C",
+			"note": "Tests 10.5.1, 10.5.2 et 10.5.3 : body déclare background:var(--bg) et color:var(--text) dans les deux thèmes (prefers-color-scheme) ; chaque élément qui déclare une couleur de texte (liens, .muted, méta, compteurs, statuts) hérite d’un fond calculé, et chaque fond déclaré (encadrés, pastilles de statut, pre) s’accompagne d’une couleur héritée ou déclarée. Aucune image de fond (10.5.3 sans objet)."
+		},
+		{
+			"criterion": "10.5",
+			"page": "https://chikimuras.github.io/rampe/cockpit/adr/0011-cli-audit-playwright/",
+			"status": "C",
+			"note": "Tests 10.5.1, 10.5.2 et 10.5.3 : body déclare background:var(--bg) et color:var(--text) dans les deux thèmes (prefers-color-scheme) ; chaque élément qui déclare une couleur de texte (liens, .muted, méta, compteurs, statuts) hérite d’un fond calculé, et chaque fond déclaré (encadrés, pastilles de statut, pre) s’accompagne d’une couleur héritée ou déclarée. Aucune image de fond (10.5.3 sans objet)."
+		},
+		{
+			"criterion": "10.5",
+			"page": "https://chikimuras.github.io/rampe/cockpit/journal/2026-10-15/",
+			"status": "C",
+			"note": "Tests 10.5.1, 10.5.2 et 10.5.3 : body déclare background:var(--bg) et color:var(--text) dans les deux thèmes (prefers-color-scheme) ; chaque élément qui déclare une couleur de texte (liens, .muted, méta, compteurs, statuts) hérite d’un fond calculé, et chaque fond déclaré (encadrés, pastilles de statut, pre) s’accompagne d’une couleur héritée ou déclarée. Aucune image de fond (10.5.3 sans objet)."
+		},
+		{
+			"criterion": "10.5",
+			"page": "https://chikimuras.github.io/rampe/cockpit/docs/roadmap/",
+			"status": "C",
+			"note": "Tests 10.5.1, 10.5.2 et 10.5.3 : body déclare background:var(--bg) et color:var(--text) dans les deux thèmes (prefers-color-scheme) ; chaque élément qui déclare une couleur de texte (liens, .muted, méta, compteurs, statuts) hérite d’un fond calculé, et chaque fond déclaré (encadrés, pastilles de statut, pre) s’accompagne d’une couleur héritée ou déclarée. Aucune image de fond (10.5.3 sans objet)."
+		},
+		{
+			"criterion": "10.5",
+			"page": "https://chikimuras.github.io/rampe/referentiel/5-1/",
+			"status": "C",
+			"note": "Tests 10.5.1, 10.5.2 et 10.5.3 : body déclare background:var(--bg) et color:var(--text) dans les deux thèmes (prefers-color-scheme) ; chaque élément qui déclare une couleur de texte (liens, .muted, méta, compteurs, statuts) hérite d’un fond calculé, et chaque fond déclaré (encadrés, pastilles de statut, pre) s’accompagne d’une couleur héritée ou déclarée. Aucune image de fond (10.5.3 sans objet)."
+		},
+		{
+			"criterion": "10.5",
+			"page": "https://chikimuras.github.io/rampe/referentiel/1-9/",
+			"status": "C",
+			"note": "Tests 10.5.1, 10.5.2 et 10.5.3 : body déclare background:var(--bg) et color:var(--text) dans les deux thèmes (prefers-color-scheme) ; chaque élément qui déclare une couleur de texte (liens, .muted, méta, compteurs, statuts) hérite d’un fond calculé, et chaque fond déclaré (encadrés, pastilles de statut, pre) s’accompagne d’une couleur héritée ou déclarée. Aucune image de fond (10.5.3 sans objet)."
+		},
+		{
+			"criterion": "10.6",
+			"page": "https://chikimuras.github.io/rampe/",
+			"status": "NA",
+			"note": "Test 10.6.1 : text-decoration calculé de chaque <a href> : tous les liens du contenu sont soulignés ; le seul lien non souligné est « Rampe », premier lien de la barre de navigation principale, dont la nature est évidente par son contexte. Aucun lien signalé uniquement par la couleur dont la nature n’est pas évidente : non applicable."
+		},
+		{
+			"criterion": "10.6",
+			"page": "https://chikimuras.github.io/rampe/referentiel/",
+			"status": "NA",
+			"note": "Test 10.6.1 : text-decoration calculé de chaque <a href> : tous les liens du contenu sont soulignés ; le seul lien non souligné est « Rampe », premier lien de la barre de navigation principale, dont la nature est évidente par son contexte. Aucun lien signalé uniquement par la couleur dont la nature n’est pas évidente : non applicable."
+		},
+		{
+			"criterion": "10.6",
+			"page": "https://chikimuras.github.io/rampe/referentiel/1-1/",
+			"status": "NA",
+			"note": "Test 10.6.1 : text-decoration calculé de chaque <a href> : tous les liens du contenu sont soulignés ; le seul lien non souligné est « Rampe », premier lien de la barre de navigation principale, dont la nature est évidente par son contexte. Aucun lien signalé uniquement par la couleur dont la nature n’est pas évidente : non applicable."
+		},
+		{
+			"criterion": "10.6",
+			"page": "https://chikimuras.github.io/rampe/referentiel/glossaire/",
+			"status": "NA",
+			"note": "Test 10.6.1 : text-decoration calculé de chaque <a href> : tous les liens du contenu sont soulignés ; le seul lien non souligné est « Rampe », premier lien de la barre de navigation principale, dont la nature est évidente par son contexte. Aucun lien signalé uniquement par la couleur dont la nature n’est pas évidente : non applicable."
+		},
+		{
+			"criterion": "10.6",
+			"page": "https://chikimuras.github.io/rampe/audit/",
+			"status": "NA",
+			"note": "Test 10.6.1 : dans l’état vierge et l’audit complet, text-decoration calculé de chaque <a href> : tous les liens du contenu sont soulignés ; le seul lien non souligné est « Rampe », premier lien de la barre de navigation principale, dont la nature est évidente par son contexte. Aucun lien signalé uniquement par la couleur dont la nature n’est pas évidente : non applicable."
+		},
+		{
+			"criterion": "10.6",
+			"page": "https://chikimuras.github.io/rampe/cockpit/",
+			"status": "NA",
+			"note": "Test 10.6.1 : text-decoration calculé de chaque <a href> : tous les liens du contenu sont soulignés ; le seul lien non souligné est « Rampe », premier lien de la barre de navigation principale, dont la nature est évidente par son contexte. Aucun lien signalé uniquement par la couleur dont la nature n’est pas évidente : non applicable."
+		},
+		{
+			"criterion": "10.6",
+			"page": "https://chikimuras.github.io/rampe/cockpit/adr/0011-cli-audit-playwright/",
+			"status": "NA",
+			"note": "Test 10.6.1 : text-decoration calculé de chaque <a href> : tous les liens du contenu sont soulignés ; le seul lien non souligné est « Rampe », premier lien de la barre de navigation principale, dont la nature est évidente par son contexte. Aucun lien signalé uniquement par la couleur dont la nature n’est pas évidente : non applicable."
+		},
+		{
+			"criterion": "10.6",
+			"page": "https://chikimuras.github.io/rampe/cockpit/journal/2026-10-15/",
+			"status": "NA",
+			"note": "Test 10.6.1 : text-decoration calculé de chaque <a href> : tous les liens du contenu sont soulignés ; le seul lien non souligné est « Rampe », premier lien de la barre de navigation principale, dont la nature est évidente par son contexte. Aucun lien signalé uniquement par la couleur dont la nature n’est pas évidente : non applicable."
+		},
+		{
+			"criterion": "10.6",
+			"page": "https://chikimuras.github.io/rampe/cockpit/docs/roadmap/",
+			"status": "NA",
+			"note": "Test 10.6.1 : text-decoration calculé de chaque <a href> : tous les liens du contenu sont soulignés ; le seul lien non souligné est « Rampe », premier lien de la barre de navigation principale, dont la nature est évidente par son contexte. Aucun lien signalé uniquement par la couleur dont la nature n’est pas évidente : non applicable."
+		},
+		{
+			"criterion": "10.6",
+			"page": "https://chikimuras.github.io/rampe/referentiel/5-1/",
+			"status": "NA",
+			"note": "Test 10.6.1 : text-decoration calculé de chaque <a href> : tous les liens du contenu sont soulignés ; le seul lien non souligné est « Rampe », premier lien de la barre de navigation principale, dont la nature est évidente par son contexte. Aucun lien signalé uniquement par la couleur dont la nature n’est pas évidente : non applicable."
+		},
+		{
+			"criterion": "10.6",
+			"page": "https://chikimuras.github.io/rampe/referentiel/1-9/",
+			"status": "NA",
+			"note": "Test 10.6.1 : text-decoration calculé de chaque <a href> : tous les liens du contenu sont soulignés ; le seul lien non souligné est « Rampe », premier lien de la barre de navigation principale, dont la nature est évidente par son contexte. Aucun lien signalé uniquement par la couleur dont la nature n’est pas évidente : non applicable."
+		},
+		{
+			"criterion": "10.7",
+			"page": "https://chikimuras.github.io/rampe/",
+			"status": "C",
+			"note": "Test 10.7.1 : parcours au clavier (Tab) de tous les éléments focalisables, thèmes clair et sombre : style auteur :focus-visible{outline:3px solid var(--accent);outline-offset:2px} présent sur chacun ; contraste du contour : 7,5:1 (#0b5d4b sur #fbfaf7) et 6,67:1 sur fond --accent-soft en clair, 10,15:1 (#6fd3b5 sur #151513) et 6,86:1 en sombre, au-delà de 3:1."
+		},
+		{
+			"criterion": "10.7",
+			"page": "https://chikimuras.github.io/rampe/referentiel/",
+			"status": "C",
+			"note": "Test 10.7.1 : parcours au clavier (Tab) de tous les éléments focalisables, thèmes clair et sombre : style auteur :focus-visible{outline:3px solid var(--accent);outline-offset:2px} présent sur chacun ; contraste du contour : 7,5:1 (#0b5d4b sur #fbfaf7) et 6,67:1 sur fond --accent-soft en clair, 10,15:1 (#6fd3b5 sur #151513) et 6,86:1 en sombre, au-delà de 3:1."
+		},
+		{
+			"criterion": "10.7",
+			"page": "https://chikimuras.github.io/rampe/referentiel/1-1/",
+			"status": "C",
+			"note": "Test 10.7.1 : parcours au clavier (Tab) de tous les éléments focalisables, thèmes clair et sombre : style auteur :focus-visible{outline:3px solid var(--accent);outline-offset:2px} présent sur chacun ; contraste du contour : 7,5:1 (#0b5d4b sur #fbfaf7) et 6,67:1 sur fond --accent-soft en clair, 10,15:1 (#6fd3b5 sur #151513) et 6,86:1 en sombre, au-delà de 3:1."
+		},
+		{
+			"criterion": "10.7",
+			"page": "https://chikimuras.github.io/rampe/referentiel/glossaire/",
+			"status": "C",
+			"note": "Test 10.7.1 : parcours au clavier (Tab) de tous les éléments focalisables, thèmes clair et sombre : style auteur :focus-visible{outline:3px solid var(--accent);outline-offset:2px} présent sur chacun ; contraste du contour : 7,5:1 (#0b5d4b sur #fbfaf7) et 6,67:1 sur fond --accent-soft en clair, 10,15:1 (#6fd3b5 sur #151513) et 6,86:1 en sombre, au-delà de 3:1."
+		},
+		{
+			"criterion": "10.7",
+			"page": "https://chikimuras.github.io/rampe/audit/",
+			"status": "C",
+			"note": "Test 10.7.1 : parcours au clavier (Tab) de tous les éléments focalisables, thèmes clair et sombre (états interactifs examinés : vierge, audit complet importé (2 pages, 106 critères, taux et tableau d’actions affichés), audit effacé puis rapport automatique importé (statuts « à confirmer », indices dépliés), boîte de dialogue « Remplacer l’audit en cours ? » ouverte) : style auteur :focus-visible{outline:3px solid var(--accent);outline-offset:2px} présent sur chacun (statuts radio : contour reporté sur l’étiquette .audit-status via :has(:focus-visible) ; champs date : contour vérifié par capture ; boutons du dialogue) ; contraste du contour : 7,5:1 (#0b5d4b sur #fbfaf7) et 6,67:1 sur fond --accent-soft en clair, 10,15:1 (#6fd3b5 sur #151513) et 6,86:1 en sombre, au-delà de 3:1."
+		},
+		{
+			"criterion": "10.7",
+			"page": "https://chikimuras.github.io/rampe/cockpit/",
+			"status": "C",
+			"note": "Test 10.7.1 : parcours au clavier (Tab) de tous les éléments focalisables, thèmes clair et sombre : style auteur :focus-visible{outline:3px solid var(--accent);outline-offset:2px} présent sur chacun ; contraste du contour : 7,5:1 (#0b5d4b sur #fbfaf7) et 6,67:1 sur fond --accent-soft en clair, 10,15:1 (#6fd3b5 sur #151513) et 6,86:1 en sombre, au-delà de 3:1."
+		},
+		{
+			"criterion": "10.7",
+			"page": "https://chikimuras.github.io/rampe/cockpit/adr/0011-cli-audit-playwright/",
+			"status": "C",
+			"note": "Test 10.7.1 : parcours au clavier (Tab) de tous les éléments focalisables, thèmes clair et sombre : style auteur :focus-visible{outline:3px solid var(--accent);outline-offset:2px} présent sur chacun ; contraste du contour : 7,5:1 (#0b5d4b sur #fbfaf7) et 6,67:1 sur fond --accent-soft en clair, 10,15:1 (#6fd3b5 sur #151513) et 6,86:1 en sombre, au-delà de 3:1."
+		},
+		{
+			"criterion": "10.7",
+			"page": "https://chikimuras.github.io/rampe/cockpit/journal/2026-10-15/",
+			"status": "C",
+			"note": "Test 10.7.1 : parcours au clavier (Tab) de tous les éléments focalisables, thèmes clair et sombre : style auteur :focus-visible{outline:3px solid var(--accent);outline-offset:2px} présent sur chacun ; contraste du contour : 7,5:1 (#0b5d4b sur #fbfaf7) et 6,67:1 sur fond --accent-soft en clair, 10,15:1 (#6fd3b5 sur #151513) et 6,86:1 en sombre, au-delà de 3:1."
+		},
+		{
+			"criterion": "10.7",
+			"page": "https://chikimuras.github.io/rampe/cockpit/docs/roadmap/",
+			"status": "C",
+			"note": "Test 10.7.1 : parcours au clavier (Tab) de tous les éléments focalisables, thèmes clair et sombre : style auteur :focus-visible{outline:3px solid var(--accent);outline-offset:2px} présent sur chacun ; contraste du contour : 7,5:1 (#0b5d4b sur #fbfaf7) et 6,67:1 sur fond --accent-soft en clair, 10,15:1 (#6fd3b5 sur #151513) et 6,86:1 en sombre, au-delà de 3:1."
+		},
+		{
+			"criterion": "10.7",
+			"page": "https://chikimuras.github.io/rampe/referentiel/5-1/",
+			"status": "C",
+			"note": "Test 10.7.1 : parcours au clavier (Tab) de tous les éléments focalisables, thèmes clair et sombre : style auteur :focus-visible{outline:3px solid var(--accent);outline-offset:2px} présent sur chacun ; contraste du contour : 7,5:1 (#0b5d4b sur #fbfaf7) et 6,67:1 sur fond --accent-soft en clair, 10,15:1 (#6fd3b5 sur #151513) et 6,86:1 en sombre, au-delà de 3:1."
+		},
+		{
+			"criterion": "10.7",
+			"page": "https://chikimuras.github.io/rampe/referentiel/1-9/",
+			"status": "C",
+			"note": "Test 10.7.1 : parcours au clavier (Tab) de tous les éléments focalisables, thèmes clair et sombre : style auteur :focus-visible{outline:3px solid var(--accent);outline-offset:2px} présent sur chacun ; contraste du contour : 7,5:1 (#0b5d4b sur #fbfaf7) et 6,67:1 sur fond --accent-soft en clair, 10,15:1 (#6fd3b5 sur #151513) et 6,86:1 en sombre, au-delà de 3:1."
+		},
+		{
+			"criterion": "10.8",
+			"page": "https://chikimuras.github.io/rampe/",
+			"status": "C",
+			"note": "Test 10.8.1 : contenus cachés recherchés (hidden, aria-hidden, display:none, visibility:hidden, classes de masquage) : le lien « Aller au contenu » (.skip, hors écran mais lu par les technologies d’assistance, visible au focus). Chaque contenu caché a vocation à être ignoré ou est restituable par une action de l’utilisateur sur l’élément qui le précède."
+		},
+		{
+			"criterion": "10.8",
+			"page": "https://chikimuras.github.io/rampe/referentiel/",
+			"status": "C",
+			"note": "Test 10.8.1 : contenus cachés recherchés (hidden, aria-hidden, display:none, visibility:hidden, classes de masquage) : le lien « Aller au contenu » (.skip, hors écran mais lu par les technologies d’assistance, visible au focus). Chaque contenu caché a vocation à être ignoré ou est restituable par une action de l’utilisateur sur l’élément qui le précède."
+		},
+		{
+			"criterion": "10.8",
+			"page": "https://chikimuras.github.io/rampe/referentiel/1-1/",
+			"status": "C",
+			"note": "Test 10.8.1 : contenus cachés recherchés (hidden, aria-hidden, display:none, visibility:hidden, classes de masquage) : le lien « Aller au contenu » (.skip, hors écran mais lu par les technologies d’assistance, visible au focus), et le contenu des 8 <details> « Méthodologie du test » fermés, restitué à l’activation du <summary> qui le précède. Chaque contenu caché a vocation à être ignoré ou est restituable par une action de l’utilisateur sur l’élément qui le précède."
+		},
+		{
+			"criterion": "10.8",
+			"page": "https://chikimuras.github.io/rampe/referentiel/glossaire/",
+			"status": "C",
+			"note": "Test 10.8.1 : contenus cachés recherchés (hidden, aria-hidden, display:none, visibility:hidden, classes de masquage) : le lien « Aller au contenu » (.skip, hors écran mais lu par les technologies d’assistance, visible au focus). Chaque contenu caché a vocation à être ignoré ou est restituable par une action de l’utilisateur sur l’élément qui le précède."
+		},
+		{
+			"criterion": "10.8",
+			"page": "https://chikimuras.github.io/rampe/audit/",
+			"status": "C",
+			"note": "Test 10.8.1 : contenus cachés recherchés (hidden, aria-hidden, display:none, visibility:hidden, classes de masquage) : le lien « Aller au contenu » (.skip, hors écran mais lu par les technologies d’assistance, visible au focus) ; états interactifs examinés : vierge, audit complet importé (2 pages, 106 critères, taux et tableau d’actions affichés), audit effacé puis rapport automatique importé (statuts « à confirmer », indices dépliés), boîte de dialogue « Remplacer l’audit en cours ? » ouverte : <dialog> fermé (affiché à l’import d’un audit, action de l’utilisateur), spans .visually-hidden qui complètent les libellés (lus par les technologies d’assistance), <details> repliés ouverts par leur <summary>, aucun aria-hidden. Chaque contenu caché a vocation à être ignoré ou est restituable par une action de l’utilisateur sur l’élément qui le précède."
+		},
+		{
+			"criterion": "10.8",
+			"page": "https://chikimuras.github.io/rampe/cockpit/",
+			"status": "C",
+			"note": "Test 10.8.1 : contenus cachés recherchés (hidden, aria-hidden, display:none, visibility:hidden, classes de masquage) : le lien « Aller au contenu » (.skip, hors écran mais lu par les technologies d’assistance, visible au focus). Chaque contenu caché a vocation à être ignoré ou est restituable par une action de l’utilisateur sur l’élément qui le précède."
+		},
+		{
+			"criterion": "10.8",
+			"page": "https://chikimuras.github.io/rampe/cockpit/adr/0011-cli-audit-playwright/",
+			"status": "C",
+			"note": "Test 10.8.1 : contenus cachés recherchés (hidden, aria-hidden, display:none, visibility:hidden, classes de masquage) : le lien « Aller au contenu » (.skip, hors écran mais lu par les technologies d’assistance, visible au focus). Chaque contenu caché a vocation à être ignoré ou est restituable par une action de l’utilisateur sur l’élément qui le précède."
+		},
+		{
+			"criterion": "10.8",
+			"page": "https://chikimuras.github.io/rampe/cockpit/journal/2026-10-15/",
+			"status": "C",
+			"note": "Test 10.8.1 : contenus cachés recherchés (hidden, aria-hidden, display:none, visibility:hidden, classes de masquage) : le lien « Aller au contenu » (.skip, hors écran mais lu par les technologies d’assistance, visible au focus). Chaque contenu caché a vocation à être ignoré ou est restituable par une action de l’utilisateur sur l’élément qui le précède."
+		},
+		{
+			"criterion": "10.8",
+			"page": "https://chikimuras.github.io/rampe/cockpit/docs/roadmap/",
+			"status": "C",
+			"note": "Test 10.8.1 : contenus cachés recherchés (hidden, aria-hidden, display:none, visibility:hidden, classes de masquage) : le lien « Aller au contenu » (.skip, hors écran mais lu par les technologies d’assistance, visible au focus). Chaque contenu caché a vocation à être ignoré ou est restituable par une action de l’utilisateur sur l’élément qui le précède."
+		},
+		{
+			"criterion": "10.8",
+			"page": "https://chikimuras.github.io/rampe/referentiel/5-1/",
+			"status": "C",
+			"note": "Test 10.8.1 : contenus cachés recherchés (hidden, aria-hidden, display:none, visibility:hidden, classes de masquage) : le lien « Aller au contenu » (.skip, hors écran mais lu par les technologies d’assistance, visible au focus), et le contenu du <details> « Méthodologie du test 5.1.1 » fermé, restitué à l’activation du <summary>. Chaque contenu caché a vocation à être ignoré ou est restituable par une action de l’utilisateur sur l’élément qui le précède."
+		},
+		{
+			"criterion": "10.8",
+			"page": "https://chikimuras.github.io/rampe/referentiel/1-9/",
+			"status": "C",
+			"note": "Test 10.8.1 : contenus cachés recherchés (hidden, aria-hidden, display:none, visibility:hidden, classes de masquage) : le lien « Aller au contenu » (.skip, hors écran mais lu par les technologies d’assistance, visible au focus), et le contenu des 5 <details> de méthodologie fermés, restitué à l’activation du <summary>. Chaque contenu caché a vocation à être ignoré ou est restituable par une action de l’utilisateur sur l’élément qui le précède."
+		},
+		{
+			"criterion": "10.9",
+			"page": "https://chikimuras.github.io/rampe/",
+			"status": "NA",
+			"note": "Tests 10.9.1 à 10.9.4 : aucune information donnée par la forme, la taille ou la position (texte en flux, titres balisés, pas de marqueur visuel ni de mise en avant porteuse de sens) ; ni image ni média. Non applicable."
+		},
+		{
+			"criterion": "10.9",
+			"page": "https://chikimuras.github.io/rampe/referentiel/",
+			"status": "C",
+			"note": "Tests 10.9.1, 10.9.2, 10.9.3 et 10.9.4 : informations données par la forme, la taille ou la position recherchées : les encadrés « Explication Rampe » (bordure et fond) portent leur libellé textuel. Chacune a un autre moyen d’être récupérée. Ni image, ni média temporel ou non temporel (10.9.2 à 10.9.4 sans objet)."
+		},
+		{
+			"criterion": "10.9",
+			"page": "https://chikimuras.github.io/rampe/referentiel/1-1/",
+			"status": "C",
+			"note": "Tests 10.9.1, 10.9.2, 10.9.3 et 10.9.4 : informations données par la forme, la taille ou la position recherchées : le lien « Critère suivant » placé à droite est nommé par son texte ; le numéro du critère au-dessus du titre est écrit en toutes lettres. Chacune a un autre moyen d’être récupérée. Ni image, ni média temporel ou non temporel (10.9.2 à 10.9.4 sans objet)."
+		},
+		{
+			"criterion": "10.9",
+			"page": "https://chikimuras.github.io/rampe/referentiel/glossaire/",
+			"status": "C",
+			"note": "Tests 10.9.1, 10.9.2, 10.9.3 et 10.9.4 : informations données par la forme, la taille ou la position recherchées : les termes, distingués par la taille et la graisse, sont aussi des <dt> de la liste de description. Chacune a un autre moyen d’être récupérée. Ni image, ni média temporel ou non temporel (10.9.2 à 10.9.4 sans objet)."
+		},
+		{
+			"criterion": "10.9",
+			"page": "https://chikimuras.github.io/rampe/audit/",
+			"status": "C",
+			"note": "Tests 10.9.1, 10.9.2, 10.9.3 et 10.9.4 : informations données par la forme, la taille ou la position recherchées : la thématique et le critère affichés (bordure, fond) portent aussi aria-current et sont repris par le titre h3 « Critère 1.1, thématique 1 » ; le statut choisi (bordure double, tirets…) est aussi l’état coché du bouton radio natif ; « ci-dessus / ci-dessous » renvoient à des éléments placés avant/après dans l’ordre du code. Chacune a un autre moyen d’être récupérée. Ni image, ni média temporel ou non temporel (10.9.2 à 10.9.4 sans objet)."
+		},
+		{
+			"criterion": "10.9",
+			"page": "https://chikimuras.github.io/rampe/cockpit/",
+			"status": "C",
+			"note": "Tests 10.9.1, 10.9.2, 10.9.3 et 10.9.4 : informations données par la forme, la taille ou la position recherchées : la longueur des barres d’avancement est doublée par le texte « 3/4 » et l’aria-label « Phase 2 … : 3 sur 4 » ; les pastilles de statut ADR sont du texte. Chacune a un autre moyen d’être récupérée. Ni image, ni média temporel ou non temporel (10.9.2 à 10.9.4 sans objet)."
+		},
+		{
+			"criterion": "10.9",
+			"page": "https://chikimuras.github.io/rampe/cockpit/adr/0011-cli-audit-playwright/",
+			"status": "NA",
+			"note": "Tests 10.9.1 à 10.9.4 : aucune information donnée par la forme, la taille ou la position (texte en flux, titres balisés, pas de marqueur visuel ni de mise en avant porteuse de sens) ; ni image ni média. Non applicable."
+		},
+		{
+			"criterion": "10.9",
+			"page": "https://chikimuras.github.io/rampe/cockpit/journal/2026-10-15/",
+			"status": "NA",
+			"note": "Tests 10.9.1 à 10.9.4 : aucune information donnée par la forme, la taille ou la position (texte en flux, titres balisés, pas de marqueur visuel ni de mise en avant porteuse de sens) ; ni image ni média. Non applicable."
+		},
+		{
+			"criterion": "10.9",
+			"page": "https://chikimuras.github.io/rampe/cockpit/docs/roadmap/",
+			"status": "C",
+			"note": "Tests 10.9.1, 10.9.2, 10.9.3 et 10.9.4 : informations données par la forme, la taille ou la position recherchées : les pastilles de statut sont du texte (« Fait », « À faire »). Chacune a un autre moyen d’être récupérée. Ni image, ni média temporel ou non temporel (10.9.2 à 10.9.4 sans objet)."
+		},
+		{
+			"criterion": "10.9",
+			"page": "https://chikimuras.github.io/rampe/referentiel/5-1/",
+			"status": "C",
+			"note": "Tests 10.9.1, 10.9.2, 10.9.3 et 10.9.4 : informations données par la forme, la taille ou la position recherchées : les liens « Critère précédent / suivant » (position gauche/droite) sont nommés par leur texte. Chacune a un autre moyen d’être récupérée. Ni image, ni média temporel ou non temporel (10.9.2 à 10.9.4 sans objet)."
+		},
+		{
+			"criterion": "10.9",
+			"page": "https://chikimuras.github.io/rampe/referentiel/1-9/",
+			"status": "C",
+			"note": "Tests 10.9.1, 10.9.2, 10.9.3 et 10.9.4 : informations données par la forme, la taille ou la position recherchées : les liens « Critère précédent / suivant » (position gauche/droite) sont nommés par leur texte. Chacune a un autre moyen d’être récupérée. Ni image, ni média temporel ou non temporel (10.9.2 à 10.9.4 sans objet)."
+		},
+		{
+			"criterion": "10.10",
+			"page": "https://chikimuras.github.io/rampe/",
+			"status": "NA",
+			"note": "Tests 10.10.1 à 10.10.4 : aucune information donnée par la forme, la taille ou la position sur la page ; ni image ni média. Non applicable."
+		},
+		{
+			"criterion": "10.10",
+			"page": "https://chikimuras.github.io/rampe/referentiel/",
+			"status": "C",
+			"note": "Tests 10.10.1, 10.10.2, 10.10.3 et 10.10.4 : les moyens alternatifs relevés (les encadrés « Explication Rampe » (bordure et fond) portent leur libellé textuel) sont textuels ou programmatiques et restitués dans tous les contextes (lecture sans CSS, lecteur d’écran) : implémentation pertinente. Ni image ni média."
+		},
+		{
+			"criterion": "10.10",
+			"page": "https://chikimuras.github.io/rampe/referentiel/1-1/",
+			"status": "C",
+			"note": "Tests 10.10.1, 10.10.2, 10.10.3 et 10.10.4 : les moyens alternatifs relevés (le lien « Critère suivant » placé à droite est nommé par son texte ; le numéro du critère au-dessus du titre est écrit en toutes lettres) sont textuels ou programmatiques et restitués dans tous les contextes (lecture sans CSS, lecteur d’écran) : implémentation pertinente. Ni image ni média."
+		},
+		{
+			"criterion": "10.10",
+			"page": "https://chikimuras.github.io/rampe/referentiel/glossaire/",
+			"status": "C",
+			"note": "Tests 10.10.1, 10.10.2, 10.10.3 et 10.10.4 : les moyens alternatifs relevés (les termes, distingués par la taille et la graisse, sont aussi des <dt> de la liste de description) sont textuels ou programmatiques et restitués dans tous les contextes (lecture sans CSS, lecteur d’écran) : implémentation pertinente. Ni image ni média."
+		},
+		{
+			"criterion": "10.10",
+			"page": "https://chikimuras.github.io/rampe/audit/",
+			"status": "C",
+			"note": "Tests 10.10.1, 10.10.2, 10.10.3 et 10.10.4 : les moyens alternatifs relevés (la thématique et le critère affichés (bordure, fond) portent aussi aria-current et sont repris par le titre h3 « Critère 1.1, thématique 1 » ; le statut choisi (bordure double, tirets…) est aussi l’état coché du bouton radio natif ; « ci-dessus / ci-dessous » renvoient à des éléments placés avant/après dans l’ordre du code) sont textuels ou programmatiques et restitués dans tous les contextes (lecture sans CSS, lecteur d’écran) : implémentation pertinente. Ni image ni média."
+		},
+		{
+			"criterion": "10.10",
+			"page": "https://chikimuras.github.io/rampe/cockpit/",
+			"status": "C",
+			"note": "Tests 10.10.1, 10.10.2, 10.10.3 et 10.10.4 : les moyens alternatifs relevés (la longueur des barres d’avancement est doublée par le texte « 3/4 » et l’aria-label « Phase 2 … : 3 sur 4 » ; les pastilles de statut ADR sont du texte) sont textuels ou programmatiques et restitués dans tous les contextes (lecture sans CSS, lecteur d’écran) : implémentation pertinente. Ni image ni média."
+		},
+		{
+			"criterion": "10.10",
+			"page": "https://chikimuras.github.io/rampe/cockpit/adr/0011-cli-audit-playwright/",
+			"status": "NA",
+			"note": "Tests 10.10.1 à 10.10.4 : aucune information donnée par la forme, la taille ou la position sur la page ; ni image ni média. Non applicable."
+		},
+		{
+			"criterion": "10.10",
+			"page": "https://chikimuras.github.io/rampe/cockpit/journal/2026-10-15/",
+			"status": "NA",
+			"note": "Tests 10.10.1 à 10.10.4 : aucune information donnée par la forme, la taille ou la position sur la page ; ni image ni média. Non applicable."
+		},
+		{
+			"criterion": "10.10",
+			"page": "https://chikimuras.github.io/rampe/cockpit/docs/roadmap/",
+			"status": "C",
+			"note": "Tests 10.10.1, 10.10.2, 10.10.3 et 10.10.4 : les moyens alternatifs relevés (les pastilles de statut sont du texte (« Fait », « À faire »)) sont textuels ou programmatiques et restitués dans tous les contextes (lecture sans CSS, lecteur d’écran) : implémentation pertinente. Ni image ni média."
+		},
+		{
+			"criterion": "10.10",
+			"page": "https://chikimuras.github.io/rampe/referentiel/5-1/",
+			"status": "C",
+			"note": "Tests 10.10.1, 10.10.2, 10.10.3 et 10.10.4 : les moyens alternatifs relevés (les liens « Critère précédent / suivant » (position gauche/droite) sont nommés par leur texte) sont textuels ou programmatiques et restitués dans tous les contextes (lecture sans CSS, lecteur d’écran) : implémentation pertinente. Ni image ni média."
+		},
+		{
+			"criterion": "10.10",
+			"page": "https://chikimuras.github.io/rampe/referentiel/1-9/",
+			"status": "C",
+			"note": "Tests 10.10.1, 10.10.2, 10.10.3 et 10.10.4 : les moyens alternatifs relevés (les liens « Critère précédent / suivant » (position gauche/droite) sont nommés par leur texte) sont textuels ou programmatiques et restitués dans tous les contextes (lecture sans CSS, lecteur d’écran) : implémentation pertinente. Ni image ni média."
+		},
+		{
+			"criterion": "10.11",
+			"page": "https://chikimuras.github.io/rampe/",
+			"status": "C",
+			"note": "Tests 10.11.1 et 10.11.2 : fenêtre de 320 px de large, thèmes clair et sombre, aussi avec l’espacement du texte 10.12 : scrollWidth du document = 320, aucun élément hors de la fenêtre, navigation qui passe à la ligne, informations et fonctionnalités disponibles. Contenu à lecture horizontale seulement (10.11.2 sans objet)."
+		},
+		{
+			"criterion": "10.11",
+			"page": "https://chikimuras.github.io/rampe/referentiel/",
+			"status": "C",
+			"note": "Tests 10.11.1 et 10.11.2 : fenêtre de 320 px de large, thèmes clair et sombre, aussi avec l’espacement du texte 10.12 : scrollWidth du document = 320, aucun élément hors de la fenêtre, navigation qui passe à la ligne, informations et fonctionnalités disponibles. Contenu à lecture horizontale seulement (10.11.2 sans objet)."
+		},
+		{
+			"criterion": "10.11",
+			"page": "https://chikimuras.github.io/rampe/referentiel/1-1/",
+			"status": "C",
+			"note": "Tests 10.11.1 et 10.11.2 : fenêtre de 320 px de large, thèmes clair et sombre, aussi avec l’espacement du texte 10.12 : scrollWidth du document = 320, aucun élément hors de la fenêtre, navigation qui passe à la ligne, informations et fonctionnalités disponibles. Contenu à lecture horizontale seulement (10.11.2 sans objet)."
+		},
+		{
+			"criterion": "10.11",
+			"page": "https://chikimuras.github.io/rampe/referentiel/glossaire/",
+			"status": "C",
+			"note": "Tests 10.11.1 et 10.11.2 : fenêtre de 320 px de large, thèmes clair et sombre, aussi avec l’espacement du texte 10.12 : scrollWidth du document = 320, aucun élément hors de la fenêtre, navigation qui passe à la ligne, informations et fonctionnalités disponibles. Contenu à lecture horizontale seulement (10.11.2 sans objet)."
+		},
+		{
+			"criterion": "10.11",
+			"page": "https://chikimuras.github.io/rampe/audit/",
+			"status": "C",
+			"note": "Tests 10.11.1 et 10.11.2 : fenêtre de 320 px de large, thèmes clair et sombre (états interactifs examinés : vierge, audit complet importé (2 pages, 106 critères, taux et tableau d’actions affichés), audit effacé puis rapport automatique importé (statuts « à confirmer », indices dépliés), boîte de dialogue « Remplacer l’audit en cours ? » ouverte), aussi avec l’espacement du texte 10.12 : scrollWidth du document = 320, aucun élément hors de la fenêtre, navigation qui passe à la ligne, informations et fonctionnalités disponibles ; seuls les tableaux de données « Résultat par page » et « Actions de mise en conformité » défilent horizontalement, dans leur propre zone focalisable (cas particulier : tableaux de données). Contenu à lecture horizontale seulement (10.11.2 sans objet)."
+		},
+		{
+			"criterion": "10.11",
+			"page": "https://chikimuras.github.io/rampe/cockpit/",
+			"status": "C",
+			"note": "Tests 10.11.1 et 10.11.2 : fenêtre de 320 px de large, thèmes clair et sombre, aussi avec l’espacement du texte 10.12 : scrollWidth du document = 320, aucun élément hors de la fenêtre, navigation qui passe à la ligne, informations et fonctionnalités disponibles. Contenu à lecture horizontale seulement (10.11.2 sans objet)."
+		},
+		{
+			"criterion": "10.11",
+			"page": "https://chikimuras.github.io/rampe/cockpit/adr/0011-cli-audit-playwright/",
+			"status": "C",
+			"note": "Tests 10.11.1 et 10.11.2 : fenêtre de 320 px de large, thèmes clair et sombre, aussi avec l’espacement du texte 10.12 : scrollWidth du document = 320, aucun élément hors de la fenêtre, navigation qui passe à la ligne, informations et fonctionnalités disponibles. Contenu à lecture horizontale seulement (10.11.2 sans objet)."
+		},
+		{
+			"criterion": "10.11",
+			"page": "https://chikimuras.github.io/rampe/cockpit/journal/2026-10-15/",
+			"status": "C",
+			"note": "Tests 10.11.1 et 10.11.2 : fenêtre de 320 px de large, thèmes clair et sombre, aussi avec l’espacement du texte 10.12 : scrollWidth du document = 320, aucun élément hors de la fenêtre, navigation qui passe à la ligne, informations et fonctionnalités disponibles. Contenu à lecture horizontale seulement (10.11.2 sans objet)."
+		},
+		{
+			"criterion": "10.11",
+			"page": "https://chikimuras.github.io/rampe/cockpit/docs/roadmap/",
+			"status": "C",
+			"note": "Tests 10.11.1 et 10.11.2 : fenêtre de 320 px de large, thèmes clair et sombre, aussi avec l’espacement du texte 10.12 : scrollWidth du document = 320, aucun élément hors de la fenêtre, navigation qui passe à la ligne, informations et fonctionnalités disponibles. Contenu à lecture horizontale seulement (10.11.2 sans objet)."
+		},
+		{
+			"criterion": "10.11",
+			"page": "https://chikimuras.github.io/rampe/referentiel/5-1/",
+			"status": "C",
+			"note": "Tests 10.11.1 et 10.11.2 : fenêtre de 320 px de large, thèmes clair et sombre, aussi avec l’espacement du texte 10.12 : scrollWidth du document = 320, aucun élément hors de la fenêtre, navigation qui passe à la ligne, informations et fonctionnalités disponibles. Contenu à lecture horizontale seulement (10.11.2 sans objet)."
+		},
+		{
+			"criterion": "10.11",
+			"page": "https://chikimuras.github.io/rampe/referentiel/1-9/",
+			"status": "C",
+			"note": "Tests 10.11.1 et 10.11.2 : fenêtre de 320 px de large, thèmes clair et sombre, aussi avec l’espacement du texte 10.12 : scrollWidth du document = 320, aucun élément hors de la fenêtre, navigation qui passe à la ligne, informations et fonctionnalités disponibles. Contenu à lecture horizontale seulement (10.11.2 sans objet)."
+		},
+		{
+			"criterion": "10.12",
+			"page": "https://chikimuras.github.io/rampe/",
+			"status": "C",
+			"note": "Test 10.12.1 : styles de la note du critère appliqués à tous les éléments (line-height:1.5, letter-spacing:0.12em, word-spacing:0.16em, margin-bottom:2em sur <p>) à 1280 et 320 px, thèmes clair et sombre : aucun texte rogné (aucun élément overflow hidden en débordement), aucun débordement horizontal du document, aucun chevauchement observé sur les captures (navigation, contenu)."
+		},
+		{
+			"criterion": "10.12",
+			"page": "https://chikimuras.github.io/rampe/referentiel/",
+			"status": "C",
+			"note": "Test 10.12.1 : styles de la note du critère appliqués à tous les éléments (line-height:1.5, letter-spacing:0.12em, word-spacing:0.16em, margin-bottom:2em sur <p>) à 1280 et 320 px, thèmes clair et sombre : aucun texte rogné (aucun élément overflow hidden en débordement), aucun débordement horizontal du document, aucun chevauchement observé sur les captures (navigation, contenu)."
+		},
+		{
+			"criterion": "10.12",
+			"page": "https://chikimuras.github.io/rampe/referentiel/1-1/",
+			"status": "C",
+			"note": "Test 10.12.1 : styles de la note du critère appliqués à tous les éléments (line-height:1.5, letter-spacing:0.12em, word-spacing:0.16em, margin-bottom:2em sur <p>) à 1280 et 320 px, thèmes clair et sombre : aucun texte rogné (aucun élément overflow hidden en débordement), aucun débordement horizontal du document, aucun chevauchement observé sur les captures (navigation, contenu)."
+		},
+		{
+			"criterion": "10.12",
+			"page": "https://chikimuras.github.io/rampe/referentiel/glossaire/",
+			"status": "C",
+			"note": "Test 10.12.1 : styles de la note du critère appliqués à tous les éléments (line-height:1.5, letter-spacing:0.12em, word-spacing:0.16em, margin-bottom:2em sur <p>) à 1280 et 320 px, thèmes clair et sombre : aucun texte rogné (aucun élément overflow hidden en débordement), aucun débordement horizontal du document, aucun chevauchement observé sur les captures (navigation, contenu)."
+		},
+		{
+			"criterion": "10.12",
+			"page": "https://chikimuras.github.io/rampe/audit/",
+			"status": "C",
+			"note": "Test 10.12.1 : styles de la note du critère appliqués à tous les éléments (line-height:1.5, letter-spacing:0.12em, word-spacing:0.16em, margin-bottom:2em sur <p>) à 1280 et 320 px, thèmes clair et sombre (états interactifs examinés : vierge, audit complet importé (2 pages, 106 critères, taux et tableau d’actions affichés), audit effacé puis rapport automatique importé (statuts « à confirmer », indices dépliés), boîte de dialogue « Remplacer l’audit en cours ? » ouverte) : aucun texte rogné (aucun élément overflow hidden en débordement), aucun débordement horizontal du document, aucun chevauchement observé sur les captures (navigation, boutons de statut, listes de critères, résultats)."
+		},
+		{
+			"criterion": "10.12",
+			"page": "https://chikimuras.github.io/rampe/cockpit/",
+			"status": "C",
+			"note": "Test 10.12.1 : styles de la note du critère appliqués à tous les éléments (line-height:1.5, letter-spacing:0.12em, word-spacing:0.16em, margin-bottom:2em sur <p>) à 1280 et 320 px, thèmes clair et sombre : aucun texte rogné (aucun élément overflow hidden en débordement), aucun débordement horizontal du document, aucun chevauchement observé sur les captures (navigation, barres d’avancement)."
+		},
+		{
+			"criterion": "10.12",
+			"page": "https://chikimuras.github.io/rampe/cockpit/adr/0011-cli-audit-playwright/",
+			"status": "C",
+			"note": "Test 10.12.1 : styles de la note du critère appliqués à tous les éléments (line-height:1.5, letter-spacing:0.12em, word-spacing:0.16em, margin-bottom:2em sur <p>) à 1280 et 320 px, thèmes clair et sombre : aucun texte rogné (aucun élément overflow hidden en débordement), aucun débordement horizontal du document, aucun chevauchement observé sur les captures (navigation, contenu)."
+		},
+		{
+			"criterion": "10.12",
+			"page": "https://chikimuras.github.io/rampe/cockpit/journal/2026-10-15/",
+			"status": "C",
+			"note": "Test 10.12.1 : styles de la note du critère appliqués à tous les éléments (line-height:1.5, letter-spacing:0.12em, word-spacing:0.16em, margin-bottom:2em sur <p>) à 1280 et 320 px, thèmes clair et sombre : aucun texte rogné (aucun élément overflow hidden en débordement), aucun débordement horizontal du document, aucun chevauchement observé sur les captures (navigation, contenu)."
+		},
+		{
+			"criterion": "10.12",
+			"page": "https://chikimuras.github.io/rampe/cockpit/docs/roadmap/",
+			"status": "C",
+			"note": "Test 10.12.1 : styles de la note du critère appliqués à tous les éléments (line-height:1.5, letter-spacing:0.12em, word-spacing:0.16em, margin-bottom:2em sur <p>) à 1280 et 320 px, thèmes clair et sombre : aucun texte rogné (aucun élément overflow hidden en débordement), aucun débordement horizontal du document, aucun chevauchement observé sur les captures (navigation, contenu)."
+		},
+		{
+			"criterion": "10.12",
+			"page": "https://chikimuras.github.io/rampe/referentiel/5-1/",
+			"status": "C",
+			"note": "Test 10.12.1 : styles de la note du critère appliqués à tous les éléments (line-height:1.5, letter-spacing:0.12em, word-spacing:0.16em, margin-bottom:2em sur <p>) à 1280 et 320 px, thèmes clair et sombre : aucun texte rogné (aucun élément overflow hidden en débordement), aucun débordement horizontal du document, aucun chevauchement observé sur les captures (navigation, contenu)."
+		},
+		{
+			"criterion": "10.12",
+			"page": "https://chikimuras.github.io/rampe/referentiel/1-9/",
+			"status": "C",
+			"note": "Test 10.12.1 : styles de la note du critère appliqués à tous les éléments (line-height:1.5, letter-spacing:0.12em, word-spacing:0.16em, margin-bottom:2em sur <p>) à 1280 et 320 px, thèmes clair et sombre : aucun texte rogné (aucun élément overflow hidden en débordement), aucun débordement horizontal du document, aucun chevauchement observé sur les captures (navigation, contenu)."
+		},
+		{
+			"criterion": "10.13",
+			"page": "https://chikimuras.github.io/rampe/",
+			"status": "NA",
+			"note": "Tests 10.13.1, 10.13.2 et 10.13.3 : contenus additionnels au survol ou au focus recherchés (règles CSS :hover/:focus, scripts, infobulles) : aucun. Le lien d’évitement, révélé par .skip:focus, est le composant lui-même et non un contenu additionnel. Non applicable."
+		},
+		{
+			"criterion": "10.13",
+			"page": "https://chikimuras.github.io/rampe/referentiel/",
+			"status": "NA",
+			"note": "Tests 10.13.1, 10.13.2 et 10.13.3 : contenus additionnels au survol ou au focus recherchés (règles CSS :hover/:focus, scripts, infobulles) : aucun. Le lien d’évitement, révélé par .skip:focus, est le composant lui-même et non un contenu additionnel. Non applicable."
+		},
+		{
+			"criterion": "10.13",
+			"page": "https://chikimuras.github.io/rampe/referentiel/1-1/",
+			"status": "NA",
+			"note": "Tests 10.13.1, 10.13.2 et 10.13.3 : contenus additionnels au survol ou au focus recherchés (règles CSS :hover/:focus, scripts, infobulles) : aucun. Le lien d’évitement, révélé par .skip:focus, est le composant lui-même et non un contenu additionnel. Non applicable."
+		},
+		{
+			"criterion": "10.13",
+			"page": "https://chikimuras.github.io/rampe/referentiel/glossaire/",
+			"status": "NA",
+			"note": "Tests 10.13.1, 10.13.2 et 10.13.3 : contenus additionnels au survol ou au focus recherchés (règles CSS :hover/:focus, scripts, infobulles) : aucun. Les infobulles des <abbr title> sont gérées par le navigateur (exclues). Le lien d’évitement, révélé par .skip:focus, est le composant lui-même et non un contenu additionnel. Non applicable."
+		},
+		{
+			"criterion": "10.13",
+			"page": "https://chikimuras.github.io/rampe/audit/",
+			"status": "NA",
+			"note": "Tests 10.13.1, 10.13.2 et 10.13.3 : contenus additionnels au survol ou au focus recherchés (règles CSS :hover/:focus, scripts, infobulles) : aucun. Le dialogue de remplacement s’ouvre sur activation (exclu). Le lien d’évitement, révélé par .skip:focus, est le composant lui-même et non un contenu additionnel. Non applicable."
+		},
+		{
+			"criterion": "10.13",
+			"page": "https://chikimuras.github.io/rampe/cockpit/",
+			"status": "NA",
+			"note": "Tests 10.13.1, 10.13.2 et 10.13.3 : contenus additionnels au survol ou au focus recherchés (règles CSS :hover/:focus, scripts, infobulles) : aucun. Le lien d’évitement, révélé par .skip:focus, est le composant lui-même et non un contenu additionnel. Non applicable."
+		},
+		{
+			"criterion": "10.13",
+			"page": "https://chikimuras.github.io/rampe/cockpit/adr/0011-cli-audit-playwright/",
+			"status": "NA",
+			"note": "Tests 10.13.1, 10.13.2 et 10.13.3 : contenus additionnels au survol ou au focus recherchés (règles CSS :hover/:focus, scripts, infobulles) : aucun. Le lien d’évitement, révélé par .skip:focus, est le composant lui-même et non un contenu additionnel. Non applicable."
+		},
+		{
+			"criterion": "10.13",
+			"page": "https://chikimuras.github.io/rampe/cockpit/journal/2026-10-15/",
+			"status": "NA",
+			"note": "Tests 10.13.1, 10.13.2 et 10.13.3 : contenus additionnels au survol ou au focus recherchés (règles CSS :hover/:focus, scripts, infobulles) : aucun. Le lien d’évitement, révélé par .skip:focus, est le composant lui-même et non un contenu additionnel. Non applicable."
+		},
+		{
+			"criterion": "10.13",
+			"page": "https://chikimuras.github.io/rampe/cockpit/docs/roadmap/",
+			"status": "NA",
+			"note": "Tests 10.13.1, 10.13.2 et 10.13.3 : contenus additionnels au survol ou au focus recherchés (règles CSS :hover/:focus, scripts, infobulles) : aucun. Le lien d’évitement, révélé par .skip:focus, est le composant lui-même et non un contenu additionnel. Non applicable."
+		},
+		{
+			"criterion": "10.13",
+			"page": "https://chikimuras.github.io/rampe/referentiel/5-1/",
+			"status": "NA",
+			"note": "Tests 10.13.1, 10.13.2 et 10.13.3 : contenus additionnels au survol ou au focus recherchés (règles CSS :hover/:focus, scripts, infobulles) : aucun. Le lien d’évitement, révélé par .skip:focus, est le composant lui-même et non un contenu additionnel. Non applicable."
+		},
+		{
+			"criterion": "10.13",
+			"page": "https://chikimuras.github.io/rampe/referentiel/1-9/",
+			"status": "NA",
+			"note": "Tests 10.13.1, 10.13.2 et 10.13.3 : contenus additionnels au survol ou au focus recherchés (règles CSS :hover/:focus, scripts, infobulles) : aucun. Le lien d’évitement, révélé par .skip:focus, est le composant lui-même et non un contenu additionnel. Non applicable."
+		},
+		{
+			"criterion": "10.14",
+			"page": "https://chikimuras.github.io/rampe/",
+			"status": "NA",
+			"note": "Tests 10.14.1 et 10.14.2 : règles CSS :hover et :focus des feuilles de la page examinées : aucune ne fait apparaître de contenu additionnel ; la seule, .skip:focus, rend visible le lien d’évitement lui-même au focus clavier (pas un contenu associé à un autre composant). Non applicable."
+		},
+		{
+			"criterion": "10.14",
+			"page": "https://chikimuras.github.io/rampe/referentiel/",
+			"status": "NA",
+			"note": "Tests 10.14.1 et 10.14.2 : règles CSS :hover et :focus des feuilles de la page examinées : aucune ne fait apparaître de contenu additionnel ; la seule, .skip:focus, rend visible le lien d’évitement lui-même au focus clavier (pas un contenu associé à un autre composant). Non applicable."
+		},
+		{
+			"criterion": "10.14",
+			"page": "https://chikimuras.github.io/rampe/referentiel/1-1/",
+			"status": "NA",
+			"note": "Tests 10.14.1 et 10.14.2 : règles CSS :hover et :focus des feuilles de la page examinées : aucune ne fait apparaître de contenu additionnel ; la seule, .skip:focus, rend visible le lien d’évitement lui-même au focus clavier (pas un contenu associé à un autre composant). Non applicable."
+		},
+		{
+			"criterion": "10.14",
+			"page": "https://chikimuras.github.io/rampe/referentiel/glossaire/",
+			"status": "NA",
+			"note": "Tests 10.14.1 et 10.14.2 : règles CSS :hover et :focus des feuilles de la page examinées : aucune ne fait apparaître de contenu additionnel ; la seule, .skip:focus, rend visible le lien d’évitement lui-même au focus clavier (pas un contenu associé à un autre composant). Non applicable."
+		},
+		{
+			"criterion": "10.14",
+			"page": "https://chikimuras.github.io/rampe/audit/",
+			"status": "NA",
+			"note": "Tests 10.14.1 et 10.14.2 : règles CSS :hover et :focus des feuilles de la page (dont /_astro/index.BSHAaWIN.css) examinées : aucune ne fait apparaître de contenu additionnel ; la seule, .skip:focus, rend visible le lien d’évitement lui-même au focus clavier (pas un contenu associé à un autre composant). Non applicable."
+		},
+		{
+			"criterion": "10.14",
+			"page": "https://chikimuras.github.io/rampe/cockpit/",
+			"status": "NA",
+			"note": "Tests 10.14.1 et 10.14.2 : règles CSS :hover et :focus des feuilles de la page examinées : aucune ne fait apparaître de contenu additionnel ; la seule, .skip:focus, rend visible le lien d’évitement lui-même au focus clavier (pas un contenu associé à un autre composant). Non applicable."
+		},
+		{
+			"criterion": "10.14",
+			"page": "https://chikimuras.github.io/rampe/cockpit/adr/0011-cli-audit-playwright/",
+			"status": "NA",
+			"note": "Tests 10.14.1 et 10.14.2 : règles CSS :hover et :focus des feuilles de la page examinées : aucune ne fait apparaître de contenu additionnel ; la seule, .skip:focus, rend visible le lien d’évitement lui-même au focus clavier (pas un contenu associé à un autre composant). Non applicable."
+		},
+		{
+			"criterion": "10.14",
+			"page": "https://chikimuras.github.io/rampe/cockpit/journal/2026-10-15/",
+			"status": "NA",
+			"note": "Tests 10.14.1 et 10.14.2 : règles CSS :hover et :focus des feuilles de la page examinées : aucune ne fait apparaître de contenu additionnel ; la seule, .skip:focus, rend visible le lien d’évitement lui-même au focus clavier (pas un contenu associé à un autre composant). Non applicable."
+		},
+		{
+			"criterion": "10.14",
+			"page": "https://chikimuras.github.io/rampe/cockpit/docs/roadmap/",
+			"status": "NA",
+			"note": "Tests 10.14.1 et 10.14.2 : règles CSS :hover et :focus des feuilles de la page examinées : aucune ne fait apparaître de contenu additionnel ; la seule, .skip:focus, rend visible le lien d’évitement lui-même au focus clavier (pas un contenu associé à un autre composant). Non applicable."
+		},
+		{
+			"criterion": "10.14",
+			"page": "https://chikimuras.github.io/rampe/referentiel/5-1/",
+			"status": "NA",
+			"note": "Tests 10.14.1 et 10.14.2 : règles CSS :hover et :focus des feuilles de la page examinées : aucune ne fait apparaître de contenu additionnel ; la seule, .skip:focus, rend visible le lien d’évitement lui-même au focus clavier (pas un contenu associé à un autre composant). Non applicable."
+		},
+		{
+			"criterion": "10.14",
+			"page": "https://chikimuras.github.io/rampe/referentiel/1-9/",
+			"status": "NA",
+			"note": "Tests 10.14.1 et 10.14.2 : règles CSS :hover et :focus des feuilles de la page examinées : aucune ne fait apparaître de contenu additionnel ; la seule, .skip:focus, rend visible le lien d’évitement lui-même au focus clavier (pas un contenu associé à un autre composant). Non applicable."
+		}
+	]
+}

@@ -1,0 +1,270 @@
+{
+	"evaluator": "Claude (IA)",
+	"date": "2026-10-16",
+	"entries": [
+		{
+			"criterion": "9.1",
+			"page": "https://chikimuras.github.io/rampe/",
+			"status": "C",
+			"note": "Tests 9.1.1, 9.1.2 et 9.1.3 : un seul titre, <h1>Rampe</h1>, pour une page courte de 3 paragraphes sans sections. Hiérarchie cohérente, intitulés pertinents décrivant la section qui suit, et chaque passage visuellement présenté comme titre est balisé <hx> (aucun role=\"heading\", aucun faux titre en gras ou grande taille repéré à l’écran)."
+		},
+		{
+			"criterion": "9.1",
+			"page": "https://chikimuras.github.io/rampe/referentiel/",
+			"status": "C",
+			"note": "Tests 9.1.1, 9.1.2 et 9.1.3 : h1 « Référentiel RGAA 4.1.2 », h2 « Thématiques » (sommaire) puis 13 h2 « 1. Images » … « 13. Consultation ». Hiérarchie cohérente, intitulés pertinents décrivant la section qui suit, et chaque passage visuellement présenté comme titre est balisé <hx> (aucun role=\"heading\", aucun faux titre en gras ou grande taille repéré à l’écran)."
+		},
+		{
+			"criterion": "9.1",
+			"page": "https://chikimuras.github.io/rampe/referentiel/1-1/",
+			"status": "C",
+			"note": "Tests 9.1.1, 9.1.2 et 9.1.3 : h1 (numéro et intitulé du critère), h2 Tests > 8 h3 « Test 1.1.x », h2 Références WCAG 2.1, h2 Ce que l’audit automatique peut détecter > h3. Hiérarchie cohérente, intitulés pertinents décrivant la section qui suit, et chaque passage visuellement présenté comme titre est balisé <hx> (aucun role=\"heading\", aucun faux titre en gras ou grande taille repéré à l’écran)."
+		},
+		{
+			"criterion": "9.1",
+			"page": "https://chikimuras.github.io/rampe/referentiel/glossaire/",
+			"status": "C",
+			"note": "Tests 9.1.1, 9.1.2 et 9.1.3 : h1 « Glossaire du RGAA 4.1.2 » ; les 119 termes sont des <dt> d’une liste de description, structure attendue d’un glossaire (glossaire RGAA « Listes ») — aucun passage n’est présenté comme un titre hors de cette liste. Hiérarchie cohérente, intitulés pertinents décrivant la section qui suit, et chaque passage visuellement présenté comme titre est balisé <hx> (aucun role=\"heading\", aucun faux titre en gras ou grande taille repéré à l’écran)."
+		},
+		{
+			"criterion": "9.1",
+			"page": "https://chikimuras.github.io/rampe/audit/",
+			"status": "C",
+			"note": "Tests 9.1.1, 9.1.2 et 9.1.3 : états interactifs examinés : vierge, audit complet importé (2 pages, 106 critères, taux et tableau d’actions affichés), audit effacé puis rapport automatique importé (statuts « à confirmer », indices dépliés), boîte de dialogue « Remplacer l’audit en cours ? » ouverte : h1, h2 numérotés 1 à 5 (et h2 du dialogue), h3/h4/h5 imbriqués (critère > tests ; aperçu de la déclaration > sections officielles > sous-sections) sans saut incohérent. Hiérarchie cohérente, intitulés pertinents décrivant la section qui suit, et chaque passage visuellement présenté comme titre est balisé <hx> (aucun role=\"heading\", aucun faux titre en gras ou grande taille repéré à l’écran)."
+		},
+		{
+			"criterion": "9.1",
+			"page": "https://chikimuras.github.io/rampe/cockpit/",
+			"status": "C",
+			"note": "Tests 9.1.1, 9.1.2 et 9.1.3 : h1 Cockpit, h2 En attente d’Alexandre, Avancement, Rampe audité par Rampe (> h3 Gate automatique, h3 Auto-évaluation), Journal de bord, Décisions d’architecture, Documentation. Hiérarchie cohérente, intitulés pertinents décrivant la section qui suit, et chaque passage visuellement présenté comme titre est balisé <hx> (aucun role=\"heading\", aucun faux titre en gras ou grande taille repéré à l’écran)."
+		},
+		{
+			"criterion": "9.1",
+			"page": "https://chikimuras.github.io/rampe/cockpit/adr/0011-cli-audit-playwright/",
+			"status": "C",
+			"note": "Tests 9.1.1, 9.1.2 et 9.1.3 : h1 (numéro et intitulé de la décision), h2 Contexte, Décision, Conséquences. Hiérarchie cohérente, intitulés pertinents décrivant la section qui suit, et chaque passage visuellement présenté comme titre est balisé <hx> (aucun role=\"heading\", aucun faux titre en gras ou grande taille repéré à l’écran)."
+		},
+		{
+			"criterion": "9.1",
+			"page": "https://chikimuras.github.io/rampe/cockpit/journal/2026-10-15/",
+			"status": "C",
+			"note": "Tests 9.1.1, 9.1.2 et 9.1.3 : h1 de l’entrée, 22 h2 (Contexte, Ce qui a été décidé… puis une h2 par PR) ; les « Sorties : » / « Leçons d’orchestration : » en <strong> introduisent une liste, ce ne sont pas des titres. Hiérarchie cohérente, intitulés pertinents décrivant la section qui suit, et chaque passage visuellement présenté comme titre est balisé <hx> (aucun role=\"heading\", aucun faux titre en gras ou grande taille repéré à l’écran)."
+		},
+		{
+			"criterion": "9.1",
+			"page": "https://chikimuras.github.io/rampe/cockpit/docs/roadmap/",
+			"status": "C",
+			"note": "Tests 9.1.1, 9.1.2 et 9.1.3 : h1 Roadmap, 7 h2 « Phase 0 » à « Phase 6 ». Hiérarchie cohérente, intitulés pertinents décrivant la section qui suit, et chaque passage visuellement présenté comme titre est balisé <hx> (aucun role=\"heading\", aucun faux titre en gras ou grande taille repéré à l’écran)."
+		},
+		{
+			"criterion": "9.1",
+			"page": "https://chikimuras.github.io/rampe/referentiel/5-1/",
+			"status": "C",
+			"note": "Tests 9.1.1, 9.1.2 et 9.1.3 : h1, h2 Tests > h3 Test 5.1.1, h2 Notes techniques, h2 Références WCAG 2.1, h2 Ce que l’audit automatique peut détecter. Hiérarchie cohérente, intitulés pertinents décrivant la section qui suit, et chaque passage visuellement présenté comme titre est balisé <hx> (aucun role=\"heading\", aucun faux titre en gras ou grande taille repéré à l’écran)."
+		},
+		{
+			"criterion": "9.1",
+			"page": "https://chikimuras.github.io/rampe/referentiel/1-9/",
+			"status": "C",
+			"note": "Tests 9.1.1, 9.1.2 et 9.1.3 : h1, h2 Tests > 5 h3 « Test 1.9.x », h2 Notes techniques, Références WCAG 2.1, Ce que l’audit automatique peut détecter > h3. Hiérarchie cohérente, intitulés pertinents décrivant la section qui suit, et chaque passage visuellement présenté comme titre est balisé <hx> (aucun role=\"heading\", aucun faux titre en gras ou grande taille repéré à l’écran)."
+		},
+		{
+			"criterion": "9.2",
+			"page": "https://chikimuras.github.io/rampe/",
+			"status": "C",
+			"note": "Test 9.2.1 (doctype HTML5) : <header> contient la navigation principale (<nav aria-label=\"Navigation principale\">) ; un seul <main id=\"contenu\"> visible ; <footer> en pied de page (crédits, licence). Aucun <nav> hors navigation, un seul <main>."
+		},
+		{
+			"criterion": "9.2",
+			"page": "https://chikimuras.github.io/rampe/referentiel/",
+			"status": "C",
+			"note": "Test 9.2.1 (doctype HTML5) : <header> contient la navigation principale (<nav aria-label=\"Navigation principale\">) ; un seul <main id=\"contenu\"> visible ; <footer> en pied de page (crédits, licence). Le second <nav>, dans <main>, est le sommaire des thématiques (aria-labelledby « Thématiques ») : navigation secondaire au sens du glossaire. Aucun <nav> hors navigation, un seul <main>."
+		},
+		{
+			"criterion": "9.2",
+			"page": "https://chikimuras.github.io/rampe/referentiel/1-1/",
+			"status": "C",
+			"note": "Test 9.2.1 (doctype HTML5) : <header> contient la navigation principale (<nav aria-label=\"Navigation principale\">) ; un seul <main id=\"contenu\"> visible ; <footer> en pied de page (crédits, licence). Les <nav> « Fil d’Ariane » et « Critères voisins » sont des barres de navigation secondaires (glossaire « Menu et barre de navigation »). Aucun <nav> hors navigation, un seul <main>."
+		},
+		{
+			"criterion": "9.2",
+			"page": "https://chikimuras.github.io/rampe/referentiel/glossaire/",
+			"status": "C",
+			"note": "Test 9.2.1 (doctype HTML5) : <header> contient la navigation principale (<nav aria-label=\"Navigation principale\">) ; un seul <main id=\"contenu\"> visible ; <footer> en pied de page (crédits, licence). Aucun <nav> hors navigation, un seul <main>."
+		},
+		{
+			"criterion": "9.2",
+			"page": "https://chikimuras.github.io/rampe/audit/",
+			"status": "C",
+			"note": "Test 9.2.1 (doctype HTML5) : <header> contient la navigation principale (<nav aria-label=\"Navigation principale\">) ; un seul <main id=\"contenu\"> visible ; <footer> en pied de page (crédits, licence). Dans tous les états (états interactifs examinés : vierge, audit complet importé (2 pages, 106 critères, taux et tableau d’actions affichés), audit effacé puis rapport automatique importé (statuts « à confirmer », indices dépliés), boîte de dialogue « Remplacer l’audit en cours ? » ouverte), les <nav> internes à <main> — liste des thématiques, liste des critères, « Critères voisins » — sont des menus contextuels qui naviguent dans la collection des critères. Aucun <nav> hors navigation, un seul <main>."
+		},
+		{
+			"criterion": "9.2",
+			"page": "https://chikimuras.github.io/rampe/cockpit/",
+			"status": "C",
+			"note": "Test 9.2.1 (doctype HTML5) : <header> contient la navigation principale (<nav aria-label=\"Navigation principale\">) ; un seul <main id=\"contenu\"> visible ; <footer> en pied de page (crédits, licence). Aucun <nav> hors navigation, un seul <main>."
+		},
+		{
+			"criterion": "9.2",
+			"page": "https://chikimuras.github.io/rampe/cockpit/adr/0011-cli-audit-playwright/",
+			"status": "C",
+			"note": "Test 9.2.1 (doctype HTML5) : <header> contient la navigation principale (<nav aria-label=\"Navigation principale\">) ; un seul <main id=\"contenu\"> visible ; <footer> en pied de page (crédits, licence). Aucun <nav> hors navigation, un seul <main>."
+		},
+		{
+			"criterion": "9.2",
+			"page": "https://chikimuras.github.io/rampe/cockpit/journal/2026-10-15/",
+			"status": "C",
+			"note": "Test 9.2.1 (doctype HTML5) : <header> contient la navigation principale (<nav aria-label=\"Navigation principale\">) ; un seul <main id=\"contenu\"> visible ; <footer> en pied de page (crédits, licence). Aucun <nav> hors navigation, un seul <main>."
+		},
+		{
+			"criterion": "9.2",
+			"page": "https://chikimuras.github.io/rampe/cockpit/docs/roadmap/",
+			"status": "C",
+			"note": "Test 9.2.1 (doctype HTML5) : <header> contient la navigation principale (<nav aria-label=\"Navigation principale\">) ; un seul <main id=\"contenu\"> visible ; <footer> en pied de page (crédits, licence). Aucun <nav> hors navigation, un seul <main>."
+		},
+		{
+			"criterion": "9.2",
+			"page": "https://chikimuras.github.io/rampe/referentiel/5-1/",
+			"status": "C",
+			"note": "Test 9.2.1 (doctype HTML5) : <header> contient la navigation principale (<nav aria-label=\"Navigation principale\">) ; un seul <main id=\"contenu\"> visible ; <footer> en pied de page (crédits, licence). Les <nav> « Fil d’Ariane » et « Critères voisins » sont des barres de navigation secondaires. Aucun <nav> hors navigation, un seul <main>."
+		},
+		{
+			"criterion": "9.2",
+			"page": "https://chikimuras.github.io/rampe/referentiel/1-9/",
+			"status": "C",
+			"note": "Test 9.2.1 (doctype HTML5) : <header> contient la navigation principale (<nav aria-label=\"Navigation principale\">) ; un seul <main id=\"contenu\"> visible ; <footer> en pied de page (crédits, licence). Les <nav> « Fil d’Ariane » et « Critères voisins » sont des barres de navigation secondaires. Aucun <nav> hors navigation, un seul <main>."
+		},
+		{
+			"criterion": "9.3",
+			"page": "https://chikimuras.github.io/rampe/",
+			"status": "NC",
+			"note": "Tests 9.3.1, 9.3.2 et 9.3.3 : la navigation principale (<nav aria-label=\"Navigation principale\"> dans <header>) aligne 7 liens (Rampe, Référentiel, Audit guidé, Cockpit, ADR, Journal, Code) visuellement regroupés en barre de navigation, directement enfants du <nav>, sans <ul>/<li> ni role=\"list\"/\"listitem\" ; le glossaire du RGAA (« Listes », note 3) cite explicitement le menu de navigation comme liste non ordonnée — test 9.3.1 en échec. Le reste est conforme : la page n’a pas d’autre liste. Correction (gabarit commun) : <nav aria-label=\"Navigation principale\"><ul><li><a…>Rampe</a></li>…</ul></nav>, en gardant la mise en ligne par CSS (display:flex sur le <ul>, list-style:none)."
+		},
+		{
+			"criterion": "9.3",
+			"page": "https://chikimuras.github.io/rampe/referentiel/",
+			"status": "NC",
+			"note": "Tests 9.3.1, 9.3.2 et 9.3.3 : la navigation principale (<nav aria-label=\"Navigation principale\"> dans <header>) aligne 7 liens (Rampe, Référentiel, Audit guidé, Cockpit, ADR, Journal, Code) visuellement regroupés en barre de navigation, directement enfants du <nav>, sans <ul>/<li> ni role=\"list\"/\"listitem\" ; le glossaire du RGAA (« Listes », note 3) cite explicitement le menu de navigation comme liste non ordonnée — test 9.3.1 en échec. Le reste est conforme : sommaire en <ol>, critères de chaque thématique en <ul>. Correction (gabarit commun) : <nav aria-label=\"Navigation principale\"><ul><li><a…>Rampe</a></li>…</ul></nav>, en gardant la mise en ligne par CSS (display:flex sur le <ul>, list-style:none)."
+		},
+		{
+			"criterion": "9.3",
+			"page": "https://chikimuras.github.io/rampe/referentiel/1-1/",
+			"status": "NC",
+			"note": "Tests 9.3.1, 9.3.2 et 9.3.3 : la navigation principale (<nav aria-label=\"Navigation principale\"> dans <header>) aligne 7 liens (Rampe, Référentiel, Audit guidé, Cockpit, ADR, Journal, Code) visuellement regroupés en barre de navigation, directement enfants du <nav>, sans <ul>/<li> ni role=\"list\"/\"listitem\" ; le glossaire du RGAA (« Listes », note 3) cite explicitement le menu de navigation comme liste non ordonnée — test 9.3.1 en échec. Le fil d’Ariane (2 liens séparés par « › ») n’est pas non plus une liste. Le reste est conforme : étapes de méthodologie en <ol>, règles axe en <ul>. Correction (gabarit commun) : <nav aria-label=\"Navigation principale\"><ul><li><a…>Rampe</a></li>…</ul></nav>, en gardant la mise en ligne par CSS (display:flex sur le <ul>, list-style:none)."
+		},
+		{
+			"criterion": "9.3",
+			"page": "https://chikimuras.github.io/rampe/referentiel/glossaire/",
+			"status": "NC",
+			"note": "Tests 9.3.1, 9.3.2 et 9.3.3 : la navigation principale (<nav aria-label=\"Navigation principale\"> dans <header>) aligne 7 liens (Rampe, Référentiel, Audit guidé, Cockpit, ADR, Journal, Code) visuellement regroupés en barre de navigation, directement enfants du <nav>, sans <ul>/<li> ni role=\"list\"/\"listitem\" ; le glossaire du RGAA (« Listes », note 3) cite explicitement le menu de navigation comme liste non ordonnée — test 9.3.1 en échec. Le reste est conforme : termes en <dl>/<dt>/<dd> (9.3.3), énumérations des définitions en <ul>. Correction (gabarit commun) : <nav aria-label=\"Navigation principale\"><ul><li><a…>Rampe</a></li>…</ul></nav>, en gardant la mise en ligne par CSS (display:flex sur le <ul>, list-style:none)."
+		},
+		{
+			"criterion": "9.3",
+			"page": "https://chikimuras.github.io/rampe/audit/",
+			"status": "NC",
+			"note": "Tests 9.3.1, 9.3.2 et 9.3.3 : la navigation principale (<nav aria-label=\"Navigation principale\"> dans <header>) aligne 7 liens (Rampe, Référentiel, Audit guidé, Cockpit, ADR, Journal, Code) visuellement regroupés en barre de navigation, directement enfants du <nav>, sans <ul>/<li> ni role=\"list\"/\"listitem\" ; le glossaire du RGAA (« Listes », note 3) cite explicitement le menu de navigation comme liste non ordonnée — test 9.3.1 en échec. Le reste est conforme : thématiques et critères en <ul>, taux en <dl>, pages et indices en <ul>/<ol>. Correction (gabarit commun) : <nav aria-label=\"Navigation principale\"><ul><li><a…>Rampe</a></li>…</ul></nav>, en gardant la mise en ligne par CSS (display:flex sur le <ul>, list-style:none)."
+		},
+		{
+			"criterion": "9.3",
+			"page": "https://chikimuras.github.io/rampe/cockpit/",
+			"status": "NC",
+			"note": "Tests 9.3.1, 9.3.2 et 9.3.3 : la navigation principale (<nav aria-label=\"Navigation principale\"> dans <header>) aligne 7 liens (Rampe, Référentiel, Audit guidé, Cockpit, ADR, Journal, Code) visuellement regroupés en barre de navigation, directement enfants du <nav>, sans <ul>/<li> ni role=\"list\"/\"listitem\" ; le glossaire du RGAA (« Listes », note 3) cite explicitement le menu de navigation comme liste non ordonnée — test 9.3.1 en échec. Le reste est conforme : tâches en attente et journal en <ul>, ADR en <ol>. Correction (gabarit commun) : <nav aria-label=\"Navigation principale\"><ul><li><a…>Rampe</a></li>…</ul></nav>, en gardant la mise en ligne par CSS (display:flex sur le <ul>, list-style:none)."
+		},
+		{
+			"criterion": "9.3",
+			"page": "https://chikimuras.github.io/rampe/cockpit/adr/0011-cli-audit-playwright/",
+			"status": "NC",
+			"note": "Tests 9.3.1, 9.3.2 et 9.3.3 : la navigation principale (<nav aria-label=\"Navigation principale\"> dans <header>) aligne 7 liens (Rampe, Référentiel, Audit guidé, Cockpit, ADR, Journal, Code) visuellement regroupés en barre de navigation, directement enfants du <nav>, sans <ul>/<li> ni role=\"list\"/\"listitem\" ; le glossaire du RGAA (« Listes », note 3) cite explicitement le menu de navigation comme liste non ordonnée — test 9.3.1 en échec. Le reste est conforme : décisions en <ol>, sous-points en <ul>. Correction (gabarit commun) : <nav aria-label=\"Navigation principale\"><ul><li><a…>Rampe</a></li>…</ul></nav>, en gardant la mise en ligne par CSS (display:flex sur le <ul>, list-style:none)."
+		},
+		{
+			"criterion": "9.3",
+			"page": "https://chikimuras.github.io/rampe/cockpit/journal/2026-10-15/",
+			"status": "NC",
+			"note": "Tests 9.3.1, 9.3.2 et 9.3.3 : la navigation principale (<nav aria-label=\"Navigation principale\"> dans <header>) aligne 7 liens (Rampe, Référentiel, Audit guidé, Cockpit, ADR, Journal, Code) visuellement regroupés en barre de navigation, directement enfants du <nav>, sans <ul>/<li> ni role=\"list\"/\"listitem\" ; le glossaire du RGAA (« Listes », note 3) cite explicitement le menu de navigation comme liste non ordonnée — test 9.3.1 en échec. Le reste est conforme : énumérations en <ul>. Correction (gabarit commun) : <nav aria-label=\"Navigation principale\"><ul><li><a…>Rampe</a></li>…</ul></nav>, en gardant la mise en ligne par CSS (display:flex sur le <ul>, list-style:none)."
+		},
+		{
+			"criterion": "9.3",
+			"page": "https://chikimuras.github.io/rampe/cockpit/docs/roadmap/",
+			"status": "NC",
+			"note": "Tests 9.3.1, 9.3.2 et 9.3.3 : la navigation principale (<nav aria-label=\"Navigation principale\"> dans <header>) aligne 7 liens (Rampe, Référentiel, Audit guidé, Cockpit, ADR, Journal, Code) visuellement regroupés en barre de navigation, directement enfants du <nav>, sans <ul>/<li> ni role=\"list\"/\"listitem\" ; le glossaire du RGAA (« Listes », note 3) cite explicitement le menu de navigation comme liste non ordonnée — test 9.3.1 en échec. Le reste est conforme : tâches de chaque phase en <ul>. Correction (gabarit commun) : <nav aria-label=\"Navigation principale\"><ul><li><a…>Rampe</a></li>…</ul></nav>, en gardant la mise en ligne par CSS (display:flex sur le <ul>, list-style:none)."
+		},
+		{
+			"criterion": "9.3",
+			"page": "https://chikimuras.github.io/rampe/referentiel/5-1/",
+			"status": "NC",
+			"note": "Tests 9.3.1, 9.3.2 et 9.3.3 : la navigation principale (<nav aria-label=\"Navigation principale\"> dans <header>) aligne 7 liens (Rampe, Référentiel, Audit guidé, Cockpit, ADR, Journal, Code) visuellement regroupés en barre de navigation, directement enfants du <nav>, sans <ul>/<li> ni role=\"list\"/\"listitem\" ; le glossaire du RGAA (« Listes », note 3) cite explicitement le menu de navigation comme liste non ordonnée — test 9.3.1 en échec. Le fil d’Ariane (2 liens séparés par « › ») n’est pas non plus une liste. Le reste est conforme : méthodologie en <ol>. Correction (gabarit commun) : <nav aria-label=\"Navigation principale\"><ul><li><a…>Rampe</a></li>…</ul></nav>, en gardant la mise en ligne par CSS (display:flex sur le <ul>, list-style:none)."
+		},
+		{
+			"criterion": "9.3",
+			"page": "https://chikimuras.github.io/rampe/referentiel/1-9/",
+			"status": "NC",
+			"note": "Tests 9.3.1, 9.3.2 et 9.3.3 : la navigation principale (<nav aria-label=\"Navigation principale\"> dans <header>) aligne 7 liens (Rampe, Référentiel, Audit guidé, Cockpit, ADR, Journal, Code) visuellement regroupés en barre de navigation, directement enfants du <nav>, sans <ul>/<li> ni role=\"list\"/\"listitem\" ; le glossaire du RGAA (« Listes », note 3) cite explicitement le menu de navigation comme liste non ordonnée — test 9.3.1 en échec. Le fil d’Ariane (2 liens séparés par « › ») n’est pas non plus une liste. Le reste est conforme : méthodologies en <ol>, conditions en <ul>. Correction (gabarit commun) : <nav aria-label=\"Navigation principale\"><ul><li><a…>Rampe</a></li>…</ul></nav>, en gardant la mise en ligne par CSS (display:flex sur le <ul>, list-style:none)."
+		},
+		{
+			"criterion": "9.4",
+			"page": "https://chikimuras.github.io/rampe/",
+			"status": "NA",
+			"note": "Tests 9.4.1 et 9.4.2 : recherche de citations (textes entre « », \" \" ou “ ” repris d’une source, éléments q/blockquote) : aucune. Aucune citation : non applicable."
+		},
+		{
+			"criterion": "9.4",
+			"page": "https://chikimuras.github.io/rampe/referentiel/",
+			"status": "NA",
+			"note": "Tests 9.4.1 et 9.4.2 : recherche de citations (textes entre « », \" \" ou “ ” repris d’une source, éléments q/blockquote) : seul le libellé d’encadré « Explication Rampe — non normative », mention d’un libellé. Aucune citation : non applicable."
+		},
+		{
+			"criterion": "9.4",
+			"page": "https://chikimuras.github.io/rampe/referentiel/1-1/",
+			"status": "NA",
+			"note": "Tests 9.4.1 et 9.4.2 : recherche de citations (textes entre « », \" \" ou “ ” repris d’une source, éléments q/blockquote) : aucune ; la fiche reproduit le texte officiel comme contenu de la page (source indiquée), sans le présenter comme citation dans un texte d’auteur. Aucune citation : non applicable."
+		},
+		{
+			"criterion": "9.4",
+			"page": "https://chikimuras.github.io/rampe/referentiel/glossaire/",
+			"status": "NA",
+			"note": "Tests 9.4.1 et 9.4.2 : recherche de citations (textes entre « », \" \" ou “ ” repris d’une source, éléments q/blockquote) : seulement des exemples et libellés entre « » faisant partie des définitions officielles reproduites. Aucune citation : non applicable."
+		},
+		{
+			"criterion": "9.4",
+			"page": "https://chikimuras.github.io/rampe/audit/",
+			"status": "NC",
+			"note": "Test 9.4.1 : dans l’état « audit complet » (section « 3. Résultat »), deux citations courtes de la méthode officielle, sourcées par le lien « méthode officielle d’évaluation de la conformité », sont écrites entre guillemets dans un simple <p> : « Le pourcentage de critères RGAA respectés s’obtient en divisant le nombre de critères validés par le nombre de critères applicables. » et « Le taux moyen de conformité du service en ligne s’obtient en faisant la moyenne des taux de conformité de chaque page. » — sans élément <q>. Test 9.4.2 : aucun bloc de citation. Correction : <q cite=\"https://accessibilite.numerique.gouv.fr/obligations/evaluation-conformite/\">…</q> (guillemets gérés par la propriété CSS quotes, pour éviter le doublon). Les autres textes entre « » sont des libellés d’interface cités, pas des citations."
+		},
+		{
+			"criterion": "9.4",
+			"page": "https://chikimuras.github.io/rampe/cockpit/",
+			"status": "NA",
+			"note": "Tests 9.4.1 et 9.4.2 : recherche de citations (textes entre « », \" \" ou “ ” repris d’une source, éléments q/blockquote) : seul le libellé de champ « Importer un audit (JSON) ». Aucune citation : non applicable."
+		},
+		{
+			"criterion": "9.4",
+			"page": "https://chikimuras.github.io/rampe/cockpit/adr/0011-cli-audit-playwright/",
+			"status": "NA",
+			"note": "Tests 9.4.1 et 9.4.2 : recherche de citations (textes entre « », \" \" ou “ ” repris d’une source, éléments q/blockquote) : seul le libellé « à confirmer par un humain ». Aucune citation : non applicable."
+		},
+		{
+			"criterion": "9.4",
+			"page": "https://chikimuras.github.io/rampe/cockpit/journal/2026-10-15/",
+			"status": "NA",
+			"note": "Tests 9.4.1 et 9.4.2 : recherche de citations (textes entre « », \" \" ou “ ” repris d’une source, éléments q/blockquote) : uniquement des libellés d’interface ou de messages cités (« Explication Rampe — non normative », « aucune non-conformité détectée »…), pas des citations d’une source. Aucune citation : non applicable."
+		},
+		{
+			"criterion": "9.4",
+			"page": "https://chikimuras.github.io/rampe/cockpit/docs/roadmap/",
+			"status": "NA",
+			"note": "Tests 9.4.1 et 9.4.2 : recherche de citations (textes entre « », \" \" ou “ ” repris d’une source, éléments q/blockquote) : aucune. Aucune citation : non applicable."
+		},
+		{
+			"criterion": "9.4",
+			"page": "https://chikimuras.github.io/rampe/referentiel/5-1/",
+			"status": "NA",
+			"note": "Tests 9.4.1 et 9.4.2 : recherche de citations (textes entre « », \" \" ou “ ” repris d’une source, éléments q/blockquote) : aucune ; texte officiel reproduit comme contenu de la page. Aucune citation : non applicable."
+		},
+		{
+			"criterion": "9.4",
+			"page": "https://chikimuras.github.io/rampe/referentiel/1-9/",
+			"status": "NA",
+			"note": "Tests 9.4.1 et 9.4.2 : recherche de citations (textes entre « », \" \" ou “ ” repris d’une source, éléments q/blockquote) : aucune ; texte officiel reproduit comme contenu de la page. Aucune citation : non applicable."
+		}
+	]
+}

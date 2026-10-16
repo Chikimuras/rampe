@@ -1,0 +1,666 @@
+{
+	"evaluator": "Claude (IA)",
+	"date": "2026-10-16",
+	"entries": [
+		{
+			"criterion": "8.1",
+			"page": "https://chikimuras.github.io/rampe/",
+			"status": "C",
+			"note": "Tests 8.1.1, 8.1.2 et 8.1.3 : le HTML servi commence par <!DOCTYPE html> (document.doctype.name = « html », sans identifiant public ni système, premier nœud du document, avant la balise <html>). Doctype HTML5 présent, valide et bien placé."
+		},
+		{
+			"criterion": "8.1",
+			"page": "https://chikimuras.github.io/rampe/referentiel/",
+			"status": "C",
+			"note": "Tests 8.1.1, 8.1.2 et 8.1.3 : le HTML servi commence par <!DOCTYPE html> (document.doctype.name = « html », sans identifiant public ni système, premier nœud du document, avant la balise <html>). Doctype HTML5 présent, valide et bien placé."
+		},
+		{
+			"criterion": "8.1",
+			"page": "https://chikimuras.github.io/rampe/referentiel/1-1/",
+			"status": "C",
+			"note": "Tests 8.1.1, 8.1.2 et 8.1.3 : le HTML servi commence par <!DOCTYPE html> (document.doctype.name = « html », sans identifiant public ni système, premier nœud du document, avant la balise <html>). Doctype HTML5 présent, valide et bien placé."
+		},
+		{
+			"criterion": "8.1",
+			"page": "https://chikimuras.github.io/rampe/referentiel/glossaire/",
+			"status": "C",
+			"note": "Tests 8.1.1, 8.1.2 et 8.1.3 : le HTML servi commence par <!DOCTYPE html> (document.doctype.name = « html », sans identifiant public ni système, premier nœud du document, avant la balise <html>). Doctype HTML5 présent, valide et bien placé."
+		},
+		{
+			"criterion": "8.1",
+			"page": "https://chikimuras.github.io/rampe/audit/",
+			"status": "C",
+			"note": "Tests 8.1.1, 8.1.2 et 8.1.3 : le HTML servi commence par <!DOCTYPE html> (document.doctype.name = « html », sans identifiant public ni système, premier nœud du document, avant la balise <html>). Doctype HTML5 présent, valide et bien placé."
+		},
+		{
+			"criterion": "8.1",
+			"page": "https://chikimuras.github.io/rampe/cockpit/",
+			"status": "C",
+			"note": "Tests 8.1.1, 8.1.2 et 8.1.3 : le HTML servi commence par <!DOCTYPE html> (document.doctype.name = « html », sans identifiant public ni système, premier nœud du document, avant la balise <html>). Doctype HTML5 présent, valide et bien placé."
+		},
+		{
+			"criterion": "8.1",
+			"page": "https://chikimuras.github.io/rampe/cockpit/adr/0011-cli-audit-playwright/",
+			"status": "C",
+			"note": "Tests 8.1.1, 8.1.2 et 8.1.3 : le HTML servi commence par <!DOCTYPE html> (document.doctype.name = « html », sans identifiant public ni système, premier nœud du document, avant la balise <html>). Doctype HTML5 présent, valide et bien placé."
+		},
+		{
+			"criterion": "8.1",
+			"page": "https://chikimuras.github.io/rampe/cockpit/journal/2026-10-15/",
+			"status": "C",
+			"note": "Tests 8.1.1, 8.1.2 et 8.1.3 : le HTML servi commence par <!DOCTYPE html> (document.doctype.name = « html », sans identifiant public ni système, premier nœud du document, avant la balise <html>). Doctype HTML5 présent, valide et bien placé."
+		},
+		{
+			"criterion": "8.1",
+			"page": "https://chikimuras.github.io/rampe/cockpit/docs/roadmap/",
+			"status": "C",
+			"note": "Tests 8.1.1, 8.1.2 et 8.1.3 : le HTML servi commence par <!DOCTYPE html> (document.doctype.name = « html », sans identifiant public ni système, premier nœud du document, avant la balise <html>). Doctype HTML5 présent, valide et bien placé."
+		},
+		{
+			"criterion": "8.1",
+			"page": "https://chikimuras.github.io/rampe/referentiel/5-1/",
+			"status": "C",
+			"note": "Tests 8.1.1, 8.1.2 et 8.1.3 : le HTML servi commence par <!DOCTYPE html> (document.doctype.name = « html », sans identifiant public ni système, premier nœud du document, avant la balise <html>). Doctype HTML5 présent, valide et bien placé."
+		},
+		{
+			"criterion": "8.1",
+			"page": "https://chikimuras.github.io/rampe/referentiel/1-9/",
+			"status": "C",
+			"note": "Tests 8.1.1, 8.1.2 et 8.1.3 : le HTML servi commence par <!DOCTYPE html> (document.doctype.name = « html », sans identifiant public ni système, premier nœud du document, avant la balise <html>). Doctype HTML5 présent, valide et bien placé."
+		},
+		{
+			"criterion": "8.2",
+			"page": "https://chikimuras.github.io/rampe/",
+			"status": "C",
+			"note": "Test 8.2.1 : validateur W3C Nu (vnu-jar 26.10.12, hors ligne) sur le HTML servi : 0 erreur (seuls des avertissements sans portée sur la conformité, p. ex. texte non normalisé NFC sur la page Référentiel). La page n’a pas de JavaScript : le code généré est le code servi. Balises bien imbriquées et fermées, 0 id en double dans le DOM, aucun attribut doublé."
+		},
+		{
+			"criterion": "8.2",
+			"page": "https://chikimuras.github.io/rampe/referentiel/",
+			"status": "C",
+			"note": "Test 8.2.1 : validateur W3C Nu (vnu-jar 26.10.12, hors ligne) sur le HTML servi : 0 erreur (seuls des avertissements sans portée sur la conformité, p. ex. texte non normalisé NFC sur la page Référentiel). La page n’a pas de JavaScript : le code généré est le code servi. Balises bien imbriquées et fermées, 0 id en double dans le DOM, aucun attribut doublé."
+		},
+		{
+			"criterion": "8.2",
+			"page": "https://chikimuras.github.io/rampe/referentiel/1-1/",
+			"status": "C",
+			"note": "Test 8.2.1 : validateur W3C Nu (vnu-jar 26.10.12, hors ligne) sur le HTML servi : 0 erreur (seuls des avertissements sans portée sur la conformité, p. ex. texte non normalisé NFC sur la page Référentiel). La page n’a pas de JavaScript : le code généré est le code servi. Balises bien imbriquées et fermées, 0 id en double dans le DOM, aucun attribut doublé."
+		},
+		{
+			"criterion": "8.2",
+			"page": "https://chikimuras.github.io/rampe/referentiel/glossaire/",
+			"status": "C",
+			"note": "Test 8.2.1 : validateur W3C Nu (vnu-jar 26.10.12, hors ligne) sur le HTML servi : 0 erreur (seuls des avertissements sans portée sur la conformité, p. ex. texte non normalisé NFC sur la page Référentiel). La page n’a pas de JavaScript : le code généré est le code servi. Balises bien imbriquées et fermées, 0 id en double dans le DOM, aucun attribut doublé."
+		},
+		{
+			"criterion": "8.2",
+			"page": "https://chikimuras.github.io/rampe/audit/",
+			"status": "NC",
+			"note": "Test 8.2.1 : validateur W3C Nu (vnu-jar 26.10.12, hors ligne, --errors-only) sur le HTML servi et sur le DOM généré après hydratation (états interactifs examinés : vierge, audit complet importé (2 pages, 106 critères, taux et tableau d’actions affichés), audit effacé puis rapport automatique importé (statuts « à confirmer », indices dépliés), boîte de dialogue « Remplacer l’audit en cours ? » ouverte) : 2 erreurs à chaque fois. L’îlot Astro injecte dans <main>, juste après le <noscript>, l’élément <style>astro-island,astro-slot,astro-static-slot{display:contents}</style> : « A style element in body must be the first child of its parent » (un <style> n’est autorisé que là où du contenu de métadonnées est attendu, donc dans <head>) — imbrication non conforme. Ids uniques (0 doublon dans tous les états), aucun attribut doublé. Correction : sortir cette règle du corps (la déclarer dans la feuille de style globale du <head> et empêcher l’injection inline d’Astro, ou déplacer le <style> dans <head> au post-traitement du build)."
+		},
+		{
+			"criterion": "8.2",
+			"page": "https://chikimuras.github.io/rampe/cockpit/",
+			"status": "C",
+			"note": "Test 8.2.1 : validateur W3C Nu (vnu-jar 26.10.12, hors ligne) sur le HTML servi : 0 erreur (seuls des avertissements sans portée sur la conformité, p. ex. texte non normalisé NFC sur la page Référentiel). La page n’a pas de JavaScript : le code généré est le code servi. Balises bien imbriquées et fermées, 0 id en double dans le DOM, aucun attribut doublé."
+		},
+		{
+			"criterion": "8.2",
+			"page": "https://chikimuras.github.io/rampe/cockpit/adr/0011-cli-audit-playwright/",
+			"status": "C",
+			"note": "Test 8.2.1 : validateur W3C Nu (vnu-jar 26.10.12, hors ligne) sur le HTML servi : 0 erreur (seuls des avertissements sans portée sur la conformité, p. ex. texte non normalisé NFC sur la page Référentiel). La page n’a pas de JavaScript : le code généré est le code servi. Balises bien imbriquées et fermées, 0 id en double dans le DOM, aucun attribut doublé."
+		},
+		{
+			"criterion": "8.2",
+			"page": "https://chikimuras.github.io/rampe/cockpit/journal/2026-10-15/",
+			"status": "C",
+			"note": "Test 8.2.1 : validateur W3C Nu (vnu-jar 26.10.12, hors ligne) sur le HTML servi : 0 erreur (seuls des avertissements sans portée sur la conformité, p. ex. texte non normalisé NFC sur la page Référentiel). La page n’a pas de JavaScript : le code généré est le code servi. Balises bien imbriquées et fermées, 0 id en double dans le DOM, aucun attribut doublé."
+		},
+		{
+			"criterion": "8.2",
+			"page": "https://chikimuras.github.io/rampe/cockpit/docs/roadmap/",
+			"status": "C",
+			"note": "Test 8.2.1 : validateur W3C Nu (vnu-jar 26.10.12, hors ligne) sur le HTML servi : 0 erreur (seuls des avertissements sans portée sur la conformité, p. ex. texte non normalisé NFC sur la page Référentiel). La page n’a pas de JavaScript : le code généré est le code servi. Balises bien imbriquées et fermées, 0 id en double dans le DOM, aucun attribut doublé."
+		},
+		{
+			"criterion": "8.2",
+			"page": "https://chikimuras.github.io/rampe/referentiel/5-1/",
+			"status": "C",
+			"note": "Test 8.2.1 : validateur W3C Nu (vnu-jar 26.10.12, hors ligne) sur le HTML servi : 0 erreur (seuls des avertissements sans portée sur la conformité, p. ex. texte non normalisé NFC sur la page Référentiel). La page n’a pas de JavaScript : le code généré est le code servi. Balises bien imbriquées et fermées, 0 id en double dans le DOM, aucun attribut doublé."
+		},
+		{
+			"criterion": "8.2",
+			"page": "https://chikimuras.github.io/rampe/referentiel/1-9/",
+			"status": "C",
+			"note": "Test 8.2.1 : validateur W3C Nu (vnu-jar 26.10.12, hors ligne) sur le HTML servi : 0 erreur (seuls des avertissements sans portée sur la conformité, p. ex. texte non normalisé NFC sur la page Référentiel). La page n’a pas de JavaScript : le code généré est le code servi. Balises bien imbriquées et fermées, 0 id en double dans le DOM, aucun attribut doublé."
+		},
+		{
+			"criterion": "8.3",
+			"page": "https://chikimuras.github.io/rampe/",
+			"status": "C",
+			"note": "Test 8.3.1 : l’élément <html> porte lang=\"fr\" (HTML5) ; la langue par défaut est donc indiquée pour tout le texte de la page."
+		},
+		{
+			"criterion": "8.3",
+			"page": "https://chikimuras.github.io/rampe/referentiel/",
+			"status": "C",
+			"note": "Test 8.3.1 : l’élément <html> porte lang=\"fr\" (HTML5) ; la langue par défaut est donc indiquée pour tout le texte de la page."
+		},
+		{
+			"criterion": "8.3",
+			"page": "https://chikimuras.github.io/rampe/referentiel/1-1/",
+			"status": "C",
+			"note": "Test 8.3.1 : l’élément <html> porte lang=\"fr\" (HTML5) ; la langue par défaut est donc indiquée pour tout le texte de la page."
+		},
+		{
+			"criterion": "8.3",
+			"page": "https://chikimuras.github.io/rampe/referentiel/glossaire/",
+			"status": "C",
+			"note": "Test 8.3.1 : l’élément <html> porte lang=\"fr\" (HTML5) ; la langue par défaut est donc indiquée pour tout le texte de la page."
+		},
+		{
+			"criterion": "8.3",
+			"page": "https://chikimuras.github.io/rampe/audit/",
+			"status": "C",
+			"note": "Test 8.3.1 : l’élément <html> porte lang=\"fr\" (HTML5) ; la langue par défaut est donc indiquée pour tout le texte de la page."
+		},
+		{
+			"criterion": "8.3",
+			"page": "https://chikimuras.github.io/rampe/cockpit/",
+			"status": "C",
+			"note": "Test 8.3.1 : l’élément <html> porte lang=\"fr\" (HTML5) ; la langue par défaut est donc indiquée pour tout le texte de la page."
+		},
+		{
+			"criterion": "8.3",
+			"page": "https://chikimuras.github.io/rampe/cockpit/adr/0011-cli-audit-playwright/",
+			"status": "C",
+			"note": "Test 8.3.1 : l’élément <html> porte lang=\"fr\" (HTML5) ; la langue par défaut est donc indiquée pour tout le texte de la page."
+		},
+		{
+			"criterion": "8.3",
+			"page": "https://chikimuras.github.io/rampe/cockpit/journal/2026-10-15/",
+			"status": "C",
+			"note": "Test 8.3.1 : l’élément <html> porte lang=\"fr\" (HTML5) ; la langue par défaut est donc indiquée pour tout le texte de la page."
+		},
+		{
+			"criterion": "8.3",
+			"page": "https://chikimuras.github.io/rampe/cockpit/docs/roadmap/",
+			"status": "C",
+			"note": "Test 8.3.1 : l’élément <html> porte lang=\"fr\" (HTML5) ; la langue par défaut est donc indiquée pour tout le texte de la page."
+		},
+		{
+			"criterion": "8.3",
+			"page": "https://chikimuras.github.io/rampe/referentiel/5-1/",
+			"status": "C",
+			"note": "Test 8.3.1 : l’élément <html> porte lang=\"fr\" (HTML5) ; la langue par défaut est donc indiquée pour tout le texte de la page."
+		},
+		{
+			"criterion": "8.3",
+			"page": "https://chikimuras.github.io/rampe/referentiel/1-9/",
+			"status": "C",
+			"note": "Test 8.3.1 : l’élément <html> porte lang=\"fr\" (HTML5) ; la langue par défaut est donc indiquée pour tout le texte de la page."
+		},
+		{
+			"criterion": "8.4",
+			"page": "https://chikimuras.github.io/rampe/",
+			"status": "C",
+			"note": "Test 8.4.1 : code de langue « fr », valide (ISO 639-1) et pertinent : le contenu principal de la page est rédigé en français."
+		},
+		{
+			"criterion": "8.4",
+			"page": "https://chikimuras.github.io/rampe/referentiel/",
+			"status": "C",
+			"note": "Test 8.4.1 : code de langue « fr », valide (ISO 639-1) et pertinent : le contenu principal de la page est rédigé en français."
+		},
+		{
+			"criterion": "8.4",
+			"page": "https://chikimuras.github.io/rampe/referentiel/1-1/",
+			"status": "C",
+			"note": "Test 8.4.1 : code de langue « fr », valide (ISO 639-1) et pertinent : le contenu principal de la page est rédigé en français."
+		},
+		{
+			"criterion": "8.4",
+			"page": "https://chikimuras.github.io/rampe/referentiel/glossaire/",
+			"status": "C",
+			"note": "Test 8.4.1 : code de langue « fr », valide (ISO 639-1) et pertinent : le contenu principal de la page est rédigé en français."
+		},
+		{
+			"criterion": "8.4",
+			"page": "https://chikimuras.github.io/rampe/audit/",
+			"status": "C",
+			"note": "Test 8.4.1 : code de langue « fr », valide (ISO 639-1) et pertinent : le contenu principal de la page est rédigé en français."
+		},
+		{
+			"criterion": "8.4",
+			"page": "https://chikimuras.github.io/rampe/cockpit/",
+			"status": "C",
+			"note": "Test 8.4.1 : code de langue « fr », valide (ISO 639-1) et pertinent : le contenu principal de la page est rédigé en français."
+		},
+		{
+			"criterion": "8.4",
+			"page": "https://chikimuras.github.io/rampe/cockpit/adr/0011-cli-audit-playwright/",
+			"status": "C",
+			"note": "Test 8.4.1 : code de langue « fr », valide (ISO 639-1) et pertinent : le contenu principal de la page est rédigé en français."
+		},
+		{
+			"criterion": "8.4",
+			"page": "https://chikimuras.github.io/rampe/cockpit/journal/2026-10-15/",
+			"status": "C",
+			"note": "Test 8.4.1 : code de langue « fr », valide (ISO 639-1) et pertinent : le contenu principal de la page est rédigé en français."
+		},
+		{
+			"criterion": "8.4",
+			"page": "https://chikimuras.github.io/rampe/cockpit/docs/roadmap/",
+			"status": "C",
+			"note": "Test 8.4.1 : code de langue « fr », valide (ISO 639-1) et pertinent : le contenu principal de la page est rédigé en français."
+		},
+		{
+			"criterion": "8.4",
+			"page": "https://chikimuras.github.io/rampe/referentiel/5-1/",
+			"status": "C",
+			"note": "Test 8.4.1 : code de langue « fr », valide (ISO 639-1) et pertinent : le contenu principal de la page est rédigé en français."
+		},
+		{
+			"criterion": "8.4",
+			"page": "https://chikimuras.github.io/rampe/referentiel/1-9/",
+			"status": "C",
+			"note": "Test 8.4.1 : code de langue « fr », valide (ISO 639-1) et pertinent : le contenu principal de la page est rédigé en français."
+		},
+		{
+			"criterion": "8.5",
+			"page": "https://chikimuras.github.io/rampe/",
+			"status": "C",
+			"note": "Test 8.5.1 : la page a un élément <title> dans <head> (« Accueil · Rampe »)."
+		},
+		{
+			"criterion": "8.5",
+			"page": "https://chikimuras.github.io/rampe/referentiel/",
+			"status": "C",
+			"note": "Test 8.5.1 : la page a un élément <title> dans <head> (« Référentiel RGAA · Rampe »)."
+		},
+		{
+			"criterion": "8.5",
+			"page": "https://chikimuras.github.io/rampe/referentiel/1-1/",
+			"status": "C",
+			"note": "Test 8.5.1 : la page a un élément <title> dans <head> (« Critère RGAA 1.1 · Rampe »)."
+		},
+		{
+			"criterion": "8.5",
+			"page": "https://chikimuras.github.io/rampe/referentiel/glossaire/",
+			"status": "C",
+			"note": "Test 8.5.1 : la page a un élément <title> dans <head> (« Glossaire du RGAA · Rampe »)."
+		},
+		{
+			"criterion": "8.5",
+			"page": "https://chikimuras.github.io/rampe/audit/",
+			"status": "C",
+			"note": "Test 8.5.1 : la page a un élément <title> dans <head> (« Audit guidé · Rampe »)."
+		},
+		{
+			"criterion": "8.5",
+			"page": "https://chikimuras.github.io/rampe/cockpit/",
+			"status": "C",
+			"note": "Test 8.5.1 : la page a un élément <title> dans <head> (« Cockpit · Rampe »)."
+		},
+		{
+			"criterion": "8.5",
+			"page": "https://chikimuras.github.io/rampe/cockpit/adr/0011-cli-audit-playwright/",
+			"status": "C",
+			"note": "Test 8.5.1 : la page a un élément <title> dans <head> (« ADR-0011 — CLI d’audit : Playwright + axe-core, résultats rangés par critère RGAA, sans aucun score · Rampe »)."
+		},
+		{
+			"criterion": "8.5",
+			"page": "https://chikimuras.github.io/rampe/cockpit/journal/2026-10-15/",
+			"status": "C",
+			"note": "Test 8.5.1 : la page a un élément <title> dans <head> (« Démarrage — choix du sujet et socle · Rampe »)."
+		},
+		{
+			"criterion": "8.5",
+			"page": "https://chikimuras.github.io/rampe/cockpit/docs/roadmap/",
+			"status": "C",
+			"note": "Test 8.5.1 : la page a un élément <title> dans <head> (« Roadmap · Rampe »)."
+		},
+		{
+			"criterion": "8.5",
+			"page": "https://chikimuras.github.io/rampe/referentiel/5-1/",
+			"status": "C",
+			"note": "Test 8.5.1 : la page a un élément <title> dans <head> (« Critère RGAA 5.1 · Rampe »)."
+		},
+		{
+			"criterion": "8.5",
+			"page": "https://chikimuras.github.io/rampe/referentiel/1-9/",
+			"status": "C",
+			"note": "Test 8.5.1 : la page a un élément <title> dans <head> (« Critère RGAA 1.9 · Rampe »)."
+		},
+		{
+			"criterion": "8.6",
+			"page": "https://chikimuras.github.io/rampe/",
+			"status": "C",
+			"note": "Test 8.6.1 : le titre « Accueil · Rampe » identifie la page d’accueil et se termine par le nom du site : il permet de retrouver la page dans l’historique ou la liste des onglets."
+		},
+		{
+			"criterion": "8.6",
+			"page": "https://chikimuras.github.io/rampe/referentiel/",
+			"status": "C",
+			"note": "Test 8.6.1 : le titre « Référentiel RGAA · Rampe » identifie la liste des critères du référentiel et se termine par le nom du site : il permet de retrouver la page dans l’historique ou la liste des onglets."
+		},
+		{
+			"criterion": "8.6",
+			"page": "https://chikimuras.github.io/rampe/referentiel/1-1/",
+			"status": "C",
+			"note": "Test 8.6.1 : le titre « Critère RGAA 1.1 · Rampe » identifie de manière unique la fiche du critère 1.1 et se termine par le nom du site : il permet de retrouver la page dans l’historique ou la liste des onglets."
+		},
+		{
+			"criterion": "8.6",
+			"page": "https://chikimuras.github.io/rampe/referentiel/glossaire/",
+			"status": "C",
+			"note": "Test 8.6.1 : le titre « Glossaire du RGAA · Rampe » identifie le glossaire et se termine par le nom du site : il permet de retrouver la page dans l’historique ou la liste des onglets."
+		},
+		{
+			"criterion": "8.6",
+			"page": "https://chikimuras.github.io/rampe/audit/",
+			"status": "C",
+			"note": "Test 8.6.1 : le titre « Audit guidé · Rampe » identifie l’outil d’audit guidé (le titre reste valable dans tous les états de l’îlot) et se termine par le nom du site : il permet de retrouver la page dans l’historique ou la liste des onglets."
+		},
+		{
+			"criterion": "8.6",
+			"page": "https://chikimuras.github.io/rampe/cockpit/",
+			"status": "C",
+			"note": "Test 8.6.1 : le titre « Cockpit · Rampe » identifie le tableau de bord du projet et se termine par le nom du site : il permet de retrouver la page dans l’historique ou la liste des onglets."
+		},
+		{
+			"criterion": "8.6",
+			"page": "https://chikimuras.github.io/rampe/cockpit/adr/0011-cli-audit-playwright/",
+			"status": "C",
+			"note": "Test 8.6.1 : le titre « ADR-0011 — CLI d’audit : Playwright + axe-core, résultats rangés par critère RGAA, sans aucun score · Rampe » reprend le numéro et l’intitulé de la décision, identique au <h1> et se termine par le nom du site : il permet de retrouver la page dans l’historique ou la liste des onglets."
+		},
+		{
+			"criterion": "8.6",
+			"page": "https://chikimuras.github.io/rampe/cockpit/journal/2026-10-15/",
+			"status": "C",
+			"note": "Test 8.6.1 : le titre « Démarrage — choix du sujet et socle · Rampe » reprend l’intitulé de l’entrée du journal, identique au <h1> et se termine par le nom du site : il permet de retrouver la page dans l’historique ou la liste des onglets."
+		},
+		{
+			"criterion": "8.6",
+			"page": "https://chikimuras.github.io/rampe/cockpit/docs/roadmap/",
+			"status": "C",
+			"note": "Test 8.6.1 : le titre « Roadmap · Rampe » reprend le <h1> « Roadmap » de la feuille de route et se termine par le nom du site : il permet de retrouver la page dans l’historique ou la liste des onglets."
+		},
+		{
+			"criterion": "8.6",
+			"page": "https://chikimuras.github.io/rampe/referentiel/5-1/",
+			"status": "C",
+			"note": "Test 8.6.1 : le titre « Critère RGAA 5.1 · Rampe » identifie de manière unique la fiche du critère 5.1 et se termine par le nom du site : il permet de retrouver la page dans l’historique ou la liste des onglets."
+		},
+		{
+			"criterion": "8.6",
+			"page": "https://chikimuras.github.io/rampe/referentiel/1-9/",
+			"status": "C",
+			"note": "Test 8.6.1 : le titre « Critère RGAA 1.9 · Rampe » identifie de manière unique la fiche du critère 1.9 et se termine par le nom du site : il permet de retrouver la page dans l’historique ou la liste des onglets."
+		},
+		{
+			"criterion": "8.7",
+			"page": "https://chikimuras.github.io/rampe/",
+			"status": "NA",
+			"note": "Test 8.7.1 : passages en langue étrangère recherchés dans tout le texte (et les attributs title, aria-label, alt) : seuls « European Accessibility Act » (<em>), nom propre d’un acte législatif, et « open source », présent dans les dictionnaires français. Cas particuliers du critère (nom propre, mot du dictionnaire) : non applicable."
+		},
+		{
+			"criterion": "8.7",
+			"page": "https://chikimuras.github.io/rampe/referentiel/",
+			"status": "NA",
+			"note": "Test 8.7.1 : texte et attributs parcourus (liste des 106 critères, explications Rampe) : aucun passage en langue étrangère hors noms propres (axe-core, DINUM) et identifiants de code en <code>. Non applicable."
+		},
+		{
+			"criterion": "8.7",
+			"page": "https://chikimuras.github.io/rampe/referentiel/1-1/",
+			"status": "C",
+			"note": "Test 8.7.1 : les passages en anglais sont tous balisés : référence WCAG « 1.1.1 Non-text Content », techniques « H36, H37, H53, F65, H24 » et les 7 descriptions de règles axe-core (« Ensure <area> elements of image maps have alternative text »…) sont dans des <span lang=\"en\">. Les identifiants de règles (area-alt…) sont du code (<code>). Aucun autre texte étranger."
+		},
+		{
+			"criterion": "8.7",
+			"page": "https://chikimuras.github.io/rampe/referentiel/glossaire/",
+			"status": "NC",
+			"note": "Test 8.7.1 : 26 passages anglais sont bien balisés lang=\"en\" (« WAI-ARIA 1.1 Authoring Practices », « Accessible name and description calculation », « landmarks » dans le corps de définition, WCAG…), mais le terme défini <dt id=\"landmarks\">Landmarks</dt> (mot anglais, absent du dictionnaire français, pas d’usage courant) n’a aucune indication de langue : il sera prononcé à la française. Correction : <dt id=\"landmarks\"><span lang=\"en\">Landmarks</span></dt> (ou lang=\"en\" sur le <dt>). À vérifier au passage : « style switcher » (définition « Mécanisme de remplacement »), jargon non balisé."
+		},
+		{
+			"criterion": "8.7",
+			"page": "https://chikimuras.github.io/rampe/audit/",
+			"status": "C",
+			"note": "Test 8.7.1 : états interactifs examinés : vierge, audit complet importé (2 pages, 106 critères, taux et tableau d’actions affichés), audit effacé puis rapport automatique importé (statuts « à confirmer », indices dépliés), boîte de dialogue « Remplacer l’audit en cours ? » ouverte. Texte de l’îlot en français ; les descriptions anglaises des règles axe-core affichées dans les indices (« Images must have alternative text ») sont dans <span lang=\"en\"> ; « Colour Contrast Analyser », Markdown, NVDA sont des noms propres. Aucun passage étranger non balisé."
+		},
+		{
+			"criterion": "8.7",
+			"page": "https://chikimuras.github.io/rampe/cockpit/",
+			"status": "NC",
+			"note": "Test 8.7.1 : le statut de chacune des 22 décisions de la liste « Décisions d’architecture (ADR) » est affiché en anglais, « Accepted » (<span class=\"status Accepted\">Accepted</span>), sans attribut lang : ce n’est ni un nom propre ni un mot passé dans l’usage, une synthèse vocale française le prononce mal. Correction : <span class=\"status Accepted\" lang=\"en\">Accepted</span>, ou mieux traduire le statut (« Acceptée »). Le reste (Roadmap, Workflow, Gate, noms de produits) relève des noms propres ou du jargon passé dans l’usage."
+		},
+		{
+			"criterion": "8.7",
+			"page": "https://chikimuras.github.io/rampe/cockpit/adr/0011-cli-audit-playwright/",
+			"status": "NC",
+			"note": "Test 8.7.1 : la ligne de métadonnées <p class=\"meta\">Accepted · 15/10/2026 · …</p> affiche le statut anglais « Accepted » sans attribut lang. Également sans lang : « incomplete » (type de résultat axe dans le tableau) et « Output Encoding » (règle citée de l’OWASP Cheat Sheet). Correction : <span lang=\"en\">Accepted</span> (ou traduire « Acceptée »), <span lang=\"en\">incomplete</span> ou <code>incomplete</code>, <span lang=\"en\">Output Encoding</span>."
+		},
+		{
+			"criterion": "8.7",
+			"page": "https://chikimuras.github.io/rampe/cockpit/journal/2026-10-15/",
+			"status": "NA",
+			"note": "Test 8.7.1 : texte parcouru en entier. Les termes étrangers sont des noms propres (European Accessibility Act, OWASP XSS Prevention Cheat Sheet, Input Validation et Deserialization Cheat Sheets, GitHub Pages, Playwright…) ou du jargon technique passé dans l’usage de ce public (merge, build, check, shell, fork, workflow, proxy), dont l’absence de balisage ne crée pas d’incompréhension (cas particuliers, note 2). Aucun passage soumis au critère : non applicable."
+		},
+		{
+			"criterion": "8.7",
+			"page": "https://chikimuras.github.io/rampe/cockpit/docs/roadmap/",
+			"status": "NA",
+			"note": "Test 8.7.1 : texte parcouru en entier : seuls des noms propres (GitHub Pages, Biome, TypeScript, Playwright, Cloudflare, Mozilla…) et du jargon passé dans l’usage (roadmap, workspace, hook, merge, typecheck), sans risque d’incompréhension à la restitution (cas particuliers, note 2). Non applicable."
+		},
+		{
+			"criterion": "8.7",
+			"page": "https://chikimuras.github.io/rampe/referentiel/5-1/",
+			"status": "C",
+			"note": "Test 8.7.1 : les passages anglais « 1.3.1 Info and Relationships » et la technique « H73 » sont dans des <span lang=\"en\"> ; aucun autre texte étranger."
+		},
+		{
+			"criterion": "8.7",
+			"page": "https://chikimuras.github.io/rampe/referentiel/1-9/",
+			"status": "C",
+			"note": "Test 8.7.1 : passages anglais tous balisés <span lang=\"en\"> : « 1.1.1 Non-text Content », « 4.1.2 Name, Role, Value », « G140, ARIA4, ARIA6 » et les 3 descriptions de règles axe-core (« Ensure every ARIA tooltip node has an accessible name »…). Aucun autre texte étranger."
+		},
+		{
+			"criterion": "8.8",
+			"page": "https://chikimuras.github.io/rampe/",
+			"status": "NA",
+			"note": "Test 8.8.1 : aucun élément du corps ne porte d’attribut lang ou xml:lang (recherche [lang] dans le DOM) : aucun changement de langue indiqué dont le code serait à vérifier. Non applicable."
+		},
+		{
+			"criterion": "8.8",
+			"page": "https://chikimuras.github.io/rampe/referentiel/",
+			"status": "NA",
+			"note": "Test 8.8.1 : aucun élément du corps ne porte d’attribut lang ou xml:lang (recherche [lang] dans le DOM) : aucun changement de langue indiqué dont le code serait à vérifier. Non applicable."
+		},
+		{
+			"criterion": "8.8",
+			"page": "https://chikimuras.github.io/rampe/referentiel/1-1/",
+			"status": "C",
+			"note": "Test 8.8.1 : 9 éléments <span lang=\"en\"> : code « en » valide (ISO 639-1) et pertinent, chaque passage balisé étant effectivement en anglais (références et techniques WCAG, descriptions axe-core, titres de documents W3C)."
+		},
+		{
+			"criterion": "8.8",
+			"page": "https://chikimuras.github.io/rampe/referentiel/glossaire/",
+			"status": "C",
+			"note": "Test 8.8.1 : 26 éléments lang=\"en\" (<span>, <abbr>) : code « en » valide (ISO 639-1) et pertinent, chaque passage balisé étant effectivement en anglais (références et techniques WCAG, descriptions axe-core, titres de documents W3C)."
+		},
+		{
+			"criterion": "8.8",
+			"page": "https://chikimuras.github.io/rampe/audit/",
+			"status": "C",
+			"note": "Test 8.8.1 : les <span lang=\"en\"> des descriptions de règles axe-core (état rapport importé) : code « en » valide (ISO 639-1) et pertinent, chaque passage balisé étant effectivement en anglais (références et techniques WCAG, descriptions axe-core, titres de documents W3C)."
+		},
+		{
+			"criterion": "8.8",
+			"page": "https://chikimuras.github.io/rampe/cockpit/",
+			"status": "NA",
+			"note": "Test 8.8.1 : aucun élément du corps ne porte d’attribut lang ou xml:lang (recherche [lang] dans le DOM) : aucun changement de langue indiqué dont le code serait à vérifier. Non applicable."
+		},
+		{
+			"criterion": "8.8",
+			"page": "https://chikimuras.github.io/rampe/cockpit/adr/0011-cli-audit-playwright/",
+			"status": "NA",
+			"note": "Test 8.8.1 : aucun élément du corps ne porte d’attribut lang ou xml:lang (recherche [lang] dans le DOM) : aucun changement de langue indiqué dont le code serait à vérifier. Non applicable."
+		},
+		{
+			"criterion": "8.8",
+			"page": "https://chikimuras.github.io/rampe/cockpit/journal/2026-10-15/",
+			"status": "NA",
+			"note": "Test 8.8.1 : aucun élément du corps ne porte d’attribut lang ou xml:lang (recherche [lang] dans le DOM) : aucun changement de langue indiqué dont le code serait à vérifier. Non applicable."
+		},
+		{
+			"criterion": "8.8",
+			"page": "https://chikimuras.github.io/rampe/cockpit/docs/roadmap/",
+			"status": "NA",
+			"note": "Test 8.8.1 : aucun élément du corps ne porte d’attribut lang ou xml:lang (recherche [lang] dans le DOM) : aucun changement de langue indiqué dont le code serait à vérifier. Non applicable."
+		},
+		{
+			"criterion": "8.8",
+			"page": "https://chikimuras.github.io/rampe/referentiel/5-1/",
+			"status": "C",
+			"note": "Test 8.8.1 : 2 éléments <span lang=\"en\"> : code « en » valide (ISO 639-1) et pertinent, chaque passage balisé étant effectivement en anglais (références et techniques WCAG, descriptions axe-core, titres de documents W3C)."
+		},
+		{
+			"criterion": "8.8",
+			"page": "https://chikimuras.github.io/rampe/referentiel/1-9/",
+			"status": "C",
+			"note": "Test 8.8.1 : 6 éléments <span lang=\"en\"> : code « en » valide (ISO 639-1) et pertinent, chaque passage balisé étant effectivement en anglais (références et techniques WCAG, descriptions axe-core, titres de documents W3C)."
+		},
+		{
+			"criterion": "8.9",
+			"page": "https://chikimuras.github.io/rampe/",
+			"status": "C",
+			"note": "Test 8.9.1 : balises examinées (h1, p, strong, em, nav, header, main, footer) : chacune conforme à sa sémantique. Aucun titre, blockquote, paragraphe vide, série de <br> ou espace utilisé pour un effet visuel ; aucun role=\"presentation\" (DOM vérifié)."
+		},
+		{
+			"criterion": "8.9",
+			"page": "https://chikimuras.github.io/rampe/referentiel/",
+			"status": "C",
+			"note": "Test 8.9.1 : h1/h2 pour les titres, ol pour le sommaire, ul pour les critères, section par thématique, code pour un identifiant. Aucun titre, blockquote, paragraphe vide, série de <br> ou espace utilisé pour un effet visuel ; aucun role=\"presentation\" (DOM vérifié)."
+		},
+		{
+			"criterion": "8.9",
+			"page": "https://chikimuras.github.io/rampe/referentiel/1-1/",
+			"status": "C",
+			"note": "Test 8.9.1 : h2/h3 de titres, details/summary pour les méthodologies, ol/ul pour les étapes, code pour le balisage cité, strong pour « le test est validé ». Aucun titre, blockquote, paragraphe vide, série de <br> ou espace utilisé pour un effet visuel ; aucun role=\"presentation\" (DOM vérifié)."
+		},
+		{
+			"criterion": "8.9",
+			"page": "https://chikimuras.github.io/rampe/referentiel/glossaire/",
+			"status": "C",
+			"note": "Test 8.9.1 : dl/dt/dd pour les 119 termes, code pour les extraits de code, abbr avec title pour WCAG. Aucun titre, blockquote, paragraphe vide, série de <br> ou espace utilisé pour un effet visuel ; aucun role=\"presentation\" (DOM vérifié)."
+		},
+		{
+			"criterion": "8.9",
+			"page": "https://chikimuras.github.io/rampe/audit/",
+			"status": "C",
+			"note": "Test 8.9.1 : états interactifs examinés : vierge, audit complet importé (2 pages, 106 critères, taux et tableau d’actions affichés), audit effacé puis rapport automatique importé (statuts « à confirmer », indices dépliés), boîte de dialogue « Remplacer l’audit en cours ? » ouverte ; fieldset/legend pour les statuts, dl pour les taux, table pour les résultats, dialog pour la confirmation ; le seul <p> vide est la zone aria-live (fonctionnelle) et les <br> séparent les lignes d’une adresse postale. Aucun titre, blockquote, paragraphe vide, série de <br> ou espace utilisé pour un effet visuel ; aucun role=\"presentation\" (DOM vérifié)."
+		},
+		{
+			"criterion": "8.9",
+			"page": "https://chikimuras.github.io/rampe/cockpit/",
+			"status": "C",
+			"note": "Test 8.9.1 : ul/ol pour les listes, progress pour l’avancement, section/h2/h3. Aucun titre, blockquote, paragraphe vide, série de <br> ou espace utilisé pour un effet visuel ; aucun role=\"presentation\" (DOM vérifié)."
+		},
+		{
+			"criterion": "8.9",
+			"page": "https://chikimuras.github.io/rampe/cockpit/adr/0011-cli-audit-playwright/",
+			"status": "C",
+			"note": "Test 8.9.1 : table de données avec th, ol/ul, strong pour l’emphase. Aucun titre, blockquote, paragraphe vide, série de <br> ou espace utilisé pour un effet visuel ; aucun role=\"presentation\" (DOM vérifié)."
+		},
+		{
+			"criterion": "8.9",
+			"page": "https://chikimuras.github.io/rampe/cockpit/journal/2026-10-15/",
+			"status": "C",
+			"note": "Test 8.9.1 : h2 de section, ul, strong et em pour l’emphase, code pour les identifiants. Aucun titre, blockquote, paragraphe vide, série de <br> ou espace utilisé pour un effet visuel ; aucun role=\"presentation\" (DOM vérifié)."
+		},
+		{
+			"criterion": "8.9",
+			"page": "https://chikimuras.github.io/rampe/cockpit/docs/roadmap/",
+			"status": "C",
+			"note": "Test 8.9.1 : h2 de phases, ul de tâches, span de statut textuel. Aucun titre, blockquote, paragraphe vide, série de <br> ou espace utilisé pour un effet visuel ; aucun role=\"presentation\" (DOM vérifié)."
+		},
+		{
+			"criterion": "8.9",
+			"page": "https://chikimuras.github.io/rampe/referentiel/5-1/",
+			"status": "C",
+			"note": "Test 8.9.1 : h2/h3, details/summary, ol/ul, code. Aucun titre, blockquote, paragraphe vide, série de <br> ou espace utilisé pour un effet visuel ; aucun role=\"presentation\" (DOM vérifié)."
+		},
+		{
+			"criterion": "8.9",
+			"page": "https://chikimuras.github.io/rampe/referentiel/1-9/",
+			"status": "C",
+			"note": "Test 8.9.1 : h2/h3, details/summary, ol/ul, code. Aucun titre, blockquote, paragraphe vide, série de <br> ou espace utilisé pour un effet visuel ; aucun role=\"presentation\" (DOM vérifié)."
+		},
+		{
+			"criterion": "8.10",
+			"page": "https://chikimuras.github.io/rampe/",
+			"status": "NA",
+			"note": "Tests 8.10.1 et 8.10.2 : recherche de caractères des écritures de droite à gauche (plages Unicode hébreu, arabe, syriaque…) dans tout le texte : aucun ; aucun attribut dir. Pas de changement de sens de lecture : non applicable."
+		},
+		{
+			"criterion": "8.10",
+			"page": "https://chikimuras.github.io/rampe/referentiel/",
+			"status": "NA",
+			"note": "Tests 8.10.1 et 8.10.2 : recherche de caractères des écritures de droite à gauche (plages Unicode hébreu, arabe, syriaque…) dans tout le texte : aucun ; aucun attribut dir. Pas de changement de sens de lecture : non applicable."
+		},
+		{
+			"criterion": "8.10",
+			"page": "https://chikimuras.github.io/rampe/referentiel/1-1/",
+			"status": "NA",
+			"note": "Tests 8.10.1 et 8.10.2 : recherche de caractères des écritures de droite à gauche (plages Unicode hébreu, arabe, syriaque…) dans tout le texte : aucun ; aucun attribut dir. Pas de changement de sens de lecture : non applicable."
+		},
+		{
+			"criterion": "8.10",
+			"page": "https://chikimuras.github.io/rampe/referentiel/glossaire/",
+			"status": "NA",
+			"note": "Tests 8.10.1 et 8.10.2 : recherche de caractères des écritures de droite à gauche (plages Unicode hébreu, arabe, syriaque…) dans tout le texte : aucun ; aucun attribut dir. Pas de changement de sens de lecture : non applicable."
+		},
+		{
+			"criterion": "8.10",
+			"page": "https://chikimuras.github.io/rampe/audit/",
+			"status": "NA",
+			"note": "Tests 8.10.1 et 8.10.2 : recherche de caractères des écritures de droite à gauche (plages Unicode hébreu, arabe, syriaque…) dans tout le texte : aucun ; aucun attribut dir. Pas de changement de sens de lecture : non applicable."
+		},
+		{
+			"criterion": "8.10",
+			"page": "https://chikimuras.github.io/rampe/cockpit/",
+			"status": "NA",
+			"note": "Tests 8.10.1 et 8.10.2 : recherche de caractères des écritures de droite à gauche (plages Unicode hébreu, arabe, syriaque…) dans tout le texte : aucun ; aucun attribut dir. Pas de changement de sens de lecture : non applicable."
+		},
+		{
+			"criterion": "8.10",
+			"page": "https://chikimuras.github.io/rampe/cockpit/adr/0011-cli-audit-playwright/",
+			"status": "NA",
+			"note": "Tests 8.10.1 et 8.10.2 : recherche de caractères des écritures de droite à gauche (plages Unicode hébreu, arabe, syriaque…) dans tout le texte : aucun ; aucun attribut dir. Pas de changement de sens de lecture : non applicable."
+		},
+		{
+			"criterion": "8.10",
+			"page": "https://chikimuras.github.io/rampe/cockpit/journal/2026-10-15/",
+			"status": "NA",
+			"note": "Tests 8.10.1 et 8.10.2 : recherche de caractères des écritures de droite à gauche (plages Unicode hébreu, arabe, syriaque…) dans tout le texte : aucun ; aucun attribut dir. Pas de changement de sens de lecture : non applicable."
+		},
+		{
+			"criterion": "8.10",
+			"page": "https://chikimuras.github.io/rampe/cockpit/docs/roadmap/",
+			"status": "NA",
+			"note": "Tests 8.10.1 et 8.10.2 : recherche de caractères des écritures de droite à gauche (plages Unicode hébreu, arabe, syriaque…) dans tout le texte : aucun ; aucun attribut dir. Pas de changement de sens de lecture : non applicable."
+		},
+		{
+			"criterion": "8.10",
+			"page": "https://chikimuras.github.io/rampe/referentiel/5-1/",
+			"status": "NA",
+			"note": "Tests 8.10.1 et 8.10.2 : recherche de caractères des écritures de droite à gauche (plages Unicode hébreu, arabe, syriaque…) dans tout le texte : aucun ; aucun attribut dir. Pas de changement de sens de lecture : non applicable."
+		},
+		{
+			"criterion": "8.10",
+			"page": "https://chikimuras.github.io/rampe/referentiel/1-9/",
+			"status": "NA",
+			"note": "Tests 8.10.1 et 8.10.2 : recherche de caractères des écritures de droite à gauche (plages Unicode hébreu, arabe, syriaque…) dans tout le texte : aucun ; aucun attribut dir. Pas de changement de sens de lecture : non applicable."
+		}
+	]
+}
