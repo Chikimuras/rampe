@@ -9,3 +9,5 @@ dist/
 # Rapports JSON de vitest écrits par le proxy rtk
 .vitest/
 *.zip
+# Rapports de `pnpm audit:rampe` (ADR-0021)
+audit-rampe-rapports/
