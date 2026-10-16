@@ -43,6 +43,18 @@ jobs:
           sudo apparmor_parser -r /etc/apparmor.d/playwright-chromium
       - run: pnpm check
       - run: pnpm build
+      # Rampe audite Rampe (ADR-0021 §1) : la vraie CLI audite l'échantillon du site construit, servi en local.
+      # Toute non-conformité automatique fait échouer la CI (code 1 de la CLI), et le site n'est pas déployé.
+      - id: audit-rampe
+        run: pnpm audit:rampe
+      # Rapports JSON et HTML conservés, surtout utiles quand l'audit échoue. Même action épinglée que plus bas.
+      - if: ${{ !cancelled() && steps.audit-rampe.outcome != 'skipped' }}
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: audit-rampe
+          path: audit-rampe-rapports/
+          if-no-files-found: error
+          retention-days: 30
       # Archive de l'extension navigateur, pour un test manuel (ADR-0019 §7). Aucune permission supplémentaire :
       # l'envoi d'artefacts passe par le jeton d'exécution du job, pas par GITHUB_TOKEN.
       - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2

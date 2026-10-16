@@ -23,6 +23,16 @@ pnpm check   # lint, typecheck, tests
 pnpm --filter @rampe/site dev
 ```
 
+## Rampe audite Rampe
+
+À chaque PR et sur `main`, la CI construit le site, le sert en local et lance la vraie CLI (`rampe audit --echantillon`) sur l’échantillon versionné [`docs/audit-rampe/echantillon.txt`](docs/audit-rampe/echantillon.txt) (ADR-0021 §1). **Toute non-conformité détectée automatiquement fait échouer la CI**, sans liste d’exceptions ; les rapports JSON et HTML sont joints à l’exécution (artefact `audit-rampe`). En local :
+
+```sh
+pnpm audit:rampe   # rapports dans audit-rampe-rapports/
+```
+
+L’échantillon contient les adresses de production ; le script les réécrit vers le build local et refuse toute autre adresse. Pour le régénérer : `pnpm --filter @rampe/site build`, puis `pnpm --filter @rampe/site exec astro preview` (il sert `apps/site/dist` sous `/rampe/`, en arrière-plan, à l’adresse qu’il affiche ; `astro preview stop` l’arrête), `pnpm exec rampe echantillon <adresse affichée>/rampe/`, et compléter à la main selon la méthode (ADR-0012), adresses de production comprises. Zéro non-conformité automatique ne veut pas dire conforme : la plupart des critères demandent un humain (ADR-0002).
+
 ## Licences
 
 - Code : MIT.
