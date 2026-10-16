@@ -8,3 +8,4 @@ dist/
 .claude/scheduled_tasks.lock
 # Rapports JSON de vitest écrits par le proxy rtk
 .vitest/
+*.zip

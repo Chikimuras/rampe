@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="fr">
+	<head>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<title>Rampe — audit de la page</title>
+		<link rel="stylesheet" href="./popup.css" />
+		<script type="module" src="./popup.ts"></script>
+	</head>
+	<body>
+		<main>
+			<h1>Rampe — audit automatique de la page</h1>
+			<p>
+				Rampe analyse la page ouverte dans cet onglet avec axe-core. Rien n’est envoyé : l’analyse reste dans votre
+				navigateur.
+			</p>
+			<button type="button" id="analyser">Analyser cette page</button>
+			<p id="etat" role="status" aria-live="polite"></p>
+			<section id="resultats" aria-labelledby="resultats-titre" hidden>
+				<h2 id="resultats-titre">Résultats</h2>
+				<p id="page"></p>
+				<div id="categories"></div>
+				<button type="button" id="telecharger">Télécharger le rapport (JSON)</button>
+				<p class="aide">
+					Ce fichier s’importe dans l’audit guidé de Rampe (champ « Importer un rapport de la CLI (JSON) »).
+				</p>
+			</section>
+			<p class="rappel" id="rappel"></p>
+		</main>
+	</body>
+</html>

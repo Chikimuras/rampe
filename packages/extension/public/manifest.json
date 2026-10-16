@@ -1,0 +1,21 @@
+{
+	"manifest_version": 3,
+	"name": "Rampe — audit d’accessibilité",
+	"description": "Analyse la page ouverte avec axe-core et range les résultats par critère RGAA. Aucune donnée envoyée.",
+	"version": "0.1.0",
+	"permissions": ["activeTab", "scripting"],
+	"action": {
+		"default_title": "Analyser cette page avec Rampe",
+		"default_popup": "popup.html"
+	},
+	"content_security_policy": {
+		"extension_pages": "script-src 'self'; object-src 'none'; default-src 'none'; style-src 'self'; img-src 'self'; base-uri 'none'; form-action 'none'"
+	},
+	"browser_specific_settings": {
+		"gecko": {
+			"id": "extension@rampe.invalid",
+			"strict_min_version": "140.0",
+			"data_collection_permissions": { "required": ["none"] }
+		}
+	}
+}
