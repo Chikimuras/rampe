@@ -3,7 +3,7 @@
 // (OWASP Cross Site Scripting Prevention Cheat Sheet, « Safe Sinks »).
 // Points d'entrée légers de @rampe/core : ni glossaire ni méthodologies dans le panneau.
 import type { AuditReport, AuditResult } from "@rampe/core/audit-report";
-import { NODE_HTML_MAX, plainTitle, selector } from "@rampe/core/axe-results";
+import { AXE_RUN_OPTIONS, NODE_HTML_MAX, plainTitle, selector } from "@rampe/core/axe-results";
 import { baseCriteria } from "@rampe/core/criteres";
 import { plural, stripControl } from "@rampe/core/sample-file";
 import {
@@ -30,10 +30,11 @@ interface ExtensionApi {
 	runtime: { getManifest(): { version: string } };
 	tabs: { query(q: { active: true; currentWindow: true }): Promise<{ id?: number; url?: string }[]> };
 	scripting: {
-		executeScript<T>(d: {
+		executeScript<T, A extends unknown[] = []>(d: {
 			target: { tabId: number };
 			files?: string[];
-			func?: () => T;
+			func?: (...args: A) => T;
+			args?: A;
 		}): Promise<{ result?: Awaited<T> }[]>;
 	};
 }
@@ -63,11 +64,14 @@ $("rappel").textContent =
 $("partage").textContent =
 	`Avant de partager ce rapport, relisez-le : il contient l’adresse de la page avec ses paramètres, et des extraits du code de la page (jusqu’à ${NODE_HTML_MAX} caractères par élément en défaut), qui peuvent contenir des données personnelles.`;
 
-/** Exécuté dans l'onglet (monde isolé de l'extension) : la page ne peut ni lire ni modifier axe. */
-async function runAxe(): Promise<PageRun> {
+/**
+ * Exécuté dans l'onglet (monde isolé de l'extension) : la page ne peut ni lire ni modifier axe. Sérialisé par le
+ * navigateur : les options arrivent en argument (`AXE_RUN_OPTIONS`, communes avec la CLI, ADR-0020).
+ */
+async function runAxe(options: typeof AXE_RUN_OPTIONS): Promise<PageRun> {
 	const axe = (globalThis as unknown as { axe: typeof import("axe-core") }).axe;
-	// Configuration par défaut, comme la CLI (ADR-0011 §2).
-	const r = await axe.run();
+	// Règles par défaut, comme la CLI (ADR-0011 §2) ; jamais d'interrogation des iframes (ADR-0020).
+	const r = await axe.run(document, options);
 	const keep = (list: typeof r.violations) =>
 		list.map((x) => ({
 			id: x.id,
@@ -158,7 +162,7 @@ async function analyseTab() {
 		checkContentType(probe?.result ?? "");
 		// axe-core embarqué, jamais chargé à distance (ADR-0019 §3) ; injecté au clic seulement (activeTab).
 		await api().scripting.executeScript({ target, files: ["axe.min.js"] });
-		const [injection] = await api().scripting.executeScript({ target, func: runAxe });
+		const [injection] = await api().scripting.executeScript({ target, func: runAxe, args: [AXE_RUN_OPTIONS] });
 		// Le navigateur renvoie un résultat vide quand le document a été remplacé pendant l'analyse.
 		if (!injection?.result) throw new Error(NO_RESULT);
 		return buildExtensionReport({

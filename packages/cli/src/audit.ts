@@ -2,6 +2,7 @@
 import {
 	type AuditPage,
 	type AuditResult,
+	type AxeRawResult,
 	buildReport as buildCoreReport,
 	byNumber,
 	plainTitle,
@@ -31,6 +32,58 @@ export {
 } from "@rampe/core";
 
 import pkg from "../package.json" with { type: "json" };
+
+/** Cible axe : un sélecteur, ou un tableau (par cadre, Shadow DOM) de cibles ; rien d'autre. */
+const isTarget = (t: unknown): boolean => typeof t === "string" || (Array.isArray(t) && t.every(isTarget));
+
+/** Vérifie la forme d'un résultat axe relu côté Node : rien de ce qui en sort n'est cru sur parole. */
+function isAxeResult(r: unknown): r is AxeRawResult {
+	const o = r as AxeRawResult;
+	return (
+		typeof o === "object" &&
+		o !== null &&
+		typeof o.id === "string" &&
+		(o.help === undefined || typeof o.help === "string") &&
+		Array.isArray(o.tags) &&
+		o.tags.every((t) => typeof t === "string") &&
+		(o.impact === undefined || o.impact === null || typeof o.impact === "string") &&
+		Array.isArray(o.nodes) &&
+		o.nodes.every(
+			(n) =>
+				typeof n === "object" &&
+				n !== null &&
+				Array.isArray(n.target) &&
+				isTarget(n.target) &&
+				typeof n.html === "string" &&
+				(n.failureSummary === undefined || typeof n.failureSummary === "string"),
+		)
+	);
+}
+
+/**
+ * Relit le JSON sérialisé par axe dans le monde isolé (ADR-0020) et en vérifie la forme ; lève une erreur sinon.
+ */
+export function parseAxeOutput(value: unknown): {
+	title: string;
+	violations: AxeRawResult[];
+	incomplete: AxeRawResult[];
+} {
+	let parsed: unknown;
+	try {
+		parsed = typeof value === "string" ? JSON.parse(value) : null;
+	} catch {
+		parsed = null;
+	}
+	const { title, violations, incomplete } = (parsed ?? {}) as Record<string, unknown>;
+	if (
+		typeof title !== "string" ||
+		!Array.isArray(violations) ||
+		!Array.isArray(incomplete) ||
+		![...violations, ...incomplete].every(isAxeResult)
+	)
+		throw new Error("résultat d’axe-core illisible : audit impossible.");
+	return { title, violations, incomplete };
+}
 
 // Forme du JSON : partagée avec le site (import dans l'audit guidé, ADR-0014), elle vit dans @rampe/core.
 export type { AuditPage, AuditReport, AuditResult, AxeRawResult, ResultKind } from "@rampe/core";

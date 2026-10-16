@@ -48,7 +48,7 @@ Aucun score n’est calculé : les 106 critères demandent une vérification hum
 - **Délai maximal** : une analyse s’arrête au bout de 60 secondes (page bloquée par un script), avec un message ; le bouton redevient utilisable. Une page qui change pendant l’analyse (navigation, fermeture) donne « La page a changé pendant l’analyse : relancez-la. », avec le message technique du navigateur replié sous « Détail technique ».
 - **Version du navigateur** dans le rapport (`engine.browser`) : sous Chromium, la version complète (`navigator.userAgentData`, ex. « Chrome 156.0.8078.4 », comparable à celle de la CLI) ; à défaut, celle de l’agent utilisateur, que Chromium réduit (« Chrome 156.0.0.0 ») ; sous Firefox, celle de l’agent utilisateur (« Firefox 140.0 »).
 - Les textes venus de la page (titre, sélecteurs, descriptions) sont affichés comme du texte, jamais interprétés comme du HTML.
-- Limite : seul le cadre principal est analysé (comme la CLI), pas le contenu des `iframe` ; le résumé le signale quand axe en trouve (règle `frame-tested`).
+- Limite : seul le cadre principal est analysé (comme la CLI), pas le contenu des `iframe` ; le résumé le signale quand axe en trouve (règle `frame-tested`). axe est lancé avec `iframes: false`, comme dans la CLI (ADR-0020) : une iframe hostile ne peut pas forger de réponse à sa messagerie `postMessage`.
 
 ## Développement
 

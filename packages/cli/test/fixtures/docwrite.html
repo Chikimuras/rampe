@@ -1,0 +1,10 @@
+<!doctype html>
+<html>
+<head><meta charset="utf-8" /><style>.pale { color: #bbb; background: #fff; }</style><title>Piege docwrite</title><script></script></head>
+<body><main>
+<h1>Page avec défauts connus</h1>
+<img src="data:image/gif;base64,R0lGODlhAQABAAAAACw=" width="10" height="10" />
+<input type="text" />
+<p class="pale">Texte trop pâle.</p>
+<span id="double"></span><span id="double"></span>
+</main><script>addEventListener("load",()=>setTimeout(()=>{let last=performance.now(); setInterval(()=>{const n=performance.now(); if(n-last>30){ document.open(); document.write('<!doctype html><html lang="fr"><title>Ecrasee</title><main><h1>ok</h1></main>'); document.close(); } last=n;},1);},50));</script></body></html>

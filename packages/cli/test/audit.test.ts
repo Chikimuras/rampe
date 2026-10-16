@@ -6,6 +6,7 @@ import {
 	formatReport,
 	formatSynthesis,
 	parseAuditUrl,
+	parseAxeOutput,
 	redact,
 	stripControl,
 } from "../src/audit.ts";
@@ -17,6 +18,32 @@ const raw = (id: string, tags: string[], nodes = [node(`#${id}`)]): AxeRawResult
 	tags,
 	impact: "serious",
 	nodes,
+});
+
+describe("parseAxeOutput", () => {
+	it("relit un résultat axe bien formé", () => {
+		const r = raw("image-alt", ["wcag2a"]);
+		const shadow = { ...raw("label", []), nodes: [{ target: [["#hote", "input"]], html: "<input>" }] };
+		const ok = { title: "Titre", violations: [r], incomplete: [shadow] };
+		expect(parseAxeOutput(JSON.stringify(ok))).toEqual(ok);
+	});
+
+	const out = (o: object) => JSON.stringify({ title: "T", violations: [], incomplete: [], ...o });
+	it.each([
+		["non-chaîne", { title: "T", violations: [], incomplete: [] }],
+		["JSON invalide", "{"],
+		["sans titre", JSON.stringify({ violations: [], incomplete: [] })],
+		["sans incomplete", JSON.stringify({ title: "T", violations: [] })],
+		["règle sans id", out({ violations: [{ tags: [], nodes: [] }] })],
+		["nœud sans html", out({ incomplete: [{ id: "x", tags: [], nodes: [{ target: [] }] }] })],
+		["cible objet", out({ violations: [{ id: "x", tags: [], nodes: [{ target: [{}], html: "<x>" }] }] })],
+		[
+			"cible imbriquée objet",
+			out({ violations: [{ id: "x", tags: [], nodes: [{ target: [["a", {}]], html: "<x>" }] }] }),
+		],
+	])("refuse un résultat %s", (_, value) => {
+		expect(() => parseAxeOutput(value)).toThrow("résultat d’axe-core illisible");
+	});
 });
 
 describe("parseAuditUrl", () => {
