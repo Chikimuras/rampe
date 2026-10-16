@@ -1308,6 +1308,24 @@ describe("audit guidé (bout en bout)", { timeout: 60_000 }, () => {
 			await page.close();
 		});
 
+		it("événement « close » en retard : il ne vole pas le focus déjà posé ailleurs (cause de l’instabilité en CI)", async () => {
+			const page = await browser.newPage();
+			await nonEmpty(page);
+			await page.getByLabel("Importer un audit (JSON)").setInputFiles(asFile(sessionJson()));
+			await dialog(page).getByRole("button", { name: "Remplacer l’audit en cours" }).click();
+			await expect.poll(() => page.locator(".audit-page-list li").count()).toBe(3);
+			// Le navigateur envoie « close » dans une tâche à part : on le rejoue de façon déterministe après que le
+			// focus est passé sur « Annuler cet import » (ce que fait Tab chez l'utilisateur rapide).
+			const focused = await page.evaluate(() => {
+				const undo = [...document.querySelectorAll("button")].find((b) => b.textContent === "Annuler cet import");
+				undo?.focus();
+				document.querySelector("dialog.audit-dialog")?.dispatchEvent(new Event("close"));
+				return document.activeElement?.textContent;
+			});
+			expect(focused).toBe("Annuler cet import");
+			await page.close();
+		});
+
 		it("fichier hostile ou abîmé : refusé avant toute confirmation, message clair, session intacte", async () => {
 			const page = await browser.newPage();
 			await nonEmpty(page);

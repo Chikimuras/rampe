@@ -1347,9 +1347,13 @@ function Backup({
 				class="audit-dialog"
 				aria-labelledby="audit-remplacer-titre"
 				aria-describedby="audit-remplacer-texte"
-				onClose={() => {
+				onClose={(e) => {
 					setPending(null);
-					inputRef.current?.focus();
+					// L'événement `close` arrive après coup (tâche du navigateur) : on ne rend le focus au champ que s'il est
+					// resté dans la boîte ou perdu, jamais s'il est déjà ailleurs (« Annuler cet import », par exemple).
+					const active = document.activeElement;
+					if (!active || active === document.body || (e.currentTarget as HTMLElement).contains(active))
+						inputRef.current?.focus();
 				}}
 			>
 				{pending && (
