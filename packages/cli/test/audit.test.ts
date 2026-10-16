@@ -7,6 +7,7 @@ import {
 	formatReport,
 	formatSynthesis,
 	parseAuditUrl,
+	parseAxeOutput,
 	redact,
 	stripControl,
 } from "../src/audit.ts";
@@ -18,6 +19,29 @@ const raw = (id: string, tags: string[], nodes = [node(`#${id}`)]): AxeRawResult
 	tags,
 	impact: "serious",
 	nodes,
+});
+
+describe("parseAxeOutput", () => {
+	it("relit un résultat axe bien formé", () => {
+		const r = raw("image-alt", ["wcag2a"]);
+		expect(parseAxeOutput(JSON.stringify({ violations: [r], incomplete: [] }))).toEqual({
+			violations: [r],
+			incomplete: [],
+		});
+	});
+
+	it.each([
+		["non-chaîne", { violations: [], incomplete: [] }],
+		["JSON invalide", "{"],
+		["sans incomplete", JSON.stringify({ violations: [] })],
+		["règle sans id", JSON.stringify({ violations: [{ tags: [], nodes: [] }], incomplete: [] })],
+		[
+			"nœud sans html",
+			JSON.stringify({ violations: [], incomplete: [{ id: "x", tags: [], nodes: [{ target: [] }] }] }),
+		],
+	])("refuse un résultat %s", (_, value) => {
+		expect(() => parseAxeOutput(value)).toThrow("résultat d’axe-core illisible");
+	});
 });
 
 describe("parseAuditUrl", () => {

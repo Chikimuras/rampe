@@ -9,13 +9,13 @@ import axe from "axe-core";
 import { type Browser, chromium, type Page } from "playwright";
 import {
 	type AuditPage,
-	type AxeRawResult,
 	buildReport,
 	classifyResults,
 	formatPage,
 	formatReport,
 	formatSynthesis,
 	parseAuditUrl,
+	parseAxeOutput,
 	redact,
 	stripControl,
 	TITLE_MAX,
@@ -165,17 +165,46 @@ const originWarning = (url: URL, finalUrl: string) =>
 		? []
 		: [`La page finale est sur une autre origine que celle demandée : ${redact(finalUrl)}`];
 
+/**
+ * Exécute axe-core dans un monde isolé du cadre principal (ADR-0020) : DOM partagé, mais pas les objets JavaScript
+ * de la page, qui ne peut donc ni remplacer `window.axe` ni fausser les primitives dont axe dépend. Injection par le
+ * protocole de débogage : non soumise à la CSP de la page, sans la désactiver. Configuration par défaut d'axe.run
+ * (sans règles expérimentales). Le résultat est sérialisé dans le monde isolé, puis validé ici.
+ */
+async function runAxeIsolated(page: Page) {
+	const cdp = await page.context().newCDPSession(page);
+	try {
+		const { frameTree } = await cdp.send("Page.getFrameTree");
+		// ponytail: cadre principal seulement ; les iframes demanderont un monde isolé par cadre.
+		const { executionContextId } = await cdp.send("Page.createIsolatedWorld", {
+			frameId: frameTree.frame.id,
+			worldName: "rampe-axe",
+			grantUniveralAccess: false,
+		});
+		const { result, exceptionDetails } = await cdp.send("Runtime.evaluate", {
+			expression: `${axe.source}
+;(async () => {
+	const r = await axe.run();
+	return JSON.stringify({ violations: r.violations, incomplete: r.incomplete });
+})()`,
+			contextId: executionContextId,
+			awaitPromise: true,
+			returnByValue: true,
+		});
+		if (exceptionDetails)
+			throw new Error(
+				`échec d’axe-core dans la page : ${exceptionDetails.exception?.description ?? exceptionDetails.text}`,
+			);
+		return parseAxeOutput(result.value);
+	} finally {
+		await cdp.detach().catch(() => {});
+	}
+}
+
 /** Charge la page et lance axe-core. */
 async function inspect(page: Page, url: URL, timeout: number): Promise<AuditPage> {
 	await load(page, url, timeout);
-	// Injection par le protocole de débogage : non soumise à la CSP de la page, sans la désactiver.
-	await page.evaluate(axe.source);
-	// Configuration par défaut d'axe.run (sans règles expérimentales).
-	// ponytail: cadre principal seulement ; les iframes demanderont une injection par cadre.
-	const raw = await page.evaluate(async () => {
-		const r = await (window as unknown as { axe: typeof axe }).axe.run();
-		return { violations: r.violations, incomplete: r.incomplete };
-	});
+	const raw = await runAxeIsolated(page);
 	const finalUrl = page.url();
 	if (!isHttp(finalUrl)) throw new Error(`la page a quitté le web (http/https) : ${finalUrl}`);
 	return {
@@ -183,7 +212,7 @@ async function inspect(page: Page, url: URL, timeout: number): Promise<AuditPage
 		finalUrl: redact(finalUrl),
 		title: truncate(await page.title(), TITLE_MAX),
 		warnings: originWarning(url, finalUrl),
-		results: classifyResults(raw.violations as AxeRawResult[], raw.incomplete as AxeRawResult[]),
+		results: classifyResults(raw.violations, raw.incomplete),
 		error: null,
 	};
 }
