@@ -25,13 +25,25 @@ pnpm --filter @rampe/site dev
 
 ## Rampe audite Rampe
 
-À chaque PR et sur `main`, la CI construit le site, le sert en local et lance la vraie CLI (`rampe audit --echantillon`) sur l’échantillon versionné [`docs/audit-rampe/echantillon.txt`](docs/audit-rampe/echantillon.txt) (ADR-0021 §1). **Toute non-conformité détectée automatiquement fait échouer la CI**, sans liste d’exceptions ; les rapports JSON et HTML sont joints à l’exécution (artefact `audit-rampe`). En local :
+À chaque PR et sur `main`, la CI construit le site, le sert en local et lance la vraie CLI en `--strict` (ADR-0021 §1). Le partage est le suivant :
+
+- **le gate** (`pnpm audit:rampe`) audite les pages **telles qu’elles se chargent** : toutes les pages construites, en thème clair puis en thème sombre, et l’échantillon versionné [`docs/audit-rampe/echantillon.txt`](docs/audit-rampe/echantillon.txt) en 375 px ;
+- **les tests de bout en bout du site** (`apps/site/test/`) couvrent les **états interactifs** de l’audit guidé (pages ajoutées, import d’un rapport, déclaration, schéma et plan), où ils lancent axe en clair, en sombre et en 375 px.
+
+Tout signalement fait échouer la CI : non-conformité, rattachement incertain ou point à vérifier. Il n’y a aucune liste d’exceptions. Les rapports JSON et HTML de chaque passage sont joints à l’exécution (artefact `audit-rampe`). En local :
 
 ```sh
 pnpm audit:rampe   # rapports dans audit-rampe-rapports/
 ```
 
-L’échantillon contient les adresses de production ; le script les réécrit vers le build local et refuse toute autre adresse. Pour le régénérer : `pnpm --filter @rampe/site build`, puis `pnpm --filter @rampe/site exec astro preview` (il sert `apps/site/dist` sous `/rampe/`, en arrière-plan, à l’adresse qu’il affiche ; `astro preview stop` l’arrête), `pnpm exec rampe echantillon <adresse affichée>/rampe/`, et compléter à la main selon la méthode (ADR-0012), adresses de production comprises. Zéro non-conformité automatique ne veut pas dire conforme : la plupart des critères demandent un humain (ADR-0002).
+L’échantillon contient les adresses de production. Le script les réécrit vers le build local et refuse toute autre adresse. Il n’est pas régénéré en CI. Pour le refaire :
+
+```sh
+pnpm audit:rampe --servir                                   # construit et sert le site sur un port libre ; affiche l’adresse
+pnpm exec rampe echantillon http://127.0.0.1:<port>/rampe/   # dans un autre terminal
+```
+
+Ensuite, complétez le fichier à la main selon la méthode (ADR-0012), avec les adresses de production. Zéro signalement automatique ne veut pas dire conforme : la plupart des critères demandent un humain (ADR-0002).
 
 ## Licences
 

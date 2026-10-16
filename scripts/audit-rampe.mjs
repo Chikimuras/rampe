@@ -164,6 +164,8 @@ async function audit(local) {
 		rmSync(json, { force: true });
 		rmSync(html, { force: true });
 		console.log(`\n##### Passage « ${pass.name} » #####`);
+		if (pass.expected !== undefined)
+			console.log("Toutes les pages sont auditées : l’avertissement sur le tirage « hasard » ne s’applique pas ici.");
 		let c = await runCli([
 			"audit",
 			"--echantillon",

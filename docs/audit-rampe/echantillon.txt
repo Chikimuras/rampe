@@ -1,7 +1,8 @@
 # Échantillon RGAA du site de Rampe (ADR-0012, ADR-0021 §1)
 #
-# Point de départ : `rampe echantillon http://127.0.0.1:<port>/rampe/ --graine 2021` sur le site construit et servi
-# localement (accueil + les 3 rubriques de la navigation principale), puis complété à la main selon la méthode.
+# Point de départ : `rampe echantillon http://127.0.0.1:<port>/rampe/ --graine 2021` sur le site servi par
+# `pnpm audit:rampe --servir` (accueil + les 3 rubriques de la navigation principale), puis complété à la main
+# selon la méthode. Il n'est pas régénéré en CI. Le gate l'audite en 375 px ; il sert aussi à l'auto-évaluation.
 # Les adresses sont celles de production : `pnpm audit:rampe` (scripts/audit-rampe.mjs) les réécrit vers le build
 # local, et refuse toute adresse hors de https://chikimuras.github.io/rampe/.
 # Une page retirée du site fait échouer le gate (HTTP 404, code 2) : mettez alors l'échantillon à jour.
@@ -46,8 +47,13 @@ https://chikimuras.github.io/rampe/cockpit/journal/2026-10-15/
 # contenu particulier — une page de documentation (feuille de route : listes de tâches converties en statuts)
 https://chikimuras.github.io/rampe/cockpit/docs/roadmap/
 
-# hasard — tiré parmi les 128 autres pages du build (mulberry32, graine 2021) : 2 pages sur 11, soit 18 %
+# hasard — 2 pages sur 11, soit 18 % (au moins 10 % exigés). Méthode, rejouable :
+#   liste de départ : chaque dossier contenant un index.html dans le build (137 pages), moins les 9 pages ci-dessus
+#   choisies à la main (dans leur version d'origine : ADR-0021 au lieu de l'ADR-0011), triée par ordre
+#   alphabétique : 128 pages ;
+#   générateur : mulberry32 (celui de `rampe echantillon`), graine 2021 ;
+#   tirage : index = floor(aléa × 128), sans remise, jusqu'à 2 pages distinctes.
 https://chikimuras.github.io/rampe/referentiel/5-1/
 
-# hasard — tiré parmi les 128 autres pages du build (mulberry32, graine 2021)
+# hasard — second tirage de la même méthode
 https://chikimuras.github.io/rampe/referentiel/1-9/
