@@ -48,6 +48,7 @@ beforeAll(async () => {
 			res.writeHead(200, { "content-type": "text/html; charset=utf-8" }).end(body);
 		// Chemins fixes : aucun chemin venu de la requête n'atteint le disque ni la page.
 		if (path === "/") return html(await readFile(join(fixtures, "site-accueil.html")));
+		if (path === "/accueil-hostile") return html(await readFile(join(fixtures, "accueil-hostile.html")));
 		if (path === "/boucle") return html(await readFile(join(fixtures, "boucle.html")));
 		if (path === "/contact") return html(page("Contact", '<img src="data:image/gif;base64,R0lGODlhAQABAAAAACw=">'));
 		if (PAGES.has(path)) return html(page("Page du mini-site"));
@@ -120,6 +121,18 @@ describe("rampe echantillon puis audit --echantillon (bout en bout)", { timeout:
 			new RegExp(`Critère 1\\.1 — .* : 1 page\\n {4}- ${base.replace(/\./g, "\\.")}/contact`),
 		);
 		expect(audited.stdout).toContain("Les 106 critères demandent une vérification humaine.");
+	});
+
+	it("un accueil qui falsifie querySelectorAll, getAttribute… ne fausse pas l'échantillon proposé (ADR-0020)", async () => {
+		const sain = join(dir, "sain.txt");
+		const piege = join(dir, "piege.txt");
+		expect((await run("echantillon", `${base}/`, "--sortie", sain, "--graine", "1")).code).toBe(0);
+		const { code, stderr } = await run("echantillon", `${base}/accueil-hostile`, "--sortie", piege, "--graine", "1");
+		expect(code, stderr).toBe(0);
+		const text = await readFile(piege, "utf8");
+		expect(text).not.toContain("/piege");
+		// Seule l'adresse de l'accueil diffère.
+		expect(text.replaceAll(`${base}/accueil-hostile`, `${base}/`)).toBe(await readFile(sain, "utf8"));
 	});
 
 	it("continue après une page en erreur, la signale et sort en 2", async () => {
