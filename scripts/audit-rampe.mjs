@@ -1,11 +1,15 @@
 // Rampe audite Rampe (ADR-0021 §1) : gate CI, lancé par `pnpm audit:rampe`.
 // 1. construit le site en production dans un dossier temporaire ;
 // 2. le sert sur 127.0.0.1, port libre, sous la base /rampe (404 ailleurs) ;
-// 3. lance la VRAIE CLI `rampe audit --echantillon … --strict` en trois passages :
+// 3. vérifie le build lui-même :
+//    - chaque page est du HTML valide selon le validateur W3C (Nu Html Checker, vnu-jar ; critère RGAA 8.2) :
+//      toute erreur fait échouer le gate (code 1 ; code 2 si Java manque : celui des exécuteurs Ubuntu de GitHub, Java 17, suffit) ;
+//    - le plan du site relie chaque page construite, et chaque page relie le plan depuis son pied de page (12.1, 12.4) ;
+// 4. lance la VRAIE CLI `rampe audit --echantillon … --strict` en trois passages :
 //    - toutes les pages construites (chaque index.html du build, triées), thème clair ;
 //    - les mêmes, thème sombre ;
 //    - l'échantillon méthodologique versionné (docs/audit-rampe/echantillon.txt), fenêtre étroite (375 px) ;
-// 4. sort en 0 si les trois passages sont à 0, sinon avec le code le plus grave (2 > 1).
+// 5. sort en 0 si la validation et les trois passages sont à 0, sinon avec le code le plus grave (2 > 1).
 // --strict : un résultat « incertain » ou « à vérifier » fait aussi échouer le gate. Aucune liste d'exceptions.
 //
 // L'échantillon versionné contient les adresses de production (https://chikimuras.github.io/rampe/…) : il reste
@@ -18,7 +22,7 @@
 //
 // `pnpm audit:rampe --servir` construit et sert le site sans l'auditer (Ctrl+C pour arrêter), par exemple pour
 // régénérer l'échantillon avec `rampe echantillon`.
-import { execFileSync, spawn } from "node:child_process";
+import { execFileSync, spawn, spawnSync } from "node:child_process";
 import {
 	existsSync,
 	mkdirSync,
@@ -30,6 +34,7 @@ import {
 	writeFileSync,
 } from "node:fs";
 import { createServer } from "node:http";
+import { createRequire } from "node:module";
 import { tmpdir } from "node:os";
 import { extname, join, normalize, resolve, sep } from "node:path";
 import { fileURLToPath } from "node:url";
@@ -39,6 +44,8 @@ const BASE = "/rampe/";
 const root = fileURLToPath(new URL("..", import.meta.url));
 const site = join(root, "apps/site");
 const cli = join(root, "packages/cli/src/cli.ts");
+// Chemin du validateur W3C. Son script d’installation (téléchargement d’un Java) est désactivé : package.json, pnpm.
+const vnuJar = String(createRequire(import.meta.url)("vnu-jar"));
 const echantillon = join(root, "docs/audit-rampe/echantillon.txt");
 const rapports = resolve(root, process.env.RAMPE_RAPPORTS ?? "audit-rampe-rapports");
 const serveOnly = process.argv.includes("--servir");
@@ -75,6 +82,35 @@ function builtPages(dir = out, prefix = "") {
 		else if (entry.name === "index.html") pages.push(prefix);
 	}
 	return pages.sort();
+}
+
+/** Validateur W3C sur tout le build ; 0 si aucune erreur, 1 sinon, 2 s’il ne peut pas tourner. */
+function validateHtml() {
+	console.log("\n##### Validation W3C (Nu Html Checker) de toutes les pages #####");
+	// -Xss : pile exigée par le validateur (StackOverflowError sinon) ; erreurs seulement, pas les avertissements.
+	const r = spawnSync("java", ["-Xss4m", "-jar", vnuJar, "--errors-only", "--skip-non-html", "--format", "gnu", out], {
+		stdio: "inherit",
+	});
+	if (r.error) {
+		console.error(`Le validateur W3C n’a pas pu être lancé (Java est-il installé ?) : ${r.error.message}`);
+		return 2;
+	}
+	if (r.status === 0) console.log("Aucune erreur de validation.");
+	return r.status === 0 ? 0 : r.status === 1 ? 1 : 2;
+}
+
+/** Plan du site (12.1, 12.4) : il relie chaque page construite, et chaque page le relie depuis son pied de page. */
+function checkSiteMap(pages) {
+	const page = (p) => readFileSync(join(out, p, "index.html"), "utf8");
+	const plan = page("plan-du-site/");
+	const unlisted = pages.filter((p) => !plan.includes(`href="${BASE}${p}"`));
+	if (unlisted.length > 0) throw new Error(`Pages absentes du plan du site : ${unlisted.join(", ")}`);
+	const footerLink = new RegExp(`<footer[^>]*>(?:(?!</footer>)[\\s\\S])*href="${BASE}plan-du-site/"`);
+	const orphans = pages.filter((p) => !footerLink.test(page(p)));
+	if (orphans.length > 0)
+		throw new Error(
+			`Pages sans lien vers le plan du site en pied de page : ${orphans.map((p) => p || "(accueil)").join(", ")}`,
+		);
 }
 
 /** Lance la CLI ; code 2 si elle ne démarre pas ou meurt sur un signal. */
@@ -138,6 +174,7 @@ async function audit(local) {
 	const claim = `0 non-conformité automatique sur les ${pages.length} pages`;
 	if (!readFileSync(join(out, "cockpit/index.html"), "utf8").includes(claim))
 		throw new Error(`Le cockpit n’annonce pas « ${claim} » : corrigez le décompte dans cockpit/index.astro.`);
+	checkSiteMap(pages);
 	const toutes = join(tmp, "toutes.txt");
 	writeFileSync(
 		toutes,
@@ -161,7 +198,7 @@ async function audit(local) {
 		{ name: "echantillon-375px", file: copie, args: ["--largeur", "375"] },
 	];
 	const written = [];
-	let code = 0;
+	let code = validateHtml();
 	for (const pass of passes) {
 		const json = join(rapports, `${pass.name}.json`);
 		const html = join(rapports, `${pass.name}.html`);
@@ -194,7 +231,7 @@ async function audit(local) {
 		}
 		code = Math.max(code, c);
 	}
-	console.log(`\nAudit de Rampe : ${pages.length} pages construites, code ${code}.`);
+	console.log(`\nAudit de Rampe : ${pages.length} pages construites, validées et auditées, code ${code}.`);
 	if (written.length > 0) console.log(`Rapports :\n  ${written.join("\n  ")}`);
 	return code;
 }

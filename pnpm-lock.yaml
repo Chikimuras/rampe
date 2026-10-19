@@ -17,6 +17,9 @@ importers:
       typescript:
         specifier: ^6.0.3
         version: 6.0.3
+      vnu-jar:
+        specifier: 26.10.11
+        version: 26.10.11
 
   apps/site:
     dependencies:
@@ -1889,6 +1892,11 @@ packages:
         optional: true
       jsdom:
         optional: true
+
+  vnu-jar@26.10.11:
+    resolution: {integrity: sha512-YKqIChv06STl9LWSVx/7A3+qwgvfK2YHUv4E1KNVOHHDuESLEOfF1c8FD2XdFS3juaO5E33qdx99mmjOrm7afQ==}
+    engines: {node: '>=18'}
+    hasBin: true
 
   volar-service-css@0.0.71:
     resolution: {integrity: sha512-wRRFt9BpjMKCazcgOh67MSjUjiWUCAh99DyYSDIOTuxaRjEtDC7PpB0k1Y1wbJIW/pVtMUSVbpPo3UGSm0Byxw==}
@@ -3780,6 +3788,8 @@ snapshots:
       '@types/node': 22.20.5
     transitivePeerDependencies:
       - msw
+
+  vnu-jar@26.10.11: {}
 
   volar-service-css@0.0.71(@volar/language-service@2.4.28):
     dependencies:
