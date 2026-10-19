@@ -15,6 +15,7 @@ const { title, description = "Rampe — accompagner les PME vers la conformité 
 		<meta name="viewport" content="width=device-width, initial-scale=1" />
 		<meta name="description" content={description} />
 		<title>{title} · Rampe</title>
+		<slot name="head" />
 		<style is:global>
 			:root {
 				--bg: #fbfaf7;

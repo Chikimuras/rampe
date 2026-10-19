@@ -239,6 +239,12 @@ function loadSession(
 	return { session: null, ignored: { raw, kept: keepAside(raw) }, future: false };
 }
 
+/**
+ * Focus sur un champ en erreur APRÈS le rendu (Preact rend en microtâche) : il porte alors son message
+ * (`aria-describedby`), lu avec lui ; aucune alerte en plus, pour ne pas l'annoncer deux fois (RGAA 7.5).
+ */
+const focusAfterRender = (target: () => HTMLElement | null | undefined) => setTimeout(() => target()?.focus());
+
 /** Fichier fabriqué dans le navigateur (Blob et lien) : rien ne part sur le réseau. */
 function saveFile(name: string, text: string, type = "application/json") {
 	const a = document.createElement("a");
@@ -292,9 +298,10 @@ export default function AuditApp({
 	const [currentId, setCurrentId] = useState<string | null>(criteria[0]?.id ?? null);
 	const [topicNumber, setTopicNumber] = useState(criteria[0]?.topic ?? 1);
 	const [filter, setFilter] = useState<Filter>("all");
-	/** `n` : un même message répété est réinséré, donc annoncé à nouveau. */
-	const [live, setLive] = useState({ text: "", error: false, n: 0 });
-	const setAnnounce: Announce = (text, error = false) => setLive((l) => ({ text, error, n: l.n + 1 }));
+	/** Deux régions indépendantes : un message d'état ne vide jamais l'alerte. `n` : un message répété est réinséré. */
+	const [status, setStatus] = useState({ text: "", n: 0 });
+	const [alert, setAlert] = useState({ text: "", n: 0 });
+	const setAnnounce: Announce = (text, error = false) => (error ? setAlert : setStatus)((l) => ({ text, n: l.n + 1 }));
 	const narrow = useNarrow();
 	const known = useMemo(() => new Set(criteria.map((c) => c.id)), [criteria]);
 	const headingRef = useRef<HTMLHeadingElement>(null);
@@ -459,8 +466,6 @@ export default function AuditApp({
 		</ul>
 	);
 	const listTitle = `Critères de la thématique ${topic?.number ?? ""}${filter !== "all" ? " (filtrés)" : ""}`;
-	// Rendu du build et sans JavaScript : aucun contrôle, qui serait inopérant (RGAA 7.2) ; le message est dans <noscript>.
-	if (!ready) return null;
 
 	return (
 		<div class="audit">
@@ -707,10 +712,10 @@ export default function AuditApp({
 			<Schema session={session} setSession={setSession} setAnnounce={setAnnounce} criteria={criteria} r={conformity} />
 
 			<p role="status" aria-live="polite" aria-atomic="true" class="audit-live">
-				{!live.error && <span key={live.n}>{live.text}</span>}
+				<span key={status.n}>{status.text}</span>
 			</p>
 			<p role="alert" aria-atomic="true" class="audit-live">
-				{live.error && <span key={live.n}>{live.text}</span>}
+				<span key={alert.n}>{alert.text}</span>
 			</p>
 
 			<section aria-labelledby="audit-recommencer" class="audit-restart">
@@ -989,9 +994,10 @@ function Pages({
 		}
 		if (error || !u) {
 			setUrlError(error ?? "");
-			urlRef.current?.focus();
-			// Le message relié au champ n'est pas relu si le focus y est déjà (Entrée) : il est aussi annoncé (RGAA 7.5).
-			setAnnounce(error ?? "", true);
+			// Focus déjà sur le champ (Entrée) : le message relié n'est pas relu, il est annoncé (RGAA 7.5) ; sinon le
+			// focus y est déplacé, et le champ lu avec son message.
+			if (document.activeElement === urlRef.current) setAnnounce(error ?? "", true);
+			else focusAfterRender(() => urlRef.current);
 			return;
 		}
 		const added = u.href;
@@ -1018,8 +1024,7 @@ function Pages({
 			}
 		} catch (err) {
 			setSampleMessage({ error: true, text: (err as Error).message });
-			sampleRef.current?.focus();
-			setAnnounce((err as Error).message, true);
+			focusAfterRender(() => sampleRef.current);
 			return;
 		}
 		const added = next.pages.length - session.pages.length;
@@ -1094,8 +1099,9 @@ function Pages({
 						ref={urlRef}
 						type="url"
 						inputMode="url"
-						/* « url » désigne le site de l'utilisateur, pas une page auditée : aucune valeur ne convient (RGAA 11.13). */
-						autoComplete="off"
+						/* Jeton « url » (liste WCAG 1.3.5, glossaire RGAA « Liste des valeurs… ») : page Web de l'organisation ; une
+						page du site audité y entre (RGAA 11.13). */
+						autoComplete="url"
 						value={url}
 						onInput={(e) => setUrl(e.currentTarget.value)}
 						aria-invalid={urlError ? "true" : undefined}
@@ -1760,9 +1766,11 @@ const DECLARATION_GROUPS: { legend: string; fields: DeclarationInput[] }[] = [
 				label: "Formulaire de contact ou adresse e-mail",
 				help: "Pour signaler un défaut d’accessibilité, par exemple https://exemple.fr/contact ou accessibilite@exemple.fr.",
 				kind: "url",
+				// Pas de jeton autocomplete (RGAA 11.13) : le champ accepte une adresse Web OU une adresse e-mail, et aucun
+				// jeton de la liste ne couvre les deux (« url » ou « email » ferait proposer la mauvaise nature de donnée).
 			},
 			{ field: "contactEntity", label: "Service à contacter", help: "Par exemple « Service client »." },
-			{ field: "contactPageUrl", label: "Page web de ses coordonnées", kind: "url" },
+			{ field: "contactPageUrl", label: "Page web de ses coordonnées", kind: "url", autoComplete: "url" },
 		],
 	},
 ];
@@ -1844,6 +1852,8 @@ function Declaration({
 	const [touched, setTouched] = useState<ReadonlySet<DeclarationField>>(new Set());
 	/** Date en cours de saisie hors limites (« 0010-10-14 ») : affichée, jamais enregistrée ni publiée. */
 	const [drafts, setDrafts] = useState<Partial<Record<DeclarationField, string>>>({});
+	/** Valeur erronée déjà annoncée à la sortie du champ, par champ. */
+	const alerted = useRef<Partial<Record<DeclarationField, string>>>({});
 	const fields = session.declaration ?? {};
 	const titles = useMemo(() => Object.fromEntries(criteria.map((c) => [c.id, c.titleText])), [criteria]);
 	const options = { date: new Date(), rgaaVersion, criterionTitles: titles };
@@ -1872,8 +1882,8 @@ function Declaration({
 		for (const [field, value] of Object.entries(drafts) as [DeclarationField, string][]) {
 			if (value !== "" && !isDay(value)) {
 				setTouched((t) => new Set(t).add(field));
-				document.getElementById(`declaration-${field}`)?.focus();
-				setAnnounce("Export impossible : une date est incomplète ou hors limites (années 1900 à 9999).", true);
+				focusAfterRender(() => document.getElementById(`declaration-${field}`));
+				setAnnounce("Export impossible : une date est incomplète ou hors limites (années 1900 à 9999).");
 				return null;
 			}
 			updates.push([field, value]);
@@ -1978,7 +1988,9 @@ function Declaration({
 				if (kind === "date") commitDate(field);
 				setTouched((t) => new Set(t).add(field));
 				// Erreur affichée alors que le focus est déjà sur le champ suivant : annoncée (RGAA 7.5).
-				if (wrong) setAnnounce(`${label} : ${error}`, true);
+				// Seulement si la valeur a changé depuis la dernière annonce : traverser le champ ne la répète pas.
+				if (wrong && alerted.current[field] !== value) setAnnounce(`${label} : ${error}`, true);
+				alerted.current[field] = wrong ? value : undefined;
 			},
 		};
 		return (
@@ -2130,6 +2142,8 @@ function Schema({
 	/** Année de début en cours de saisie : enregistrée à la sortie du champ, ou avant un export, si elle est valide. */
 	const [startDraft, setStartDraft] = useState<string | undefined>(undefined);
 	const [startInvalid, setStartInvalid] = useState(false);
+	/** Année erronée déjà annoncée à la sortie du champ. */
+	const alertedStart = useRef<string | undefined>(undefined);
 	const [newTitle, setNewTitle] = useState("");
 	const [newInvalid, setNewInvalid] = useState(false);
 	const [chosenYear, setChosenYear] = useState<number | null>(null);
@@ -2196,8 +2210,9 @@ function Schema({
 		e.preventDefault();
 		if (!newTitle.trim()) {
 			setNewInvalid(true);
-			document.getElementById("schema-nouvelle-action")?.focus();
-			setAnnounce(NEW_ACTION_ERROR, true);
+			const field = document.getElementById("schema-nouvelle-action");
+			if (document.activeElement === field) setAnnounce(NEW_ACTION_ERROR, true);
+			else focusAfterRender(() => field);
 			return;
 		}
 		if (apply((s) => addFreeAction(s, newTitle))) {
@@ -2243,8 +2258,8 @@ function Schema({
 	const download = (doc: "schema" | "plan", format: "html" | "markdown") => {
 		const current = commitStart();
 		if (!current) {
-			document.getElementById("schema-debut")?.focus();
-			setAnnounce("Export impossible : l’année de début est incomplète ou hors limites.", true);
+			focusAfterRender(() => document.getElementById("schema-debut"));
+			setAnnounce("Export impossible : l’année de début est incomplète ou hors limites.");
 			return;
 		}
 		const ext = format === "html" ? "html" : "md";
@@ -2315,7 +2330,11 @@ function Schema({
 						onInput={(e) => setStartDraft((e.currentTarget as HTMLInputElement).value)}
 						onBlur={() => {
 							// Erreur affichée alors que le focus est déjà sur le champ suivant : annoncée (RGAA 7.5).
-							if (!commitStart()) setAnnounce(`Année de début : ${YEAR_ERROR}`, true);
+							const value = startDraft;
+							const ok = commitStart();
+							// Seulement si la valeur a changé depuis la dernière annonce.
+							if (!ok && alertedStart.current !== value) setAnnounce(`Année de début : ${YEAR_ERROR}`, true);
+							alertedStart.current = ok ? undefined : value;
 						}}
 					/>
 					{startInvalid && (

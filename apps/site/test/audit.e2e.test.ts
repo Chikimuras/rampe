@@ -89,12 +89,11 @@ afterAll(async () => {
 	if (reportPath) await rm(dirname(reportPath), { recursive: true, force: true });
 });
 
-/** Ouvre /audit/ et attend l'hydratation de l'îlot. */
+/** Ouvre /audit/ et attend l'hydratation de l'îlot (Astro retire alors l'attribut `ssr`). */
 async function openAudit(page: Page) {
 	await page.goto(`${base}/audit/`);
 	await expect(page.title()).resolves.toBe("Audit guidé · Rampe");
-	// Contrôles rendus seulement après l'hydratation et la relecture de la session (RGAA 7.2).
-	await page.waitForSelector("#audit-echantillon");
+	await page.waitForSelector("astro-island:not([ssr])");
 }
 
 /** Régions d'annonce (RGAA 7.5) : messages d'état (role="status") et erreurs sans déplacement du focus (role="alert"). */
@@ -233,7 +232,7 @@ describe("audit guidé (bout en bout)", { timeout: 60_000 }, () => {
 
 		// Reprise après rechargement : la page et le statut sont toujours là.
 		await page.reload();
-		await page.waitForSelector("#audit-echantillon");
+		await page.waitForSelector("astro-island:not([ssr])");
 		await expect(page.locator(".audit-page-list li").textContent()).resolves.toContain("Accueil");
 		// Au rechargement, le parcours repart du critère 1.1.
 		await expect(page.getByLabel("Non conforme", { exact: true }).isChecked()).resolves.toBe(true);
@@ -431,7 +430,7 @@ describe("audit guidé (bout en bout)", { timeout: 60_000 }, () => {
 		await addPage(b, "https://exemple.fr/contact", "Contact"); // écriture de B après celle de A
 		await b.waitForFunction(() => localStorage.getItem("rampe.audit.session")?.includes("Contact"));
 		await a.reload();
-		await a.waitForSelector("#audit-echantillon");
+		await a.waitForSelector("astro-island:not([ssr])");
 		await expect(a.locator(".audit-page-list li").allTextContents()).resolves.toEqual([
 			expect.stringContaining("Accueil"),
 			expect.stringContaining("Contact"),
@@ -471,7 +470,8 @@ describe("audit guidé (bout en bout)", { timeout: 60_000 }, () => {
 		const field = page.getByLabel("Adresse de la page");
 		await expect(field.getAttribute("aria-invalid")).resolves.toBe("true");
 		await expect(page.locator("#audit-url-erreur").textContent()).resolves.toMatch(/URL invalide/);
-		expect(await page.evaluate(() => document.activeElement?.id)).toBe("audit-url");
+		// Focus déplacé après le rendu (le champ porte alors son message) : attente active.
+		await expect.poll(() => page.evaluate(() => document.activeElement?.id)).toBe("audit-url");
 		await addPage(page, "https://exemple.fr/", "");
 		await addPage(page, "https://autre.fr/", "");
 		await expect(page.locator("#audit-url-erreur").textContent()).resolves.toMatch(/un seul site/);
@@ -516,7 +516,7 @@ describe("audit guidé (bout en bout)", { timeout: 60_000 }, () => {
 		for (const n of [1, 2, 3, 4]) {
 			await page.evaluate((v) => localStorage.setItem("rampe.audit.session", v), broken(n));
 			await page.reload();
-			await page.waitForSelector("#audit-echantillon");
+			await page.waitForSelector("astro-island:not([ssr])");
 			await expect.poll(() => page.getByText(/n’a pas pu être relue/).count()).toBe(1);
 			if (n === 1) {
 				const [file] = await Promise.all([
@@ -585,7 +585,7 @@ describe("audit guidé (bout en bout)", { timeout: 60_000 }, () => {
 		});
 		for (let i = 0; i < 5; i++) {
 			await page.reload();
-			await page.waitForSelector("#audit-echantillon");
+			await page.waitForSelector("astro-island:not([ssr])");
 		}
 		await expect(copies(page)).resolves.toEqual(["X du 1er janvier", '{"schemaVersion":2,"pages":"Y illisible"}']);
 		await page.close();
@@ -601,7 +601,7 @@ describe("audit guidé (bout en bout)", { timeout: 60_000 }, () => {
 			localStorage.setItem("rampe.audit.session", '{"schemaVersion":2,"pages":"Z"}');
 		});
 		await page.reload();
-		await page.waitForSelector("#audit-echantillon");
+		await page.waitForSelector("astro-island:not([ssr])");
 		// Copie gardée (pas d'alerte de stockage plein), la plus ancienne ÉCRITE retirée.
 		await expect.poll(() => page.getByText(/ni mise de côté/).count()).toBe(0);
 		await expect(copies(page)).resolves.toEqual(["copie 2", "copie 3", '{"schemaVersion":2,"pages":"Z"}']);
@@ -625,7 +625,7 @@ describe("audit guidé (bout en bout)", { timeout: 60_000 }, () => {
 		}, text);
 		await openAudit(page);
 		await page.reload();
-		await page.waitForSelector("#audit-echantillon");
+		await page.waitForSelector("astro-island:not([ssr])");
 		await expect.poll(() => page.getByText(/n’a pas pu être relue/).count()).toBe(0);
 		await expect.poll(() => page.locator(".audit-page-list li").count()).toBe(2);
 		await expect(page.locator(`#processus-${FA}`).inputValue()).resolves.toBe(value.pages[0].process);
@@ -1662,7 +1662,7 @@ describe("audit guidé (bout en bout)", { timeout: 60_000 }, () => {
 				JSON.parse((await a.evaluate(() => localStorage.getItem("rampe.audit.session"))) ?? "{}").declaration,
 			).toEqual(expected);
 			await a.reload();
-			await a.waitForSelector("#audit-echantillon");
+			await a.waitForSelector("astro-island:not([ssr])");
 			await check(a);
 
 			const file = await download(a, "Télécharger l’audit (JSON)");
@@ -1812,7 +1812,7 @@ describe("audit guidé (bout en bout)", { timeout: 60_000 }, () => {
 				/^Date incomplète ou hors limites/,
 			);
 			await expect
-				.poll(() => alertText(page))
+				.poll(() => statusText(page))
 				.toBe("Export impossible : une date est incomplète ou hors limites (années 1900 à 9999).");
 			await page.getByRole("button", { name: "Télécharger (Markdown)" }).click();
 			await page.waitForTimeout(800);
@@ -1929,7 +1929,7 @@ describe("audit guidé (bout en bout)", { timeout: 60_000 }, () => {
 			json.evaluations["8.3"][P1] = { status: "C", note: "", source: "humain" };
 			await page.evaluate((v) => localStorage.setItem("rampe.audit.session", v), JSON.stringify(json));
 			await page.reload();
-			await page.waitForSelector("#audit-echantillon");
+			await page.waitForSelector("astro-island:not([ssr])");
 			await expect
 				.poll(() => rowHeads(page))
 				.toEqual([expect.any(String), expect.stringMatching(/Critère désormais validé\.$/)]);
@@ -2084,7 +2084,7 @@ describe("audit guidé (bout en bout)", { timeout: 60_000 }, () => {
 			};
 			await check(a);
 			await a.reload();
-			await a.waitForSelector("#audit-echantillon");
+			await a.waitForSelector("astro-island:not([ssr])");
 			await check(a);
 			const file = await download(a, "Télécharger l’audit (JSON)");
 			expect(file.json.schemaVersion).toBe(5);
@@ -2143,7 +2143,7 @@ describe("audit guidé (bout en bout)", { timeout: 60_000 }, () => {
 			await page.getByRole("button", { name: "Télécharger le schéma (HTML)" }).click();
 			await expect.poll(() => page.evaluate(() => document.activeElement?.id)).toBe("schema-debut");
 			await expect
-				.poll(() => alertText(page))
+				.poll(() => statusText(page))
 				.toBe("Export impossible : l’année de début est incomplète ou hors limites.");
 			await page.waitForTimeout(600);
 			expect(downloads).toEqual([]);
@@ -2187,7 +2187,7 @@ describe("audit guidé (bout en bout)", { timeout: 60_000 }, () => {
 			delete json.evaluations["11.1"][P1];
 			await page.evaluate((v) => localStorage.setItem("rampe.audit.session", v), JSON.stringify(json));
 			await page.reload();
-			await page.waitForSelector("#audit-echantillon");
+			await page.waitForSelector("astro-island:not([ssr])");
 			await expect
 				.poll(() => page.locator(".audit-schema").textContent())
 				.toContain("Attention : l’audit n’est plus complet.");
@@ -2389,7 +2389,7 @@ describe("audit guidé (bout en bout)", { timeout: 60_000 }, () => {
 				)
 				.toBe("Claude");
 			await page.reload();
-			await page.waitForSelector("#audit-echantillon");
+			await page.waitForSelector("astro-island:not([ssr])");
 			expect(await banner(page)).toContain(NOTICE);
 			await page.close();
 		});
@@ -2443,11 +2443,15 @@ describe("audit guidé (bout en bout)", { timeout: 60_000 }, () => {
 			await page.close();
 		});
 
-		it("11.13 : « Nom de l’organisme » en autocomplete organization ; adresse de page auditée sans autocomplete", async () => {
+		it("11.13 : autocomplete organization (organisme) et url (pages Web de l'organisation) ; aucun jeton sur URL ou e-mail", async () => {
 			const page = await browser.newPage();
 			await openAudit(page);
 			await expect(page.getByLabel("Nom de l’organisme").getAttribute("autocomplete")).resolves.toBe("organization");
-			await expect(page.getByLabel("Adresse de la page").getAttribute("autocomplete")).resolves.toBe("off");
+			await expect(page.getByLabel("Adresse de la page").getAttribute("autocomplete")).resolves.toBe("url");
+			await expect(page.getByLabel("Page web de ses coordonnées").getAttribute("autocomplete")).resolves.toBe("url");
+			await expect(
+				page.getByLabel("Formulaire de contact ou adresse e-mail").getAttribute("autocomplete"),
+			).resolves.toBeNull();
 			await page.close();
 		});
 
@@ -2475,12 +2479,17 @@ describe("audit guidé (bout en bout)", { timeout: 60_000 }, () => {
 			const page = await context.newPage();
 			await page.goto(`${base}/audit/`);
 			await expect(page.title()).resolves.toBe("Audit guidé · Rampe");
-			await expect(page.locator("main").getByRole("button").count()).resolves.toBe(0);
-			await expect(page.locator("main :is(input, select, textarea, button, form)").count()).resolves.toBe(0);
+			// Rendus au build, mais masqués : aucun n'est visible ni atteignable.
+			const controls = page.locator("main :is(input, select, textarea, button, summary)");
+			expect(await controls.count()).toBeGreaterThan(30);
+			const visible = await controls.evaluateAll((els) => els.filter((el) => el.checkVisibility()).length);
+			expect(visible).toBe(0);
 			// Le moteur de texte de Playwright ignore <noscript> : sélecteur CSS.
 			const message = page.locator("main noscript p");
 			await expect(message.isVisible()).resolves.toBe(true);
-			await expect(message.textContent()).resolves.toMatch(/^\s*L’audit guidé nécessite JavaScript/);
+			await expect(message.textContent()).resolves.toBe(
+				"L’audit guidé nécessite JavaScript : il ne s’affiche pas sans. Le référentiel reste consultable.",
+			);
 			await expect(message.locator("a").getAttribute("href")).resolves.toMatch(/\/referentiel\/$/);
 			await context.close();
 		});
@@ -2511,40 +2520,110 @@ describe("audit guidé (bout en bout)", { timeout: 60_000 }, () => {
 			await page.close();
 		});
 
-		it("7.5 : messages d'état en role=status atomique ; erreurs sans déplacement du focus en role=alert, sans doublon", async () => {
+		it("7.5 : role=status atomique ; erreurs en role=alert si le focus ne bouge pas ; les deux régions indépendantes", async () => {
 			const page = await browser.newPage();
 			await openWith(page, sessionJson());
-			const region = page.locator(".audit-live[role=status]");
-			await expect(region.getAttribute("aria-atomic")).resolves.toBe("true");
-			await expect(page.locator(".audit-live[role=alert]").count()).resolves.toBe(1);
+			await expect(page.locator(".audit-live[role=status]").getAttribute("aria-atomic")).resolves.toBe("true");
+			await expect(page.locator(".audit-live[role=alert]").getAttribute("aria-atomic")).resolves.toBe("true");
 			// Entrée dans le champ : le focus y reste, l'erreur est annoncée par la région d'alerte.
-			await page.getByLabel("Adresse de la page").fill("https://exemple.fr/");
-			await page.getByLabel("Adresse de la page").press("Enter");
+			const address = page.getByLabel("Adresse de la page");
+			await address.fill("https://exemple.fr/");
+			await address.press("Enter");
 			await expect.poll(() => alertText(page)).toBe("Cette page est déjà dans l’échantillon.");
-			await expect(statusText(page)).resolves.toBe("");
-			await page.getByLabel("Adresse de la page").fill("https://exemple.fr/contact");
-			await page.getByLabel("Adresse de la page").press("Enter");
-			await expect.poll(() => statusText(page)).toBe("Page ajoutée : https://exemple.fr/contact");
-			await expect(alertText(page)).resolves.toBe("");
 			await page.getByLabel("Intitulé d’une action libre").press("Enter");
 			await expect.poll(() => alertText(page)).toBe("Saisissez l’intitulé de l’action.");
-			// Erreurs affichées à la sortie du champ : le focus est déjà sur le champ suivant.
+			// Erreur, puis message d'état dans la même tâche : le second ne vide pas la première.
 			await page.getByLabel("Page web de ses coordonnées").fill("pas une adresse");
-			await page.getByLabel("Page web de ses coordonnées").press("Tab");
-			await expect.poll(() => alertText(page)).toMatch(/^Page web de ses coordonnées : Adresse non reconnue/);
-			await page.getByLabel("Année de début").fill("12");
-			await page.getByLabel("Année de début").press("Tab");
-			await expect.poll(() => alertText(page)).toMatch(/^Année de début : Année incomplète ou hors limites/);
-			// Refus d'import : alerte.
-			await page.getByLabel("Importer un audit (JSON)").setInputFiles({
-				name: "x.json",
-				mimeType: "application/json",
-				buffer: Buffer.from("pas du json"),
+			await page.evaluate(() => {
+				(document.activeElement as HTMLElement).blur();
+				[...document.querySelectorAll("button")].find((b) => b.textContent === "Mettre à jour depuis l’audit")?.click();
 			});
-			await expect.poll(() => alertText(page)).toMatch(/^Ce fichier n’est pas un fichier JSON lisible/);
-			await expect(statusText(page)).resolves.toBe("");
+			await expect.poll(() => statusText(page)).toBe("2 actions ajoutées, 0 action mise à jour.");
+			await expect(alertText(page)).resolves.toMatch(/^Page web de ses coordonnées : Adresse non reconnue/);
 			await page.close();
 		});
+
+		it("7.5 : focus déplacé sur le champ en erreur : lu avec son message, aucune alerte en plus", async () => {
+			const page = await browser.newPage();
+			await openAudit(page);
+			await page.evaluate(() => {
+				const w = window as unknown as { described: (string | null)[] };
+				w.described = [];
+				for (const id of ["audit-url", "schema-nouvelle-action"])
+					document
+						.getElementById(id)
+						?.addEventListener("focus", (e) =>
+							w.described.push((e.target as HTMLElement).getAttribute("aria-describedby")),
+						);
+			});
+			await page.getByRole("button", { name: "Ajouter la page" }).click();
+			await page.getByRole("button", { name: "Ajouter l’action" }).click();
+			await expect
+				.poll(() => page.evaluate(() => (window as unknown as { described: string[] }).described))
+				.toEqual(["audit-url-erreur", "schema-nouvelle-action-aide schema-nouvelle-action-erreur"]);
+			await expect(alertText(page)).resolves.toBe("");
+			await page.close();
+		});
+
+		it("7.5 : erreur à la sortie du champ annoncée une fois par valeur, pas à chaque passage", async () => {
+			const page = await browser.newPage();
+			await openAudit(page);
+			const year = page.getByLabel("Année de début");
+			const span = () => page.locator(".audit-live[role=alert] span");
+			await year.fill("12");
+			await year.press("Tab");
+			await expect.poll(() => alertText(page)).toMatch(/^Année de début : Année incomplète/);
+			await span().evaluate((el) => {
+				el.dataset.premier = "1";
+			});
+			// Retour dans le champ puis sortie, sans changer la valeur : rien n'est réinséré, donc rien n'est relu.
+			await year.focus();
+			await year.press("Tab");
+			await page.waitForTimeout(200);
+			await expect(span().getAttribute("data-premier")).resolves.toBe("1");
+			// Valeur changée, toujours erronée : nouvelle annonce.
+			await year.fill("123");
+			await year.press("Tab");
+			await expect.poll(() => span().getAttribute("data-premier")).toBeNull();
+			const contact = page.getByLabel("Page web de ses coordonnées");
+			await contact.fill("pas une adresse");
+			await contact.press("Tab");
+			await expect.poll(() => alertText(page)).toMatch(/^Page web de ses coordonnées : /);
+			await span().evaluate((el) => {
+				el.dataset.premier = "1";
+			});
+			await contact.focus();
+			await contact.press("Tab");
+			await page.waitForTimeout(200);
+			await expect(span().getAttribute("data-premier")).resolves.toBe("1");
+			await page.close();
+		});
+
+		for (const viewport of [
+			{ width: 1280, height: 900 },
+			{ width: 375, height: 800 },
+		])
+			it(`7.2 : avec JavaScript, contrôles présents dès le chargement, sans décalage à l'hydratation (${viewport.width} px)`, async () => {
+				const page = await browser.newPage({ viewport });
+				await page.addInitScript(() => {
+					const w = window as unknown as { cls: number };
+					w.cls = 0;
+					new PerformanceObserver((list) => {
+						for (const e of list.getEntries() as unknown as { value: number; hadRecentInput: boolean }[])
+							if (!e.hadRecentInput) w.cls += e.value;
+					}).observe({ type: "layout-shift", buffered: true });
+				});
+				await page.goto(`${base}/audit/`);
+				await page.waitForLoadState("load");
+				await expect(page.locator("#audit-url").isVisible()).resolves.toBe(true);
+				await page.waitForSelector("astro-island:not([ssr])");
+				await page.waitForLoadState("networkidle");
+				await page.waitForTimeout(500);
+				const cls = await page.evaluate(() => (window as unknown as { cls: number }).cls);
+				console.log(`CLS /audit/ (${viewport.width} px) : ${cls}`);
+				expect(cls).toBeLessThan(0.01);
+				await page.close();
+			});
 
 		for (const colorScheme of ["light", "dark"] as const) {
 			it(`3.3 : bordures des boutons et des champs à 3:1 au moins contre le fond (${colorScheme === "light" ? "clair" : "sombre"})`, async () => {

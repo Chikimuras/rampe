@@ -37,6 +37,9 @@ const criteria: AuditCriterion[] = rgaa.criteria.map((c) => ({
 	title="Audit guidé"
 	description={`Évaluer à la main les ${rgaa.criteria.length} critères du RGAA ${rgaa.version}, page par page, avec le texte officiel sous les yeux.`}
 >
+	{/* Sans JavaScript, les contrôles rendus au build seraient inopérants : masqués (RGAA 7.2). Avec JavaScript, ils
+	sont dans la page dès le chargement, sans décalage à l'hydratation. */}
+	<noscript slot="head"><style is:inline>.audit { display: none; }</style></noscript>
 	<h1>Audit guidé</h1>
 	<p>
 		Pour chaque critère du RGAA {rgaa.version} et chaque page de votre échantillon, indiquez si la page est
@@ -47,11 +50,9 @@ const criteria: AuditCriterion[] = rgaa.criteria.map((c) => ({
 		Rampe vous guide mais ne certifie rien : c’est votre évaluation qui fait foi. Votre travail est enregistré
 		automatiquement dans ce navigateur, et nulle part ailleurs.
 	</p>
+	{/* Message sur une ligne : la compression du HTML avale l'espace d'un retour à la ligne avant le lien. */}
 	<noscript>
-		<p class="audit-banner">
-			L’audit guidé nécessite JavaScript : il ne s’affiche pas sans. Le
-			<a href={url("referentiel/")}>référentiel</a> reste consultable.
-		</p>
+		<p class="audit-banner">L’audit guidé nécessite JavaScript : il ne s’affiche pas sans. Le <a href={url("referentiel/")}>référentiel</a> reste consultable.</p>
 	</noscript>
 
 	{/* client:load : l'outil est tout le contenu de la page, visible dès l'arrivée ; client:visible ne ferait que retarder. */}
