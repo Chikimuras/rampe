@@ -55,6 +55,8 @@ beforeAll(async () => {
 		const name = req.url?.slice(1) ?? "";
 		// Redirection vers une autre origine (localhost au lieu de 127.0.0.1).
 		if (name === "redirige") return res.writeHead(302, { location: `http://localhost:${port}/propre` }).end();
+		// Cible de navigation qui ne répond jamais : la requête part, le nouveau document n'est jamais validé.
+		if (name === "lent") return;
 		// Noms de fichiers fixes : aucun chemin venu de la requête n'atteint le disque.
 		if (!FIXTURES.has(name)) return res.writeHead(404).end();
 		res
@@ -70,6 +72,7 @@ beforeAll(async () => {
 afterAll(async () => {
 	await rm(json, { force: true });
 	await rm(html, { force: true });
+	server.closeAllConnections(); // requêtes vers /lent, restées sans réponse
 	await new Promise<void>((resolve) => server.close(() => resolve()));
 });
 
@@ -153,10 +156,14 @@ describe("rampe audit (bout en bout)", { timeout: 60_000 }, () => {
 		}
 	});
 
-	it("sort en 2 si la page navigue pendant l'analyse", async () => {
-		const { code, stderr } = await run("audit", `${base}/navdrift`);
-		expect(code).toBe(2);
+	it("sort en 2 si la page navigue pendant l'analyse, sans aucun rapport", async () => {
+		// Ordre forcé : la requête de navigation part pendant l'analyse, la validation du nouveau document n'arrive
+		// jamais. Un audit qui ne guette que la destruction du monde isolé le rate, quelle que soit la charge.
+		const { code, stderr } = await run("audit", `${base}/navdrift`, "--json", json, "--timeout", "20000");
+		expect(code, stderr).toBe(2);
 		expect(stderr).toContain("La page a navigué pendant l’analyse : audit impossible.");
+		// Aucun résultat attribué à une page, ni à navdrift ni à la cible de la navigation.
+		await expect(readFile(json, "utf8")).rejects.toThrow();
 	});
 
 	it("titre lu avec l'analyse : une page qui se réécrit pendant l'analyse ne change pas le titre", async () => {

@@ -1,10 +1,25 @@
 <!doctype html>
 <html>
-<head><meta charset="utf-8" /><style>.pale { color: #bbb; background: #fff; }</style><title>Piege navigation</title><script></script></head>
+<head><meta charset="utf-8" /><style>.pale { color: #bbb; background: #fff; }</style><title>Piege navigation</title></head>
 <body><main>
 <h1>Page avec défauts connus</h1>
 <img src="data:image/gif;base64,R0lGODlhAQABAAAAACw=" width="10" height="10" />
 <input type="text" />
 <p class="pale">Texte trop pâle.</p>
 <span id="double"></span><span id="double"></span>
-</main><script>addEventListener("load",()=>setTimeout(()=>{let last=performance.now(); setInterval(()=>{const n=performance.now(); if(n-last>30){ location.href="/propre"; } last=n;},1);},50));</script></body></html>
+<div id="lest"></div>
+</main><script>
+// Lest : axe l'analyse en plusieurs blocs de plusieurs centaines de millisecondes chacun.
+document.getElementById("lest").innerHTML = '<p class="pale">Texte pâle.</p>'.repeat(10000);
+// La navigation part dès que le fil principal sort d'un blocage de plus de 200 ms : la fin du premier bloc d'axe,
+// donc pendant l'analyse (le chargement ne bloque pas autant). Le serveur ne répond jamais à /lent : le nouveau
+// document n'est jamais validé, le monde isolé n'est jamais détruit.
+addEventListener("load", () => setTimeout(() => {
+	let last = performance.now();
+	const t = setInterval(() => {
+		const n = performance.now();
+		if (n - last > 200) { clearInterval(t); location.href = "/lent"; }
+		last = n;
+	}, 1);
+}, 100));
+</script></body></html>
