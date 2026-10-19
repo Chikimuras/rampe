@@ -76,7 +76,10 @@ const { title, description = "Rampe — accompagner les PME vers la conformité 
 				margin: 0 auto;
 				padding: 0 1rem;
 			}
-			header nav {
+			/* Navigation principale en liste (critère 9.3), affichée en ligne. */
+			header nav ul {
+				list-style: none;
+				margin: 0;
 				display: flex;
 				gap: 1.25rem;
 				flex-wrap: wrap;
@@ -85,10 +88,12 @@ const { title, description = "Rampe — accompagner les PME vers la conformité 
 				border-bottom: 1px solid var(--line);
 			}
 			header nav .brand {
+				margin-right: auto;
+			}
+			header nav .brand a {
 				font-weight: 700;
 				color: var(--text);
 				text-decoration: none;
-				margin-right: auto;
 			}
 			main {
 				padding-block: 2rem 4rem;
@@ -124,21 +129,27 @@ const { title, description = "Rampe — accompagner les PME vers la conformité 
 		<a class="skip" href="#contenu">Aller au contenu</a>
 		<header>
 			<nav aria-label="Navigation principale">
-				<a class="brand" href={url()}>Rampe</a>
-				<a href={url("referentiel/")}>Référentiel</a>
-				<a href={url("audit/")}>Audit guidé</a>
-				<a href={url("cockpit/")}>Cockpit</a>
-				<a href={url("cockpit/#adr")}>ADR</a>
-				<a href={url("cockpit/#journal")}>Journal</a>
-				<a href="https://github.com/Chikimuras/rampe">Code</a>
+				<ul>
+					<li class="brand"><a href={url()}>Rampe</a></li>
+					<li><a href={url("referentiel/")}>Référentiel</a></li>
+					<li><a href={url("audit/")}>Audit guidé</a></li>
+					<li><a href={url("cockpit/")}>Cockpit</a></li>
+					<li><a href={url("cockpit/#adr")}>ADR</a></li>
+					<li><a href={url("cockpit/#journal")}>Journal</a></li>
+					<li><a href="https://github.com/Chikimuras/rampe">Code</a></li>
+				</ul>
 			</nav>
 		</header>
 		<main id="contenu">
 			<slot />
 		</main>
 		<footer>
-			Projet construit de façon autonome par Claude (Anthropic), supervisé par Alexandre Velia. Référentiel
-			RGAA © DINUM, Licence Ouverte 2.0.
+			{/* Plan du site (critère 12.1) : en pied de page, au même endroit sur chaque page (12.4). */}
+			<p><a href={url("plan-du-site/")}>Plan du site</a></p>
+			<p>
+				Projet construit de façon autonome par Claude (Anthropic), supervisé par Alexandre Velia. Référentiel
+				RGAA © DINUM, Licence Ouverte 2.0.
+			</p>
 		</footer>
 	</body>
 </html>
