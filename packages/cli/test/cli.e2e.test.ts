@@ -52,7 +52,7 @@ let base: string;
 
 beforeAll(async () => {
 	server = createServer(async (req, res) => {
-		const name = req.url?.slice(1) ?? "";
+		const name = new URL(req.url ?? "/", "http://x").pathname.slice(1);
 		// Redirection vers une autre origine (localhost au lieu de 127.0.0.1).
 		if (name === "redirige") return res.writeHead(302, { location: `http://localhost:${port}/propre` }).end();
 		// Cible de navigation qui ne répond jamais : la requête part, le nouveau document n'est jamais validé.
@@ -163,6 +163,13 @@ describe("rampe audit (bout en bout)", { timeout: 60_000 }, () => {
 		expect(code, stderr).toBe(2);
 		expect(stderr).toContain("La page a navigué pendant l’analyse : audit impossible.");
 		// Aucun résultat attribué à une page, ni à navdrift ni à la cible de la navigation.
+		await expect(readFile(json, "utf8")).rejects.toThrow();
+	});
+
+	it("sort en 2 si l'URL change pendant l'analyse sans requête (history.pushState), sans aucun rapport", async () => {
+		const { code, stderr } = await run("audit", `${base}/navdrift?historique`, "--json", json, "--timeout", "20000");
+		expect(code, stderr).toBe(2);
+		expect(stderr).toContain("La page a navigué pendant l’analyse : audit impossible.");
 		await expect(readFile(json, "utf8")).rejects.toThrow();
 	});
 

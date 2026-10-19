@@ -18,7 +18,12 @@ addEventListener("load", () => setTimeout(() => {
 	let last = performance.now();
 	const t = setInterval(() => {
 		const n = performance.now();
-		if (n - last > 200) { clearInterval(t); location.href = "/lent"; }
+		if (n - last > 200) {
+			clearInterval(t);
+			// ?historique : navigation dans le même document (aucune requête), seule l'URL change.
+			if (location.search === "?historique") history.pushState(null, "", "/ailleurs");
+			else location.href = "/lent";
+		}
 		last = n;
 	}, 1);
 }, 100));
