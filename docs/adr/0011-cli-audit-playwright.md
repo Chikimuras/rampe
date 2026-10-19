@@ -15,13 +15,18 @@ La phase 2 apporte l’audit automatique d’un site réel. axe-core doit tourne
 2. **Moteur** : Playwright (Chromium) charge la page, puis axe-core 4.14.0 est injecté et exécuté avec sa **configuration par défaut**, c’est-à-dire sans les règles expérimentales. La version d’axe est la même que celle de `@rampe/core` et du site.
 3. **Classement des résultats**, avec `classifyAxeRule` de `@rampe/core` (ADR-0008) et la règle d’honnêteté de l’ADR-0002 :
 
-   | Résultat axe | Rattachement | Présenté comme |
-   |---|---|---|
-   | violation | direct (`rgaa`), règle ni bonne pratique ni expérimentale | **Non-conformité détectée** au(x) test(s) cité(s) |
-   | violation | direct (`rgaa`), règle bonne pratique ou expérimentale | **Problème détecté, rattachement incertain** (« à confirmer par un humain ») |
-   | violation | indirect (`wcag`) | **Problème détecté, rattachement RGAA incertain** |
-   | violation | `hors-rgaa` | **Bonne pratique** (hors conformité) |
-   | incomplete | tout niveau | **À vérifier par un humain** |
+   <!-- Tableau en HTML pour lui associer un titre (<caption>, critère RGAA 5.4) ; contenu identique au tableau Markdown d’origine. -->
+   <table>
+   <caption>Classement des résultats axe-core</caption>
+   <thead><tr><th>Résultat axe</th><th>Rattachement</th><th>Présenté comme</th></tr></thead>
+   <tbody>
+   <tr><td>violation</td><td>direct (<code>rgaa</code>), règle ni bonne pratique ni expérimentale</td><td><strong>Non-conformité détectée</strong> au(x) test(s) cité(s)</td></tr>
+   <tr><td>violation</td><td>direct (<code>rgaa</code>), règle bonne pratique ou expérimentale</td><td><strong>Problème détecté, rattachement incertain</strong> (« à confirmer par un humain »)</td></tr>
+   <tr><td>violation</td><td>indirect (<code>wcag</code>)</td><td><strong>Problème détecté, rattachement RGAA incertain</strong></td></tr>
+   <tr><td>violation</td><td><code>hors-rgaa</code></td><td><strong>Bonne pratique</strong> (hors conformité)</td></tr>
+   <tr><td>incomplete</td><td>tout niveau</td><td><strong>À vérifier par un humain</strong></td></tr>
+   </tbody>
+   </table>
 
    - Les règles `deprecated` sont exclues.
    - Une règle qu’axe classe bonne pratique ou expérimentale ne prouve pas une non-conformité, même quand elle cite un test RGAA (ex. `region` et le test 9.2.1, qui ne porte que sur le balisage `header`/`nav`/`main`/`footer`) : seul un résultat certain peut être présenté comme non-conformité (ADR-0002), et le niveau `rgaa` qualifie la précision du rattachement, pas la certitude du défaut (ADR-0008). Elle ne déclenche donc jamais le code de sortie non nul. `isDirectCheck` de `@rampe/core` porte cette règle ; le site l’applique aussi pour décompter les critères couverts.
