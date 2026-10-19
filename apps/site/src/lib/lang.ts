@@ -10,6 +10,7 @@ import { htmlToHast } from "satteri";
 
 /** Jargon technique anglais des pages du cockpit (ADR, journal, documentation). Pluriel en -s reconnu. */
 export const TECH_TERMS = [
+	"backend",
 	"build",
 	"check",
 	"checkout",
@@ -17,11 +18,13 @@ export const TECH_TERMS = [
 	"cron",
 	"diff",
 	"force-push",
+	"fixture",
 	"fork",
 	"fuzzer",
 	"fuzzing",
 	"gate",
 	"golden",
+	"headless",
 	"hook",
 	"incomplete",
 	"lint",

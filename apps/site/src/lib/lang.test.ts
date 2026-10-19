@@ -15,6 +15,10 @@ describe("markEnglishHtml", () => {
 		expect(mark("<p>des commits et des forks</p>")).toBe(`<p>des ${en("commits")} et des ${en("forks")}</p>`);
 	});
 
+	it.each(["backend", "fixtures", "headless"])("balise %s", (w) => {
+		expect(mark(`<p>un ${w} ici</p>`)).toBe(`<p>un ${en(w)} ici</p>`);
+	});
+
 	it("ne balise que des mots entiers", () => {
 		const html = "<p>rebuild, builder, checkoutx, gateway, sous-commit, merger, lintage</p>";
 		expect(mark(html)).toBe(html);

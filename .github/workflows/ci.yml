@@ -48,6 +48,12 @@ jobs:
       # identique à ce qu'ils produisent.
       - run: pnpm auto-evaluation --verifier
       - run: pnpm build
+      # Java du validateur W3C (vnu-jar) lancé par `pnpm audit:rampe` : version exacte et distribution fixées, plutôt
+      # que le Java préinstallé de l’image, qui change sans prévenir. Aucune permission supplémentaire.
+      - uses: actions/setup-java@de7274f081f381c8f8158605e0321c36c376e2e6 # v6.0.1
+        with:
+          distribution: temurin
+          java-version: 17.0.20+8
       # Rampe audite Rampe (ADR-0021 §1) : la vraie CLI, en --strict, audite toutes les pages construites (thèmes
       # clair puis sombre) et l'échantillon versionné en 375 px. Tout signalement (non-conformité, incertain, à vérifier)
       # fait échouer la CI, et le site n'est pas déployé.

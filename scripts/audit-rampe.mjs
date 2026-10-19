@@ -3,10 +3,12 @@
 // 2. le sert sur 127.0.0.1, port libre, sous la base /rampe (404 ailleurs) ;
 // 3. vérifie le build lui-même :
 //    - chaque page est du HTML valide selon le validateur W3C (Nu Html Checker, vnu-jar ; critère RGAA 8.2) :
-//      toute erreur fait échouer le gate (code 1 ; code 2 si Java manque : celui des exécuteurs Ubuntu de GitHub, Java 17, suffit) ;
-//    - le plan du site relie chaque page construite, et chaque page relie le plan depuis son pied de page (12.1, 12.4) ;
+//      toute erreur fait échouer le gate (code 1 ; code 2 si Java manque ; en CI : Temurin 17, fixé par actions/setup-java) ;
+//    - le plan du site relie chaque page construite (hors 404), sans lien mort, et chaque page relie le plan depuis son
+//      pied de page (12.1, 12.4) ;
+//    - tout tableau de données a un titre associé (5.4) ;
 // 4. lance la VRAIE CLI `rampe audit --echantillon … --strict` en trois passages :
-//    - toutes les pages construites (chaque index.html du build, triées), thème clair ;
+//    - toutes les pages construites (chaque fichier .html du build, 404.html comprise, triées), thème clair ;
 //    - les mêmes, thème sombre ;
 //    - l'échantillon méthodologique versionné (docs/audit-rampe/echantillon.txt), fenêtre étroite (375 px) ;
 // 5. sort en 0 si la validation et les trois passages sont à 0, sinon avec le code le plus grave (2 > 1).
@@ -74,15 +76,19 @@ function resolveFile(path) {
 	}
 }
 
-/** Chemins de toutes les pages construites (`<dossier>/index.html`), triés. */
+/** Chemins de toutes les pages construites, triés : `<dossier>/` pour un index.html, le nom du fichier sinon (404.html). */
 function builtPages(dir = out, prefix = "") {
 	const pages = [];
 	for (const entry of readdirSync(dir, { withFileTypes: true })) {
 		if (entry.isDirectory()) pages.push(...builtPages(join(dir, entry.name), `${prefix}${entry.name}/`));
 		else if (entry.name === "index.html") pages.push(prefix);
+		else if (entry.name.endsWith(".html")) pages.push(prefix + entry.name);
 	}
 	return pages.sort();
 }
+
+/** HTML d’une page construite, par son chemin. */
+const readPage = (p) => readFileSync(join(out, p.endsWith(".html") ? p : join(p, "index.html")), "utf8");
 
 /** Validateur W3C sur tout le build ; 0 si aucune erreur, 1 sinon, 2 s’il ne peut pas tourner. */
 function validateHtml() {
@@ -99,18 +105,47 @@ function validateHtml() {
 	return r.status === 0 ? 0 : r.status === 1 ? 1 : 2;
 }
 
-/** Plan du site (12.1, 12.4) : il relie chaque page construite, et chaque page le relie depuis son pied de page. */
+/**
+ * Plan du site (12.1, 12.4) : le <main> du plan relie chaque page construite (sauf la 404, qui n’est pas une page du
+ * site), sans lien interne mort ; chaque page, 404 comprise, relie le plan depuis son pied de page.
+ */
 function checkSiteMap(pages) {
-	const page = (p) => readFileSync(join(out, p, "index.html"), "utf8");
-	const plan = page("plan-du-site/");
-	const unlisted = pages.filter((p) => !plan.includes(`href="${BASE}${p}"`));
+	const main = readPage("plan-du-site/").match(/<main[\s>][\s\S]*?<\/main>/)?.[0] ?? "";
+	const links = new Set(
+		[...main.matchAll(/href="([^"]*)"/g)]
+			.map((m) => m[1])
+			.filter((h) => h.startsWith(BASE))
+			.map((h) => h.slice(BASE.length).split("#")[0]),
+	);
+	const unlisted = pages.filter((p) => p !== "404.html" && !links.has(p));
 	if (unlisted.length > 0) throw new Error(`Pages absentes du plan du site : ${unlisted.join(", ")}`);
+	const dead = [...links].filter((l) => !pages.includes(l));
+	if (dead.length > 0) throw new Error(`Liens morts dans le plan du site : ${dead.join(", ")}`);
 	const footerLink = new RegExp(`<footer[^>]*>(?:(?!</footer>)[\\s\\S])*href="${BASE}plan-du-site/"`);
-	const orphans = pages.filter((p) => !footerLink.test(page(p)));
+	const orphans = pages.filter((p) => !footerLink.test(readPage(p)));
 	if (orphans.length > 0)
 		throw new Error(
 			`Pages sans lien vers le plan du site en pied de page : ${orphans.map((p) => p || "(accueil)").join(", ")}`,
 		);
+}
+
+/**
+ * Tableaux (critère 5.4) : tout <table> de données a un titre associé, <caption> en premier enfant, aria-label ou
+ * aria-labelledby. Un tableau de mise en forme (role="presentation" ou "none") n’est pas concerné.
+ */
+function checkTableNames(pages) {
+	const unnamed = pages.flatMap((p) =>
+		[...readPage(p).matchAll(/<table\b([^>]*)>(\s*<caption\b)?/g)]
+			.filter(
+				([, attrs, caption]) =>
+					!caption &&
+					!/\b(aria-label|aria-labelledby)="[^"]*\S/.test(attrs) &&
+					!/\brole="(presentation|none)"/.test(attrs),
+			)
+			.map(() => p || "(accueil)"),
+	);
+	if (unnamed.length > 0)
+		throw new Error(`Tableaux sans titre associé (caption, aria-label ou aria-labelledby) : ${unnamed.join(", ")}`);
 }
 
 /** Lance la CLI ; code 2 si elle ne démarre pas ou meurt sur un signal. */
@@ -175,6 +210,7 @@ async function audit(local) {
 	if (!readFileSync(join(out, "cockpit/index.html"), "utf8").includes(claim))
 		throw new Error(`Le cockpit n’annonce pas « ${claim} » : corrigez le décompte dans cockpit/index.astro.`);
 	checkSiteMap(pages);
+	checkTableNames(pages);
 	const toutes = join(tmp, "toutes.txt");
 	writeFileSync(
 		toutes,

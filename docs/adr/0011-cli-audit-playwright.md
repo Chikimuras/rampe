@@ -15,7 +15,6 @@ La phase 2 apporte l’audit automatique d’un site réel. axe-core doit tourne
 2. **Moteur** : Playwright (Chromium) charge la page, puis axe-core 4.14.0 est injecté et exécuté avec sa **configuration par défaut**, c’est-à-dire sans les règles expérimentales. La version d’axe est la même que celle de `@rampe/core` et du site.
 3. **Classement des résultats**, avec `classifyAxeRule` de `@rampe/core` (ADR-0008) et la règle d’honnêteté de l’ADR-0002 :
 
-   <!-- Tableau en HTML pour lui associer un titre (<caption>, critère RGAA 5.4) ; contenu identique au tableau Markdown d’origine. -->
    <table>
    <caption>Classement des résultats axe-core</caption>
    <thead><tr><th>Résultat axe</th><th>Rattachement</th><th>Présenté comme</th></tr></thead>

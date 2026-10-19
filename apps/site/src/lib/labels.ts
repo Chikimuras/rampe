@@ -13,6 +13,8 @@ export const ADR_STATUS = {
 export const frDate = (d: Date) =>
 	d.toLocaleDateString("fr-FR", { day: "numeric", month: "long", year: "numeric", timeZone: "UTC" });
 
-/** Titre d'une entrée du journal, pour `<title>` et `<h1>` (critères 8.6 et 9.1) : la date d'abord. */
-export const journalTitle = (entry: { data: { title: string; date: Date } }) =>
-	`Journal du ${frDate(entry.data.date)} — ${entry.data.title}`;
+/**
+ * Titre d'une entrée du journal, pour `<title>` et `<h1>` (critères 8.6 et 9.1) : une entrée couvre toute une
+ * journée, son titre est donc sa date ; le titre du frontmatter n'en résume qu'une partie et devient un sous-titre.
+ */
+export const journalTitle = (entry: { data: { date: Date } }) => `Journal du ${frDate(entry.data.date)}`;
