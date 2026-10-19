@@ -1,0 +1,864 @@
+{
+	"evaluator": "Claude (IA)",
+	"date": "2026-10-16",
+	"entries": [
+		{
+			"criterion": "11.1",
+			"page": "https://chikimuras.github.io/rampe/",
+			"status": "NA",
+			"note": "Tests 11.1.1 à 11.1.3 : la page d’accueil ne contient aucun champ de formulaire (aucun <input>, <select>, <textarea>, <progress>, ni élément de rôle WAI-ARIA de champ ; aucun <form>), vérifié dans le DOM du build servi. Contenu visé absent : non applicable."
+		},
+		{
+			"criterion": "11.1",
+			"page": "https://chikimuras.github.io/rampe/referentiel/",
+			"status": "NA",
+			"note": "Tests 11.1.1 à 11.1.3 : la page Référentiel ne contient aucun champ de formulaire (aucun <input>, <select>, <textarea>, <progress>, ni élément de rôle WAI-ARIA de champ ; aucun <form>), vérifié dans le DOM du build servi. Contenu visé absent : non applicable."
+		},
+		{
+			"criterion": "11.1",
+			"page": "https://chikimuras.github.io/rampe/referentiel/1-1/",
+			"status": "NA",
+			"note": "Tests 11.1.1 à 11.1.3 : la fiche du critère 1.1 ne contient aucun champ de formulaire (aucun <input>, <select>, <textarea>, <progress>, ni élément de rôle WAI-ARIA de champ ; aucun <form>), vérifié dans le DOM du build servi. Contenu visé absent : non applicable."
+		},
+		{
+			"criterion": "11.1",
+			"page": "https://chikimuras.github.io/rampe/referentiel/glossaire/",
+			"status": "NA",
+			"note": "Tests 11.1.1 à 11.1.3 : le glossaire ne contient aucun champ de formulaire (aucun <input>, <select>, <textarea>, <progress>, ni élément de rôle WAI-ARIA de champ ; aucun <form>), vérifié dans le DOM du build servi. Contenu visé absent : non applicable."
+		},
+		{
+			"criterion": "11.1",
+			"page": "https://chikimuras.github.io/rampe/audit/",
+			"status": "NC",
+			"note": "Test 11.1.1 en échec. Champs examinés dans le DOM rendu après hydratation (avec une page ajoutée à l’échantillon et une action libre ajoutée au schéma) : les champs texte, zones de texte, champs fichier, dates, listes et la barre <progress> ont un <label for> associé (tests 11.1.1 et 11.1.2 validés pour eux, for = id), ou un aria-label pour les listes et le champ « Commentaire » du tableau d’actions. En revanche, les boutons radio sont étiquetés uniquement par une balise <label> englobante, sans attribut for, sans id, sans aria-label, aria-labelledby ni title : les 4 radios name=\"audit-filtre\" du groupe « Afficher » (« Tous les critères »…), les 4 radios name=\"statut-<critère>-<page>\" de chaque page (« Conforme », « Non conforme », « Non applicable », « Non testé ») et les 2 radios name=\"declaration-auditBy\" (« En interne », « Par un prestataire »). L’étiquette implicite ne figure pas parmi les conditions du test 11.1.1 (le <label> doit avoir un attribut for). Correction : donner un id à chaque radio et un for au <label>. Point secondaire à faire vérifier par un humain (test 11.1.3) : les listes et le champ du tableau « Actions de mise en conformité » n’ont qu’un aria-label ; le seul texte visible est l’en-tête de colonne, accolé seulement à la première ligne."
+		},
+		{
+			"criterion": "11.1",
+			"page": "https://chikimuras.github.io/rampe/cockpit/",
+			"status": "C",
+			"note": "Tests 11.1.1 à 11.1.3 : Page examinée : page Cockpit (/cockpit/). Les 7 barres <progress> de la section « Avancement » (seuls champs de formulaire de la page au sens du glossaire RGAA « Champ de saisie de formulaire » : « afficher des résultats : output, progress, meter »), chacune dans un <li> après son intitulé visible « Phase n — … » et avant le compteur « n/m ». Test 11.1.1 : chacune a un aria-label (« Phase 0 — Socle et cockpit : 5 sur 5 », « Phase 1 — Référentiel RGAA : 4 sur 4 », « Phase 2 — Audit automatisé (CLI) : 3 sur 4 »… « Phase 6 — Lancement : 1 sur 4 »). Test 11.1.2 : aucun <label for>, sans objet. Test 11.1.3 : l’étiquette aria-label n’est pas visible, mais chaque barre est accompagnée d’un passage de texte visible accolé (« Phase n — … » à gauche, « n/m » à droite) qui permet de comprendre ce qu’elle affiche. Jugement (décision consignée, orchestrateur, délégation ADR-0001). Conforme."
+		},
+		{
+			"criterion": "11.1",
+			"page": "https://chikimuras.github.io/rampe/cockpit/adr/0011-cli-audit-playwright/",
+			"status": "NA",
+			"note": "Tests 11.1.1 à 11.1.3 : la page ADR-0011 ne contient aucun champ de formulaire (aucun <input>, <select>, <textarea>, <progress>, ni élément de rôle WAI-ARIA de champ ; aucun <form>), vérifié dans le DOM du build servi. Contenu visé absent : non applicable."
+		},
+		{
+			"criterion": "11.1",
+			"page": "https://chikimuras.github.io/rampe/cockpit/journal/2026-10-15/",
+			"status": "NA",
+			"note": "Tests 11.1.1 à 11.1.3 : la page du journal du 2026-10-15 ne contient aucun champ de formulaire (aucun <input>, <select>, <textarea>, <progress>, ni élément de rôle WAI-ARIA de champ ; aucun <form>), vérifié dans le DOM du build servi. Contenu visé absent : non applicable."
+		},
+		{
+			"criterion": "11.1",
+			"page": "https://chikimuras.github.io/rampe/cockpit/docs/roadmap/",
+			"status": "NA",
+			"note": "Tests 11.1.1 à 11.1.3 : la page Roadmap ne contient aucun champ de formulaire (aucun <input>, <select>, <textarea>, <progress>, ni élément de rôle WAI-ARIA de champ ; aucun <form>), vérifié dans le DOM du build servi. Contenu visé absent : non applicable."
+		},
+		{
+			"criterion": "11.1",
+			"page": "https://chikimuras.github.io/rampe/referentiel/5-1/",
+			"status": "NA",
+			"note": "Tests 11.1.1 à 11.1.3 : la fiche du critère 5.1 ne contient aucun champ de formulaire (aucun <input>, <select>, <textarea>, <progress>, ni élément de rôle WAI-ARIA de champ ; aucun <form>), vérifié dans le DOM du build servi. Contenu visé absent : non applicable."
+		},
+		{
+			"criterion": "11.1",
+			"page": "https://chikimuras.github.io/rampe/referentiel/1-9/",
+			"status": "NA",
+			"note": "Tests 11.1.1 à 11.1.3 : la fiche du critère 1.9 ne contient aucun champ de formulaire (aucun <input>, <select>, <textarea>, <progress>, ni élément de rôle WAI-ARIA de champ ; aucun <form>), vérifié dans le DOM du build servi. Contenu visé absent : non applicable."
+		},
+		{
+			"criterion": "11.2",
+			"page": "https://chikimuras.github.io/rampe/",
+			"status": "NA",
+			"note": "Tests 11.2.1 à 11.2.6 : la page d’accueil ne contient aucun champ de formulaire (aucun <input>, <select>, <textarea>, <progress>, ni élément de rôle WAI-ARIA de champ ; aucun <form>), vérifié dans le DOM du build servi. Contenu visé absent : non applicable."
+		},
+		{
+			"criterion": "11.2",
+			"page": "https://chikimuras.github.io/rampe/referentiel/",
+			"status": "NA",
+			"note": "Tests 11.2.1 à 11.2.6 : la page Référentiel ne contient aucun champ de formulaire (aucun <input>, <select>, <textarea>, <progress>, ni élément de rôle WAI-ARIA de champ ; aucun <form>), vérifié dans le DOM du build servi. Contenu visé absent : non applicable."
+		},
+		{
+			"criterion": "11.2",
+			"page": "https://chikimuras.github.io/rampe/referentiel/1-1/",
+			"status": "NA",
+			"note": "Tests 11.2.1 à 11.2.6 : la fiche du critère 1.1 ne contient aucun champ de formulaire (aucun <input>, <select>, <textarea>, <progress>, ni élément de rôle WAI-ARIA de champ ; aucun <form>), vérifié dans le DOM du build servi. Contenu visé absent : non applicable."
+		},
+		{
+			"criterion": "11.2",
+			"page": "https://chikimuras.github.io/rampe/referentiel/glossaire/",
+			"status": "NA",
+			"note": "Tests 11.2.1 à 11.2.6 : le glossaire ne contient aucun champ de formulaire (aucun <input>, <select>, <textarea>, <progress>, ni élément de rôle WAI-ARIA de champ ; aucun <form>), vérifié dans le DOM du build servi. Contenu visé absent : non applicable."
+		},
+		{
+			"criterion": "11.2",
+			"page": "https://chikimuras.github.io/rampe/audit/",
+			"status": "C",
+			"note": "Tests 11.2.1 à 11.2.5 appliqués aux champs de /audit/ (DOM hydraté, une page et une action ajoutées). Étiquettes <label> pertinentes : « Adresse de la page », « Nom de la page (facultatif) », « Importer un audit (JSON) », « Importer un rapport automatique (CLI ou extension, JSON) », « Processus (facultatif) de <page> », « Note sur <page> (facultative) », « Année de début », « Durée », les champs de la déclaration et les volets du schéma ; le <progress> a pour étiquette « Il reste N évaluations « non testé » sur N ». Les aria-label du tableau d’actions (« Priorité de l’action 1 : Former l’équipe », « Année cible… », « Commentaire… », « Bilan… ») donnent la fonction exacte (test 11.2.3). Aucun title ni aria-labelledby comme étiquette (tests 11.2.2 et 11.2.4 sans objet) ; aucun nom accessible ne contredit un intitulé visible (test 11.2.5) ; pas de bouton adjacent faisant office d’étiquette (test 11.2.6 sans objet)."
+		},
+		{
+			"criterion": "11.2",
+			"page": "https://chikimuras.github.io/rampe/cockpit/",
+			"status": "C",
+			"note": "Tests 11.2.1 à 11.2.6 : Page examinée : page Cockpit (/cockpit/). Les 7 barres <progress> de la section « Avancement » (seuls champs de formulaire de la page au sens du glossaire RGAA « Champ de saisie de formulaire » : « afficher des résultats : output, progress, meter »), chacune dans un <li> après son intitulé visible « Phase n — … » et avant le compteur « n/m ». Test 11.2.3 : les aria-label (« Phase 2 — Audit automatisé (CLI) : 3 sur 4 »…) donnent la fonction exacte de chaque barre (avancement de la phase nommée). Test 11.2.5 : chaque aria-label contient l’intitulé visible « Phase n — … ». Tests 11.2.1, 11.2.2, 11.2.4 et 11.2.6 : ni <label>, ni title, ni aria-labelledby, ni bouton adjacent, sans objet. Jugement (décision consignée, orchestrateur, délégation ADR-0001). Conforme."
+		},
+		{
+			"criterion": "11.2",
+			"page": "https://chikimuras.github.io/rampe/cockpit/adr/0011-cli-audit-playwright/",
+			"status": "NA",
+			"note": "Tests 11.2.1 à 11.2.6 : la page ADR-0011 ne contient aucun champ de formulaire (aucun <input>, <select>, <textarea>, <progress>, ni élément de rôle WAI-ARIA de champ ; aucun <form>), vérifié dans le DOM du build servi. Contenu visé absent : non applicable."
+		},
+		{
+			"criterion": "11.2",
+			"page": "https://chikimuras.github.io/rampe/cockpit/journal/2026-10-15/",
+			"status": "NA",
+			"note": "Tests 11.2.1 à 11.2.6 : la page du journal du 2026-10-15 ne contient aucun champ de formulaire (aucun <input>, <select>, <textarea>, <progress>, ni élément de rôle WAI-ARIA de champ ; aucun <form>), vérifié dans le DOM du build servi. Contenu visé absent : non applicable."
+		},
+		{
+			"criterion": "11.2",
+			"page": "https://chikimuras.github.io/rampe/cockpit/docs/roadmap/",
+			"status": "NA",
+			"note": "Tests 11.2.1 à 11.2.6 : la page Roadmap ne contient aucun champ de formulaire (aucun <input>, <select>, <textarea>, <progress>, ni élément de rôle WAI-ARIA de champ ; aucun <form>), vérifié dans le DOM du build servi. Contenu visé absent : non applicable."
+		},
+		{
+			"criterion": "11.2",
+			"page": "https://chikimuras.github.io/rampe/referentiel/5-1/",
+			"status": "NA",
+			"note": "Tests 11.2.1 à 11.2.6 : la fiche du critère 5.1 ne contient aucun champ de formulaire (aucun <input>, <select>, <textarea>, <progress>, ni élément de rôle WAI-ARIA de champ ; aucun <form>), vérifié dans le DOM du build servi. Contenu visé absent : non applicable."
+		},
+		{
+			"criterion": "11.2",
+			"page": "https://chikimuras.github.io/rampe/referentiel/1-9/",
+			"status": "NA",
+			"note": "Tests 11.2.1 à 11.2.6 : la fiche du critère 1.9 ne contient aucun champ de formulaire (aucun <input>, <select>, <textarea>, <progress>, ni élément de rôle WAI-ARIA de champ ; aucun <form>), vérifié dans le DOM du build servi. Contenu visé absent : non applicable."
+		},
+		{
+			"criterion": "11.3",
+			"page": "https://chikimuras.github.io/rampe/",
+			"status": "NA",
+			"note": "Tests 11.3.1 et 11.3.2 : la page d’accueil ne contient aucun champ de formulaire (aucun <input>, <select>, <textarea>, <progress>, ni élément de rôle WAI-ARIA de champ ; aucun <form>), vérifié dans le DOM du build servi. Contenu visé absent : non applicable."
+		},
+		{
+			"criterion": "11.3",
+			"page": "https://chikimuras.github.io/rampe/referentiel/",
+			"status": "NA",
+			"note": "Tests 11.3.1 et 11.3.2 : la page Référentiel ne contient aucun champ de formulaire (aucun <input>, <select>, <textarea>, <progress>, ni élément de rôle WAI-ARIA de champ ; aucun <form>), vérifié dans le DOM du build servi. Contenu visé absent : non applicable."
+		},
+		{
+			"criterion": "11.3",
+			"page": "https://chikimuras.github.io/rampe/referentiel/1-1/",
+			"status": "NA",
+			"note": "Tests 11.3.1 et 11.3.2 : la fiche du critère 1.1 ne contient aucun champ de formulaire (aucun <input>, <select>, <textarea>, <progress>, ni élément de rôle WAI-ARIA de champ ; aucun <form>), vérifié dans le DOM du build servi. Contenu visé absent : non applicable."
+		},
+		{
+			"criterion": "11.3",
+			"page": "https://chikimuras.github.io/rampe/referentiel/glossaire/",
+			"status": "NA",
+			"note": "Tests 11.3.1 et 11.3.2 : le glossaire ne contient aucun champ de formulaire (aucun <input>, <select>, <textarea>, <progress>, ni élément de rôle WAI-ARIA de champ ; aucun <form>), vérifié dans le DOM du build servi. Contenu visé absent : non applicable."
+		},
+		{
+			"criterion": "11.3",
+			"page": "https://chikimuras.github.io/rampe/audit/",
+			"status": "C",
+			"note": "Test 11.3.1 : les champs de même fonction répétés sur la page ont des étiquettes cohérentes : par page de l’échantillon, « Processus (facultatif) de <page> », « Note sur <page> (facultative) » et les 4 mêmes statuts ; dans le tableau d’actions, « Priorité / Année cible / Commentaire / Bilan de l’action n : <intitulé> ». Les deux champs fichier ont des fonctions différentes (audit complet, rapport automatique) et des étiquettes distinctes. Test 11.3.2 : aucune autre page de l’échantillon n’a de formulaire, donc pas d’incohérence entre pages."
+		},
+		{
+			"criterion": "11.3",
+			"page": "https://chikimuras.github.io/rampe/cockpit/",
+			"status": "C",
+			"note": "Tests 11.3.1 et 11.3.2 : Page examinée : page Cockpit (/cockpit/). Les 7 barres <progress> de la section « Avancement » (seuls champs de formulaire de la page au sens du glossaire RGAA « Champ de saisie de formulaire » : « afficher des résultats : output, progress, meter »), chacune dans un <li> après son intitulé visible « Phase n — … » et avant le compteur « n/m ». Les 7 barres, de même fonction, ont des étiquettes construites de la même façon (« Phase n — <intitulé> : x sur y »). Test 11.3.2 : aucune autre page de l’échantillon n’affiche ces barres (l’audit guidé a une barre de fonction différente, « Il reste N évaluations… »). Jugement (décision consignée, orchestrateur, délégation ADR-0001). Conforme."
+		},
+		{
+			"criterion": "11.3",
+			"page": "https://chikimuras.github.io/rampe/cockpit/adr/0011-cli-audit-playwright/",
+			"status": "NA",
+			"note": "Tests 11.3.1 et 11.3.2 : la page ADR-0011 ne contient aucun champ de formulaire (aucun <input>, <select>, <textarea>, <progress>, ni élément de rôle WAI-ARIA de champ ; aucun <form>), vérifié dans le DOM du build servi. Contenu visé absent : non applicable."
+		},
+		{
+			"criterion": "11.3",
+			"page": "https://chikimuras.github.io/rampe/cockpit/journal/2026-10-15/",
+			"status": "NA",
+			"note": "Tests 11.3.1 et 11.3.2 : la page du journal du 2026-10-15 ne contient aucun champ de formulaire (aucun <input>, <select>, <textarea>, <progress>, ni élément de rôle WAI-ARIA de champ ; aucun <form>), vérifié dans le DOM du build servi. Contenu visé absent : non applicable."
+		},
+		{
+			"criterion": "11.3",
+			"page": "https://chikimuras.github.io/rampe/cockpit/docs/roadmap/",
+			"status": "NA",
+			"note": "Tests 11.3.1 et 11.3.2 : la page Roadmap ne contient aucun champ de formulaire (aucun <input>, <select>, <textarea>, <progress>, ni élément de rôle WAI-ARIA de champ ; aucun <form>), vérifié dans le DOM du build servi. Contenu visé absent : non applicable."
+		},
+		{
+			"criterion": "11.3",
+			"page": "https://chikimuras.github.io/rampe/referentiel/5-1/",
+			"status": "NA",
+			"note": "Tests 11.3.1 et 11.3.2 : la fiche du critère 5.1 ne contient aucun champ de formulaire (aucun <input>, <select>, <textarea>, <progress>, ni élément de rôle WAI-ARIA de champ ; aucun <form>), vérifié dans le DOM du build servi. Contenu visé absent : non applicable."
+		},
+		{
+			"criterion": "11.3",
+			"page": "https://chikimuras.github.io/rampe/referentiel/1-9/",
+			"status": "NA",
+			"note": "Tests 11.3.1 et 11.3.2 : la fiche du critère 1.9 ne contient aucun champ de formulaire (aucun <input>, <select>, <textarea>, <progress>, ni élément de rôle WAI-ARIA de champ ; aucun <form>), vérifié dans le DOM du build servi. Contenu visé absent : non applicable."
+		},
+		{
+			"criterion": "11.4",
+			"page": "https://chikimuras.github.io/rampe/",
+			"status": "NA",
+			"note": "Tests 11.4.1 à 11.4.3 : la page d’accueil ne contient aucun champ de formulaire (aucun <input>, <select>, <textarea>, <progress>, ni élément de rôle WAI-ARIA de champ ; aucun <form>), vérifié dans le DOM du build servi. Contenu visé absent : non applicable."
+		},
+		{
+			"criterion": "11.4",
+			"page": "https://chikimuras.github.io/rampe/referentiel/",
+			"status": "NA",
+			"note": "Tests 11.4.1 à 11.4.3 : la page Référentiel ne contient aucun champ de formulaire (aucun <input>, <select>, <textarea>, <progress>, ni élément de rôle WAI-ARIA de champ ; aucun <form>), vérifié dans le DOM du build servi. Contenu visé absent : non applicable."
+		},
+		{
+			"criterion": "11.4",
+			"page": "https://chikimuras.github.io/rampe/referentiel/1-1/",
+			"status": "NA",
+			"note": "Tests 11.4.1 à 11.4.3 : la fiche du critère 1.1 ne contient aucun champ de formulaire (aucun <input>, <select>, <textarea>, <progress>, ni élément de rôle WAI-ARIA de champ ; aucun <form>), vérifié dans le DOM du build servi. Contenu visé absent : non applicable."
+		},
+		{
+			"criterion": "11.4",
+			"page": "https://chikimuras.github.io/rampe/referentiel/glossaire/",
+			"status": "NA",
+			"note": "Tests 11.4.1 à 11.4.3 : le glossaire ne contient aucun champ de formulaire (aucun <input>, <select>, <textarea>, <progress>, ni élément de rôle WAI-ARIA de champ ; aucun <form>), vérifié dans le DOM du build servi. Contenu visé absent : non applicable."
+		},
+		{
+			"criterion": "11.4",
+			"page": "https://chikimuras.github.io/rampe/audit/",
+			"status": "C",
+			"note": "Tests 11.4.1 à 11.4.3, vérifiés sur des captures de /audit/ (largeur 800 px et 1280 px) : chaque <label> de champ texte, zone de texte, fichier, date et liste est placé immédiatement au-dessus du champ (dans la déclaration et le schéma, une courte aide est intercalée mais l’ensemble reste visuellement groupé et sans ambiguïté) ; « Processus (facultatif) » est à gauche de son champ ; les étiquettes des boutons radio (filtre, statuts, « L’audit a été réalisé ») sont immédiatement à droite du bouton. Le texte est en français, sens de lecture de gauche à droite."
+		},
+		{
+			"criterion": "11.4",
+			"page": "https://chikimuras.github.io/rampe/cockpit/",
+			"status": "C",
+			"note": "Tests 11.4.1 à 11.4.3 : Page examinée : page Cockpit (/cockpit/). Les 7 barres <progress> de la section « Avancement » (seuls champs de formulaire de la page au sens du glossaire RGAA « Champ de saisie de formulaire » : « afficher des résultats : output, progress, meter »), chacune dans un <li> après son intitulé visible « Phase n — … » et avant le compteur « n/m ». Mesuré à 1280 px : l’intitulé visible « Phase n — … » est sur la même ligne, immédiatement à gauche de sa barre, le compteur « n/m » immédiatement à droite ; à 320 px, l’intitulé reste immédiatement à gauche de la barre (renvoyé à la ligne dans une colonne étroite) et le compteur à droite, dans le même <li>. Étiquette et champ accolés, texte en français, lecture de gauche à droite. Jugement (décision consignée, orchestrateur, délégation ADR-0001). Conforme."
+		},
+		{
+			"criterion": "11.4",
+			"page": "https://chikimuras.github.io/rampe/cockpit/adr/0011-cli-audit-playwright/",
+			"status": "NA",
+			"note": "Tests 11.4.1 à 11.4.3 : la page ADR-0011 ne contient aucun champ de formulaire (aucun <input>, <select>, <textarea>, <progress>, ni élément de rôle WAI-ARIA de champ ; aucun <form>), vérifié dans le DOM du build servi. Contenu visé absent : non applicable."
+		},
+		{
+			"criterion": "11.4",
+			"page": "https://chikimuras.github.io/rampe/cockpit/journal/2026-10-15/",
+			"status": "NA",
+			"note": "Tests 11.4.1 à 11.4.3 : la page du journal du 2026-10-15 ne contient aucun champ de formulaire (aucun <input>, <select>, <textarea>, <progress>, ni élément de rôle WAI-ARIA de champ ; aucun <form>), vérifié dans le DOM du build servi. Contenu visé absent : non applicable."
+		},
+		{
+			"criterion": "11.4",
+			"page": "https://chikimuras.github.io/rampe/cockpit/docs/roadmap/",
+			"status": "NA",
+			"note": "Tests 11.4.1 à 11.4.3 : la page Roadmap ne contient aucun champ de formulaire (aucun <input>, <select>, <textarea>, <progress>, ni élément de rôle WAI-ARIA de champ ; aucun <form>), vérifié dans le DOM du build servi. Contenu visé absent : non applicable."
+		},
+		{
+			"criterion": "11.4",
+			"page": "https://chikimuras.github.io/rampe/referentiel/5-1/",
+			"status": "NA",
+			"note": "Tests 11.4.1 à 11.4.3 : la fiche du critère 5.1 ne contient aucun champ de formulaire (aucun <input>, <select>, <textarea>, <progress>, ni élément de rôle WAI-ARIA de champ ; aucun <form>), vérifié dans le DOM du build servi. Contenu visé absent : non applicable."
+		},
+		{
+			"criterion": "11.4",
+			"page": "https://chikimuras.github.io/rampe/referentiel/1-9/",
+			"status": "NA",
+			"note": "Tests 11.4.1 à 11.4.3 : la fiche du critère 1.9 ne contient aucun champ de formulaire (aucun <input>, <select>, <textarea>, <progress>, ni élément de rôle WAI-ARIA de champ ; aucun <form>), vérifié dans le DOM du build servi. Contenu visé absent : non applicable."
+		},
+		{
+			"criterion": "11.5",
+			"page": "https://chikimuras.github.io/rampe/",
+			"status": "NA",
+			"note": "Tests 11.5.1 : la page d’accueil ne contient aucun champ de formulaire (aucun <input>, <select>, <textarea>, <progress>, ni élément de rôle WAI-ARIA de champ ; aucun <form>), vérifié dans le DOM du build servi. Contenu visé absent : non applicable."
+		},
+		{
+			"criterion": "11.5",
+			"page": "https://chikimuras.github.io/rampe/referentiel/",
+			"status": "NA",
+			"note": "Tests 11.5.1 : la page Référentiel ne contient aucun champ de formulaire (aucun <input>, <select>, <textarea>, <progress>, ni élément de rôle WAI-ARIA de champ ; aucun <form>), vérifié dans le DOM du build servi. Contenu visé absent : non applicable."
+		},
+		{
+			"criterion": "11.5",
+			"page": "https://chikimuras.github.io/rampe/referentiel/1-1/",
+			"status": "NA",
+			"note": "Tests 11.5.1 : la fiche du critère 1.1 ne contient aucun champ de formulaire (aucun <input>, <select>, <textarea>, <progress>, ni élément de rôle WAI-ARIA de champ ; aucun <form>), vérifié dans le DOM du build servi. Contenu visé absent : non applicable."
+		},
+		{
+			"criterion": "11.5",
+			"page": "https://chikimuras.github.io/rampe/referentiel/glossaire/",
+			"status": "NA",
+			"note": "Tests 11.5.1 : le glossaire ne contient aucun champ de formulaire (aucun <input>, <select>, <textarea>, <progress>, ni élément de rôle WAI-ARIA de champ ; aucun <form>), vérifié dans le DOM du build servi. Contenu visé absent : non applicable."
+		},
+		{
+			"criterion": "11.5",
+			"page": "https://chikimuras.github.io/rampe/audit/",
+			"status": "C",
+			"note": "Test 11.5.1 : les champs de même nature sont regroupés dans des <fieldset> : radios du filtre (« Afficher »), radios de statut et note de chaque page (fieldset par page), radios « L’audit a été réalisé », groupes de la déclaration (« Organisme et site », « Audit », « Contenus non accessibles », « Dates », « Contact ») et du schéma (« Période du schéma », « Politique d’accessibilité numérique », « Travaux de mise en conformité »). Le formulaire « Ajouter une page » (adresse et nom) et le formulaire d’action libre forment un seul bloc : regroupement non nécessaire. Dans le tableau d’actions, l’appartenance de chaque champ à son action figure dans son aria-label."
+		},
+		{
+			"criterion": "11.5",
+			"page": "https://chikimuras.github.io/rampe/cockpit/",
+			"status": "NA",
+			"note": "Test 11.5.1 : Page examinée : page Cockpit (/cockpit/). Les 7 barres <progress> de la section « Avancement » (seuls champs de formulaire de la page au sens du glossaire RGAA « Champ de saisie de formulaire » : « afficher des résultats : output, progress, meter »), chacune dans un <li> après son intitulé visible « Phase n — … » et avant le compteur « n/m ». La page n’a aucun <form> ni champ de saisie : les 7 barres sont des indicateurs de résultat déjà regroupés par la liste <ul> sous le titre h2 « Avancement », chacune complète par son étiquette ; aucun groupe de champs de saisie de même nature dont le regroupement (fieldset, role=\"group\") serait nécessaire. Non applicable."
+		},
+		{
+			"criterion": "11.5",
+			"page": "https://chikimuras.github.io/rampe/cockpit/adr/0011-cli-audit-playwright/",
+			"status": "NA",
+			"note": "Tests 11.5.1 : la page ADR-0011 ne contient aucun champ de formulaire (aucun <input>, <select>, <textarea>, <progress>, ni élément de rôle WAI-ARIA de champ ; aucun <form>), vérifié dans le DOM du build servi. Contenu visé absent : non applicable."
+		},
+		{
+			"criterion": "11.5",
+			"page": "https://chikimuras.github.io/rampe/cockpit/journal/2026-10-15/",
+			"status": "NA",
+			"note": "Tests 11.5.1 : la page du journal du 2026-10-15 ne contient aucun champ de formulaire (aucun <input>, <select>, <textarea>, <progress>, ni élément de rôle WAI-ARIA de champ ; aucun <form>), vérifié dans le DOM du build servi. Contenu visé absent : non applicable."
+		},
+		{
+			"criterion": "11.5",
+			"page": "https://chikimuras.github.io/rampe/cockpit/docs/roadmap/",
+			"status": "NA",
+			"note": "Tests 11.5.1 : la page Roadmap ne contient aucun champ de formulaire (aucun <input>, <select>, <textarea>, <progress>, ni élément de rôle WAI-ARIA de champ ; aucun <form>), vérifié dans le DOM du build servi. Contenu visé absent : non applicable."
+		},
+		{
+			"criterion": "11.5",
+			"page": "https://chikimuras.github.io/rampe/referentiel/5-1/",
+			"status": "NA",
+			"note": "Tests 11.5.1 : la fiche du critère 5.1 ne contient aucun champ de formulaire (aucun <input>, <select>, <textarea>, <progress>, ni élément de rôle WAI-ARIA de champ ; aucun <form>), vérifié dans le DOM du build servi. Contenu visé absent : non applicable."
+		},
+		{
+			"criterion": "11.5",
+			"page": "https://chikimuras.github.io/rampe/referentiel/1-9/",
+			"status": "NA",
+			"note": "Tests 11.5.1 : la fiche du critère 1.9 ne contient aucun champ de formulaire (aucun <input>, <select>, <textarea>, <progress>, ni élément de rôle WAI-ARIA de champ ; aucun <form>), vérifié dans le DOM du build servi. Contenu visé absent : non applicable."
+		},
+		{
+			"criterion": "11.6",
+			"page": "https://chikimuras.github.io/rampe/",
+			"status": "NA",
+			"note": "Tests 11.6.1 : la page d’accueil ne contient aucun champ de formulaire (aucun <input>, <select>, <textarea>, <progress>, ni élément de rôle WAI-ARIA de champ ; aucun <form>), vérifié dans le DOM du build servi. Contenu visé absent : non applicable."
+		},
+		{
+			"criterion": "11.6",
+			"page": "https://chikimuras.github.io/rampe/referentiel/",
+			"status": "NA",
+			"note": "Tests 11.6.1 : la page Référentiel ne contient aucun champ de formulaire (aucun <input>, <select>, <textarea>, <progress>, ni élément de rôle WAI-ARIA de champ ; aucun <form>), vérifié dans le DOM du build servi. Contenu visé absent : non applicable."
+		},
+		{
+			"criterion": "11.6",
+			"page": "https://chikimuras.github.io/rampe/referentiel/1-1/",
+			"status": "NA",
+			"note": "Tests 11.6.1 : la fiche du critère 1.1 ne contient aucun champ de formulaire (aucun <input>, <select>, <textarea>, <progress>, ni élément de rôle WAI-ARIA de champ ; aucun <form>), vérifié dans le DOM du build servi. Contenu visé absent : non applicable."
+		},
+		{
+			"criterion": "11.6",
+			"page": "https://chikimuras.github.io/rampe/referentiel/glossaire/",
+			"status": "NA",
+			"note": "Tests 11.6.1 : le glossaire ne contient aucun champ de formulaire (aucun <input>, <select>, <textarea>, <progress>, ni élément de rôle WAI-ARIA de champ ; aucun <form>), vérifié dans le DOM du build servi. Contenu visé absent : non applicable."
+		},
+		{
+			"criterion": "11.6",
+			"page": "https://chikimuras.github.io/rampe/audit/",
+			"status": "C",
+			"note": "Test 11.6.1 : chaque <fieldset> trouvé sur /audit/ possède un <legend> : « Afficher », « Critère <n>, page <adresse> » (partie « Critère <n>, page » masquée visuellement), « L’audit a été réalisé », « Organisme et site », « Audit », « Contenus non accessibles », « Dates », « Contact », « Période du schéma », « Politique d’accessibilité numérique », « Travaux de mise en conformité ». Aucun regroupement par role=\"group\" ou role=\"radiogroup\"."
+		},
+		{
+			"criterion": "11.6",
+			"page": "https://chikimuras.github.io/rampe/cockpit/",
+			"status": "NA",
+			"note": "Test 11.6.1 : Page examinée : page Cockpit (/cockpit/). Les 7 barres <progress> de la section « Avancement » (seuls champs de formulaire de la page au sens du glossaire RGAA « Champ de saisie de formulaire » : « afficher des résultats : output, progress, meter »), chacune dans un <li> après son intitulé visible « Phase n — … » et avant le compteur « n/m ». Aucun <fieldset>, aucun élément role=\"group\" ou role=\"radiogroup\" dans le DOM servi : aucune légende de regroupement à vérifier. Non applicable."
+		},
+		{
+			"criterion": "11.6",
+			"page": "https://chikimuras.github.io/rampe/cockpit/adr/0011-cli-audit-playwright/",
+			"status": "NA",
+			"note": "Tests 11.6.1 : la page ADR-0011 ne contient aucun champ de formulaire (aucun <input>, <select>, <textarea>, <progress>, ni élément de rôle WAI-ARIA de champ ; aucun <form>), vérifié dans le DOM du build servi. Contenu visé absent : non applicable."
+		},
+		{
+			"criterion": "11.6",
+			"page": "https://chikimuras.github.io/rampe/cockpit/journal/2026-10-15/",
+			"status": "NA",
+			"note": "Tests 11.6.1 : la page du journal du 2026-10-15 ne contient aucun champ de formulaire (aucun <input>, <select>, <textarea>, <progress>, ni élément de rôle WAI-ARIA de champ ; aucun <form>), vérifié dans le DOM du build servi. Contenu visé absent : non applicable."
+		},
+		{
+			"criterion": "11.6",
+			"page": "https://chikimuras.github.io/rampe/cockpit/docs/roadmap/",
+			"status": "NA",
+			"note": "Tests 11.6.1 : la page Roadmap ne contient aucun champ de formulaire (aucun <input>, <select>, <textarea>, <progress>, ni élément de rôle WAI-ARIA de champ ; aucun <form>), vérifié dans le DOM du build servi. Contenu visé absent : non applicable."
+		},
+		{
+			"criterion": "11.6",
+			"page": "https://chikimuras.github.io/rampe/referentiel/5-1/",
+			"status": "NA",
+			"note": "Tests 11.6.1 : la fiche du critère 5.1 ne contient aucun champ de formulaire (aucun <input>, <select>, <textarea>, <progress>, ni élément de rôle WAI-ARIA de champ ; aucun <form>), vérifié dans le DOM du build servi. Contenu visé absent : non applicable."
+		},
+		{
+			"criterion": "11.6",
+			"page": "https://chikimuras.github.io/rampe/referentiel/1-9/",
+			"status": "NA",
+			"note": "Tests 11.6.1 : la fiche du critère 1.9 ne contient aucun champ de formulaire (aucun <input>, <select>, <textarea>, <progress>, ni élément de rôle WAI-ARIA de champ ; aucun <form>), vérifié dans le DOM du build servi. Contenu visé absent : non applicable."
+		},
+		{
+			"criterion": "11.7",
+			"page": "https://chikimuras.github.io/rampe/",
+			"status": "NA",
+			"note": "Tests 11.7.1 : la page d’accueil ne contient aucun champ de formulaire (aucun <input>, <select>, <textarea>, <progress>, ni élément de rôle WAI-ARIA de champ ; aucun <form>), vérifié dans le DOM du build servi. Contenu visé absent : non applicable."
+		},
+		{
+			"criterion": "11.7",
+			"page": "https://chikimuras.github.io/rampe/referentiel/",
+			"status": "NA",
+			"note": "Tests 11.7.1 : la page Référentiel ne contient aucun champ de formulaire (aucun <input>, <select>, <textarea>, <progress>, ni élément de rôle WAI-ARIA de champ ; aucun <form>), vérifié dans le DOM du build servi. Contenu visé absent : non applicable."
+		},
+		{
+			"criterion": "11.7",
+			"page": "https://chikimuras.github.io/rampe/referentiel/1-1/",
+			"status": "NA",
+			"note": "Tests 11.7.1 : la fiche du critère 1.1 ne contient aucun champ de formulaire (aucun <input>, <select>, <textarea>, <progress>, ni élément de rôle WAI-ARIA de champ ; aucun <form>), vérifié dans le DOM du build servi. Contenu visé absent : non applicable."
+		},
+		{
+			"criterion": "11.7",
+			"page": "https://chikimuras.github.io/rampe/referentiel/glossaire/",
+			"status": "NA",
+			"note": "Tests 11.7.1 : le glossaire ne contient aucun champ de formulaire (aucun <input>, <select>, <textarea>, <progress>, ni élément de rôle WAI-ARIA de champ ; aucun <form>), vérifié dans le DOM du build servi. Contenu visé absent : non applicable."
+		},
+		{
+			"criterion": "11.7",
+			"page": "https://chikimuras.github.io/rampe/audit/",
+			"status": "C",
+			"note": "Test 11.7.1 : les légendes des regroupements de /audit/ sont pertinentes : « Afficher » introduit les options de filtre des critères ; « Critère 1.1, page https://exemple.fr/ » identifie le critère et la page évalués par les statuts et la note ; « L’audit a été réalisé » + « En interne / Par un prestataire » ; les légendes des groupes de la déclaration et du schéma reprennent les rubriques officielles (« Organisme et site », « Dates », « Contact », « Période du schéma »…)."
+		},
+		{
+			"criterion": "11.7",
+			"page": "https://chikimuras.github.io/rampe/cockpit/",
+			"status": "NA",
+			"note": "Test 11.7.1 : Page examinée : page Cockpit (/cockpit/). Les 7 barres <progress> de la section « Avancement » (seuls champs de formulaire de la page au sens du glossaire RGAA « Champ de saisie de formulaire » : « afficher des résultats : output, progress, meter »), chacune dans un <li> après son intitulé visible « Phase n — … » et avant le compteur « n/m ». Aucun <fieldset> ni role=\"group\" (voir 11.6), donc aucune légende dont juger la pertinence. Non applicable."
+		},
+		{
+			"criterion": "11.7",
+			"page": "https://chikimuras.github.io/rampe/cockpit/adr/0011-cli-audit-playwright/",
+			"status": "NA",
+			"note": "Tests 11.7.1 : la page ADR-0011 ne contient aucun champ de formulaire (aucun <input>, <select>, <textarea>, <progress>, ni élément de rôle WAI-ARIA de champ ; aucun <form>), vérifié dans le DOM du build servi. Contenu visé absent : non applicable."
+		},
+		{
+			"criterion": "11.7",
+			"page": "https://chikimuras.github.io/rampe/cockpit/journal/2026-10-15/",
+			"status": "NA",
+			"note": "Tests 11.7.1 : la page du journal du 2026-10-15 ne contient aucun champ de formulaire (aucun <input>, <select>, <textarea>, <progress>, ni élément de rôle WAI-ARIA de champ ; aucun <form>), vérifié dans le DOM du build servi. Contenu visé absent : non applicable."
+		},
+		{
+			"criterion": "11.7",
+			"page": "https://chikimuras.github.io/rampe/cockpit/docs/roadmap/",
+			"status": "NA",
+			"note": "Tests 11.7.1 : la page Roadmap ne contient aucun champ de formulaire (aucun <input>, <select>, <textarea>, <progress>, ni élément de rôle WAI-ARIA de champ ; aucun <form>), vérifié dans le DOM du build servi. Contenu visé absent : non applicable."
+		},
+		{
+			"criterion": "11.7",
+			"page": "https://chikimuras.github.io/rampe/referentiel/5-1/",
+			"status": "NA",
+			"note": "Tests 11.7.1 : la fiche du critère 5.1 ne contient aucun champ de formulaire (aucun <input>, <select>, <textarea>, <progress>, ni élément de rôle WAI-ARIA de champ ; aucun <form>), vérifié dans le DOM du build servi. Contenu visé absent : non applicable."
+		},
+		{
+			"criterion": "11.7",
+			"page": "https://chikimuras.github.io/rampe/referentiel/1-9/",
+			"status": "NA",
+			"note": "Tests 11.7.1 : la fiche du critère 1.9 ne contient aucun champ de formulaire (aucun <input>, <select>, <textarea>, <progress>, ni élément de rôle WAI-ARIA de champ ; aucun <form>), vérifié dans le DOM du build servi. Contenu visé absent : non applicable."
+		},
+		{
+			"criterion": "11.8",
+			"page": "https://chikimuras.github.io/rampe/",
+			"status": "NA",
+			"note": "Tests 11.8.1 à 11.8.3 : la page d’accueil ne contient aucun champ de formulaire (aucun <input>, <select>, <textarea>, <progress>, ni élément de rôle WAI-ARIA de champ ; aucun <form>), vérifié dans le DOM du build servi. Contenu visé absent : non applicable."
+		},
+		{
+			"criterion": "11.8",
+			"page": "https://chikimuras.github.io/rampe/referentiel/",
+			"status": "NA",
+			"note": "Tests 11.8.1 à 11.8.3 : la page Référentiel ne contient aucun champ de formulaire (aucun <input>, <select>, <textarea>, <progress>, ni élément de rôle WAI-ARIA de champ ; aucun <form>), vérifié dans le DOM du build servi. Contenu visé absent : non applicable."
+		},
+		{
+			"criterion": "11.8",
+			"page": "https://chikimuras.github.io/rampe/referentiel/1-1/",
+			"status": "NA",
+			"note": "Tests 11.8.1 à 11.8.3 : la fiche du critère 1.1 ne contient aucun champ de formulaire (aucun <input>, <select>, <textarea>, <progress>, ni élément de rôle WAI-ARIA de champ ; aucun <form>), vérifié dans le DOM du build servi. Contenu visé absent : non applicable."
+		},
+		{
+			"criterion": "11.8",
+			"page": "https://chikimuras.github.io/rampe/referentiel/glossaire/",
+			"status": "NA",
+			"note": "Tests 11.8.1 à 11.8.3 : le glossaire ne contient aucun champ de formulaire (aucun <input>, <select>, <textarea>, <progress>, ni élément de rôle WAI-ARIA de champ ; aucun <form>), vérifié dans le DOM du build servi. Contenu visé absent : non applicable."
+		},
+		{
+			"criterion": "11.8",
+			"page": "https://chikimuras.github.io/rampe/audit/",
+			"status": "C",
+			"note": "Tests 11.8.1 à 11.8.3 : listes <select> trouvées sur /audit/ : « Durée » (1 an, 2 ans, 3 ans), « Année du plan d’action » (années de la période), et dans le tableau d’actions « Priorité » (haute, moyenne, basse), « Année cible » et « Bilan » (faite, en cours, reportée…). Chaque liste propose une seule série d’items de même nature : aucun regroupement <optgroup> n’est nécessaire (test 11.8.1 validé) ; aucun <optgroup> présent (tests 11.8.2 et 11.8.3 sans objet)."
+		},
+		{
+			"criterion": "11.8",
+			"page": "https://chikimuras.github.io/rampe/cockpit/",
+			"status": "NA",
+			"note": "Tests 11.8.1 à 11.8.3 : Page examinée : page Cockpit (/cockpit/). Les 7 barres <progress> de la section « Avancement » (seuls champs de formulaire de la page au sens du glossaire RGAA « Champ de saisie de formulaire » : « afficher des résultats : output, progress, meter »), chacune dans un <li> après son intitulé visible « Phase n — … » et avant le compteur « n/m ». Aucune liste de choix <select> ni <optgroup> dans le DOM servi. Non applicable."
+		},
+		{
+			"criterion": "11.8",
+			"page": "https://chikimuras.github.io/rampe/cockpit/adr/0011-cli-audit-playwright/",
+			"status": "NA",
+			"note": "Tests 11.8.1 à 11.8.3 : la page ADR-0011 ne contient aucun champ de formulaire (aucun <input>, <select>, <textarea>, <progress>, ni élément de rôle WAI-ARIA de champ ; aucun <form>), vérifié dans le DOM du build servi. Contenu visé absent : non applicable."
+		},
+		{
+			"criterion": "11.8",
+			"page": "https://chikimuras.github.io/rampe/cockpit/journal/2026-10-15/",
+			"status": "NA",
+			"note": "Tests 11.8.1 à 11.8.3 : la page du journal du 2026-10-15 ne contient aucun champ de formulaire (aucun <input>, <select>, <textarea>, <progress>, ni élément de rôle WAI-ARIA de champ ; aucun <form>), vérifié dans le DOM du build servi. Contenu visé absent : non applicable."
+		},
+		{
+			"criterion": "11.8",
+			"page": "https://chikimuras.github.io/rampe/cockpit/docs/roadmap/",
+			"status": "NA",
+			"note": "Tests 11.8.1 à 11.8.3 : la page Roadmap ne contient aucun champ de formulaire (aucun <input>, <select>, <textarea>, <progress>, ni élément de rôle WAI-ARIA de champ ; aucun <form>), vérifié dans le DOM du build servi. Contenu visé absent : non applicable."
+		},
+		{
+			"criterion": "11.8",
+			"page": "https://chikimuras.github.io/rampe/referentiel/5-1/",
+			"status": "NA",
+			"note": "Tests 11.8.1 à 11.8.3 : la fiche du critère 5.1 ne contient aucun champ de formulaire (aucun <input>, <select>, <textarea>, <progress>, ni élément de rôle WAI-ARIA de champ ; aucun <form>), vérifié dans le DOM du build servi. Contenu visé absent : non applicable."
+		},
+		{
+			"criterion": "11.8",
+			"page": "https://chikimuras.github.io/rampe/referentiel/1-9/",
+			"status": "NA",
+			"note": "Tests 11.8.1 à 11.8.3 : la fiche du critère 1.9 ne contient aucun champ de formulaire (aucun <input>, <select>, <textarea>, <progress>, ni élément de rôle WAI-ARIA de champ ; aucun <form>), vérifié dans le DOM du build servi. Contenu visé absent : non applicable."
+		},
+		{
+			"criterion": "11.9",
+			"page": "https://chikimuras.github.io/rampe/",
+			"status": "NA",
+			"note": "Tests 11.9.1 et 11.9.2 : la page d’accueil ne contient aucun champ de formulaire (aucun <input>, <select>, <textarea>, <progress>, ni élément de rôle WAI-ARIA de champ ; aucun <form>), vérifié dans le DOM du build servi. Contenu visé absent : non applicable."
+		},
+		{
+			"criterion": "11.9",
+			"page": "https://chikimuras.github.io/rampe/referentiel/",
+			"status": "NA",
+			"note": "Tests 11.9.1 et 11.9.2 : la page Référentiel ne contient aucun champ de formulaire (aucun <input>, <select>, <textarea>, <progress>, ni élément de rôle WAI-ARIA de champ ; aucun <form>), vérifié dans le DOM du build servi. Contenu visé absent : non applicable."
+		},
+		{
+			"criterion": "11.9",
+			"page": "https://chikimuras.github.io/rampe/referentiel/1-1/",
+			"status": "NA",
+			"note": "Tests 11.9.1 et 11.9.2 : la fiche du critère 1.1 ne contient aucun champ de formulaire (aucun <input>, <select>, <textarea>, <progress>, ni élément de rôle WAI-ARIA de champ ; aucun <form>), vérifié dans le DOM du build servi. Contenu visé absent : non applicable."
+		},
+		{
+			"criterion": "11.9",
+			"page": "https://chikimuras.github.io/rampe/referentiel/glossaire/",
+			"status": "NA",
+			"note": "Tests 11.9.1 et 11.9.2 : le glossaire ne contient aucun champ de formulaire (aucun <input>, <select>, <textarea>, <progress>, ni élément de rôle WAI-ARIA de champ ; aucun <form>), vérifié dans le DOM du build servi. Contenu visé absent : non applicable."
+		},
+		{
+			"criterion": "11.9",
+			"page": "https://chikimuras.github.io/rampe/audit/",
+			"status": "C",
+			"note": "Tests 11.9.1 et 11.9.2 : boutons des deux <form> de /audit/ : « Ajouter la page » (formulaire « Ajouter une page ») et « Ajouter l’action » (formulaire d’action libre), contenus de <button> pertinents, sans aria-label ni title. Hors <form>, les autres boutons sont aussi pertinents et leur nom accessible contient l’intitulé visible : « Retirer » + nom de page masqué visuellement, aria-label « Retirer l’action 1 : Former l’équipe » pour l’intitulé visible « Retirer », « Télécharger (HTML) », « Remplacer l’audit en cours », « Annuler », etc."
+		},
+		{
+			"criterion": "11.9",
+			"page": "https://chikimuras.github.io/rampe/cockpit/",
+			"status": "NA",
+			"note": "Tests 11.9.1 et 11.9.2 : Page examinée : page Cockpit (/cockpit/). Les 7 barres <progress> de la section « Avancement » (seuls champs de formulaire de la page au sens du glossaire RGAA « Champ de saisie de formulaire » : « afficher des résultats : output, progress, meter »), chacune dans un <li> après son intitulé visible « Phase n — … » et avant le compteur « n/m ». Aucun bouton (<button>, <input type=\"submit|button|reset|image\">, role=\"button\") dans le DOM servi : les seuls éléments interactifs sont 39 liens. Aucun intitulé de bouton à juger. Non applicable."
+		},
+		{
+			"criterion": "11.9",
+			"page": "https://chikimuras.github.io/rampe/cockpit/adr/0011-cli-audit-playwright/",
+			"status": "NA",
+			"note": "Tests 11.9.1 et 11.9.2 : la page ADR-0011 ne contient aucun champ de formulaire (aucun <input>, <select>, <textarea>, <progress>, ni élément de rôle WAI-ARIA de champ ; aucun <form>), vérifié dans le DOM du build servi. Contenu visé absent : non applicable."
+		},
+		{
+			"criterion": "11.9",
+			"page": "https://chikimuras.github.io/rampe/cockpit/journal/2026-10-15/",
+			"status": "NA",
+			"note": "Tests 11.9.1 et 11.9.2 : la page du journal du 2026-10-15 ne contient aucun champ de formulaire (aucun <input>, <select>, <textarea>, <progress>, ni élément de rôle WAI-ARIA de champ ; aucun <form>), vérifié dans le DOM du build servi. Contenu visé absent : non applicable."
+		},
+		{
+			"criterion": "11.9",
+			"page": "https://chikimuras.github.io/rampe/cockpit/docs/roadmap/",
+			"status": "NA",
+			"note": "Tests 11.9.1 et 11.9.2 : la page Roadmap ne contient aucun champ de formulaire (aucun <input>, <select>, <textarea>, <progress>, ni élément de rôle WAI-ARIA de champ ; aucun <form>), vérifié dans le DOM du build servi. Contenu visé absent : non applicable."
+		},
+		{
+			"criterion": "11.9",
+			"page": "https://chikimuras.github.io/rampe/referentiel/5-1/",
+			"status": "NA",
+			"note": "Tests 11.9.1 et 11.9.2 : la fiche du critère 5.1 ne contient aucun champ de formulaire (aucun <input>, <select>, <textarea>, <progress>, ni élément de rôle WAI-ARIA de champ ; aucun <form>), vérifié dans le DOM du build servi. Contenu visé absent : non applicable."
+		},
+		{
+			"criterion": "11.9",
+			"page": "https://chikimuras.github.io/rampe/referentiel/1-9/",
+			"status": "NA",
+			"note": "Tests 11.9.1 et 11.9.2 : la fiche du critère 1.9 ne contient aucun champ de formulaire (aucun <input>, <select>, <textarea>, <progress>, ni élément de rôle WAI-ARIA de champ ; aucun <form>), vérifié dans le DOM du build servi. Contenu visé absent : non applicable."
+		},
+		{
+			"criterion": "11.10",
+			"page": "https://chikimuras.github.io/rampe/",
+			"status": "NA",
+			"note": "Tests 11.10.1 à 11.10.7 : la page d’accueil ne contient aucun champ de formulaire (aucun <input>, <select>, <textarea>, <progress>, ni élément de rôle WAI-ARIA de champ ; aucun <form>), vérifié dans le DOM du build servi. Contenu visé absent : non applicable."
+		},
+		{
+			"criterion": "11.10",
+			"page": "https://chikimuras.github.io/rampe/referentiel/",
+			"status": "NA",
+			"note": "Tests 11.10.1 à 11.10.7 : la page Référentiel ne contient aucun champ de formulaire (aucun <input>, <select>, <textarea>, <progress>, ni élément de rôle WAI-ARIA de champ ; aucun <form>), vérifié dans le DOM du build servi. Contenu visé absent : non applicable."
+		},
+		{
+			"criterion": "11.10",
+			"page": "https://chikimuras.github.io/rampe/referentiel/1-1/",
+			"status": "NA",
+			"note": "Tests 11.10.1 à 11.10.7 : la fiche du critère 1.1 ne contient aucun champ de formulaire (aucun <input>, <select>, <textarea>, <progress>, ni élément de rôle WAI-ARIA de champ ; aucun <form>), vérifié dans le DOM du build servi. Contenu visé absent : non applicable."
+		},
+		{
+			"criterion": "11.10",
+			"page": "https://chikimuras.github.io/rampe/referentiel/glossaire/",
+			"status": "NA",
+			"note": "Tests 11.10.1 à 11.10.7 : le glossaire ne contient aucun champ de formulaire (aucun <input>, <select>, <textarea>, <progress>, ni élément de rôle WAI-ARIA de champ ; aucun <form>), vérifié dans le DOM du build servi. Contenu visé absent : non applicable."
+		},
+		{
+			"criterion": "11.10",
+			"page": "https://chikimuras.github.io/rampe/audit/",
+			"status": "C",
+			"note": "Exercé au clavier sur /audit/. Tests 11.10.1 et 11.10.2 non applicables (cas particulier) : le formulaire « Ajouter une page » signale visiblement son champ optionnel dans le <label> (« Nom de la page (facultatif) »), le formulaire d’action libre n’a qu’un champ, la déclaration marque ses champs optionnels « (facultatif) ». Test 11.10.3 : envoi à vide de « Adresse de la page » : message visible « Indiquez l’adresse de la page, par exemple https://exemple.fr/. », aria-invalid=\"true\", focus remis sur le champ ; action libre vide : « Saisissez l’intitulé de l’action. », aria-invalid=\"true\". Test 11.10.4 : ces messages sont dans un passage relié par aria-describedby (audit-url-erreur, schema-nouvelle-action-erreur). Test 11.10.5 : les indications de format existantes (exemples d’adresse de la déclaration) sont visibles et reliées par aria-describedby avant validation. Tests 11.10.6 et 11.10.7 : adresse invalide (« foo » → « URL invalide : « foo ». Exemple attendu : https://exemple.fr/ » ; ftp:// refusé), adresse de déclaration invalide, date hors limites (0002) et année « 12 » produisent un message visible, aria-invalid=\"true\" et un passage relié par aria-describedby ; idem pour les champs fichier refusés (JSON illisible, rapport d’un autre format) et la zone « Contenu du fichier »."
+		},
+		{
+			"criterion": "11.10",
+			"page": "https://chikimuras.github.io/rampe/cockpit/",
+			"status": "NA",
+			"note": "Tests 11.10.1 à 11.10.7 : Page examinée : page Cockpit (/cockpit/). Les 7 barres <progress> de la section « Avancement » (seuls champs de formulaire de la page au sens du glossaire RGAA « Champ de saisie de formulaire » : « afficher des résultats : output, progress, meter »), chacune dans un <li> après son intitulé visible « Phase n — … » et avant le compteur « n/m ». Ces barres affichent un résultat calculé au build : aucune saisie, donc ni champ obligatoire, ni format imposé, ni contrôle de saisie, ni message d’erreur. Non applicable."
+		},
+		{
+			"criterion": "11.10",
+			"page": "https://chikimuras.github.io/rampe/cockpit/adr/0011-cli-audit-playwright/",
+			"status": "NA",
+			"note": "Tests 11.10.1 à 11.10.7 : la page ADR-0011 ne contient aucun champ de formulaire (aucun <input>, <select>, <textarea>, <progress>, ni élément de rôle WAI-ARIA de champ ; aucun <form>), vérifié dans le DOM du build servi. Contenu visé absent : non applicable."
+		},
+		{
+			"criterion": "11.10",
+			"page": "https://chikimuras.github.io/rampe/cockpit/journal/2026-10-15/",
+			"status": "NA",
+			"note": "Tests 11.10.1 à 11.10.7 : la page du journal du 2026-10-15 ne contient aucun champ de formulaire (aucun <input>, <select>, <textarea>, <progress>, ni élément de rôle WAI-ARIA de champ ; aucun <form>), vérifié dans le DOM du build servi. Contenu visé absent : non applicable."
+		},
+		{
+			"criterion": "11.10",
+			"page": "https://chikimuras.github.io/rampe/cockpit/docs/roadmap/",
+			"status": "NA",
+			"note": "Tests 11.10.1 à 11.10.7 : la page Roadmap ne contient aucun champ de formulaire (aucun <input>, <select>, <textarea>, <progress>, ni élément de rôle WAI-ARIA de champ ; aucun <form>), vérifié dans le DOM du build servi. Contenu visé absent : non applicable."
+		},
+		{
+			"criterion": "11.10",
+			"page": "https://chikimuras.github.io/rampe/referentiel/5-1/",
+			"status": "NA",
+			"note": "Tests 11.10.1 à 11.10.7 : la fiche du critère 5.1 ne contient aucun champ de formulaire (aucun <input>, <select>, <textarea>, <progress>, ni élément de rôle WAI-ARIA de champ ; aucun <form>), vérifié dans le DOM du build servi. Contenu visé absent : non applicable."
+		},
+		{
+			"criterion": "11.10",
+			"page": "https://chikimuras.github.io/rampe/referentiel/1-9/",
+			"status": "NA",
+			"note": "Tests 11.10.1 à 11.10.7 : la fiche du critère 1.9 ne contient aucun champ de formulaire (aucun <input>, <select>, <textarea>, <progress>, ni élément de rôle WAI-ARIA de champ ; aucun <form>), vérifié dans le DOM du build servi. Contenu visé absent : non applicable."
+		},
+		{
+			"criterion": "11.11",
+			"page": "https://chikimuras.github.io/rampe/",
+			"status": "NA",
+			"note": "Tests 11.11.1 et 11.11.2 : la page d’accueil ne contient aucun champ de formulaire (aucun <input>, <select>, <textarea>, <progress>, ni élément de rôle WAI-ARIA de champ ; aucun <form>), vérifié dans le DOM du build servi. Contenu visé absent : non applicable."
+		},
+		{
+			"criterion": "11.11",
+			"page": "https://chikimuras.github.io/rampe/referentiel/",
+			"status": "NA",
+			"note": "Tests 11.11.1 et 11.11.2 : la page Référentiel ne contient aucun champ de formulaire (aucun <input>, <select>, <textarea>, <progress>, ni élément de rôle WAI-ARIA de champ ; aucun <form>), vérifié dans le DOM du build servi. Contenu visé absent : non applicable."
+		},
+		{
+			"criterion": "11.11",
+			"page": "https://chikimuras.github.io/rampe/referentiel/1-1/",
+			"status": "NA",
+			"note": "Tests 11.11.1 et 11.11.2 : la fiche du critère 1.1 ne contient aucun champ de formulaire (aucun <input>, <select>, <textarea>, <progress>, ni élément de rôle WAI-ARIA de champ ; aucun <form>), vérifié dans le DOM du build servi. Contenu visé absent : non applicable."
+		},
+		{
+			"criterion": "11.11",
+			"page": "https://chikimuras.github.io/rampe/referentiel/glossaire/",
+			"status": "NA",
+			"note": "Tests 11.11.1 et 11.11.2 : le glossaire ne contient aucun champ de formulaire (aucun <input>, <select>, <textarea>, <progress>, ni élément de rôle WAI-ARIA de champ ; aucun <form>), vérifié dans le DOM du build servi. Contenu visé absent : non applicable."
+		},
+		{
+			"criterion": "11.11",
+			"page": "https://chikimuras.github.io/rampe/audit/",
+			"status": "C",
+			"note": "Tests 11.11.1 et 11.11.2 sur les erreurs provoquées : adresse vide ou invalide (« Exemple attendu : https://exemple.fr/ »), protocole refusé (« Seules les adresses http:// et https:// sont acceptées »), autre site, doublon ; adresse de déclaration (« commencez par https:// ou saisissez une adresse e-mail ») ; date (« années 1900 à 9999 », sur un champ type=date natif qui impose son format) ; année de début (« 1900 à 9999 ») ; action vide (exemples « Former l’équipe éditoriale » reliés par aria-describedby) ; fichiers refusés (« choisissez le fichier écrit par rampe audit --json », limite de taille indiquée). Chaque message suggère le type, le format ou un exemple quand c’est nécessaire."
+		},
+		{
+			"criterion": "11.11",
+			"page": "https://chikimuras.github.io/rampe/cockpit/",
+			"status": "NA",
+			"note": "Tests 11.11.1 et 11.11.2 : Page examinée : page Cockpit (/cockpit/). Les 7 barres <progress> de la section « Avancement » (seuls champs de formulaire de la page au sens du glossaire RGAA « Champ de saisie de formulaire » : « afficher des résultats : output, progress, meter »), chacune dans un <li> après son intitulé visible « Phase n — … » et avant le compteur « n/m ». Aucune saisie ni contrôle de saisie, donc aucun message d’erreur dont juger les suggestions. Non applicable."
+		},
+		{
+			"criterion": "11.11",
+			"page": "https://chikimuras.github.io/rampe/cockpit/adr/0011-cli-audit-playwright/",
+			"status": "NA",
+			"note": "Tests 11.11.1 et 11.11.2 : la page ADR-0011 ne contient aucun champ de formulaire (aucun <input>, <select>, <textarea>, <progress>, ni élément de rôle WAI-ARIA de champ ; aucun <form>), vérifié dans le DOM du build servi. Contenu visé absent : non applicable."
+		},
+		{
+			"criterion": "11.11",
+			"page": "https://chikimuras.github.io/rampe/cockpit/journal/2026-10-15/",
+			"status": "NA",
+			"note": "Tests 11.11.1 et 11.11.2 : la page du journal du 2026-10-15 ne contient aucun champ de formulaire (aucun <input>, <select>, <textarea>, <progress>, ni élément de rôle WAI-ARIA de champ ; aucun <form>), vérifié dans le DOM du build servi. Contenu visé absent : non applicable."
+		},
+		{
+			"criterion": "11.11",
+			"page": "https://chikimuras.github.io/rampe/cockpit/docs/roadmap/",
+			"status": "NA",
+			"note": "Tests 11.11.1 et 11.11.2 : la page Roadmap ne contient aucun champ de formulaire (aucun <input>, <select>, <textarea>, <progress>, ni élément de rôle WAI-ARIA de champ ; aucun <form>), vérifié dans le DOM du build servi. Contenu visé absent : non applicable."
+		},
+		{
+			"criterion": "11.11",
+			"page": "https://chikimuras.github.io/rampe/referentiel/5-1/",
+			"status": "NA",
+			"note": "Tests 11.11.1 et 11.11.2 : la fiche du critère 5.1 ne contient aucun champ de formulaire (aucun <input>, <select>, <textarea>, <progress>, ni élément de rôle WAI-ARIA de champ ; aucun <form>), vérifié dans le DOM du build servi. Contenu visé absent : non applicable."
+		},
+		{
+			"criterion": "11.11",
+			"page": "https://chikimuras.github.io/rampe/referentiel/1-9/",
+			"status": "NA",
+			"note": "Tests 11.11.1 et 11.11.2 : la fiche du critère 1.9 ne contient aucun champ de formulaire (aucun <input>, <select>, <textarea>, <progress>, ni élément de rôle WAI-ARIA de champ ; aucun <form>), vérifié dans le DOM du build servi. Contenu visé absent : non applicable."
+		},
+		{
+			"criterion": "11.12",
+			"page": "https://chikimuras.github.io/rampe/",
+			"status": "NA",
+			"note": "Tests 11.12.1 et 11.12.2 : la page d’accueil ne contient aucun champ de formulaire (aucun <input>, <select>, <textarea>, <progress>, ni élément de rôle WAI-ARIA de champ ; aucun <form>), vérifié dans le DOM du build servi. Contenu visé absent : non applicable."
+		},
+		{
+			"criterion": "11.12",
+			"page": "https://chikimuras.github.io/rampe/referentiel/",
+			"status": "NA",
+			"note": "Tests 11.12.1 et 11.12.2 : la page Référentiel ne contient aucun champ de formulaire (aucun <input>, <select>, <textarea>, <progress>, ni élément de rôle WAI-ARIA de champ ; aucun <form>), vérifié dans le DOM du build servi. Contenu visé absent : non applicable."
+		},
+		{
+			"criterion": "11.12",
+			"page": "https://chikimuras.github.io/rampe/referentiel/1-1/",
+			"status": "NA",
+			"note": "Tests 11.12.1 et 11.12.2 : la fiche du critère 1.1 ne contient aucun champ de formulaire (aucun <input>, <select>, <textarea>, <progress>, ni élément de rôle WAI-ARIA de champ ; aucun <form>), vérifié dans le DOM du build servi. Contenu visé absent : non applicable."
+		},
+		{
+			"criterion": "11.12",
+			"page": "https://chikimuras.github.io/rampe/referentiel/glossaire/",
+			"status": "NA",
+			"note": "Tests 11.12.1 et 11.12.2 : le glossaire ne contient aucun champ de formulaire (aucun <input>, <select>, <textarea>, <progress>, ni élément de rôle WAI-ARIA de champ ; aucun <form>), vérifié dans le DOM du build servi. Contenu visé absent : non applicable."
+		},
+		{
+			"criterion": "11.12",
+			"page": "https://chikimuras.github.io/rampe/audit/",
+			"status": "C",
+			"note": "Tests 11.12.1 et 11.12.2 : formulaires et commandes qui modifient ou suppriment des données de l’audit, exercés : « Ajouter la page » (la page peut être retirée ensuite, après confirmation « Retirer « … » de l’échantillon ? Ses évaluations seront effacées. ») ; « Ajouter l’action » (l’action peut être retirée puis rétablie) ; import d’un audit complet (boîte de dialogue modale « Remplacer l’audit en cours ? » avec Télécharger d’abord / Remplacer / Annuler, puis bouton « Annuler cet import ») ; import d’un rapport (« Annuler cet import ») ; « Effacer cet audit et recommencer » (confirmation explicite) ; « Je reprends cet audit à mon compte » (confirmation puis « Annuler »). Les champs de la déclaration, à portée juridique, restent modifiables à tout moment avant et après chaque téléchargement."
+		},
+		{
+			"criterion": "11.12",
+			"page": "https://chikimuras.github.io/rampe/cockpit/",
+			"status": "NA",
+			"note": "Tests 11.12.1 et 11.12.2 : Page examinée : page Cockpit (/cockpit/). Les 7 barres <progress> de la section « Avancement » (seuls champs de formulaire de la page au sens du glossaire RGAA « Champ de saisie de formulaire » : « afficher des résultats : output, progress, meter »), chacune dans un <li> après son intitulé visible « Phase n — … » et avant le compteur « n/m ». Aucun formulaire ni commande qui modifie, supprime ou transmet des données : page statique. Non applicable."
+		},
+		{
+			"criterion": "11.12",
+			"page": "https://chikimuras.github.io/rampe/cockpit/adr/0011-cli-audit-playwright/",
+			"status": "NA",
+			"note": "Tests 11.12.1 et 11.12.2 : la page ADR-0011 ne contient aucun champ de formulaire (aucun <input>, <select>, <textarea>, <progress>, ni élément de rôle WAI-ARIA de champ ; aucun <form>), vérifié dans le DOM du build servi. Contenu visé absent : non applicable."
+		},
+		{
+			"criterion": "11.12",
+			"page": "https://chikimuras.github.io/rampe/cockpit/journal/2026-10-15/",
+			"status": "NA",
+			"note": "Tests 11.12.1 et 11.12.2 : la page du journal du 2026-10-15 ne contient aucun champ de formulaire (aucun <input>, <select>, <textarea>, <progress>, ni élément de rôle WAI-ARIA de champ ; aucun <form>), vérifié dans le DOM du build servi. Contenu visé absent : non applicable."
+		},
+		{
+			"criterion": "11.12",
+			"page": "https://chikimuras.github.io/rampe/cockpit/docs/roadmap/",
+			"status": "NA",
+			"note": "Tests 11.12.1 et 11.12.2 : la page Roadmap ne contient aucun champ de formulaire (aucun <input>, <select>, <textarea>, <progress>, ni élément de rôle WAI-ARIA de champ ; aucun <form>), vérifié dans le DOM du build servi. Contenu visé absent : non applicable."
+		},
+		{
+			"criterion": "11.12",
+			"page": "https://chikimuras.github.io/rampe/referentiel/5-1/",
+			"status": "NA",
+			"note": "Tests 11.12.1 et 11.12.2 : la fiche du critère 5.1 ne contient aucun champ de formulaire (aucun <input>, <select>, <textarea>, <progress>, ni élément de rôle WAI-ARIA de champ ; aucun <form>), vérifié dans le DOM du build servi. Contenu visé absent : non applicable."
+		},
+		{
+			"criterion": "11.12",
+			"page": "https://chikimuras.github.io/rampe/referentiel/1-9/",
+			"status": "NA",
+			"note": "Tests 11.12.1 et 11.12.2 : la fiche du critère 1.9 ne contient aucun champ de formulaire (aucun <input>, <select>, <textarea>, <progress>, ni élément de rôle WAI-ARIA de champ ; aucun <form>), vérifié dans le DOM du build servi. Contenu visé absent : non applicable."
+		},
+		{
+			"criterion": "11.13",
+			"page": "https://chikimuras.github.io/rampe/",
+			"status": "NA",
+			"note": "Tests 11.13.1 : la page d’accueil ne contient aucun champ de formulaire (aucun <input>, <select>, <textarea>, <progress>, ni élément de rôle WAI-ARIA de champ ; aucun <form>), vérifié dans le DOM du build servi. Contenu visé absent : non applicable."
+		},
+		{
+			"criterion": "11.13",
+			"page": "https://chikimuras.github.io/rampe/referentiel/",
+			"status": "NA",
+			"note": "Tests 11.13.1 : la page Référentiel ne contient aucun champ de formulaire (aucun <input>, <select>, <textarea>, <progress>, ni élément de rôle WAI-ARIA de champ ; aucun <form>), vérifié dans le DOM du build servi. Contenu visé absent : non applicable."
+		},
+		{
+			"criterion": "11.13",
+			"page": "https://chikimuras.github.io/rampe/referentiel/1-1/",
+			"status": "NA",
+			"note": "Tests 11.13.1 : la fiche du critère 1.1 ne contient aucun champ de formulaire (aucun <input>, <select>, <textarea>, <progress>, ni élément de rôle WAI-ARIA de champ ; aucun <form>), vérifié dans le DOM du build servi. Contenu visé absent : non applicable."
+		},
+		{
+			"criterion": "11.13",
+			"page": "https://chikimuras.github.io/rampe/referentiel/glossaire/",
+			"status": "NA",
+			"note": "Tests 11.13.1 : le glossaire ne contient aucun champ de formulaire (aucun <input>, <select>, <textarea>, <progress>, ni élément de rôle WAI-ARIA de champ ; aucun <form>), vérifié dans le DOM du build servi. Contenu visé absent : non applicable."
+		},
+		{
+			"criterion": "11.13",
+			"page": "https://chikimuras.github.io/rampe/audit/",
+			"status": "NC",
+			"note": "Test 11.13.1 en échec. Champs se rapportant à une information concernant l’utilisateur : le champ « Nom de l’organisme » (id declaration-organization) recueille le nom de l’organisme de la personne qui remplit sa déclaration, finalité prévue par la liste des valeurs autocomplete (« organization ») ; il n’a pas d’attribut autocomplete. Correction : ajouter autocomplete=\"organization\". Les autres champs (adresses de pages auditées, contenus de la déclaration et du schéma, année) ne concernent pas l’utilisateur. Remarque : « Adresse de la page » porte autocomplete=\"url\" alors qu’elle ne désigne pas une page de l’utilisateur (valeur peu adaptée, hors du champ du test). Évaluation à faire relire par un humain : elle repose sur le fait que l’organisme déclarant est celui de l’utilisateur. Jugement discutable, consigné (décision d’orchestrateur, délégation ADR-0001)."
+		},
+		{
+			"criterion": "11.13",
+			"page": "https://chikimuras.github.io/rampe/cockpit/",
+			"status": "NA",
+			"note": "Test 11.13.1 : Page examinée : page Cockpit (/cockpit/). Les 7 barres <progress> de la section « Avancement » (seuls champs de formulaire de la page au sens du glossaire RGAA « Champ de saisie de formulaire » : « afficher des résultats : output, progress, meter »), chacune dans un <li> après son intitulé visible « Phase n — … » et avant le compteur « n/m ». Aucun champ de saisie, donc aucun champ recueillant une information concernant l’utilisateur. Non applicable."
+		},
+		{
+			"criterion": "11.13",
+			"page": "https://chikimuras.github.io/rampe/cockpit/adr/0011-cli-audit-playwright/",
+			"status": "NA",
+			"note": "Tests 11.13.1 : la page ADR-0011 ne contient aucun champ de formulaire (aucun <input>, <select>, <textarea>, <progress>, ni élément de rôle WAI-ARIA de champ ; aucun <form>), vérifié dans le DOM du build servi. Contenu visé absent : non applicable."
+		},
+		{
+			"criterion": "11.13",
+			"page": "https://chikimuras.github.io/rampe/cockpit/journal/2026-10-15/",
+			"status": "NA",
+			"note": "Tests 11.13.1 : la page du journal du 2026-10-15 ne contient aucun champ de formulaire (aucun <input>, <select>, <textarea>, <progress>, ni élément de rôle WAI-ARIA de champ ; aucun <form>), vérifié dans le DOM du build servi. Contenu visé absent : non applicable."
+		},
+		{
+			"criterion": "11.13",
+			"page": "https://chikimuras.github.io/rampe/cockpit/docs/roadmap/",
+			"status": "NA",
+			"note": "Tests 11.13.1 : la page Roadmap ne contient aucun champ de formulaire (aucun <input>, <select>, <textarea>, <progress>, ni élément de rôle WAI-ARIA de champ ; aucun <form>), vérifié dans le DOM du build servi. Contenu visé absent : non applicable."
+		},
+		{
+			"criterion": "11.13",
+			"page": "https://chikimuras.github.io/rampe/referentiel/5-1/",
+			"status": "NA",
+			"note": "Tests 11.13.1 : la fiche du critère 5.1 ne contient aucun champ de formulaire (aucun <input>, <select>, <textarea>, <progress>, ni élément de rôle WAI-ARIA de champ ; aucun <form>), vérifié dans le DOM du build servi. Contenu visé absent : non applicable."
+		},
+		{
+			"criterion": "11.13",
+			"page": "https://chikimuras.github.io/rampe/referentiel/1-9/",
+			"status": "NA",
+			"note": "Tests 11.13.1 : la fiche du critère 1.9 ne contient aucun champ de formulaire (aucun <input>, <select>, <textarea>, <progress>, ni élément de rôle WAI-ARIA de champ ; aucun <form>), vérifié dans le DOM du build servi. Contenu visé absent : non applicable."
+		}
+	]
+}

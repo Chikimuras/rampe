@@ -1,0 +1,204 @@
+{
+	"evaluator": "Claude (IA)",
+	"date": "2026-10-16",
+	"entries": [
+		{
+			"criterion": "3.1",
+			"page": "https://chikimuras.github.io/rampe/",
+			"status": "C",
+			"note": "Tests 3.1.1 à 3.1.6 sur l’accueil (titre, trois paragraphes, navigation principale, pied de page), thèmes clair et sombre (jugement de l’IA sur le rendu et le DOM). Seule information liée à la couleur : les liens (navigation et lien « cockpit » dans le paragraphe). Liens : couleur var(--accent) ET soulignement conservé (text-decoration-line « underline » mesuré sur tous les <a>, sauf le nom « Rampe » de l’en-tête, qui n’est pas dans un bloc de texte et se distingue par sa position et sa graisse) ; focus : contour de 3 px (forme, pas seulement couleur). Tests 3.1.2, 3.1.5 et 3.1.6 : aucune indication de couleur donnée par un texte, aucun média temporel ni non temporel ; 3.1.3 : aucune image. Chaque information repérée a un autre moyen de perception (texte, soulignement, forme, graisse) : conforme."
+		},
+		{
+			"criterion": "3.1",
+			"page": "https://chikimuras.github.io/rampe/referentiel/",
+			"status": "C",
+			"note": "Tests 3.1.1 à 3.1.6 sur la page Référentiel (13 thématiques, 106 liens de critères, encadrés « Explication Rampe »), thèmes clair et sombre (jugement de l’IA sur le rendu et le DOM). Informations examinées : liens des critères (soulignés), numéros « Critère n » en gras, mentions « n règles axe-core » en texte, encadrés « Explication Rampe » identifiés par leur intitulé textuel en plus du fond et de la bordure. Liens : couleur var(--accent) ET soulignement conservé (text-decoration-line « underline » mesuré sur tous les <a>, sauf le nom « Rampe » de l’en-tête, qui n’est pas dans un bloc de texte et se distingue par sa position et sa graisse) ; focus : contour de 3 px (forme, pas seulement couleur). Tests 3.1.2, 3.1.5 et 3.1.6 : aucune indication de couleur donnée par un texte, aucun média temporel ni non temporel ; 3.1.3 : aucune image. Chaque information repérée a un autre moyen de perception (texte, soulignement, forme, graisse) : conforme."
+		},
+		{
+			"criterion": "3.1",
+			"page": "https://chikimuras.github.io/rampe/referentiel/1-1/",
+			"status": "C",
+			"note": "Tests 3.1.1 à 3.1.6 sur la fiche du critère 1.1 (texte officiel, 8 tests, blocs <details> de méthodologie, liens vers le glossaire), thèmes clair et sombre (jugement de l’IA sur le rendu et le DOM). Informations examinées : liens du glossaire (soulignés), niveaux « Test 1.1.x » et texte officiel en gris mais aussi signalés par leur texte, encadré de vérification humaine identifié par son texte, blocs <details> repérés par le triangle et l’intitulé. Liens : couleur var(--accent) ET soulignement conservé (text-decoration-line « underline » mesuré sur tous les <a>, sauf le nom « Rampe » de l’en-tête, qui n’est pas dans un bloc de texte et se distingue par sa position et sa graisse) ; focus : contour de 3 px (forme, pas seulement couleur). Tests 3.1.2, 3.1.5 et 3.1.6 : aucune indication de couleur donnée par un texte, aucun média temporel ni non temporel ; 3.1.3 : aucune image. Chaque information repérée a un autre moyen de perception (texte, soulignement, forme, graisse) : conforme."
+		},
+		{
+			"criterion": "3.1",
+			"page": "https://chikimuras.github.io/rampe/referentiel/glossaire/",
+			"status": "C",
+			"note": "Tests 3.1.1 à 3.1.6 sur le glossaire (liste de définitions <dl>, ancres), thèmes clair et sombre (jugement de l’IA sur le rendu et le DOM). Informations examinées : termes définis (<dt> en gras avec filet), liens soulignés ; aucune information portée par la seule couleur. Liens : couleur var(--accent) ET soulignement conservé (text-decoration-line « underline » mesuré sur tous les <a>, sauf le nom « Rampe » de l’en-tête, qui n’est pas dans un bloc de texte et se distingue par sa position et sa graisse) ; focus : contour de 3 px (forme, pas seulement couleur). Tests 3.1.2, 3.1.5 et 3.1.6 : aucune indication de couleur donnée par un texte, aucun média temporel ni non temporel ; 3.1.3 : aucune image. Chaque information repérée a un autre moyen de perception (texte, soulignement, forme, graisse) : conforme."
+		},
+		{
+			"criterion": "3.1",
+			"page": "https://chikimuras.github.io/rampe/audit/",
+			"status": "C",
+			"note": "Tests 3.1.1 à 3.1.6 sur l’audit guidé (îlot Preact), thèmes clair et sombre (jugement de l’IA sur le rendu et le DOM). Informations examinées (états de l’îlot examinés : état initial, erreur d’adresse (champ aria-invalid + message), 2 pages ajoutées, import d’un rapport automatique (statut « à confirmer », conflit, indices), critère 3.2 affiché, tous les <details> ouverts, boîte de dialogue « Remplacer l’audit en cours ? » ouverte, puis audit complet importé (tableau « Résultat par page », déclaration, schéma pluriannuel)) : statut choisi (bouton radio coché + bordure de la pastille dont l’épaisseur et le style changent : C pleine 2 px, NC 3 px, NA double 4 px, NT tirets), thématique et critère courants (aria-current : bordure 2 px + fond + texte en gras), champ en erreur (bordure 2 px + message d’erreur textuel), statut « à confirmer » et conflit (encadrés en tirets / pleins + texte « Détecté automatiquement, à confirmer. » / « L’outil a détecté une non-conformité… »), éléments à compléter de l’aperçu (<mark> + crochets « […] »), lignes retirées du schéma (mention « Retirée. »). Liens : couleur var(--accent) ET soulignement conservé (text-decoration-line « underline » mesuré sur tous les <a>, sauf le nom « Rampe » de l’en-tête, qui n’est pas dans un bloc de texte et se distingue par sa position et sa graisse) ; focus : contour de 3 px (forme, pas seulement couleur). Tests 3.1.2, 3.1.5 et 3.1.6 : aucune indication de couleur donnée par un texte, aucun média temporel ni non temporel ; 3.1.3 : aucune image. Chaque information repérée a un autre moyen de perception (texte, soulignement, forme, graisse) : conforme."
+		},
+		{
+			"criterion": "3.1",
+			"page": "https://chikimuras.github.io/rampe/cockpit/",
+			"status": "C",
+			"note": "Tests 3.1.1 à 3.1.6 sur le cockpit (encadré « En attente d’Alexandre », 7 barres <progress>, liste des ADR avec pastilles de statut « Accepted », liste des pages du journal), thèmes clair et sombre (jugement de l’IA sur le rendu et le DOM). Informations examinées : pastilles de statut des ADR (texte « Accepted »), barres d’avancement accompagnées du texte « n/m », encadré « En attente d’Alexandre » identifié par son titre. Liens : couleur var(--accent) ET soulignement conservé (text-decoration-line « underline » mesuré sur tous les <a>, sauf le nom « Rampe » de l’en-tête, qui n’est pas dans un bloc de texte et se distingue par sa position et sa graisse) ; focus : contour de 3 px (forme, pas seulement couleur). Tests 3.1.2, 3.1.5 et 3.1.6 : aucune indication de couleur donnée par un texte, aucun média temporel ni non temporel ; 3.1.3 : aucune image. Chaque information repérée a un autre moyen de perception (texte, soulignement, forme, graisse) : conforme."
+		},
+		{
+			"criterion": "3.1",
+			"page": "https://chikimuras.github.io/rampe/cockpit/adr/0011-cli-audit-playwright/",
+			"status": "C",
+			"note": "Tests 3.1.1 à 3.1.6 sur la page ADR-0011 (Markdown rendu, tableau, blocs de code), thèmes clair et sombre (jugement de l’IA sur le rendu et le DOM). Informations examinées : statut de l’ADR écrit en clair (« Accepted ») dans la ligne de métadonnées, tableau et code sans coloration syntaxique, signe « ⛔ » expliqué par le texte voisin. Liens : couleur var(--accent) ET soulignement conservé (text-decoration-line « underline » mesuré sur tous les <a>, sauf le nom « Rampe » de l’en-tête, qui n’est pas dans un bloc de texte et se distingue par sa position et sa graisse) ; focus : contour de 3 px (forme, pas seulement couleur). Tests 3.1.2, 3.1.5 et 3.1.6 : aucune indication de couleur donnée par un texte, aucun média temporel ni non temporel ; 3.1.3 : aucune image. Chaque information repérée a un autre moyen de perception (texte, soulignement, forme, graisse) : conforme."
+		},
+		{
+			"criterion": "3.1",
+			"page": "https://chikimuras.github.io/rampe/cockpit/journal/2026-10-15/",
+			"status": "C",
+			"note": "Tests 3.1.1 à 3.1.6 sur la page de journal du 15/10/2026 (Markdown rendu, titres, listes, code), thèmes clair et sombre (jugement de l’IA sur le rendu et le DOM). Informations examinées : liens soulignés, texte en gras, code sans coloration syntaxique, signe « ⛔ » accompagné du nom de la personne concernée. Liens : couleur var(--accent) ET soulignement conservé (text-decoration-line « underline » mesuré sur tous les <a>, sauf le nom « Rampe » de l’en-tête, qui n’est pas dans un bloc de texte et se distingue par sa position et sa graisse) ; focus : contour de 3 px (forme, pas seulement couleur). Tests 3.1.2, 3.1.5 et 3.1.6 : aucune indication de couleur donnée par un texte, aucun média temporel ni non temporel ; 3.1.3 : aucune image. Chaque information repérée a un autre moyen de perception (texte, soulignement, forme, graisse) : conforme."
+		},
+		{
+			"criterion": "3.1",
+			"page": "https://chikimuras.github.io/rampe/cockpit/docs/roadmap/",
+			"status": "C",
+			"note": "Tests 3.1.1 à 3.1.6 sur la feuille de route (listes de tâches avec pastilles « Fait » / « À faire »), thèmes clair et sombre (jugement de l’IA sur le rendu et le DOM). Informations examinées : état des tâches donné par le texte des pastilles (« Fait » ×20, « À faire » ×7) et non par leur seul fond vert clair, signe « ⛔ » expliqué en tête de page (« Les ⛔ signalent un besoin d’action humaine »). Liens : couleur var(--accent) ET soulignement conservé (text-decoration-line « underline » mesuré sur tous les <a>, sauf le nom « Rampe » de l’en-tête, qui n’est pas dans un bloc de texte et se distingue par sa position et sa graisse) ; focus : contour de 3 px (forme, pas seulement couleur). Tests 3.1.2, 3.1.5 et 3.1.6 : aucune indication de couleur donnée par un texte, aucun média temporel ni non temporel ; 3.1.3 : aucune image. Chaque information repérée a un autre moyen de perception (texte, soulignement, forme, graisse) : conforme."
+		},
+		{
+			"criterion": "3.1",
+			"page": "https://chikimuras.github.io/rampe/referentiel/5-1/",
+			"status": "C",
+			"note": "Tests 3.1.1 à 3.1.6 sur la fiche du critère 5.1 (texte officiel, test, méthodologie, encadré de vérification humaine), thèmes clair et sombre (jugement de l’IA sur le rendu et le DOM). Informations examinées : liens soulignés, texte officiel et niveaux en gris mais signalés par leur texte, encadré « Aucune règle d’axe-core… » identifié par son texte en plus de la bordure orange. Liens : couleur var(--accent) ET soulignement conservé (text-decoration-line « underline » mesuré sur tous les <a>, sauf le nom « Rampe » de l’en-tête, qui n’est pas dans un bloc de texte et se distingue par sa position et sa graisse) ; focus : contour de 3 px (forme, pas seulement couleur). Tests 3.1.2, 3.1.5 et 3.1.6 : aucune indication de couleur donnée par un texte, aucun média temporel ni non temporel ; 3.1.3 : aucune image. Chaque information repérée a un autre moyen de perception (texte, soulignement, forme, graisse) : conforme."
+		},
+		{
+			"criterion": "3.1",
+			"page": "https://chikimuras.github.io/rampe/referentiel/1-9/",
+			"status": "C",
+			"note": "Tests 3.1.1 à 3.1.6 sur la fiche du critère 1.9 (texte officiel, tests, méthodologie, encadré de vérification humaine), thèmes clair et sombre (jugement de l’IA sur le rendu et le DOM). Informations examinées : liens soulignés, texte officiel et niveaux en gris mais signalés par leur texte, encadré « Aucune règle d’axe-core… » identifié par son texte en plus de la bordure orange. Liens : couleur var(--accent) ET soulignement conservé (text-decoration-line « underline » mesuré sur tous les <a>, sauf le nom « Rampe » de l’en-tête, qui n’est pas dans un bloc de texte et se distingue par sa position et sa graisse) ; focus : contour de 3 px (forme, pas seulement couleur). Tests 3.1.2, 3.1.5 et 3.1.6 : aucune indication de couleur donnée par un texte, aucun média temporel ni non temporel ; 3.1.3 : aucune image. Chaque information repérée a un autre moyen de perception (texte, soulignement, forme, graisse) : conforme."
+		},
+		{
+			"criterion": "3.2",
+			"page": "https://chikimuras.github.io/rampe/",
+			"status": "C",
+			"note": "Tests 3.2.1 à 3.2.4 sur l’accueil (titre, trois paragraphes, navigation principale, pied de page) : chaque nœud texte visible a été mesuré (getComputedStyle : color, background-color composé avec les ancêtres, opacité, taille et graisse restituées) et le rapport WCAG calculé par l’IA, en thème clair puis sombre (colorScheme Playwright), <details> ouverts. Aucune image d’arrière-plan sous du texte. Plus faible rapport : thème clair 6,59:1 (texte gris #5d5a53 de 14 px du pied de page sur #fbfaf7), thème sombre 7,51:1 (#a9a69d sur #151513) ; liens #0b5d4b 7,50:1 / #6fd3b5 10,15:1 ; texte courant #1c1b19 16,49:1 / #ecebe6 15,32:1 ; titre h1 34 px gras idem. Tous les textes de moins de 24 px (ou 18,5 px gras) atteignent 4,5:1 (3.2.1, 3.2.2), les plus grands dépassent 3:1 (3.2.3, 3.2.4). Test 3.2.5 : aucun mécanisme de remplacement, non nécessaire. Conforme."
+		},
+		{
+			"criterion": "3.2",
+			"page": "https://chikimuras.github.io/rampe/referentiel/",
+			"status": "C",
+			"note": "Tests 3.2.1 à 3.2.4 sur la page Référentiel (13 thématiques, 106 liens de critères, encadrés « Explication Rampe ») : chaque nœud texte visible a été mesuré (getComputedStyle : color, background-color composé avec les ancêtres, opacité, taille et graisse restituées) et le rapport WCAG calculé par l’IA, en thème clair puis sombre (colorScheme Playwright), <details> ouverts. Aucune image d’arrière-plan sous du texte. Plus faible rapport : thème clair 6,59:1 (mentions .axe #5d5a53 de 14 px sur #fbfaf7), thème sombre 7,51:1 (#a9a69d sur #151513) ; liens et numéros de critère #0b5d4b 7,50:1 / #6fd3b5 10,15:1 ; intitulé « Explication Rampe » 14 px gras #1c1b19 sur #e2f0eb 14,67:1 / #ecebe6 sur #1c3a32 10,34:1. Tous les textes de moins de 24 px (ou 18,5 px gras) atteignent 4,5:1 (3.2.1, 3.2.2), les plus grands dépassent 3:1 (3.2.3, 3.2.4). Test 3.2.5 : aucun mécanisme de remplacement, non nécessaire. Conforme."
+		},
+		{
+			"criterion": "3.2",
+			"page": "https://chikimuras.github.io/rampe/referentiel/1-1/",
+			"status": "C",
+			"note": "Tests 3.2.1 à 3.2.4 sur la fiche du critère 1.1 (texte officiel, 8 tests, blocs <details> de méthodologie, liens vers le glossaire) : chaque nœud texte visible a été mesuré (getComputedStyle : color, background-color composé avec les ancêtres, opacité, taille et graisse restituées) et le rapport WCAG calculé par l’IA, en thème clair puis sombre (colorScheme Playwright), <details> ouverts. Aucune image d’arrière-plan sous du texte. Plus faible rapport : thème clair 6,59:1 (fil d’Ariane, niveaux de test et texte officiel #5d5a53 de 14 à 16 px sur #fbfaf7), thème sombre 7,51:1 (#a9a69d sur #151513) ; liens #0b5d4b 7,50:1 / 10,15:1 ; texte des <details> ouverts #1c1b19 sur #fff 17,21:1 / #ecebe6 sur #1e1e1b 14,00:1. Tous les textes de moins de 24 px (ou 18,5 px gras) atteignent 4,5:1 (3.2.1, 3.2.2), les plus grands dépassent 3:1 (3.2.3, 3.2.4). Test 3.2.5 : aucun mécanisme de remplacement, non nécessaire. Conforme."
+		},
+		{
+			"criterion": "3.2",
+			"page": "https://chikimuras.github.io/rampe/referentiel/glossaire/",
+			"status": "C",
+			"note": "Tests 3.2.1 à 3.2.4 sur le glossaire (liste de définitions <dl>, ancres) : chaque nœud texte visible a été mesuré (getComputedStyle : color, background-color composé avec les ancêtres, opacité, taille et graisse restituées) et le rapport WCAG calculé par l’IA, en thème clair puis sombre (colorScheme Playwright), <details> ouverts. Aucune image d’arrière-plan sous du texte. Plus faible rapport : thème clair 6,59:1 (source RGAA #5d5a53 de 14 px sur #fbfaf7), thème sombre 7,51:1 (#a9a69d sur #151513) ; liens et <code> #0b5d4b 7,50:1 / 10,15:1 ; termes <dt> 19 px gras #1c1b19 16,49:1 / 15,32:1. Tous les textes de moins de 24 px (ou 18,5 px gras) atteignent 4,5:1 (3.2.1, 3.2.2), les plus grands dépassent 3:1 (3.2.3, 3.2.4). Test 3.2.5 : aucun mécanisme de remplacement, non nécessaire. Conforme."
+		},
+		{
+			"criterion": "3.2",
+			"page": "https://chikimuras.github.io/rampe/audit/",
+			"status": "C",
+			"note": "Tests 3.2.1 à 3.2.4 sur l’audit guidé (îlot Preact) : chaque nœud texte visible a été mesuré (getComputedStyle : color, background-color composé avec les ancêtres, opacité, taille et graisse restituées) et le rapport WCAG calculé par l’IA, en thème clair puis sombre (colorScheme Playwright), <details> ouverts. Aucune image d’arrière-plan sous du texte. Plus faible rapport : thème clair 5,86:1 (compteurs .audit-count #5d5a53 de 14 px sur le fond #e2f0eb du bouton de thématique courant), thème sombre 5,07:1 (#a9a69d sur #1c3a32, même élément) ; états de l’îlot examinés : état initial, erreur d’adresse (champ aria-invalid + message), 2 pages ajoutées, import d’un rapport automatique (statut « à confirmer », conflit, indices), critère 3.2 affiché, tous les <details> ouverts, boîte de dialogue « Remplacer l’audit en cours ? » ouverte, puis audit complet importé (tableau « Résultat par page », déclaration, schéma pluriannuel) ; message d’erreur .audit-error #8a4b00 gras sur #fff 6,80:1 / #f2b45c sur #1e1e1b 9,12:1 ; boutons principaux #fbfaf7 sur #0b5d4b 7,50:1 / #151513 sur #6fd3b5 10,15:1 (y compris ::file-selector-button, calculé à la main) ; pastille NC cochée #1c1b19 sur #fbe9e4 14,65:1 / #ecebe6 sur #3d1f18 12,50:1 ; <mark> #1c1b19 sur #e2f0eb 14,67:1 / 10,34:1 ; texte de la boîte de dialogue sur #fff / #1e1e1b ≥ 6,87:1 ; lien d’évitement au focus #0b5d4b sur #fff 7,83:1 / #6fd3b5 sur #1e1e1b 9,28:1 ; aucun placeholder. Tous les textes de moins de 24 px (ou 18,5 px gras) atteignent 4,5:1 (3.2.1, 3.2.2), les plus grands dépassent 3:1 (3.2.3, 3.2.4). Test 3.2.5 : aucun mécanisme de remplacement, non nécessaire. Conforme."
+		},
+		{
+			"criterion": "3.2",
+			"page": "https://chikimuras.github.io/rampe/cockpit/",
+			"status": "C",
+			"note": "Tests 3.2.1 à 3.2.4 sur le cockpit (encadré « En attente d’Alexandre », 7 barres <progress>, liste des ADR avec pastilles de statut « Accepted », liste des pages du journal) : chaque nœud texte visible a été mesuré (getComputedStyle : color, background-color composé avec les ancêtres, opacité, taille et graisse restituées) et le rapport WCAG calculé par l’IA, en thème clair puis sombre (colorScheme Playwright), <details> ouverts. Aucune image d’arrière-plan sous du texte. Plus faible rapport : thème clair 6,59:1 (compteurs « n/m » #5d5a53 de 17 px sur #fbfaf7), thème sombre 7,51:1 (#a9a69d sur #151513) ; pastilles « Accepted » 12,8 px #1c1b19 sur #e2f0eb 14,67:1 / #ecebe6 sur #1c3a32 10,34:1 ; liens 7,50:1 / 10,15:1. Tous les textes de moins de 24 px (ou 18,5 px gras) atteignent 4,5:1 (3.2.1, 3.2.2), les plus grands dépassent 3:1 (3.2.3, 3.2.4). Test 3.2.5 : aucun mécanisme de remplacement, non nécessaire. Conforme."
+		},
+		{
+			"criterion": "3.2",
+			"page": "https://chikimuras.github.io/rampe/cockpit/adr/0011-cli-audit-playwright/",
+			"status": "C",
+			"note": "Tests 3.2.1 à 3.2.4 sur la page ADR-0011 (Markdown rendu, tableau, blocs de code) : chaque nœud texte visible a été mesuré (getComputedStyle : color, background-color composé avec les ancêtres, opacité, taille et graisse restituées) et le rapport WCAG calculé par l’IA, en thème clair puis sombre (colorScheme Playwright), <details> ouverts. Aucune image d’arrière-plan sous du texte. Plus faible rapport : thème clair 6,59:1 (métadonnées .meta #5d5a53 de 17 px et pied de page 14 px sur #fbfaf7), thème sombre 7,51:1 (#a9a69d sur #151513) ; texte du tableau et du code #1c1b19 sur #fbfaf7 / #fff ≥ 16,49:1 ; h2 25,5 px gras 16,49:1 / 15,32:1 ; liens 7,50:1 / 10,15:1. Tous les textes de moins de 24 px (ou 18,5 px gras) atteignent 4,5:1 (3.2.1, 3.2.2), les plus grands dépassent 3:1 (3.2.3, 3.2.4). Test 3.2.5 : aucun mécanisme de remplacement, non nécessaire. Conforme."
+		},
+		{
+			"criterion": "3.2",
+			"page": "https://chikimuras.github.io/rampe/cockpit/journal/2026-10-15/",
+			"status": "C",
+			"note": "Tests 3.2.1 à 3.2.4 sur la page de journal du 15/10/2026 (Markdown rendu, titres, listes, code) : chaque nœud texte visible a été mesuré (getComputedStyle : color, background-color composé avec les ancêtres, opacité, taille et graisse restituées) et le rapport WCAG calculé par l’IA, en thème clair puis sombre (colorScheme Playwright), <details> ouverts. Aucune image d’arrière-plan sous du texte. Plus faible rapport : thème clair 6,59:1 (date .meta #5d5a53 de 17 px et pied de page sur #fbfaf7), thème sombre 7,51:1 (#a9a69d sur #151513) ; texte, <strong> et code #1c1b19 ≥ 16,49:1 / ≥ 14,00:1 ; liens 7,50:1 / 10,15:1. Tous les textes de moins de 24 px (ou 18,5 px gras) atteignent 4,5:1 (3.2.1, 3.2.2), les plus grands dépassent 3:1 (3.2.3, 3.2.4). Test 3.2.5 : aucun mécanisme de remplacement, non nécessaire. Conforme."
+		},
+		{
+			"criterion": "3.2",
+			"page": "https://chikimuras.github.io/rampe/cockpit/docs/roadmap/",
+			"status": "C",
+			"note": "Tests 3.2.1 à 3.2.4 sur la feuille de route (listes de tâches avec pastilles « Fait » / « À faire ») : chaque nœud texte visible a été mesuré (getComputedStyle : color, background-color composé avec les ancêtres, opacité, taille et graisse restituées) et le rapport WCAG calculé par l’IA, en thème clair puis sombre (colorScheme Playwright), <details> ouverts. Aucune image d’arrière-plan sous du texte. Plus faible rapport : thème clair 6,59:1 (pied de page #5d5a53 de 14 px sur #fbfaf7), thème sombre 7,51:1 (#a9a69d sur #151513) ; pastilles « Fait » 12,8 px #1c1b19 sur #e2f0eb 14,67:1 / 10,34:1 et « À faire » sur #fbfaf7 16,49:1 / 15,32:1 ; liens 7,50:1 / 10,15:1. Tous les textes de moins de 24 px (ou 18,5 px gras) atteignent 4,5:1 (3.2.1, 3.2.2), les plus grands dépassent 3:1 (3.2.3, 3.2.4). Test 3.2.5 : aucun mécanisme de remplacement, non nécessaire. Conforme."
+		},
+		{
+			"criterion": "3.2",
+			"page": "https://chikimuras.github.io/rampe/referentiel/5-1/",
+			"status": "C",
+			"note": "Tests 3.2.1 à 3.2.4 sur la fiche du critère 5.1 (texte officiel, test, méthodologie, encadré de vérification humaine) : chaque nœud texte visible a été mesuré (getComputedStyle : color, background-color composé avec les ancêtres, opacité, taille et graisse restituées) et le rapport WCAG calculé par l’IA, en thème clair puis sombre (colorScheme Playwright), <details> ouverts. Aucune image d’arrière-plan sous du texte. Plus faible rapport : thème clair 6,59:1 (fil d’Ariane, niveaux et texte officiel #5d5a53 sur #fbfaf7), thème sombre 7,51:1 (#a9a69d sur #151513) ; encadré de vérification humaine #1c1b19 sur #fff 17,21:1 / #ecebe6 sur #1e1e1b 14,00:1 ; liens 7,50:1 / 10,15:1. Tous les textes de moins de 24 px (ou 18,5 px gras) atteignent 4,5:1 (3.2.1, 3.2.2), les plus grands dépassent 3:1 (3.2.3, 3.2.4). Test 3.2.5 : aucun mécanisme de remplacement, non nécessaire. Conforme."
+		},
+		{
+			"criterion": "3.2",
+			"page": "https://chikimuras.github.io/rampe/referentiel/1-9/",
+			"status": "C",
+			"note": "Tests 3.2.1 à 3.2.4 sur la fiche du critère 1.9 (texte officiel, tests, méthodologie, encadré de vérification humaine) : chaque nœud texte visible a été mesuré (getComputedStyle : color, background-color composé avec les ancêtres, opacité, taille et graisse restituées) et le rapport WCAG calculé par l’IA, en thème clair puis sombre (colorScheme Playwright), <details> ouverts. Aucune image d’arrière-plan sous du texte. Plus faible rapport : thème clair 6,59:1 (fil d’Ariane, niveaux et texte officiel #5d5a53 sur #fbfaf7), thème sombre 7,51:1 (#a9a69d sur #151513) ; encadré de vérification humaine #1c1b19 sur #fff 17,21:1 / #ecebe6 sur #1e1e1b 14,00:1 ; liens 7,50:1 / 10,15:1. Tous les textes de moins de 24 px (ou 18,5 px gras) atteignent 4,5:1 (3.2.1, 3.2.2), les plus grands dépassent 3:1 (3.2.3, 3.2.4). Test 3.2.5 : aucun mécanisme de remplacement, non nécessaire. Conforme."
+		},
+		{
+			"criterion": "3.3",
+			"page": "https://chikimuras.github.io/rampe/",
+			"status": "C",
+			"note": "Tests 3.3.1 à 3.3.3 sur l’accueil (titre, trois paragraphes, navigation principale, pied de page), couleurs mesurées (getComputedStyle, et pixels de captures pour les éléments natifs) en thème clair et sombre. Composants : liens de navigation et du texte (liens identifiés par leur soulignement et leur texte à 7,50:1 / 10,15:1), lien d’évitement ; contour de focus 3 px var(--accent) décalé de 2 px sur le fond de page : #0b5d4b / #fbfaf7 7,50:1 (clair), #6fd3b5 / #151513 10,15:1 (sombre). Aucun élément graphique porteur d’information (3.3.2, 3.3.3). Test 3.3.4 : aucun mécanisme de remplacement, non nécessaire. Conforme."
+		},
+		{
+			"criterion": "3.3",
+			"page": "https://chikimuras.github.io/rampe/referentiel/",
+			"status": "C",
+			"note": "Tests 3.3.1 à 3.3.3 sur la page Référentiel (13 thématiques, 106 liens de critères, encadrés « Explication Rampe »), couleurs mesurées (getComputedStyle, et pixels de captures pour les éléments natifs) en thème clair et sombre. Composants : liens (liens identifiés par leur soulignement et leur texte à 7,50:1 / 10,15:1) ; contour de focus 3 px var(--accent) décalé de 2 px sur le fond de page : #0b5d4b / #fbfaf7 7,50:1 (clair), #6fd3b5 / #151513 10,15:1 (sombre). Les filets #e3e0d8 entre critères et la bordure gauche des encadrés sont décoratifs (cas particulier : non porteurs d’information). Aucun élément graphique porteur d’information. Test 3.3.4 : aucun mécanisme de remplacement, non nécessaire. Conforme."
+		},
+		{
+			"criterion": "3.3",
+			"page": "https://chikimuras.github.io/rampe/referentiel/1-1/",
+			"status": "C",
+			"note": "Tests 3.3.1 à 3.3.3 sur la fiche du critère 1.1 (texte officiel, 8 tests, blocs <details> de méthodologie, liens vers le glossaire), couleurs mesurées (getComputedStyle, et pixels de captures pour les éléments natifs) en thème clair et sombre. Composants : liens (liens identifiés par leur soulignement et leur texte à 7,50:1 / 10,15:1), résumés <summary> des blocs de méthodologie identifiés par leur triangle ::marker #1c1b19 (16,49:1 / 15,32:1) et leur intitulé en gras — la bordure #e3e0d8 du <details> n’est pas nécessaire pour les identifier ; contour de focus 3 px var(--accent) décalé de 2 px sur le fond de page : #0b5d4b / #fbfaf7 7,50:1 (clair), #6fd3b5 / #151513 10,15:1 (sombre). Aucun élément graphique porteur d’information. Test 3.3.4 : aucun mécanisme de remplacement, non nécessaire. Conforme."
+		},
+		{
+			"criterion": "3.3",
+			"page": "https://chikimuras.github.io/rampe/referentiel/glossaire/",
+			"status": "C",
+			"note": "Tests 3.3.1 à 3.3.3 sur le glossaire (liste de définitions <dl>, ancres), couleurs mesurées (getComputedStyle, et pixels de captures pour les éléments natifs) en thème clair et sombre. Composants : liens (liens identifiés par leur soulignement et leur texte à 7,50:1 / 10,15:1) ; contour de focus 3 px var(--accent) décalé de 2 px sur le fond de page : #0b5d4b / #fbfaf7 7,50:1 (clair), #6fd3b5 / #151513 10,15:1 (sombre). Filets des <dt> décoratifs. Aucun élément graphique porteur d’information. Test 3.3.4 : aucun mécanisme de remplacement, non nécessaire. Conforme."
+		},
+		{
+			"criterion": "3.3",
+			"page": "https://chikimuras.github.io/rampe/audit/",
+			"status": "NC",
+			"note": "Test 3.3.1 en échec sur l’audit guidé (îlot Preact) (états de l’îlot examinés : état initial, erreur d’adresse (champ aria-invalid + message), 2 pages ajoutées, import d’un rapport automatique (statut « à confirmer », conflit, indices), critère 3.2 affiché, tous les <details> ouverts, boîte de dialogue « Remplacer l’audit en cours ? » ouverte, puis audit complet importé (tableau « Résultat par page », déclaration, schéma pluriannuel)), couleurs mesurées par getComputedStyle et pixels de captures, thèmes clair et sombre. Les boutons de la navigation « Thématiques » (.audit-topics button, 13 boutons « 1. Images 18 à évaluer »…) et de la liste « Critères de la thématique n » (.audit-list button) ne sont identifiables comme boutons que par leur cadre : texte de même couleur que le texte courant, sans soulignement ni icône. Or ce cadre est une bordure de 1 px var(--line) : #e3e0d8 sur le fond #fbfaf7 = 1,26:1 (sur #fff 1,32:1) en clair, #34332f sur #151513 = 1,45:1 en sombre, et le fond du bouton (#fff / #1e1e1b) ne contraste qu’à 1,04:1 / 1,09:1 avec la page : inférieur à 3:1, aucun mécanisme de remplacement (3.3.4 sans objet). Jugement de l’IA : sans ce cadre, la grille se lit comme du texte simple ; le cas particulier « couleur non nécessaire pour identifier le composant » ne s’applique donc pas. Le reste passe : état courant aria-current (bordure #0b5d4b 7,50:1 / #6fd3b5 10,15:1, plus fond et gras), boutons ordinaires (bordure #5d5a53 6,59:1 / #a9a69d 7,51:1), boutons principaux (fond #0b5d4b 7,50:1 / #6fd3b5 10,15:1), champs (bordure #5d5a53 6,88:1 sur #fff / 6,87:1 sur #1e1e1b), champ invalide (bordure 2 px #8a4b00 6,52:1 / #f2b45c 9,98:1), boutons radio (anneau natif #767676 4,35:1 sur #fbfaf7 en clair, #858585 4,95:1 en sombre ; coché #0b5d4b 7,50:1 / #6fd3b5 10,15:1), pastilles de statut cochées (C #0b5d4b, NC #a3361b 6,49:1 / #ff9b85 8,95:1, NA et NT #5d5a53 6,59:1 / #a9a69d 7,51:1), contour de focus 3 px var(--accent) décalé de 2 px sur le fond de page : #0b5d4b / #fbfaf7 7,50:1 (clair), #6fd3b5 / #151513 10,15:1 (sombre). 3.3.2 / 3.3.3 : barre <progress> doublée du texte « Il reste n évaluations… », cas particulier. Non conforme à cause des boutons de thématique et de critère. Correction : bordure var(--muted) pour ces boutons."
+		},
+		{
+			"criterion": "3.3",
+			"page": "https://chikimuras.github.io/rampe/cockpit/",
+			"status": "C",
+			"note": "Tests 3.3.1 à 3.3.3 sur le cockpit (encadré « En attente d’Alexandre », 7 barres <progress>, liste des ADR avec pastilles de statut « Accepted », liste des pages du journal), couleurs mesurées (getComputedStyle, et pixels de captures pour les éléments natifs) en thème clair et sombre. Composants : liens (liens identifiés par leur soulignement et leur texte à 7,50:1 / 10,15:1) ; contour de focus 3 px var(--accent) décalé de 2 px sur le fond de page : #0b5d4b / #fbfaf7 7,50:1 (clair), #6fd3b5 / #151513 10,15:1 (sombre). Éléments graphiques : 7 barres <progress> (pixels mesurés sur capture) — partie remplie #0b5d4b contre piste #efefef 6,81:1 (clair), #6fd3b5 contre #3b3b3b 6,22:1 (sombre) pour 3.3.3 ; la piste vide contraste peu avec le fond (1,10:1 / 1,63:1) mais chaque barre est doublée du texte « n/m » visible et de son nom accessible (aria-label « Phase n — … : x sur y », par exemple « Phase 2 — Audit automatisé (CLI) : 3 sur 4 »), cas particulier « informations identiques visibles dans la page ». Pastilles de statut : information portée par le texte. Test 3.3.4 : aucun mécanisme de remplacement, non nécessaire. Conforme."
+		},
+		{
+			"criterion": "3.3",
+			"page": "https://chikimuras.github.io/rampe/cockpit/adr/0011-cli-audit-playwright/",
+			"status": "C",
+			"note": "Tests 3.3.1 à 3.3.3 sur la page ADR-0011 (Markdown rendu, tableau, blocs de code), couleurs mesurées (getComputedStyle, et pixels de captures pour les éléments natifs) en thème clair et sombre. Composants : liens (liens identifiés par leur soulignement et leur texte à 7,50:1 / 10,15:1) ; contour de focus 3 px var(--accent) décalé de 2 px sur le fond de page : #0b5d4b / #fbfaf7 7,50:1 (clair), #6fd3b5 / #151513 10,15:1 (sombre). Bordures du tableau décoratives (structure, pas un composant). Aucun élément graphique porteur d’information. Test 3.3.4 : aucun mécanisme de remplacement, non nécessaire. Conforme."
+		},
+		{
+			"criterion": "3.3",
+			"page": "https://chikimuras.github.io/rampe/cockpit/journal/2026-10-15/",
+			"status": "C",
+			"note": "Tests 3.3.1 à 3.3.3 sur la page de journal du 15/10/2026 (Markdown rendu, titres, listes, code), couleurs mesurées (getComputedStyle, et pixels de captures pour les éléments natifs) en thème clair et sombre. Composants : liens (liens identifiés par leur soulignement et leur texte à 7,50:1 / 10,15:1) ; contour de focus 3 px var(--accent) décalé de 2 px sur le fond de page : #0b5d4b / #fbfaf7 7,50:1 (clair), #6fd3b5 / #151513 10,15:1 (sombre). Aucun élément graphique porteur d’information. Test 3.3.4 : aucun mécanisme de remplacement, non nécessaire. Conforme."
+		},
+		{
+			"criterion": "3.3",
+			"page": "https://chikimuras.github.io/rampe/cockpit/docs/roadmap/",
+			"status": "C",
+			"note": "Tests 3.3.1 à 3.3.3 sur la feuille de route (listes de tâches avec pastilles « Fait » / « À faire »), couleurs mesurées (getComputedStyle, et pixels de captures pour les éléments natifs) en thème clair et sombre. Composants : liens (liens identifiés par leur soulignement et leur texte à 7,50:1 / 10,15:1) ; contour de focus 3 px var(--accent) décalé de 2 px sur le fond de page : #0b5d4b / #fbfaf7 7,50:1 (clair), #6fd3b5 / #151513 10,15:1 (sombre). Pastilles de tâche : bordure #0b5d4b 7,50:1 / #6fd3b5 10,15:1, mais l’état est porté par le texte « Fait » / « À faire ». Aucun élément graphique dont la couleur seule est nécessaire. Test 3.3.4 : aucun mécanisme de remplacement, non nécessaire. Conforme."
+		},
+		{
+			"criterion": "3.3",
+			"page": "https://chikimuras.github.io/rampe/referentiel/5-1/",
+			"status": "C",
+			"note": "Tests 3.3.1 à 3.3.3 sur la fiche du critère 5.1 (texte officiel, test, méthodologie, encadré de vérification humaine), couleurs mesurées (getComputedStyle, et pixels de captures pour les éléments natifs) en thème clair et sombre. Composants : liens (liens identifiés par leur soulignement et leur texte à 7,50:1 / 10,15:1), résumé <summary> identifié par son triangle ::marker #1c1b19 et son intitulé gras ; contour de focus 3 px var(--accent) décalé de 2 px sur le fond de page : #0b5d4b / #fbfaf7 7,50:1 (clair), #6fd3b5 / #151513 10,15:1 (sombre). Bordure orange de l’encadré décorative (le texte porte l’information). Aucun élément graphique porteur d’information. Test 3.3.4 : aucun mécanisme de remplacement, non nécessaire. Conforme."
+		},
+		{
+			"criterion": "3.3",
+			"page": "https://chikimuras.github.io/rampe/referentiel/1-9/",
+			"status": "C",
+			"note": "Tests 3.3.1 à 3.3.3 sur la fiche du critère 1.9 (texte officiel, tests, méthodologie, encadré de vérification humaine), couleurs mesurées (getComputedStyle, et pixels de captures pour les éléments natifs) en thème clair et sombre. Composants : liens (liens identifiés par leur soulignement et leur texte à 7,50:1 / 10,15:1), résumés <summary> identifiés par leur triangle ::marker #1c1b19 et leur intitulé gras ; contour de focus 3 px var(--accent) décalé de 2 px sur le fond de page : #0b5d4b / #fbfaf7 7,50:1 (clair), #6fd3b5 / #151513 10,15:1 (sombre). Bordure orange de l’encadré décorative (le texte porte l’information). Aucun élément graphique porteur d’information. Test 3.3.4 : aucun mécanisme de remplacement, non nécessaire. Conforme."
+		}
+	]
+}

@@ -1,0 +1,732 @@
+{
+	"evaluator": "Claude (IA)",
+	"date": "2026-10-16",
+	"entries": [
+		{
+			"criterion": "12.1",
+			"page": "https://chikimuras.github.io/rampe/",
+			"status": "NC",
+			"note": "Test 12.1.1 en échec, évalué sur l’ensemble des pages du site (137 pages construites, donc pas un « nombre très limité de pages » ; pas de processus). La page d’accueil propose le menu de navigation principal (<nav aria-label=\"Navigation principale\"> : Rampe, Référentiel, Audit guidé, Cockpit, ADR, Journal, Code), mais le site n’a ni page « plan du site » ni moteur de recherche (aucun lien de plan du site, aucun champ ou role=\"search\" sur les 11 pages examinées). Une seule des combinaisons exigées n’est donc présente. Correction : ajouter une page « plan du site » (liens vers toutes les rubriques et pages), reliée depuis chaque page au même endroit."
+		},
+		{
+			"criterion": "12.1",
+			"page": "https://chikimuras.github.io/rampe/referentiel/",
+			"status": "NC",
+			"note": "Test 12.1.1 en échec, évalué sur l’ensemble des pages du site (137 pages construites, donc pas un « nombre très limité de pages » ; pas de processus). La page Référentiel propose le menu de navigation principal (<nav aria-label=\"Navigation principale\"> : Rampe, Référentiel, Audit guidé, Cockpit, ADR, Journal, Code), mais le site n’a ni page « plan du site » ni moteur de recherche (aucun lien de plan du site, aucun champ ou role=\"search\" sur les 11 pages examinées). Une seule des combinaisons exigées n’est donc présente. Correction : ajouter une page « plan du site » (liens vers toutes les rubriques et pages), reliée depuis chaque page au même endroit."
+		},
+		{
+			"criterion": "12.1",
+			"page": "https://chikimuras.github.io/rampe/referentiel/1-1/",
+			"status": "NC",
+			"note": "Test 12.1.1 en échec, évalué sur l’ensemble des pages du site (137 pages construites, donc pas un « nombre très limité de pages » ; pas de processus). La fiche du critère 1.1 propose le menu de navigation principal (<nav aria-label=\"Navigation principale\"> : Rampe, Référentiel, Audit guidé, Cockpit, ADR, Journal, Code), mais le site n’a ni page « plan du site » ni moteur de recherche (aucun lien de plan du site, aucun champ ou role=\"search\" sur les 11 pages examinées). Une seule des combinaisons exigées n’est donc présente. Correction : ajouter une page « plan du site » (liens vers toutes les rubriques et pages), reliée depuis chaque page au même endroit."
+		},
+		{
+			"criterion": "12.1",
+			"page": "https://chikimuras.github.io/rampe/referentiel/glossaire/",
+			"status": "NC",
+			"note": "Test 12.1.1 en échec, évalué sur l’ensemble des pages du site (137 pages construites, donc pas un « nombre très limité de pages » ; pas de processus). Le glossaire propose le menu de navigation principal (<nav aria-label=\"Navigation principale\"> : Rampe, Référentiel, Audit guidé, Cockpit, ADR, Journal, Code), mais le site n’a ni page « plan du site » ni moteur de recherche (aucun lien de plan du site, aucun champ ou role=\"search\" sur les 11 pages examinées). Une seule des combinaisons exigées n’est donc présente. Correction : ajouter une page « plan du site » (liens vers toutes les rubriques et pages), reliée depuis chaque page au même endroit."
+		},
+		{
+			"criterion": "12.1",
+			"page": "https://chikimuras.github.io/rampe/audit/",
+			"status": "NC",
+			"note": "Test 12.1.1 en échec, évalué sur l’ensemble des pages du site (137 pages construites, donc pas un « nombre très limité de pages » ; pas de processus). L’audit guidé propose le menu de navigation principal (<nav aria-label=\"Navigation principale\"> : Rampe, Référentiel, Audit guidé, Cockpit, ADR, Journal, Code), mais le site n’a ni page « plan du site » ni moteur de recherche (aucun lien de plan du site, aucun champ ou role=\"search\" sur les 11 pages examinées). Une seule des combinaisons exigées n’est donc présente. Correction : ajouter une page « plan du site » (liens vers toutes les rubriques et pages), reliée depuis chaque page au même endroit."
+		},
+		{
+			"criterion": "12.1",
+			"page": "https://chikimuras.github.io/rampe/cockpit/",
+			"status": "NC",
+			"note": "Test 12.1.1 en échec, évalué sur l’ensemble des pages du site (137 pages construites, donc pas un « nombre très limité de pages » ; pas de processus). Le cockpit propose le menu de navigation principal (<nav aria-label=\"Navigation principale\"> : Rampe, Référentiel, Audit guidé, Cockpit, ADR, Journal, Code), mais le site n’a ni page « plan du site » ni moteur de recherche (aucun lien de plan du site, aucun champ ou role=\"search\" sur les 11 pages examinées). Une seule des combinaisons exigées n’est donc présente. Correction : ajouter une page « plan du site » (liens vers toutes les rubriques et pages), reliée depuis chaque page au même endroit."
+		},
+		{
+			"criterion": "12.1",
+			"page": "https://chikimuras.github.io/rampe/cockpit/adr/0011-cli-audit-playwright/",
+			"status": "NC",
+			"note": "Test 12.1.1 en échec, évalué sur l’ensemble des pages du site (137 pages construites, donc pas un « nombre très limité de pages » ; pas de processus). La page ADR-0011 propose le menu de navigation principal (<nav aria-label=\"Navigation principale\"> : Rampe, Référentiel, Audit guidé, Cockpit, ADR, Journal, Code), mais le site n’a ni page « plan du site » ni moteur de recherche (aucun lien de plan du site, aucun champ ou role=\"search\" sur les 11 pages examinées). Une seule des combinaisons exigées n’est donc présente. Correction : ajouter une page « plan du site » (liens vers toutes les rubriques et pages), reliée depuis chaque page au même endroit."
+		},
+		{
+			"criterion": "12.1",
+			"page": "https://chikimuras.github.io/rampe/cockpit/journal/2026-10-15/",
+			"status": "NC",
+			"note": "Test 12.1.1 en échec, évalué sur l’ensemble des pages du site (137 pages construites, donc pas un « nombre très limité de pages » ; pas de processus). La page du journal du 2026-10-15 propose le menu de navigation principal (<nav aria-label=\"Navigation principale\"> : Rampe, Référentiel, Audit guidé, Cockpit, ADR, Journal, Code), mais le site n’a ni page « plan du site » ni moteur de recherche (aucun lien de plan du site, aucun champ ou role=\"search\" sur les 11 pages examinées). Une seule des combinaisons exigées n’est donc présente. Correction : ajouter une page « plan du site » (liens vers toutes les rubriques et pages), reliée depuis chaque page au même endroit."
+		},
+		{
+			"criterion": "12.1",
+			"page": "https://chikimuras.github.io/rampe/cockpit/docs/roadmap/",
+			"status": "NC",
+			"note": "Test 12.1.1 en échec, évalué sur l’ensemble des pages du site (137 pages construites, donc pas un « nombre très limité de pages » ; pas de processus). La page Roadmap propose le menu de navigation principal (<nav aria-label=\"Navigation principale\"> : Rampe, Référentiel, Audit guidé, Cockpit, ADR, Journal, Code), mais le site n’a ni page « plan du site » ni moteur de recherche (aucun lien de plan du site, aucun champ ou role=\"search\" sur les 11 pages examinées). Une seule des combinaisons exigées n’est donc présente. Correction : ajouter une page « plan du site » (liens vers toutes les rubriques et pages), reliée depuis chaque page au même endroit."
+		},
+		{
+			"criterion": "12.1",
+			"page": "https://chikimuras.github.io/rampe/referentiel/5-1/",
+			"status": "NC",
+			"note": "Test 12.1.1 en échec, évalué sur l’ensemble des pages du site (137 pages construites, donc pas un « nombre très limité de pages » ; pas de processus). La fiche du critère 5.1 propose le menu de navigation principal (<nav aria-label=\"Navigation principale\"> : Rampe, Référentiel, Audit guidé, Cockpit, ADR, Journal, Code), mais le site n’a ni page « plan du site » ni moteur de recherche (aucun lien de plan du site, aucun champ ou role=\"search\" sur les 11 pages examinées). Une seule des combinaisons exigées n’est donc présente. Correction : ajouter une page « plan du site » (liens vers toutes les rubriques et pages), reliée depuis chaque page au même endroit."
+		},
+		{
+			"criterion": "12.1",
+			"page": "https://chikimuras.github.io/rampe/referentiel/1-9/",
+			"status": "NC",
+			"note": "Test 12.1.1 en échec, évalué sur l’ensemble des pages du site (137 pages construites, donc pas un « nombre très limité de pages » ; pas de processus). La fiche du critère 1.9 propose le menu de navigation principal (<nav aria-label=\"Navigation principale\"> : Rampe, Référentiel, Audit guidé, Cockpit, ADR, Journal, Code), mais le site n’a ni page « plan du site » ni moteur de recherche (aucun lien de plan du site, aucun champ ou role=\"search\" sur les 11 pages examinées). Une seule des combinaisons exigées n’est donc présente. Correction : ajouter une page « plan du site » (liens vers toutes les rubriques et pages), reliée depuis chaque page au même endroit."
+		},
+		{
+			"criterion": "12.2",
+			"page": "https://chikimuras.github.io/rampe/",
+			"status": "NA",
+			"note": "Test 12.2.1 : la page est la page d’accueil, cas particulier du critère 12.2 : non applicable. (Pour information, le menu principal y est au même endroit que sur les autres pages.)"
+		},
+		{
+			"criterion": "12.2",
+			"page": "https://chikimuras.github.io/rampe/referentiel/",
+			"status": "C",
+			"note": "Test 12.2.1 : comparé à l’accueil et aux autres pages de l’échantillon (même ensemble, gabarit Base.astro), le menu « Navigation principale » de la page Référentiel est toujours dans le <header>, en haut de page, au même emplacement (mesuré à 1280 px : x=240, y=0, largeur 800 px), avec les mêmes liens dans le même ordre, et il précède <main> dans le code source."
+		},
+		{
+			"criterion": "12.2",
+			"page": "https://chikimuras.github.io/rampe/referentiel/1-1/",
+			"status": "C",
+			"note": "Test 12.2.1 : comparé à l’accueil et aux autres pages de l’échantillon (même ensemble, gabarit Base.astro), le menu « Navigation principale » de la fiche du critère 1.1 est toujours dans le <header>, en haut de page, au même emplacement (mesuré à 1280 px : x=240, y=0, largeur 800 px), avec les mêmes liens dans le même ordre, et il précède <main> dans le code source. Le fil d’Ariane et la barre « Critères voisins » occupent la même place sur les trois fiches de critère de l’échantillon (1.1, 5.1, 1.9)."
+		},
+		{
+			"criterion": "12.2",
+			"page": "https://chikimuras.github.io/rampe/referentiel/glossaire/",
+			"status": "C",
+			"note": "Test 12.2.1 : comparé à l’accueil et aux autres pages de l’échantillon (même ensemble, gabarit Base.astro), le menu « Navigation principale » du glossaire est toujours dans le <header>, en haut de page, au même emplacement (mesuré à 1280 px : x=240, y=0, largeur 800 px), avec les mêmes liens dans le même ordre, et il précède <main> dans le code source."
+		},
+		{
+			"criterion": "12.2",
+			"page": "https://chikimuras.github.io/rampe/audit/",
+			"status": "C",
+			"note": "Test 12.2.1 : comparé à l’accueil et aux autres pages de l’échantillon (même ensemble, gabarit Base.astro), le menu « Navigation principale » de l’audit guidé est toujours dans le <header>, en haut de page, au même emplacement (mesuré à 1280 px : x=240, y=0, largeur 800 px), avec les mêmes liens dans le même ordre, et il précède <main> dans le code source."
+		},
+		{
+			"criterion": "12.2",
+			"page": "https://chikimuras.github.io/rampe/cockpit/",
+			"status": "C",
+			"note": "Test 12.2.1 : comparé à l’accueil et aux autres pages de l’échantillon (même ensemble, gabarit Base.astro), le menu « Navigation principale » du cockpit est toujours dans le <header>, en haut de page, au même emplacement (mesuré à 1280 px : x=240, y=0, largeur 800 px), avec les mêmes liens dans le même ordre, et il précède <main> dans le code source."
+		},
+		{
+			"criterion": "12.2",
+			"page": "https://chikimuras.github.io/rampe/cockpit/adr/0011-cli-audit-playwright/",
+			"status": "C",
+			"note": "Test 12.2.1 : comparé à l’accueil et aux autres pages de l’échantillon (même ensemble, gabarit Base.astro), le menu « Navigation principale » de la page ADR-0011 est toujours dans le <header>, en haut de page, au même emplacement (mesuré à 1280 px : x=240, y=0, largeur 800 px), avec les mêmes liens dans le même ordre, et il précède <main> dans le code source."
+		},
+		{
+			"criterion": "12.2",
+			"page": "https://chikimuras.github.io/rampe/cockpit/journal/2026-10-15/",
+			"status": "C",
+			"note": "Test 12.2.1 : comparé à l’accueil et aux autres pages de l’échantillon (même ensemble, gabarit Base.astro), le menu « Navigation principale » de la page du journal du 2026-10-15 est toujours dans le <header>, en haut de page, au même emplacement (mesuré à 1280 px : x=240, y=0, largeur 800 px), avec les mêmes liens dans le même ordre, et il précède <main> dans le code source."
+		},
+		{
+			"criterion": "12.2",
+			"page": "https://chikimuras.github.io/rampe/cockpit/docs/roadmap/",
+			"status": "C",
+			"note": "Test 12.2.1 : comparé à l’accueil et aux autres pages de l’échantillon (même ensemble, gabarit Base.astro), le menu « Navigation principale » de la page Roadmap est toujours dans le <header>, en haut de page, au même emplacement (mesuré à 1280 px : x=240, y=0, largeur 800 px), avec les mêmes liens dans le même ordre, et il précède <main> dans le code source."
+		},
+		{
+			"criterion": "12.2",
+			"page": "https://chikimuras.github.io/rampe/referentiel/5-1/",
+			"status": "C",
+			"note": "Test 12.2.1 : comparé à l’accueil et aux autres pages de l’échantillon (même ensemble, gabarit Base.astro), le menu « Navigation principale » de la fiche du critère 5.1 est toujours dans le <header>, en haut de page, au même emplacement (mesuré à 1280 px : x=240, y=0, largeur 800 px), avec les mêmes liens dans le même ordre, et il précède <main> dans le code source. Le fil d’Ariane et la barre « Critères voisins » occupent la même place sur les trois fiches de critère de l’échantillon (1.1, 5.1, 1.9)."
+		},
+		{
+			"criterion": "12.2",
+			"page": "https://chikimuras.github.io/rampe/referentiel/1-9/",
+			"status": "C",
+			"note": "Test 12.2.1 : comparé à l’accueil et aux autres pages de l’échantillon (même ensemble, gabarit Base.astro), le menu « Navigation principale » de la fiche du critère 1.9 est toujours dans le <header>, en haut de page, au même emplacement (mesuré à 1280 px : x=240, y=0, largeur 800 px), avec les mêmes liens dans le même ordre, et il précède <main> dans le code source. Le fil d’Ariane et la barre « Critères voisins » occupent la même place sur les trois fiches de critère de l’échantillon (1.1, 5.1, 1.9)."
+		},
+		{
+			"criterion": "12.3",
+			"page": "https://chikimuras.github.io/rampe/",
+			"status": "NA",
+			"note": "Tests 12.3.1 à 12.3.3 : le site n’a pas de page « plan du site » ; la page d’accueil n’en contient pas (DOM du build examiné). Contenu visé absent : non applicable. Ce manque est relevé au critère 12.1."
+		},
+		{
+			"criterion": "12.3",
+			"page": "https://chikimuras.github.io/rampe/referentiel/",
+			"status": "NA",
+			"note": "Tests 12.3.1 à 12.3.3 : le site n’a pas de page « plan du site » ; la page Référentiel n’en contient pas (DOM du build examiné). Contenu visé absent : non applicable. Ce manque est relevé au critère 12.1."
+		},
+		{
+			"criterion": "12.3",
+			"page": "https://chikimuras.github.io/rampe/referentiel/1-1/",
+			"status": "NA",
+			"note": "Tests 12.3.1 à 12.3.3 : le site n’a pas de page « plan du site » ; la fiche du critère 1.1 n’en contient pas (DOM du build examiné). Contenu visé absent : non applicable. Ce manque est relevé au critère 12.1."
+		},
+		{
+			"criterion": "12.3",
+			"page": "https://chikimuras.github.io/rampe/referentiel/glossaire/",
+			"status": "NA",
+			"note": "Tests 12.3.1 à 12.3.3 : le site n’a pas de page « plan du site » ; le glossaire n’en contient pas (DOM du build examiné). Contenu visé absent : non applicable. Ce manque est relevé au critère 12.1."
+		},
+		{
+			"criterion": "12.3",
+			"page": "https://chikimuras.github.io/rampe/audit/",
+			"status": "NA",
+			"note": "Tests 12.3.1 à 12.3.3 : le site n’a pas de page « plan du site » ; l’audit guidé n’en contient pas (DOM du build examiné). Contenu visé absent : non applicable. Ce manque est relevé au critère 12.1."
+		},
+		{
+			"criterion": "12.3",
+			"page": "https://chikimuras.github.io/rampe/cockpit/",
+			"status": "NA",
+			"note": "Tests 12.3.1 à 12.3.3 : le site n’a pas de page « plan du site » ; le cockpit n’en contient pas (DOM du build examiné). Contenu visé absent : non applicable. Ce manque est relevé au critère 12.1."
+		},
+		{
+			"criterion": "12.3",
+			"page": "https://chikimuras.github.io/rampe/cockpit/adr/0011-cli-audit-playwright/",
+			"status": "NA",
+			"note": "Tests 12.3.1 à 12.3.3 : le site n’a pas de page « plan du site » ; la page ADR-0011 n’en contient pas (DOM du build examiné). Contenu visé absent : non applicable. Ce manque est relevé au critère 12.1."
+		},
+		{
+			"criterion": "12.3",
+			"page": "https://chikimuras.github.io/rampe/cockpit/journal/2026-10-15/",
+			"status": "NA",
+			"note": "Tests 12.3.1 à 12.3.3 : le site n’a pas de page « plan du site » ; la page du journal du 2026-10-15 n’en contient pas (DOM du build examiné). Contenu visé absent : non applicable. Ce manque est relevé au critère 12.1."
+		},
+		{
+			"criterion": "12.3",
+			"page": "https://chikimuras.github.io/rampe/cockpit/docs/roadmap/",
+			"status": "NA",
+			"note": "Tests 12.3.1 à 12.3.3 : le site n’a pas de page « plan du site » ; la page Roadmap n’en contient pas (DOM du build examiné). Contenu visé absent : non applicable. Ce manque est relevé au critère 12.1."
+		},
+		{
+			"criterion": "12.3",
+			"page": "https://chikimuras.github.io/rampe/referentiel/5-1/",
+			"status": "NA",
+			"note": "Tests 12.3.1 à 12.3.3 : le site n’a pas de page « plan du site » ; la fiche du critère 5.1 n’en contient pas (DOM du build examiné). Contenu visé absent : non applicable. Ce manque est relevé au critère 12.1."
+		},
+		{
+			"criterion": "12.3",
+			"page": "https://chikimuras.github.io/rampe/referentiel/1-9/",
+			"status": "NA",
+			"note": "Tests 12.3.1 à 12.3.3 : le site n’a pas de page « plan du site » ; la fiche du critère 1.9 n’en contient pas (DOM du build examiné). Contenu visé absent : non applicable. Ce manque est relevé au critère 12.1."
+		},
+		{
+			"criterion": "12.4",
+			"page": "https://chikimuras.github.io/rampe/",
+			"status": "NA",
+			"note": "Tests 12.4.1 à 12.4.3 : le site n’a pas de page « plan du site », ni de lien ou bouton y menant ; la page d’accueil n’en contient pas (DOM du build examiné). Contenu visé absent : non applicable. Ce manque est relevé au critère 12.1."
+		},
+		{
+			"criterion": "12.4",
+			"page": "https://chikimuras.github.io/rampe/referentiel/",
+			"status": "NA",
+			"note": "Tests 12.4.1 à 12.4.3 : le site n’a pas de page « plan du site », ni de lien ou bouton y menant ; la page Référentiel n’en contient pas (DOM du build examiné). Contenu visé absent : non applicable. Ce manque est relevé au critère 12.1."
+		},
+		{
+			"criterion": "12.4",
+			"page": "https://chikimuras.github.io/rampe/referentiel/1-1/",
+			"status": "NA",
+			"note": "Tests 12.4.1 à 12.4.3 : le site n’a pas de page « plan du site », ni de lien ou bouton y menant ; la fiche du critère 1.1 n’en contient pas (DOM du build examiné). Contenu visé absent : non applicable. Ce manque est relevé au critère 12.1."
+		},
+		{
+			"criterion": "12.4",
+			"page": "https://chikimuras.github.io/rampe/referentiel/glossaire/",
+			"status": "NA",
+			"note": "Tests 12.4.1 à 12.4.3 : le site n’a pas de page « plan du site », ni de lien ou bouton y menant ; le glossaire n’en contient pas (DOM du build examiné). Contenu visé absent : non applicable. Ce manque est relevé au critère 12.1."
+		},
+		{
+			"criterion": "12.4",
+			"page": "https://chikimuras.github.io/rampe/audit/",
+			"status": "NA",
+			"note": "Tests 12.4.1 à 12.4.3 : le site n’a pas de page « plan du site », ni de lien ou bouton y menant ; l’audit guidé n’en contient pas (DOM du build examiné). Contenu visé absent : non applicable. Ce manque est relevé au critère 12.1."
+		},
+		{
+			"criterion": "12.4",
+			"page": "https://chikimuras.github.io/rampe/cockpit/",
+			"status": "NA",
+			"note": "Tests 12.4.1 à 12.4.3 : le site n’a pas de page « plan du site », ni de lien ou bouton y menant ; le cockpit n’en contient pas (DOM du build examiné). Contenu visé absent : non applicable. Ce manque est relevé au critère 12.1."
+		},
+		{
+			"criterion": "12.4",
+			"page": "https://chikimuras.github.io/rampe/cockpit/adr/0011-cli-audit-playwright/",
+			"status": "NA",
+			"note": "Tests 12.4.1 à 12.4.3 : le site n’a pas de page « plan du site », ni de lien ou bouton y menant ; la page ADR-0011 n’en contient pas (DOM du build examiné). Contenu visé absent : non applicable. Ce manque est relevé au critère 12.1."
+		},
+		{
+			"criterion": "12.4",
+			"page": "https://chikimuras.github.io/rampe/cockpit/journal/2026-10-15/",
+			"status": "NA",
+			"note": "Tests 12.4.1 à 12.4.3 : le site n’a pas de page « plan du site », ni de lien ou bouton y menant ; la page du journal du 2026-10-15 n’en contient pas (DOM du build examiné). Contenu visé absent : non applicable. Ce manque est relevé au critère 12.1."
+		},
+		{
+			"criterion": "12.4",
+			"page": "https://chikimuras.github.io/rampe/cockpit/docs/roadmap/",
+			"status": "NA",
+			"note": "Tests 12.4.1 à 12.4.3 : le site n’a pas de page « plan du site », ni de lien ou bouton y menant ; la page Roadmap n’en contient pas (DOM du build examiné). Contenu visé absent : non applicable. Ce manque est relevé au critère 12.1."
+		},
+		{
+			"criterion": "12.4",
+			"page": "https://chikimuras.github.io/rampe/referentiel/5-1/",
+			"status": "NA",
+			"note": "Tests 12.4.1 à 12.4.3 : le site n’a pas de page « plan du site », ni de lien ou bouton y menant ; la fiche du critère 5.1 n’en contient pas (DOM du build examiné). Contenu visé absent : non applicable. Ce manque est relevé au critère 12.1."
+		},
+		{
+			"criterion": "12.4",
+			"page": "https://chikimuras.github.io/rampe/referentiel/1-9/",
+			"status": "NA",
+			"note": "Tests 12.4.1 à 12.4.3 : le site n’a pas de page « plan du site », ni de lien ou bouton y menant ; la fiche du critère 1.9 n’en contient pas (DOM du build examiné). Contenu visé absent : non applicable. Ce manque est relevé au critère 12.1."
+		},
+		{
+			"criterion": "12.5",
+			"page": "https://chikimuras.github.io/rampe/",
+			"status": "NA",
+			"note": "Tests 12.5.1 à 12.5.3 : le site n’a pas de moteur de recherche interne (ni champ de recherche, ni role=\"search\", ni lien vers une recherche) ; la page d’accueil n’en contient pas (DOM du build examiné). Contenu visé absent : non applicable. Ce manque est relevé au critère 12.1."
+		},
+		{
+			"criterion": "12.5",
+			"page": "https://chikimuras.github.io/rampe/referentiel/",
+			"status": "NA",
+			"note": "Tests 12.5.1 à 12.5.3 : le site n’a pas de moteur de recherche interne (ni champ de recherche, ni role=\"search\", ni lien vers une recherche) ; la page Référentiel n’en contient pas (DOM du build examiné). Contenu visé absent : non applicable. Ce manque est relevé au critère 12.1."
+		},
+		{
+			"criterion": "12.5",
+			"page": "https://chikimuras.github.io/rampe/referentiel/1-1/",
+			"status": "NA",
+			"note": "Tests 12.5.1 à 12.5.3 : le site n’a pas de moteur de recherche interne (ni champ de recherche, ni role=\"search\", ni lien vers une recherche) ; la fiche du critère 1.1 n’en contient pas (DOM du build examiné). Contenu visé absent : non applicable. Ce manque est relevé au critère 12.1."
+		},
+		{
+			"criterion": "12.5",
+			"page": "https://chikimuras.github.io/rampe/referentiel/glossaire/",
+			"status": "NA",
+			"note": "Tests 12.5.1 à 12.5.3 : le site n’a pas de moteur de recherche interne (ni champ de recherche, ni role=\"search\", ni lien vers une recherche) ; le glossaire n’en contient pas (DOM du build examiné). Contenu visé absent : non applicable. Ce manque est relevé au critère 12.1."
+		},
+		{
+			"criterion": "12.5",
+			"page": "https://chikimuras.github.io/rampe/audit/",
+			"status": "NA",
+			"note": "Tests 12.5.1 à 12.5.3 : le site n’a pas de moteur de recherche interne (ni champ de recherche, ni role=\"search\", ni lien vers une recherche) ; l’audit guidé n’en contient pas (DOM du build examiné). Contenu visé absent : non applicable. Ce manque est relevé au critère 12.1."
+		},
+		{
+			"criterion": "12.5",
+			"page": "https://chikimuras.github.io/rampe/cockpit/",
+			"status": "NA",
+			"note": "Tests 12.5.1 à 12.5.3 : le site n’a pas de moteur de recherche interne (ni champ de recherche, ni role=\"search\", ni lien vers une recherche) ; le cockpit n’en contient pas (DOM du build examiné). Contenu visé absent : non applicable. Ce manque est relevé au critère 12.1."
+		},
+		{
+			"criterion": "12.5",
+			"page": "https://chikimuras.github.io/rampe/cockpit/adr/0011-cli-audit-playwright/",
+			"status": "NA",
+			"note": "Tests 12.5.1 à 12.5.3 : le site n’a pas de moteur de recherche interne (ni champ de recherche, ni role=\"search\", ni lien vers une recherche) ; la page ADR-0011 n’en contient pas (DOM du build examiné). Contenu visé absent : non applicable. Ce manque est relevé au critère 12.1."
+		},
+		{
+			"criterion": "12.5",
+			"page": "https://chikimuras.github.io/rampe/cockpit/journal/2026-10-15/",
+			"status": "NA",
+			"note": "Tests 12.5.1 à 12.5.3 : le site n’a pas de moteur de recherche interne (ni champ de recherche, ni role=\"search\", ni lien vers une recherche) ; la page du journal du 2026-10-15 n’en contient pas (DOM du build examiné). Contenu visé absent : non applicable. Ce manque est relevé au critère 12.1."
+		},
+		{
+			"criterion": "12.5",
+			"page": "https://chikimuras.github.io/rampe/cockpit/docs/roadmap/",
+			"status": "NA",
+			"note": "Tests 12.5.1 à 12.5.3 : le site n’a pas de moteur de recherche interne (ni champ de recherche, ni role=\"search\", ni lien vers une recherche) ; la page Roadmap n’en contient pas (DOM du build examiné). Contenu visé absent : non applicable. Ce manque est relevé au critère 12.1."
+		},
+		{
+			"criterion": "12.5",
+			"page": "https://chikimuras.github.io/rampe/referentiel/5-1/",
+			"status": "NA",
+			"note": "Tests 12.5.1 à 12.5.3 : le site n’a pas de moteur de recherche interne (ni champ de recherche, ni role=\"search\", ni lien vers une recherche) ; la fiche du critère 5.1 n’en contient pas (DOM du build examiné). Contenu visé absent : non applicable. Ce manque est relevé au critère 12.1."
+		},
+		{
+			"criterion": "12.5",
+			"page": "https://chikimuras.github.io/rampe/referentiel/1-9/",
+			"status": "NA",
+			"note": "Tests 12.5.1 à 12.5.3 : le site n’a pas de moteur de recherche interne (ni champ de recherche, ni role=\"search\", ni lien vers une recherche) ; la fiche du critère 1.9 n’en contient pas (DOM du build examiné). Contenu visé absent : non applicable. Ce manque est relevé au critère 12.1."
+		},
+		{
+			"criterion": "12.6",
+			"page": "https://chikimuras.github.io/rampe/",
+			"status": "C",
+			"note": "Test 12.6.1 : sur la page d’accueil, l’en-tête est un <header> enfant de <body> (landmark banner), la navigation principale un <nav aria-label=\"Navigation principale\"> (navigation), le contenu principal un <main id=\"contenu\"> (main) et le pied de page un <footer> enfant de <body> (contentinfo). Chaque zone a un landmark correspondant à sa nature ; il n’y a pas de zone de moteur de recherche."
+		},
+		{
+			"criterion": "12.6",
+			"page": "https://chikimuras.github.io/rampe/referentiel/",
+			"status": "C",
+			"note": "Test 12.6.1 : sur la page Référentiel, l’en-tête est un <header> enfant de <body> (landmark banner), la navigation principale un <nav aria-label=\"Navigation principale\"> (navigation), le contenu principal un <main id=\"contenu\"> (main) et le pied de page un <footer> enfant de <body> (contentinfo). Chaque zone a un landmark correspondant à sa nature ; il n’y a pas de zone de moteur de recherche."
+		},
+		{
+			"criterion": "12.6",
+			"page": "https://chikimuras.github.io/rampe/referentiel/1-1/",
+			"status": "C",
+			"note": "Test 12.6.1 : sur la fiche du critère 1.1, l’en-tête est un <header> enfant de <body> (landmark banner), la navigation principale un <nav aria-label=\"Navigation principale\"> (navigation), le contenu principal un <main id=\"contenu\"> (main) et le pied de page un <footer> enfant de <body> (contentinfo). Chaque zone a un landmark correspondant à sa nature ; il n’y a pas de zone de moteur de recherche."
+		},
+		{
+			"criterion": "12.6",
+			"page": "https://chikimuras.github.io/rampe/referentiel/glossaire/",
+			"status": "C",
+			"note": "Test 12.6.1 : sur le glossaire, l’en-tête est un <header> enfant de <body> (landmark banner), la navigation principale un <nav aria-label=\"Navigation principale\"> (navigation), le contenu principal un <main id=\"contenu\"> (main) et le pied de page un <footer> enfant de <body> (contentinfo). Chaque zone a un landmark correspondant à sa nature ; il n’y a pas de zone de moteur de recherche."
+		},
+		{
+			"criterion": "12.6",
+			"page": "https://chikimuras.github.io/rampe/audit/",
+			"status": "C",
+			"note": "Test 12.6.1 : sur l’audit guidé, l’en-tête est un <header> enfant de <body> (landmark banner), la navigation principale un <nav aria-label=\"Navigation principale\"> (navigation), le contenu principal un <main id=\"contenu\"> (main) et le pied de page un <footer> enfant de <body> (contentinfo). Chaque zone a un landmark correspondant à sa nature ; il n’y a pas de zone de moteur de recherche."
+		},
+		{
+			"criterion": "12.6",
+			"page": "https://chikimuras.github.io/rampe/cockpit/",
+			"status": "C",
+			"note": "Test 12.6.1 : sur le cockpit, l’en-tête est un <header> enfant de <body> (landmark banner), la navigation principale un <nav aria-label=\"Navigation principale\"> (navigation), le contenu principal un <main id=\"contenu\"> (main) et le pied de page un <footer> enfant de <body> (contentinfo). Chaque zone a un landmark correspondant à sa nature ; il n’y a pas de zone de moteur de recherche."
+		},
+		{
+			"criterion": "12.6",
+			"page": "https://chikimuras.github.io/rampe/cockpit/adr/0011-cli-audit-playwright/",
+			"status": "C",
+			"note": "Test 12.6.1 : sur la page ADR-0011, l’en-tête est un <header> enfant de <body> (landmark banner), la navigation principale un <nav aria-label=\"Navigation principale\"> (navigation), le contenu principal un <main id=\"contenu\"> (main) et le pied de page un <footer> enfant de <body> (contentinfo). Chaque zone a un landmark correspondant à sa nature ; il n’y a pas de zone de moteur de recherche."
+		},
+		{
+			"criterion": "12.6",
+			"page": "https://chikimuras.github.io/rampe/cockpit/journal/2026-10-15/",
+			"status": "C",
+			"note": "Test 12.6.1 : sur la page du journal du 2026-10-15, l’en-tête est un <header> enfant de <body> (landmark banner), la navigation principale un <nav aria-label=\"Navigation principale\"> (navigation), le contenu principal un <main id=\"contenu\"> (main) et le pied de page un <footer> enfant de <body> (contentinfo). Chaque zone a un landmark correspondant à sa nature ; il n’y a pas de zone de moteur de recherche."
+		},
+		{
+			"criterion": "12.6",
+			"page": "https://chikimuras.github.io/rampe/cockpit/docs/roadmap/",
+			"status": "C",
+			"note": "Test 12.6.1 : sur la page Roadmap, l’en-tête est un <header> enfant de <body> (landmark banner), la navigation principale un <nav aria-label=\"Navigation principale\"> (navigation), le contenu principal un <main id=\"contenu\"> (main) et le pied de page un <footer> enfant de <body> (contentinfo). Chaque zone a un landmark correspondant à sa nature ; il n’y a pas de zone de moteur de recherche."
+		},
+		{
+			"criterion": "12.6",
+			"page": "https://chikimuras.github.io/rampe/referentiel/5-1/",
+			"status": "C",
+			"note": "Test 12.6.1 : sur la fiche du critère 5.1, l’en-tête est un <header> enfant de <body> (landmark banner), la navigation principale un <nav aria-label=\"Navigation principale\"> (navigation), le contenu principal un <main id=\"contenu\"> (main) et le pied de page un <footer> enfant de <body> (contentinfo). Chaque zone a un landmark correspondant à sa nature ; il n’y a pas de zone de moteur de recherche."
+		},
+		{
+			"criterion": "12.6",
+			"page": "https://chikimuras.github.io/rampe/referentiel/1-9/",
+			"status": "C",
+			"note": "Test 12.6.1 : sur la fiche du critère 1.9, l’en-tête est un <header> enfant de <body> (landmark banner), la navigation principale un <nav aria-label=\"Navigation principale\"> (navigation), le contenu principal un <main id=\"contenu\"> (main) et le pied de page un <footer> enfant de <body> (contentinfo). Chaque zone a un landmark correspondant à sa nature ; il n’y a pas de zone de moteur de recherche."
+		},
+		{
+			"criterion": "12.7",
+			"page": "https://chikimuras.github.io/rampe/",
+			"status": "C",
+			"note": "Tests 12.7.1 et 12.7.2, au clavier dans Chromium : la première tabulation sur la page d’accueil atteint le lien « Aller au contenu » (href=\"#contenu\"), premier élément du <body>, masqué hors écran et visible à la prise de focus en haut à gauche (16 px, 16 px), au même endroit et dans le même ordre sur les 11 pages. Activé, il place la cible sur <main id=\"contenu\"> : la tabulation suivante atteint le premier élément focalisable du contenu principal. Lien fonctionnel."
+		},
+		{
+			"criterion": "12.7",
+			"page": "https://chikimuras.github.io/rampe/referentiel/",
+			"status": "C",
+			"note": "Tests 12.7.1 et 12.7.2, au clavier dans Chromium : la première tabulation sur la page Référentiel atteint le lien « Aller au contenu » (href=\"#contenu\"), premier élément du <body>, masqué hors écran et visible à la prise de focus en haut à gauche (16 px, 16 px), au même endroit et dans le même ordre sur les 11 pages. Activé, il place la cible sur <main id=\"contenu\"> : la tabulation suivante atteint le premier élément focalisable du contenu principal. Lien fonctionnel."
+		},
+		{
+			"criterion": "12.7",
+			"page": "https://chikimuras.github.io/rampe/referentiel/1-1/",
+			"status": "C",
+			"note": "Tests 12.7.1 et 12.7.2, au clavier dans Chromium : la première tabulation sur la fiche du critère 1.1 atteint le lien « Aller au contenu » (href=\"#contenu\"), premier élément du <body>, masqué hors écran et visible à la prise de focus en haut à gauche (16 px, 16 px), au même endroit et dans le même ordre sur les 11 pages. Activé, il place la cible sur <main id=\"contenu\"> : la tabulation suivante atteint le premier élément focalisable du contenu principal. Lien fonctionnel."
+		},
+		{
+			"criterion": "12.7",
+			"page": "https://chikimuras.github.io/rampe/referentiel/glossaire/",
+			"status": "C",
+			"note": "Tests 12.7.1 et 12.7.2, au clavier dans Chromium : la première tabulation sur le glossaire atteint le lien « Aller au contenu » (href=\"#contenu\"), premier élément du <body>, masqué hors écran et visible à la prise de focus en haut à gauche (16 px, 16 px), au même endroit et dans le même ordre sur les 11 pages. Activé, il place la cible sur <main id=\"contenu\"> : la tabulation suivante atteint le premier élément focalisable du contenu principal. Lien fonctionnel."
+		},
+		{
+			"criterion": "12.7",
+			"page": "https://chikimuras.github.io/rampe/audit/",
+			"status": "C",
+			"note": "Tests 12.7.1 et 12.7.2, au clavier dans Chromium : la première tabulation sur l’audit guidé atteint le lien « Aller au contenu » (href=\"#contenu\"), premier élément du <body>, masqué hors écran et visible à la prise de focus en haut à gauche (16 px, 16 px), au même endroit et dans le même ordre sur les 11 pages. Activé, il place la cible sur <main id=\"contenu\"> : la tabulation suivante atteint le premier élément focalisable du contenu principal. Lien fonctionnel."
+		},
+		{
+			"criterion": "12.7",
+			"page": "https://chikimuras.github.io/rampe/cockpit/",
+			"status": "C",
+			"note": "Tests 12.7.1 et 12.7.2, au clavier dans Chromium : la première tabulation sur le cockpit atteint le lien « Aller au contenu » (href=\"#contenu\"), premier élément du <body>, masqué hors écran et visible à la prise de focus en haut à gauche (16 px, 16 px), au même endroit et dans le même ordre sur les 11 pages. Activé, il place la cible sur <main id=\"contenu\"> : la tabulation suivante atteint le premier élément focalisable du contenu principal. Lien fonctionnel."
+		},
+		{
+			"criterion": "12.7",
+			"page": "https://chikimuras.github.io/rampe/cockpit/adr/0011-cli-audit-playwright/",
+			"status": "C",
+			"note": "Tests 12.7.1 et 12.7.2, au clavier dans Chromium : la première tabulation sur la page ADR-0011 atteint le lien « Aller au contenu » (href=\"#contenu\"), premier élément du <body>, masqué hors écran et visible à la prise de focus en haut à gauche (16 px, 16 px), au même endroit et dans le même ordre sur les 11 pages. Activé, il place la cible sur <main id=\"contenu\"> : la tabulation suivante atteint le premier élément focalisable du contenu principal. Lien fonctionnel."
+		},
+		{
+			"criterion": "12.7",
+			"page": "https://chikimuras.github.io/rampe/cockpit/journal/2026-10-15/",
+			"status": "C",
+			"note": "Tests 12.7.1 et 12.7.2, au clavier dans Chromium : la première tabulation sur la page du journal du 2026-10-15 atteint le lien « Aller au contenu » (href=\"#contenu\"), premier élément du <body>, masqué hors écran et visible à la prise de focus en haut à gauche (16 px, 16 px), au même endroit et dans le même ordre sur les 11 pages. Activé, il place la cible sur <main id=\"contenu\"> : la tabulation suivante atteint le premier élément focalisable du contenu principal. Lien fonctionnel."
+		},
+		{
+			"criterion": "12.7",
+			"page": "https://chikimuras.github.io/rampe/cockpit/docs/roadmap/",
+			"status": "C",
+			"note": "Tests 12.7.1 et 12.7.2, au clavier dans Chromium : la première tabulation sur la page Roadmap atteint le lien « Aller au contenu » (href=\"#contenu\"), premier élément du <body>, masqué hors écran et visible à la prise de focus en haut à gauche (16 px, 16 px), au même endroit et dans le même ordre sur les 11 pages. Activé, il place la cible sur <main id=\"contenu\"> : la tabulation suivante atteint le premier élément focalisable du contenu principal. Lien fonctionnel."
+		},
+		{
+			"criterion": "12.7",
+			"page": "https://chikimuras.github.io/rampe/referentiel/5-1/",
+			"status": "C",
+			"note": "Tests 12.7.1 et 12.7.2, au clavier dans Chromium : la première tabulation sur la fiche du critère 5.1 atteint le lien « Aller au contenu » (href=\"#contenu\"), premier élément du <body>, masqué hors écran et visible à la prise de focus en haut à gauche (16 px, 16 px), au même endroit et dans le même ordre sur les 11 pages. Activé, il place la cible sur <main id=\"contenu\"> : la tabulation suivante atteint le premier élément focalisable du contenu principal. Lien fonctionnel."
+		},
+		{
+			"criterion": "12.7",
+			"page": "https://chikimuras.github.io/rampe/referentiel/1-9/",
+			"status": "C",
+			"note": "Tests 12.7.1 et 12.7.2, au clavier dans Chromium : la première tabulation sur la fiche du critère 1.9 atteint le lien « Aller au contenu » (href=\"#contenu\"), premier élément du <body>, masqué hors écran et visible à la prise de focus en haut à gauche (16 px, 16 px), au même endroit et dans le même ordre sur les 11 pages. Activé, il place la cible sur <main id=\"contenu\"> : la tabulation suivante atteint le premier élément focalisable du contenu principal. Lien fonctionnel."
+		},
+		{
+			"criterion": "12.8",
+			"page": "https://chikimuras.github.io/rampe/",
+			"status": "C",
+			"note": "Test 12.8.1 : parcours Tab puis Maj+Tab de la page d’accueil : le focus suit l’ordre du code source (lien d’évitement, menu principal, puis liens du contenu), sans tabindex positif ni réordonnancement CSS (order, grid), cohérent avec l’ordre de lecture. Test 12.8.2 : aucun script n’insère ou ne met à jour de contenu sur cette page (pas d’îlot JavaScript)."
+		},
+		{
+			"criterion": "12.8",
+			"page": "https://chikimuras.github.io/rampe/referentiel/",
+			"status": "C",
+			"note": "Test 12.8.1 : parcours Tab puis Maj+Tab de la page Référentiel : le focus suit l’ordre du code source (lien d’évitement, menu principal, puis liens du contenu), sans tabindex positif ni réordonnancement CSS (order, grid), cohérent avec l’ordre de lecture. Test 12.8.2 : aucun script n’insère ou ne met à jour de contenu sur cette page (pas d’îlot JavaScript)."
+		},
+		{
+			"criterion": "12.8",
+			"page": "https://chikimuras.github.io/rampe/referentiel/1-1/",
+			"status": "C",
+			"note": "Test 12.8.1 : parcours Tab puis Maj+Tab de la fiche du critère 1.1 : le focus suit l’ordre du code source (lien d’évitement, menu principal, puis liens du contenu), sans tabindex positif ni réordonnancement CSS (order, grid), cohérent avec l’ordre de lecture. Test 12.8.2 : aucun script n’insère ou ne met à jour de contenu sur cette page (pas d’îlot JavaScript)."
+		},
+		{
+			"criterion": "12.8",
+			"page": "https://chikimuras.github.io/rampe/referentiel/glossaire/",
+			"status": "C",
+			"note": "Test 12.8.1 : parcours Tab puis Maj+Tab du glossaire : le focus suit l’ordre du code source (lien d’évitement, menu principal, puis liens du contenu), sans tabindex positif ni réordonnancement CSS (order, grid), cohérent avec l’ordre de lecture. Test 12.8.2 : aucun script n’insère ou ne met à jour de contenu sur cette page (pas d’îlot JavaScript)."
+		},
+		{
+			"criterion": "12.8",
+			"page": "https://chikimuras.github.io/rampe/audit/",
+			"status": "C",
+			"note": "Tests 12.8.1 et 12.8.2, parcours Tab et Maj+Tab : ordre du code source, sans tabindex positif (seuls les titres h2 « 1. Pages de l’échantillon » et h3 du critère ont tabindex=\"-1\" pour recevoir le focus par script) ; lien d’évitement, menu, sauvegarde, échantillon, rapport, filtre, thématiques, critères, statuts, déclaration, schéma, « Recommencer ». Contenus insérés par script : après « Ajouter la page » le focus revient au champ adresse ; après une erreur il est remis sur le champ fautif ; après « Retirer » il va au bouton « Retirer » suivant ; « Critère suivant » et la liste des critères placent le focus sur le titre du critère affiché ; la boîte « Remplacer l’audit en cours ? » reçoit le focus et Échap le rend au champ fichier ; « Annuler cet import » rend le focus au champ fichier ; à l’export bloqué par une date, le focus va sur la date fautive. Ordre cohérent."
+		},
+		{
+			"criterion": "12.8",
+			"page": "https://chikimuras.github.io/rampe/cockpit/",
+			"status": "C",
+			"note": "Test 12.8.1 : parcours Tab puis Maj+Tab du cockpit : le focus suit l’ordre du code source (lien d’évitement, menu principal, puis liens du contenu), sans tabindex positif ni réordonnancement CSS (order, grid), cohérent avec l’ordre de lecture. Test 12.8.2 : aucun script n’insère ou ne met à jour de contenu sur cette page (pas d’îlot JavaScript)."
+		},
+		{
+			"criterion": "12.8",
+			"page": "https://chikimuras.github.io/rampe/cockpit/adr/0011-cli-audit-playwright/",
+			"status": "C",
+			"note": "Test 12.8.1 : parcours Tab puis Maj+Tab de la page ADR-0011 : le focus suit l’ordre du code source (lien d’évitement, menu principal, puis liens du contenu), sans tabindex positif ni réordonnancement CSS (order, grid), cohérent avec l’ordre de lecture. Test 12.8.2 : aucun script n’insère ou ne met à jour de contenu sur cette page (pas d’îlot JavaScript)."
+		},
+		{
+			"criterion": "12.8",
+			"page": "https://chikimuras.github.io/rampe/cockpit/journal/2026-10-15/",
+			"status": "C",
+			"note": "Test 12.8.1 : parcours Tab puis Maj+Tab de la page du journal du 2026-10-15 : le focus suit l’ordre du code source (lien d’évitement, menu principal, puis liens du contenu), sans tabindex positif ni réordonnancement CSS (order, grid), cohérent avec l’ordre de lecture. Test 12.8.2 : aucun script n’insère ou ne met à jour de contenu sur cette page (pas d’îlot JavaScript)."
+		},
+		{
+			"criterion": "12.8",
+			"page": "https://chikimuras.github.io/rampe/cockpit/docs/roadmap/",
+			"status": "C",
+			"note": "Test 12.8.1 : parcours Tab puis Maj+Tab de la page Roadmap : le focus suit l’ordre du code source (lien d’évitement, menu principal, puis liens du contenu), sans tabindex positif ni réordonnancement CSS (order, grid), cohérent avec l’ordre de lecture. Test 12.8.2 : aucun script n’insère ou ne met à jour de contenu sur cette page (pas d’îlot JavaScript)."
+		},
+		{
+			"criterion": "12.8",
+			"page": "https://chikimuras.github.io/rampe/referentiel/5-1/",
+			"status": "C",
+			"note": "Test 12.8.1 : parcours Tab puis Maj+Tab de la fiche du critère 5.1 : le focus suit l’ordre du code source (lien d’évitement, menu principal, puis liens du contenu), sans tabindex positif ni réordonnancement CSS (order, grid), cohérent avec l’ordre de lecture. Test 12.8.2 : aucun script n’insère ou ne met à jour de contenu sur cette page (pas d’îlot JavaScript)."
+		},
+		{
+			"criterion": "12.8",
+			"page": "https://chikimuras.github.io/rampe/referentiel/1-9/",
+			"status": "C",
+			"note": "Test 12.8.1 : parcours Tab puis Maj+Tab de la fiche du critère 1.9 : le focus suit l’ordre du code source (lien d’évitement, menu principal, puis liens du contenu), sans tabindex positif ni réordonnancement CSS (order, grid), cohérent avec l’ordre de lecture. Test 12.8.2 : aucun script n’insère ou ne met à jour de contenu sur cette page (pas d’îlot JavaScript)."
+		},
+		{
+			"criterion": "12.9",
+			"page": "https://chikimuras.github.io/rampe/",
+			"status": "C",
+			"note": "Test 12.9.1 : tabulation de bout en bout de la page d’accueil (Playwright, Chromium) : chaque élément focalisable est atteint puis quitté, le focus sort de la page après le dernier élément, et Maj+Tab revient en arrière. Aucun piège."
+		},
+		{
+			"criterion": "12.9",
+			"page": "https://chikimuras.github.io/rampe/referentiel/",
+			"status": "C",
+			"note": "Test 12.9.1 : tabulation de bout en bout de la page Référentiel (Playwright, Chromium) : chaque élément focalisable est atteint puis quitté, le focus sort de la page après le dernier élément, et Maj+Tab revient en arrière. Aucun piège."
+		},
+		{
+			"criterion": "12.9",
+			"page": "https://chikimuras.github.io/rampe/referentiel/1-1/",
+			"status": "C",
+			"note": "Test 12.9.1 : tabulation de bout en bout de la fiche du critère 1.1 (Playwright, Chromium) : chaque élément focalisable est atteint puis quitté, le focus sort de la page après le dernier élément, et Maj+Tab revient en arrière. Aucun piège."
+		},
+		{
+			"criterion": "12.9",
+			"page": "https://chikimuras.github.io/rampe/referentiel/glossaire/",
+			"status": "C",
+			"note": "Test 12.9.1 : tabulation de bout en bout du glossaire (Playwright, Chromium) : chaque élément focalisable est atteint puis quitté, le focus sort de la page après le dernier élément, et Maj+Tab revient en arrière. Aucun piège."
+		},
+		{
+			"criterion": "12.9",
+			"page": "https://chikimuras.github.io/rampe/audit/",
+			"status": "C",
+			"note": "Test 12.9.1 : tabulation de bout en bout de l’audit guidé (Playwright, Chromium) : chaque élément focalisable est atteint puis quitté, le focus sort de la page après le dernier élément, et Maj+Tab revient en arrière. Les champs date (segments jour/mois/année) se quittent par Tab ; la boîte de dialogue modale native se ferme par Échap ou « Annuler » ; les zones de texte ne capturent pas la tabulation. Aucun piège."
+		},
+		{
+			"criterion": "12.9",
+			"page": "https://chikimuras.github.io/rampe/cockpit/",
+			"status": "C",
+			"note": "Test 12.9.1 : tabulation de bout en bout du cockpit (Playwright, Chromium) : chaque élément focalisable est atteint puis quitté, le focus sort de la page après le dernier élément, et Maj+Tab revient en arrière. Aucun piège."
+		},
+		{
+			"criterion": "12.9",
+			"page": "https://chikimuras.github.io/rampe/cockpit/adr/0011-cli-audit-playwright/",
+			"status": "C",
+			"note": "Test 12.9.1 : tabulation de bout en bout de la page ADR-0011 (Playwright, Chromium) : chaque élément focalisable est atteint puis quitté, le focus sort de la page après le dernier élément, et Maj+Tab revient en arrière. Aucun piège."
+		},
+		{
+			"criterion": "12.9",
+			"page": "https://chikimuras.github.io/rampe/cockpit/journal/2026-10-15/",
+			"status": "C",
+			"note": "Test 12.9.1 : tabulation de bout en bout de la page du journal du 2026-10-15 (Playwright, Chromium) : chaque élément focalisable est atteint puis quitté, le focus sort de la page après le dernier élément, et Maj+Tab revient en arrière. Aucun piège."
+		},
+		{
+			"criterion": "12.9",
+			"page": "https://chikimuras.github.io/rampe/cockpit/docs/roadmap/",
+			"status": "C",
+			"note": "Test 12.9.1 : tabulation de bout en bout de la page Roadmap (Playwright, Chromium) : chaque élément focalisable est atteint puis quitté, le focus sort de la page après le dernier élément, et Maj+Tab revient en arrière. Aucun piège."
+		},
+		{
+			"criterion": "12.9",
+			"page": "https://chikimuras.github.io/rampe/referentiel/5-1/",
+			"status": "C",
+			"note": "Test 12.9.1 : tabulation de bout en bout de la fiche du critère 5.1 (Playwright, Chromium) : chaque élément focalisable est atteint puis quitté, le focus sort de la page après le dernier élément, et Maj+Tab revient en arrière. Aucun piège."
+		},
+		{
+			"criterion": "12.9",
+			"page": "https://chikimuras.github.io/rampe/referentiel/1-9/",
+			"status": "C",
+			"note": "Test 12.9.1 : tabulation de bout en bout de la fiche du critère 1.9 (Playwright, Chromium) : chaque élément focalisable est atteint puis quitté, le focus sort de la page après le dernier élément, et Maj+Tab revient en arrière. Aucun piège."
+		},
+		{
+			"criterion": "12.10",
+			"page": "https://chikimuras.github.io/rampe/",
+			"status": "NA",
+			"note": "Test 12.10.1 : la page d’accueil ne propose aucun raccourci clavier : aucun attribut accesskey, et aucun gestionnaire keydown/keypress dans le code du site (layout Base.astro examinés). Contenu visé absent : non applicable."
+		},
+		{
+			"criterion": "12.10",
+			"page": "https://chikimuras.github.io/rampe/referentiel/",
+			"status": "NA",
+			"note": "Test 12.10.1 : la page Référentiel ne propose aucun raccourci clavier : aucun attribut accesskey, et aucun gestionnaire keydown/keypress dans le code du site (layout Base.astro examinés). Contenu visé absent : non applicable."
+		},
+		{
+			"criterion": "12.10",
+			"page": "https://chikimuras.github.io/rampe/referentiel/1-1/",
+			"status": "NA",
+			"note": "Test 12.10.1 : la fiche du critère 1.1 ne propose aucun raccourci clavier : aucun attribut accesskey, et aucun gestionnaire keydown/keypress dans le code du site (layout Base.astro examinés). Contenu visé absent : non applicable."
+		},
+		{
+			"criterion": "12.10",
+			"page": "https://chikimuras.github.io/rampe/referentiel/glossaire/",
+			"status": "NA",
+			"note": "Test 12.10.1 : le glossaire ne propose aucun raccourci clavier : aucun attribut accesskey, et aucun gestionnaire keydown/keypress dans le code du site (layout Base.astro examinés). Contenu visé absent : non applicable."
+		},
+		{
+			"criterion": "12.10",
+			"page": "https://chikimuras.github.io/rampe/audit/",
+			"status": "NA",
+			"note": "Test 12.10.1 : l’audit guidé ne propose aucun raccourci clavier : aucun attribut accesskey, et aucun gestionnaire keydown/keypress dans le code du site (layout Base.astro et îlot AuditApp.tsx examinés). Contenu visé absent : non applicable."
+		},
+		{
+			"criterion": "12.10",
+			"page": "https://chikimuras.github.io/rampe/cockpit/",
+			"status": "NA",
+			"note": "Test 12.10.1 : le cockpit ne propose aucun raccourci clavier : aucun attribut accesskey, et aucun gestionnaire keydown/keypress dans le code du site (layout Base.astro examinés). Contenu visé absent : non applicable."
+		},
+		{
+			"criterion": "12.10",
+			"page": "https://chikimuras.github.io/rampe/cockpit/adr/0011-cli-audit-playwright/",
+			"status": "NA",
+			"note": "Test 12.10.1 : la page ADR-0011 ne propose aucun raccourci clavier : aucun attribut accesskey, et aucun gestionnaire keydown/keypress dans le code du site (layout Base.astro examinés). Contenu visé absent : non applicable."
+		},
+		{
+			"criterion": "12.10",
+			"page": "https://chikimuras.github.io/rampe/cockpit/journal/2026-10-15/",
+			"status": "NA",
+			"note": "Test 12.10.1 : la page du journal du 2026-10-15 ne propose aucun raccourci clavier : aucun attribut accesskey, et aucun gestionnaire keydown/keypress dans le code du site (layout Base.astro examinés). Contenu visé absent : non applicable."
+		},
+		{
+			"criterion": "12.10",
+			"page": "https://chikimuras.github.io/rampe/cockpit/docs/roadmap/",
+			"status": "NA",
+			"note": "Test 12.10.1 : la page Roadmap ne propose aucun raccourci clavier : aucun attribut accesskey, et aucun gestionnaire keydown/keypress dans le code du site (layout Base.astro examinés). Contenu visé absent : non applicable."
+		},
+		{
+			"criterion": "12.10",
+			"page": "https://chikimuras.github.io/rampe/referentiel/5-1/",
+			"status": "NA",
+			"note": "Test 12.10.1 : la fiche du critère 5.1 ne propose aucun raccourci clavier : aucun attribut accesskey, et aucun gestionnaire keydown/keypress dans le code du site (layout Base.astro examinés). Contenu visé absent : non applicable."
+		},
+		{
+			"criterion": "12.10",
+			"page": "https://chikimuras.github.io/rampe/referentiel/1-9/",
+			"status": "NA",
+			"note": "Test 12.10.1 : la fiche du critère 1.9 ne propose aucun raccourci clavier : aucun attribut accesskey, et aucun gestionnaire keydown/keypress dans le code du site (layout Base.astro examinés). Contenu visé absent : non applicable."
+		},
+		{
+			"criterion": "12.11",
+			"page": "https://chikimuras.github.io/rampe/",
+			"status": "NA",
+			"note": "Test 12.11.1 : la page d’accueil n’a aucun contenu additionnel apparaissant au survol, à la prise de focus ou à l’activation d’un composant : pas de <details>, de <dialog>, d’infobulle ni de règle CSS :hover révélant du contenu (le lien d’évitement visible au focus est l’élément focalisé lui-même). Contenu visé absent : non applicable."
+		},
+		{
+			"criterion": "12.11",
+			"page": "https://chikimuras.github.io/rampe/referentiel/",
+			"status": "NA",
+			"note": "Test 12.11.1 : la page Référentiel n’a aucun contenu additionnel apparaissant au survol, à la prise de focus ou à l’activation d’un composant : pas de <details>, de <dialog>, d’infobulle ni de règle CSS :hover révélant du contenu (le lien d’évitement visible au focus est l’élément focalisé lui-même). Contenu visé absent : non applicable."
+		},
+		{
+			"criterion": "12.11",
+			"page": "https://chikimuras.github.io/rampe/referentiel/1-1/",
+			"status": "C",
+			"note": "Test 12.11.1 : la fiche du critère 1.1 contient 8 éléments <details> « Méthodologie du test 1.1.x », contenus additionnels affichés à l’activation du <summary>, qui s’ouvre au clavier (Entrée/Espace) ; ces contenus ne renferment aucun composant interactif, et rien n’est inaccessible au clavier. Aucun contenu n’apparaît au survol ou à la prise de focus (aucune règle :hover ni infobulle ; le lien d’évitement visible au focus est lui-même l’élément focalisé)."
+		},
+		{
+			"criterion": "12.11",
+			"page": "https://chikimuras.github.io/rampe/referentiel/glossaire/",
+			"status": "NA",
+			"note": "Test 12.11.1 : le glossaire n’a aucun contenu additionnel apparaissant au survol, à la prise de focus ou à l’activation d’un composant : pas de <details>, de <dialog>, d’infobulle ni de règle CSS :hover révélant du contenu (le lien d’évitement visible au focus est l’élément focalisé lui-même). Contenu visé absent : non applicable."
+		},
+		{
+			"criterion": "12.11",
+			"page": "https://chikimuras.github.io/rampe/audit/",
+			"status": "C",
+			"note": "Test 12.11.1 : contenus additionnels apparaissant à l’activation sur /audit/ : <details> « Coller un fichier echantillon.txt… » (zone de texte et bouton), « Tests du critère » (27 liens vers le glossaire) et ses « Méthodologie du test », « Indices de l’audit automatique », « Détail technique » d’une erreur, liste repliée des critères sous 700 px, boîte de dialogue « Remplacer l’audit en cours ? ». Ouverts au clavier (Entrée sur le <summary>), tous leurs composants sont atteints à la tabulation. Aucun contenu n’apparaît au survol."
+		},
+		{
+			"criterion": "12.11",
+			"page": "https://chikimuras.github.io/rampe/cockpit/",
+			"status": "NA",
+			"note": "Test 12.11.1 : le cockpit n’a aucun contenu additionnel apparaissant au survol, à la prise de focus ou à l’activation d’un composant : pas de <details>, de <dialog>, d’infobulle ni de règle CSS :hover révélant du contenu (le lien d’évitement visible au focus est l’élément focalisé lui-même). Contenu visé absent : non applicable."
+		},
+		{
+			"criterion": "12.11",
+			"page": "https://chikimuras.github.io/rampe/cockpit/adr/0011-cli-audit-playwright/",
+			"status": "NA",
+			"note": "Test 12.11.1 : la page ADR-0011 n’a aucun contenu additionnel apparaissant au survol, à la prise de focus ou à l’activation d’un composant : pas de <details>, de <dialog>, d’infobulle ni de règle CSS :hover révélant du contenu (le lien d’évitement visible au focus est l’élément focalisé lui-même). Contenu visé absent : non applicable."
+		},
+		{
+			"criterion": "12.11",
+			"page": "https://chikimuras.github.io/rampe/cockpit/journal/2026-10-15/",
+			"status": "NA",
+			"note": "Test 12.11.1 : la page du journal du 2026-10-15 n’a aucun contenu additionnel apparaissant au survol, à la prise de focus ou à l’activation d’un composant : pas de <details>, de <dialog>, d’infobulle ni de règle CSS :hover révélant du contenu (le lien d’évitement visible au focus est l’élément focalisé lui-même). Contenu visé absent : non applicable."
+		},
+		{
+			"criterion": "12.11",
+			"page": "https://chikimuras.github.io/rampe/cockpit/docs/roadmap/",
+			"status": "NA",
+			"note": "Test 12.11.1 : la page Roadmap n’a aucun contenu additionnel apparaissant au survol, à la prise de focus ou à l’activation d’un composant : pas de <details>, de <dialog>, d’infobulle ni de règle CSS :hover révélant du contenu (le lien d’évitement visible au focus est l’élément focalisé lui-même). Contenu visé absent : non applicable."
+		},
+		{
+			"criterion": "12.11",
+			"page": "https://chikimuras.github.io/rampe/referentiel/5-1/",
+			"status": "C",
+			"note": "Test 12.11.1 : la fiche du critère 5.1 contient 1 élément <details> « Méthodologie du test 5.1.1 », contenus additionnels affichés à l’activation du <summary>, qui s’ouvre au clavier (Entrée/Espace) ; ces contenus ne renferment aucun composant interactif, et rien n’est inaccessible au clavier. Aucun contenu n’apparaît au survol ou à la prise de focus (aucune règle :hover ni infobulle ; le lien d’évitement visible au focus est lui-même l’élément focalisé)."
+		},
+		{
+			"criterion": "12.11",
+			"page": "https://chikimuras.github.io/rampe/referentiel/1-9/",
+			"status": "C",
+			"note": "Test 12.11.1 : la fiche du critère 1.9 contient 5 éléments <details> « Méthodologie du test 1.9.x », contenus additionnels affichés à l’activation du <summary>, qui s’ouvre au clavier (Entrée/Espace) ; ces contenus ne renferment aucun composant interactif, et rien n’est inaccessible au clavier. Aucun contenu n’apparaît au survol ou à la prise de focus (aucune règle :hover ni infobulle ; le lien d’évitement visible au focus est lui-même l’élément focalisé)."
+		}
+	]
+}

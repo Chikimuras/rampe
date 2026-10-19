@@ -1,0 +1,864 @@
+{
+	"evaluator": "Claude (IA)",
+	"date": "2026-10-16",
+	"entries": [
+		{
+			"criterion": "4.1",
+			"page": "https://chikimuras.github.io/rampe/",
+			"status": "NA",
+			"note": "Tests 4.1.1 à 4.1.3 : Page examinée : page d’accueil (/). Inventaire du DOM servi (Playwright/Chromium) : 0 élément <video>, <audio>, <object>, <embed>, <iframe>, <canvas>, <svg>, <bgsound> ou role=\"img\", et 0 lien vers un fichier audio ou vidéo ou une plateforme vidéo, sur 9 liens. Aucun média temporel pré-enregistré à transcrire ou audiodécrire : non applicable."
+		},
+		{
+			"criterion": "4.1",
+			"page": "https://chikimuras.github.io/rampe/referentiel/",
+			"status": "NA",
+			"note": "Tests 4.1.1 à 4.1.3 : Page examinée : page Référentiel (/referentiel/). Inventaire du DOM servi (Playwright/Chromium) : 0 élément <video>, <audio>, <object>, <embed>, <iframe>, <canvas>, <svg>, <bgsound> ou role=\"img\", et 0 lien vers un fichier audio ou vidéo ou une plateforme vidéo, sur 131 liens. Aucun média temporel pré-enregistré à transcrire ou audiodécrire : non applicable."
+		},
+		{
+			"criterion": "4.1",
+			"page": "https://chikimuras.github.io/rampe/referentiel/1-1/",
+			"status": "NA",
+			"note": "Tests 4.1.1 à 4.1.3 : Page examinée : fiche du critère 1.1 (/referentiel/1-1/). Inventaire du DOM servi (Playwright/Chromium) : 0 élément <video>, <audio>, <object>, <embed>, <iframe>, <canvas>, <svg>, <bgsound> ou role=\"img\", et 0 lien vers un fichier audio ou vidéo ou une plateforme vidéo, sur 43 liens. Aucun média temporel pré-enregistré à transcrire ou audiodécrire : non applicable."
+		},
+		{
+			"criterion": "4.1",
+			"page": "https://chikimuras.github.io/rampe/referentiel/glossaire/",
+			"status": "NA",
+			"note": "Tests 4.1.1 à 4.1.3 : Page examinée : page Glossaire (/referentiel/glossaire/). Inventaire du DOM servi (Playwright/Chromium) : 0 élément <video>, <audio>, <object>, <embed>, <iframe>, <canvas>, <svg>, <bgsound> ou role=\"img\", et 0 lien vers un fichier audio ou vidéo ou une plateforme vidéo, sur 76 liens. Aucun média temporel pré-enregistré à transcrire ou audiodécrire : non applicable."
+		},
+		{
+			"criterion": "4.1",
+			"page": "https://chikimuras.github.io/rampe/audit/",
+			"status": "NA",
+			"note": "Tests 4.1.1 à 4.1.3 : DOM et arbre d’accessibilité examinés avec Playwright/Chromium, état initial puis états interactifs : deux pages ajoutées, les 106 critères affichés un à un avec les sections « Tests » et « Méthodologie » ouvertes, résultat complet affiché, action libre ajoutée et tableau d’actions mis à jour depuis l’audit ; la page ne contient aucun élément <video>, <audio>, <object>, <embed>, <iframe>, <canvas>, <svg>, <bgsound> ni élément role=\"img\", et aucun lien vers un fichier audio ou vidéo. Le seul renvoi à une vidéo est un lien texte vers YouTube dans la méthodologie du test 13.7.1 (affichée pour le critère 13.7) : c’est un lien vers une page externe, pas un média de la page. Aucun média temporel pré-enregistré (transcription ou audiodescription) : non applicable."
+		},
+		{
+			"criterion": "4.1",
+			"page": "https://chikimuras.github.io/rampe/cockpit/",
+			"status": "NA",
+			"note": "Tests 4.1.1 à 4.1.3 : Page examinée : page Cockpit (/cockpit/). Inventaire du DOM servi (Playwright/Chromium) : 0 élément <video>, <audio>, <object>, <embed>, <iframe>, <canvas>, <svg>, <bgsound> ou role=\"img\", et 0 lien vers un fichier audio ou vidéo ou une plateforme vidéo, sur 39 liens. Aucun média temporel pré-enregistré à transcrire ou audiodécrire : non applicable."
+		},
+		{
+			"criterion": "4.1",
+			"page": "https://chikimuras.github.io/rampe/cockpit/adr/0011-cli-audit-playwright/",
+			"status": "NA",
+			"note": "Tests 4.1.1 à 4.1.3 : Page examinée : page ADR-0011 (/cockpit/adr/0011-cli-audit-playwright/). Inventaire du DOM servi (Playwright/Chromium) : 0 élément <video>, <audio>, <object>, <embed>, <iframe>, <canvas>, <svg>, <bgsound> ou role=\"img\", et 0 lien vers un fichier audio ou vidéo ou une plateforme vidéo, sur 10 liens. Aucun média temporel pré-enregistré à transcrire ou audiodécrire : non applicable."
+		},
+		{
+			"criterion": "4.1",
+			"page": "https://chikimuras.github.io/rampe/cockpit/journal/2026-10-15/",
+			"status": "NA",
+			"note": "Tests 4.1.1 à 4.1.3 : Page examinée : page du journal du 15/10/2026 (/cockpit/journal/2026-10-15/). Inventaire du DOM servi (Playwright/Chromium) : 0 élément <video>, <audio>, <object>, <embed>, <iframe>, <canvas>, <svg>, <bgsound> ou role=\"img\", et 0 lien vers un fichier audio ou vidéo ou une plateforme vidéo, sur 10 liens. Aucun média temporel pré-enregistré à transcrire ou audiodécrire : non applicable."
+		},
+		{
+			"criterion": "4.1",
+			"page": "https://chikimuras.github.io/rampe/cockpit/docs/roadmap/",
+			"status": "NA",
+			"note": "Tests 4.1.1 à 4.1.3 : Page examinée : page Roadmap (/cockpit/docs/roadmap/). Inventaire du DOM servi (Playwright/Chromium) : 0 élément <video>, <audio>, <object>, <embed>, <iframe>, <canvas>, <svg>, <bgsound> ou role=\"img\", et 0 lien vers un fichier audio ou vidéo ou une plateforme vidéo, sur 10 liens. Aucun média temporel pré-enregistré à transcrire ou audiodécrire : non applicable."
+		},
+		{
+			"criterion": "4.1",
+			"page": "https://chikimuras.github.io/rampe/referentiel/5-1/",
+			"status": "NA",
+			"note": "Tests 4.1.1 à 4.1.3 : Page examinée : fiche du critère 5.1 (/referentiel/5-1/). Inventaire du DOM servi (Playwright/Chromium) : 0 élément <video>, <audio>, <object>, <embed>, <iframe>, <canvas>, <svg>, <bgsound> ou role=\"img\", et 0 lien vers un fichier audio ou vidéo ou une plateforme vidéo, sur 19 liens. Aucun média temporel pré-enregistré à transcrire ou audiodécrire : non applicable."
+		},
+		{
+			"criterion": "4.1",
+			"page": "https://chikimuras.github.io/rampe/referentiel/1-9/",
+			"status": "NA",
+			"note": "Tests 4.1.1 à 4.1.3 : Page examinée : fiche du critère 1.9 (/referentiel/1-9/). Inventaire du DOM servi (Playwright/Chromium) : 0 élément <video>, <audio>, <object>, <embed>, <iframe>, <canvas>, <svg>, <bgsound> ou role=\"img\", et 0 lien vers un fichier audio ou vidéo ou une plateforme vidéo, sur 45 liens. Aucun média temporel pré-enregistré à transcrire ou audiodécrire : non applicable."
+		},
+		{
+			"criterion": "4.2",
+			"page": "https://chikimuras.github.io/rampe/",
+			"status": "NA",
+			"note": "Tests 4.2.1 à 4.2.3 : Page examinée : page d’accueil (/). Inventaire du DOM servi (Playwright/Chromium) : 0 élément <video>, <audio>, <object>, <embed>, <iframe>, <canvas>, <svg>, <bgsound> ou role=\"img\", et 0 lien vers un fichier audio ou vidéo ou une plateforme vidéo, sur 9 liens. Aucun transcription ni audiodescription à juger : non applicable."
+		},
+		{
+			"criterion": "4.2",
+			"page": "https://chikimuras.github.io/rampe/referentiel/",
+			"status": "NA",
+			"note": "Tests 4.2.1 à 4.2.3 : Page examinée : page Référentiel (/referentiel/). Inventaire du DOM servi (Playwright/Chromium) : 0 élément <video>, <audio>, <object>, <embed>, <iframe>, <canvas>, <svg>, <bgsound> ou role=\"img\", et 0 lien vers un fichier audio ou vidéo ou une plateforme vidéo, sur 131 liens. Aucun transcription ni audiodescription à juger : non applicable."
+		},
+		{
+			"criterion": "4.2",
+			"page": "https://chikimuras.github.io/rampe/referentiel/1-1/",
+			"status": "NA",
+			"note": "Tests 4.2.1 à 4.2.3 : Page examinée : fiche du critère 1.1 (/referentiel/1-1/). Inventaire du DOM servi (Playwright/Chromium) : 0 élément <video>, <audio>, <object>, <embed>, <iframe>, <canvas>, <svg>, <bgsound> ou role=\"img\", et 0 lien vers un fichier audio ou vidéo ou une plateforme vidéo, sur 43 liens. Aucun transcription ni audiodescription à juger : non applicable."
+		},
+		{
+			"criterion": "4.2",
+			"page": "https://chikimuras.github.io/rampe/referentiel/glossaire/",
+			"status": "NA",
+			"note": "Tests 4.2.1 à 4.2.3 : Page examinée : page Glossaire (/referentiel/glossaire/). Inventaire du DOM servi (Playwright/Chromium) : 0 élément <video>, <audio>, <object>, <embed>, <iframe>, <canvas>, <svg>, <bgsound> ou role=\"img\", et 0 lien vers un fichier audio ou vidéo ou une plateforme vidéo, sur 76 liens. Aucun transcription ni audiodescription à juger : non applicable."
+		},
+		{
+			"criterion": "4.2",
+			"page": "https://chikimuras.github.io/rampe/audit/",
+			"status": "NA",
+			"note": "Tests 4.2.1 à 4.2.3 : DOM et arbre d’accessibilité examinés avec Playwright/Chromium, état initial puis états interactifs : deux pages ajoutées, les 106 critères affichés un à un avec les sections « Tests » et « Méthodologie » ouvertes, résultat complet affiché, action libre ajoutée et tableau d’actions mis à jour depuis l’audit ; la page ne contient aucun élément <video>, <audio>, <object>, <embed>, <iframe>, <canvas>, <svg>, <bgsound> ni élément role=\"img\", et aucun lien vers un fichier audio ou vidéo. Le seul renvoi à une vidéo est un lien texte vers YouTube dans la méthodologie du test 13.7.1 (affichée pour le critère 13.7) : c’est un lien vers une page externe, pas un média de la page. Aucun média temporel ayant une transcription ou une audiodescription : non applicable."
+		},
+		{
+			"criterion": "4.2",
+			"page": "https://chikimuras.github.io/rampe/cockpit/",
+			"status": "NA",
+			"note": "Tests 4.2.1 à 4.2.3 : Page examinée : page Cockpit (/cockpit/). Inventaire du DOM servi (Playwright/Chromium) : 0 élément <video>, <audio>, <object>, <embed>, <iframe>, <canvas>, <svg>, <bgsound> ou role=\"img\", et 0 lien vers un fichier audio ou vidéo ou une plateforme vidéo, sur 39 liens. Aucun transcription ni audiodescription à juger : non applicable."
+		},
+		{
+			"criterion": "4.2",
+			"page": "https://chikimuras.github.io/rampe/cockpit/adr/0011-cli-audit-playwright/",
+			"status": "NA",
+			"note": "Tests 4.2.1 à 4.2.3 : Page examinée : page ADR-0011 (/cockpit/adr/0011-cli-audit-playwright/). Inventaire du DOM servi (Playwright/Chromium) : 0 élément <video>, <audio>, <object>, <embed>, <iframe>, <canvas>, <svg>, <bgsound> ou role=\"img\", et 0 lien vers un fichier audio ou vidéo ou une plateforme vidéo, sur 10 liens. Aucun transcription ni audiodescription à juger : non applicable."
+		},
+		{
+			"criterion": "4.2",
+			"page": "https://chikimuras.github.io/rampe/cockpit/journal/2026-10-15/",
+			"status": "NA",
+			"note": "Tests 4.2.1 à 4.2.3 : Page examinée : page du journal du 15/10/2026 (/cockpit/journal/2026-10-15/). Inventaire du DOM servi (Playwright/Chromium) : 0 élément <video>, <audio>, <object>, <embed>, <iframe>, <canvas>, <svg>, <bgsound> ou role=\"img\", et 0 lien vers un fichier audio ou vidéo ou une plateforme vidéo, sur 10 liens. Aucun transcription ni audiodescription à juger : non applicable."
+		},
+		{
+			"criterion": "4.2",
+			"page": "https://chikimuras.github.io/rampe/cockpit/docs/roadmap/",
+			"status": "NA",
+			"note": "Tests 4.2.1 à 4.2.3 : Page examinée : page Roadmap (/cockpit/docs/roadmap/). Inventaire du DOM servi (Playwright/Chromium) : 0 élément <video>, <audio>, <object>, <embed>, <iframe>, <canvas>, <svg>, <bgsound> ou role=\"img\", et 0 lien vers un fichier audio ou vidéo ou une plateforme vidéo, sur 10 liens. Aucun transcription ni audiodescription à juger : non applicable."
+		},
+		{
+			"criterion": "4.2",
+			"page": "https://chikimuras.github.io/rampe/referentiel/5-1/",
+			"status": "NA",
+			"note": "Tests 4.2.1 à 4.2.3 : Page examinée : fiche du critère 5.1 (/referentiel/5-1/). Inventaire du DOM servi (Playwright/Chromium) : 0 élément <video>, <audio>, <object>, <embed>, <iframe>, <canvas>, <svg>, <bgsound> ou role=\"img\", et 0 lien vers un fichier audio ou vidéo ou une plateforme vidéo, sur 19 liens. Aucun transcription ni audiodescription à juger : non applicable."
+		},
+		{
+			"criterion": "4.2",
+			"page": "https://chikimuras.github.io/rampe/referentiel/1-9/",
+			"status": "NA",
+			"note": "Tests 4.2.1 à 4.2.3 : Page examinée : fiche du critère 1.9 (/referentiel/1-9/). Inventaire du DOM servi (Playwright/Chromium) : 0 élément <video>, <audio>, <object>, <embed>, <iframe>, <canvas>, <svg>, <bgsound> ou role=\"img\", et 0 lien vers un fichier audio ou vidéo ou une plateforme vidéo, sur 45 liens. Aucun transcription ni audiodescription à juger : non applicable."
+		},
+		{
+			"criterion": "4.3",
+			"page": "https://chikimuras.github.io/rampe/",
+			"status": "NA",
+			"note": "Tests 4.3.1 et 4.3.2 : Page examinée : page d’accueil (/). Inventaire du DOM servi (Playwright/Chromium) : 0 élément <video>, <audio>, <object>, <embed>, <iframe>, <canvas>, <svg>, <bgsound> ou role=\"img\", et 0 lien vers un fichier audio ou vidéo ou une plateforme vidéo, sur 9 liens. Aucun média temporel synchronisé à sous-titrer : non applicable."
+		},
+		{
+			"criterion": "4.3",
+			"page": "https://chikimuras.github.io/rampe/referentiel/",
+			"status": "NA",
+			"note": "Tests 4.3.1 et 4.3.2 : Page examinée : page Référentiel (/referentiel/). Inventaire du DOM servi (Playwright/Chromium) : 0 élément <video>, <audio>, <object>, <embed>, <iframe>, <canvas>, <svg>, <bgsound> ou role=\"img\", et 0 lien vers un fichier audio ou vidéo ou une plateforme vidéo, sur 131 liens. Aucun média temporel synchronisé à sous-titrer : non applicable."
+		},
+		{
+			"criterion": "4.3",
+			"page": "https://chikimuras.github.io/rampe/referentiel/1-1/",
+			"status": "NA",
+			"note": "Tests 4.3.1 et 4.3.2 : Page examinée : fiche du critère 1.1 (/referentiel/1-1/). Inventaire du DOM servi (Playwright/Chromium) : 0 élément <video>, <audio>, <object>, <embed>, <iframe>, <canvas>, <svg>, <bgsound> ou role=\"img\", et 0 lien vers un fichier audio ou vidéo ou une plateforme vidéo, sur 43 liens. Aucun média temporel synchronisé à sous-titrer : non applicable."
+		},
+		{
+			"criterion": "4.3",
+			"page": "https://chikimuras.github.io/rampe/referentiel/glossaire/",
+			"status": "NA",
+			"note": "Tests 4.3.1 et 4.3.2 : Page examinée : page Glossaire (/referentiel/glossaire/). Inventaire du DOM servi (Playwright/Chromium) : 0 élément <video>, <audio>, <object>, <embed>, <iframe>, <canvas>, <svg>, <bgsound> ou role=\"img\", et 0 lien vers un fichier audio ou vidéo ou une plateforme vidéo, sur 76 liens. Aucun média temporel synchronisé à sous-titrer : non applicable."
+		},
+		{
+			"criterion": "4.3",
+			"page": "https://chikimuras.github.io/rampe/audit/",
+			"status": "NA",
+			"note": "Tests 4.3.1 et 4.3.2 : DOM et arbre d’accessibilité examinés avec Playwright/Chromium, état initial puis états interactifs : deux pages ajoutées, les 106 critères affichés un à un avec les sections « Tests » et « Méthodologie » ouvertes, résultat complet affiché, action libre ajoutée et tableau d’actions mis à jour depuis l’audit ; la page ne contient aucun élément <video>, <audio>, <object>, <embed>, <iframe>, <canvas>, <svg>, <bgsound> ni élément role=\"img\", et aucun lien vers un fichier audio ou vidéo. Le seul renvoi à une vidéo est un lien texte vers YouTube dans la méthodologie du test 13.7.1 (affichée pour le critère 13.7) : c’est un lien vers une page externe, pas un média de la page. Aucun média temporel synchronisé (sous-titres) : non applicable."
+		},
+		{
+			"criterion": "4.3",
+			"page": "https://chikimuras.github.io/rampe/cockpit/",
+			"status": "NA",
+			"note": "Tests 4.3.1 et 4.3.2 : Page examinée : page Cockpit (/cockpit/). Inventaire du DOM servi (Playwright/Chromium) : 0 élément <video>, <audio>, <object>, <embed>, <iframe>, <canvas>, <svg>, <bgsound> ou role=\"img\", et 0 lien vers un fichier audio ou vidéo ou une plateforme vidéo, sur 39 liens. Aucun média temporel synchronisé à sous-titrer : non applicable."
+		},
+		{
+			"criterion": "4.3",
+			"page": "https://chikimuras.github.io/rampe/cockpit/adr/0011-cli-audit-playwright/",
+			"status": "NA",
+			"note": "Tests 4.3.1 et 4.3.2 : Page examinée : page ADR-0011 (/cockpit/adr/0011-cli-audit-playwright/). Inventaire du DOM servi (Playwright/Chromium) : 0 élément <video>, <audio>, <object>, <embed>, <iframe>, <canvas>, <svg>, <bgsound> ou role=\"img\", et 0 lien vers un fichier audio ou vidéo ou une plateforme vidéo, sur 10 liens. Aucun média temporel synchronisé à sous-titrer : non applicable."
+		},
+		{
+			"criterion": "4.3",
+			"page": "https://chikimuras.github.io/rampe/cockpit/journal/2026-10-15/",
+			"status": "NA",
+			"note": "Tests 4.3.1 et 4.3.2 : Page examinée : page du journal du 15/10/2026 (/cockpit/journal/2026-10-15/). Inventaire du DOM servi (Playwright/Chromium) : 0 élément <video>, <audio>, <object>, <embed>, <iframe>, <canvas>, <svg>, <bgsound> ou role=\"img\", et 0 lien vers un fichier audio ou vidéo ou une plateforme vidéo, sur 10 liens. Aucun média temporel synchronisé à sous-titrer : non applicable."
+		},
+		{
+			"criterion": "4.3",
+			"page": "https://chikimuras.github.io/rampe/cockpit/docs/roadmap/",
+			"status": "NA",
+			"note": "Tests 4.3.1 et 4.3.2 : Page examinée : page Roadmap (/cockpit/docs/roadmap/). Inventaire du DOM servi (Playwright/Chromium) : 0 élément <video>, <audio>, <object>, <embed>, <iframe>, <canvas>, <svg>, <bgsound> ou role=\"img\", et 0 lien vers un fichier audio ou vidéo ou une plateforme vidéo, sur 10 liens. Aucun média temporel synchronisé à sous-titrer : non applicable."
+		},
+		{
+			"criterion": "4.3",
+			"page": "https://chikimuras.github.io/rampe/referentiel/5-1/",
+			"status": "NA",
+			"note": "Tests 4.3.1 et 4.3.2 : Page examinée : fiche du critère 5.1 (/referentiel/5-1/). Inventaire du DOM servi (Playwright/Chromium) : 0 élément <video>, <audio>, <object>, <embed>, <iframe>, <canvas>, <svg>, <bgsound> ou role=\"img\", et 0 lien vers un fichier audio ou vidéo ou une plateforme vidéo, sur 19 liens. Aucun média temporel synchronisé à sous-titrer : non applicable."
+		},
+		{
+			"criterion": "4.3",
+			"page": "https://chikimuras.github.io/rampe/referentiel/1-9/",
+			"status": "NA",
+			"note": "Tests 4.3.1 et 4.3.2 : Page examinée : fiche du critère 1.9 (/referentiel/1-9/). Inventaire du DOM servi (Playwright/Chromium) : 0 élément <video>, <audio>, <object>, <embed>, <iframe>, <canvas>, <svg>, <bgsound> ou role=\"img\", et 0 lien vers un fichier audio ou vidéo ou une plateforme vidéo, sur 45 liens. Aucun média temporel synchronisé à sous-titrer : non applicable."
+		},
+		{
+			"criterion": "4.4",
+			"page": "https://chikimuras.github.io/rampe/",
+			"status": "NA",
+			"note": "Tests 4.4.1 : Page examinée : page d’accueil (/). Inventaire du DOM servi (Playwright/Chromium) : 0 élément <video>, <audio>, <object>, <embed>, <iframe>, <canvas>, <svg>, <bgsound> ou role=\"img\", et 0 lien vers un fichier audio ou vidéo ou une plateforme vidéo, sur 9 liens. Aucun sous-titres à juger : non applicable."
+		},
+		{
+			"criterion": "4.4",
+			"page": "https://chikimuras.github.io/rampe/referentiel/",
+			"status": "NA",
+			"note": "Tests 4.4.1 : Page examinée : page Référentiel (/referentiel/). Inventaire du DOM servi (Playwright/Chromium) : 0 élément <video>, <audio>, <object>, <embed>, <iframe>, <canvas>, <svg>, <bgsound> ou role=\"img\", et 0 lien vers un fichier audio ou vidéo ou une plateforme vidéo, sur 131 liens. Aucun sous-titres à juger : non applicable."
+		},
+		{
+			"criterion": "4.4",
+			"page": "https://chikimuras.github.io/rampe/referentiel/1-1/",
+			"status": "NA",
+			"note": "Tests 4.4.1 : Page examinée : fiche du critère 1.1 (/referentiel/1-1/). Inventaire du DOM servi (Playwright/Chromium) : 0 élément <video>, <audio>, <object>, <embed>, <iframe>, <canvas>, <svg>, <bgsound> ou role=\"img\", et 0 lien vers un fichier audio ou vidéo ou une plateforme vidéo, sur 43 liens. Aucun sous-titres à juger : non applicable."
+		},
+		{
+			"criterion": "4.4",
+			"page": "https://chikimuras.github.io/rampe/referentiel/glossaire/",
+			"status": "NA",
+			"note": "Tests 4.4.1 : Page examinée : page Glossaire (/referentiel/glossaire/). Inventaire du DOM servi (Playwright/Chromium) : 0 élément <video>, <audio>, <object>, <embed>, <iframe>, <canvas>, <svg>, <bgsound> ou role=\"img\", et 0 lien vers un fichier audio ou vidéo ou une plateforme vidéo, sur 76 liens. Aucun sous-titres à juger : non applicable."
+		},
+		{
+			"criterion": "4.4",
+			"page": "https://chikimuras.github.io/rampe/audit/",
+			"status": "NA",
+			"note": "Tests 4.4.1 : DOM et arbre d’accessibilité examinés avec Playwright/Chromium, état initial puis états interactifs : deux pages ajoutées, les 106 critères affichés un à un avec les sections « Tests » et « Méthodologie » ouvertes, résultat complet affiché, action libre ajoutée et tableau d’actions mis à jour depuis l’audit ; la page ne contient aucun élément <video>, <audio>, <object>, <embed>, <iframe>, <canvas>, <svg>, <bgsound> ni élément role=\"img\", et aucun lien vers un fichier audio ou vidéo. Le seul renvoi à une vidéo est un lien texte vers YouTube dans la méthodologie du test 13.7.1 (affichée pour le critère 13.7) : c’est un lien vers une page externe, pas un média de la page. Aucun média temporel synchronisé sous-titré : non applicable."
+		},
+		{
+			"criterion": "4.4",
+			"page": "https://chikimuras.github.io/rampe/cockpit/",
+			"status": "NA",
+			"note": "Tests 4.4.1 : Page examinée : page Cockpit (/cockpit/). Inventaire du DOM servi (Playwright/Chromium) : 0 élément <video>, <audio>, <object>, <embed>, <iframe>, <canvas>, <svg>, <bgsound> ou role=\"img\", et 0 lien vers un fichier audio ou vidéo ou une plateforme vidéo, sur 39 liens. Aucun sous-titres à juger : non applicable."
+		},
+		{
+			"criterion": "4.4",
+			"page": "https://chikimuras.github.io/rampe/cockpit/adr/0011-cli-audit-playwright/",
+			"status": "NA",
+			"note": "Tests 4.4.1 : Page examinée : page ADR-0011 (/cockpit/adr/0011-cli-audit-playwright/). Inventaire du DOM servi (Playwright/Chromium) : 0 élément <video>, <audio>, <object>, <embed>, <iframe>, <canvas>, <svg>, <bgsound> ou role=\"img\", et 0 lien vers un fichier audio ou vidéo ou une plateforme vidéo, sur 10 liens. Aucun sous-titres à juger : non applicable."
+		},
+		{
+			"criterion": "4.4",
+			"page": "https://chikimuras.github.io/rampe/cockpit/journal/2026-10-15/",
+			"status": "NA",
+			"note": "Tests 4.4.1 : Page examinée : page du journal du 15/10/2026 (/cockpit/journal/2026-10-15/). Inventaire du DOM servi (Playwright/Chromium) : 0 élément <video>, <audio>, <object>, <embed>, <iframe>, <canvas>, <svg>, <bgsound> ou role=\"img\", et 0 lien vers un fichier audio ou vidéo ou une plateforme vidéo, sur 10 liens. Aucun sous-titres à juger : non applicable."
+		},
+		{
+			"criterion": "4.4",
+			"page": "https://chikimuras.github.io/rampe/cockpit/docs/roadmap/",
+			"status": "NA",
+			"note": "Tests 4.4.1 : Page examinée : page Roadmap (/cockpit/docs/roadmap/). Inventaire du DOM servi (Playwright/Chromium) : 0 élément <video>, <audio>, <object>, <embed>, <iframe>, <canvas>, <svg>, <bgsound> ou role=\"img\", et 0 lien vers un fichier audio ou vidéo ou une plateforme vidéo, sur 10 liens. Aucun sous-titres à juger : non applicable."
+		},
+		{
+			"criterion": "4.4",
+			"page": "https://chikimuras.github.io/rampe/referentiel/5-1/",
+			"status": "NA",
+			"note": "Tests 4.4.1 : Page examinée : fiche du critère 5.1 (/referentiel/5-1/). Inventaire du DOM servi (Playwright/Chromium) : 0 élément <video>, <audio>, <object>, <embed>, <iframe>, <canvas>, <svg>, <bgsound> ou role=\"img\", et 0 lien vers un fichier audio ou vidéo ou une plateforme vidéo, sur 19 liens. Aucun sous-titres à juger : non applicable."
+		},
+		{
+			"criterion": "4.4",
+			"page": "https://chikimuras.github.io/rampe/referentiel/1-9/",
+			"status": "NA",
+			"note": "Tests 4.4.1 : Page examinée : fiche du critère 1.9 (/referentiel/1-9/). Inventaire du DOM servi (Playwright/Chromium) : 0 élément <video>, <audio>, <object>, <embed>, <iframe>, <canvas>, <svg>, <bgsound> ou role=\"img\", et 0 lien vers un fichier audio ou vidéo ou une plateforme vidéo, sur 45 liens. Aucun sous-titres à juger : non applicable."
+		},
+		{
+			"criterion": "4.5",
+			"page": "https://chikimuras.github.io/rampe/",
+			"status": "NA",
+			"note": "Tests 4.5.1 et 4.5.2 : Page examinée : page d’accueil (/). Inventaire du DOM servi (Playwright/Chromium) : 0 élément <video>, <audio>, <object>, <embed>, <iframe>, <canvas>, <svg>, <bgsound> ou role=\"img\", et 0 lien vers un fichier audio ou vidéo ou une plateforme vidéo, sur 9 liens. Aucun média temporel à audiodécrire : non applicable."
+		},
+		{
+			"criterion": "4.5",
+			"page": "https://chikimuras.github.io/rampe/referentiel/",
+			"status": "NA",
+			"note": "Tests 4.5.1 et 4.5.2 : Page examinée : page Référentiel (/referentiel/). Inventaire du DOM servi (Playwright/Chromium) : 0 élément <video>, <audio>, <object>, <embed>, <iframe>, <canvas>, <svg>, <bgsound> ou role=\"img\", et 0 lien vers un fichier audio ou vidéo ou une plateforme vidéo, sur 131 liens. Aucun média temporel à audiodécrire : non applicable."
+		},
+		{
+			"criterion": "4.5",
+			"page": "https://chikimuras.github.io/rampe/referentiel/1-1/",
+			"status": "NA",
+			"note": "Tests 4.5.1 et 4.5.2 : Page examinée : fiche du critère 1.1 (/referentiel/1-1/). Inventaire du DOM servi (Playwright/Chromium) : 0 élément <video>, <audio>, <object>, <embed>, <iframe>, <canvas>, <svg>, <bgsound> ou role=\"img\", et 0 lien vers un fichier audio ou vidéo ou une plateforme vidéo, sur 43 liens. Aucun média temporel à audiodécrire : non applicable."
+		},
+		{
+			"criterion": "4.5",
+			"page": "https://chikimuras.github.io/rampe/referentiel/glossaire/",
+			"status": "NA",
+			"note": "Tests 4.5.1 et 4.5.2 : Page examinée : page Glossaire (/referentiel/glossaire/). Inventaire du DOM servi (Playwright/Chromium) : 0 élément <video>, <audio>, <object>, <embed>, <iframe>, <canvas>, <svg>, <bgsound> ou role=\"img\", et 0 lien vers un fichier audio ou vidéo ou une plateforme vidéo, sur 76 liens. Aucun média temporel à audiodécrire : non applicable."
+		},
+		{
+			"criterion": "4.5",
+			"page": "https://chikimuras.github.io/rampe/audit/",
+			"status": "NA",
+			"note": "Tests 4.5.1 et 4.5.2 : DOM et arbre d’accessibilité examinés avec Playwright/Chromium, état initial puis états interactifs : deux pages ajoutées, les 106 critères affichés un à un avec les sections « Tests » et « Méthodologie » ouvertes, résultat complet affiché, action libre ajoutée et tableau d’actions mis à jour depuis l’audit ; la page ne contient aucun élément <video>, <audio>, <object>, <embed>, <iframe>, <canvas>, <svg>, <bgsound> ni élément role=\"img\", et aucun lien vers un fichier audio ou vidéo. Le seul renvoi à une vidéo est un lien texte vers YouTube dans la méthodologie du test 13.7.1 (affichée pour le critère 13.7) : c’est un lien vers une page externe, pas un média de la page. Aucun média temporel pré-enregistré (audiodescription) : non applicable."
+		},
+		{
+			"criterion": "4.5",
+			"page": "https://chikimuras.github.io/rampe/cockpit/",
+			"status": "NA",
+			"note": "Tests 4.5.1 et 4.5.2 : Page examinée : page Cockpit (/cockpit/). Inventaire du DOM servi (Playwright/Chromium) : 0 élément <video>, <audio>, <object>, <embed>, <iframe>, <canvas>, <svg>, <bgsound> ou role=\"img\", et 0 lien vers un fichier audio ou vidéo ou une plateforme vidéo, sur 39 liens. Aucun média temporel à audiodécrire : non applicable."
+		},
+		{
+			"criterion": "4.5",
+			"page": "https://chikimuras.github.io/rampe/cockpit/adr/0011-cli-audit-playwright/",
+			"status": "NA",
+			"note": "Tests 4.5.1 et 4.5.2 : Page examinée : page ADR-0011 (/cockpit/adr/0011-cli-audit-playwright/). Inventaire du DOM servi (Playwright/Chromium) : 0 élément <video>, <audio>, <object>, <embed>, <iframe>, <canvas>, <svg>, <bgsound> ou role=\"img\", et 0 lien vers un fichier audio ou vidéo ou une plateforme vidéo, sur 10 liens. Aucun média temporel à audiodécrire : non applicable."
+		},
+		{
+			"criterion": "4.5",
+			"page": "https://chikimuras.github.io/rampe/cockpit/journal/2026-10-15/",
+			"status": "NA",
+			"note": "Tests 4.5.1 et 4.5.2 : Page examinée : page du journal du 15/10/2026 (/cockpit/journal/2026-10-15/). Inventaire du DOM servi (Playwright/Chromium) : 0 élément <video>, <audio>, <object>, <embed>, <iframe>, <canvas>, <svg>, <bgsound> ou role=\"img\", et 0 lien vers un fichier audio ou vidéo ou une plateforme vidéo, sur 10 liens. Aucun média temporel à audiodécrire : non applicable."
+		},
+		{
+			"criterion": "4.5",
+			"page": "https://chikimuras.github.io/rampe/cockpit/docs/roadmap/",
+			"status": "NA",
+			"note": "Tests 4.5.1 et 4.5.2 : Page examinée : page Roadmap (/cockpit/docs/roadmap/). Inventaire du DOM servi (Playwright/Chromium) : 0 élément <video>, <audio>, <object>, <embed>, <iframe>, <canvas>, <svg>, <bgsound> ou role=\"img\", et 0 lien vers un fichier audio ou vidéo ou une plateforme vidéo, sur 10 liens. Aucun média temporel à audiodécrire : non applicable."
+		},
+		{
+			"criterion": "4.5",
+			"page": "https://chikimuras.github.io/rampe/referentiel/5-1/",
+			"status": "NA",
+			"note": "Tests 4.5.1 et 4.5.2 : Page examinée : fiche du critère 5.1 (/referentiel/5-1/). Inventaire du DOM servi (Playwright/Chromium) : 0 élément <video>, <audio>, <object>, <embed>, <iframe>, <canvas>, <svg>, <bgsound> ou role=\"img\", et 0 lien vers un fichier audio ou vidéo ou une plateforme vidéo, sur 19 liens. Aucun média temporel à audiodécrire : non applicable."
+		},
+		{
+			"criterion": "4.5",
+			"page": "https://chikimuras.github.io/rampe/referentiel/1-9/",
+			"status": "NA",
+			"note": "Tests 4.5.1 et 4.5.2 : Page examinée : fiche du critère 1.9 (/referentiel/1-9/). Inventaire du DOM servi (Playwright/Chromium) : 0 élément <video>, <audio>, <object>, <embed>, <iframe>, <canvas>, <svg>, <bgsound> ou role=\"img\", et 0 lien vers un fichier audio ou vidéo ou une plateforme vidéo, sur 45 liens. Aucun média temporel à audiodécrire : non applicable."
+		},
+		{
+			"criterion": "4.6",
+			"page": "https://chikimuras.github.io/rampe/",
+			"status": "NA",
+			"note": "Tests 4.6.1 et 4.6.2 : Page examinée : page d’accueil (/). Inventaire du DOM servi (Playwright/Chromium) : 0 élément <video>, <audio>, <object>, <embed>, <iframe>, <canvas>, <svg>, <bgsound> ou role=\"img\", et 0 lien vers un fichier audio ou vidéo ou une plateforme vidéo, sur 9 liens. Aucun audiodescription à juger : non applicable."
+		},
+		{
+			"criterion": "4.6",
+			"page": "https://chikimuras.github.io/rampe/referentiel/",
+			"status": "NA",
+			"note": "Tests 4.6.1 et 4.6.2 : Page examinée : page Référentiel (/referentiel/). Inventaire du DOM servi (Playwright/Chromium) : 0 élément <video>, <audio>, <object>, <embed>, <iframe>, <canvas>, <svg>, <bgsound> ou role=\"img\", et 0 lien vers un fichier audio ou vidéo ou une plateforme vidéo, sur 131 liens. Aucun audiodescription à juger : non applicable."
+		},
+		{
+			"criterion": "4.6",
+			"page": "https://chikimuras.github.io/rampe/referentiel/1-1/",
+			"status": "NA",
+			"note": "Tests 4.6.1 et 4.6.2 : Page examinée : fiche du critère 1.1 (/referentiel/1-1/). Inventaire du DOM servi (Playwright/Chromium) : 0 élément <video>, <audio>, <object>, <embed>, <iframe>, <canvas>, <svg>, <bgsound> ou role=\"img\", et 0 lien vers un fichier audio ou vidéo ou une plateforme vidéo, sur 43 liens. Aucun audiodescription à juger : non applicable."
+		},
+		{
+			"criterion": "4.6",
+			"page": "https://chikimuras.github.io/rampe/referentiel/glossaire/",
+			"status": "NA",
+			"note": "Tests 4.6.1 et 4.6.2 : Page examinée : page Glossaire (/referentiel/glossaire/). Inventaire du DOM servi (Playwright/Chromium) : 0 élément <video>, <audio>, <object>, <embed>, <iframe>, <canvas>, <svg>, <bgsound> ou role=\"img\", et 0 lien vers un fichier audio ou vidéo ou une plateforme vidéo, sur 76 liens. Aucun audiodescription à juger : non applicable."
+		},
+		{
+			"criterion": "4.6",
+			"page": "https://chikimuras.github.io/rampe/audit/",
+			"status": "NA",
+			"note": "Tests 4.6.1 et 4.6.2 : DOM et arbre d’accessibilité examinés avec Playwright/Chromium, état initial puis états interactifs : deux pages ajoutées, les 106 critères affichés un à un avec les sections « Tests » et « Méthodologie » ouvertes, résultat complet affiché, action libre ajoutée et tableau d’actions mis à jour depuis l’audit ; la page ne contient aucun élément <video>, <audio>, <object>, <embed>, <iframe>, <canvas>, <svg>, <bgsound> ni élément role=\"img\", et aucun lien vers un fichier audio ou vidéo. Le seul renvoi à une vidéo est un lien texte vers YouTube dans la méthodologie du test 13.7.1 (affichée pour le critère 13.7) : c’est un lien vers une page externe, pas un média de la page. Aucun média temporel audiodécrit : non applicable."
+		},
+		{
+			"criterion": "4.6",
+			"page": "https://chikimuras.github.io/rampe/cockpit/",
+			"status": "NA",
+			"note": "Tests 4.6.1 et 4.6.2 : Page examinée : page Cockpit (/cockpit/). Inventaire du DOM servi (Playwright/Chromium) : 0 élément <video>, <audio>, <object>, <embed>, <iframe>, <canvas>, <svg>, <bgsound> ou role=\"img\", et 0 lien vers un fichier audio ou vidéo ou une plateforme vidéo, sur 39 liens. Aucun audiodescription à juger : non applicable."
+		},
+		{
+			"criterion": "4.6",
+			"page": "https://chikimuras.github.io/rampe/cockpit/adr/0011-cli-audit-playwright/",
+			"status": "NA",
+			"note": "Tests 4.6.1 et 4.6.2 : Page examinée : page ADR-0011 (/cockpit/adr/0011-cli-audit-playwright/). Inventaire du DOM servi (Playwright/Chromium) : 0 élément <video>, <audio>, <object>, <embed>, <iframe>, <canvas>, <svg>, <bgsound> ou role=\"img\", et 0 lien vers un fichier audio ou vidéo ou une plateforme vidéo, sur 10 liens. Aucun audiodescription à juger : non applicable."
+		},
+		{
+			"criterion": "4.6",
+			"page": "https://chikimuras.github.io/rampe/cockpit/journal/2026-10-15/",
+			"status": "NA",
+			"note": "Tests 4.6.1 et 4.6.2 : Page examinée : page du journal du 15/10/2026 (/cockpit/journal/2026-10-15/). Inventaire du DOM servi (Playwright/Chromium) : 0 élément <video>, <audio>, <object>, <embed>, <iframe>, <canvas>, <svg>, <bgsound> ou role=\"img\", et 0 lien vers un fichier audio ou vidéo ou une plateforme vidéo, sur 10 liens. Aucun audiodescription à juger : non applicable."
+		},
+		{
+			"criterion": "4.6",
+			"page": "https://chikimuras.github.io/rampe/cockpit/docs/roadmap/",
+			"status": "NA",
+			"note": "Tests 4.6.1 et 4.6.2 : Page examinée : page Roadmap (/cockpit/docs/roadmap/). Inventaire du DOM servi (Playwright/Chromium) : 0 élément <video>, <audio>, <object>, <embed>, <iframe>, <canvas>, <svg>, <bgsound> ou role=\"img\", et 0 lien vers un fichier audio ou vidéo ou une plateforme vidéo, sur 10 liens. Aucun audiodescription à juger : non applicable."
+		},
+		{
+			"criterion": "4.6",
+			"page": "https://chikimuras.github.io/rampe/referentiel/5-1/",
+			"status": "NA",
+			"note": "Tests 4.6.1 et 4.6.2 : Page examinée : fiche du critère 5.1 (/referentiel/5-1/). Inventaire du DOM servi (Playwright/Chromium) : 0 élément <video>, <audio>, <object>, <embed>, <iframe>, <canvas>, <svg>, <bgsound> ou role=\"img\", et 0 lien vers un fichier audio ou vidéo ou une plateforme vidéo, sur 19 liens. Aucun audiodescription à juger : non applicable."
+		},
+		{
+			"criterion": "4.6",
+			"page": "https://chikimuras.github.io/rampe/referentiel/1-9/",
+			"status": "NA",
+			"note": "Tests 4.6.1 et 4.6.2 : Page examinée : fiche du critère 1.9 (/referentiel/1-9/). Inventaire du DOM servi (Playwright/Chromium) : 0 élément <video>, <audio>, <object>, <embed>, <iframe>, <canvas>, <svg>, <bgsound> ou role=\"img\", et 0 lien vers un fichier audio ou vidéo ou une plateforme vidéo, sur 45 liens. Aucun audiodescription à juger : non applicable."
+		},
+		{
+			"criterion": "4.7",
+			"page": "https://chikimuras.github.io/rampe/",
+			"status": "NA",
+			"note": "Tests 4.7.1 : Page examinée : page d’accueil (/). Inventaire du DOM servi (Playwright/Chromium) : 0 élément <video>, <audio>, <object>, <embed>, <iframe>, <canvas>, <svg>, <bgsound> ou role=\"img\", et 0 lien vers un fichier audio ou vidéo ou une plateforme vidéo, sur 9 liens. Aucun média temporel à identifier : non applicable."
+		},
+		{
+			"criterion": "4.7",
+			"page": "https://chikimuras.github.io/rampe/referentiel/",
+			"status": "NA",
+			"note": "Tests 4.7.1 : Page examinée : page Référentiel (/referentiel/). Inventaire du DOM servi (Playwright/Chromium) : 0 élément <video>, <audio>, <object>, <embed>, <iframe>, <canvas>, <svg>, <bgsound> ou role=\"img\", et 0 lien vers un fichier audio ou vidéo ou une plateforme vidéo, sur 131 liens. Aucun média temporel à identifier : non applicable."
+		},
+		{
+			"criterion": "4.7",
+			"page": "https://chikimuras.github.io/rampe/referentiel/1-1/",
+			"status": "NA",
+			"note": "Tests 4.7.1 : Page examinée : fiche du critère 1.1 (/referentiel/1-1/). Inventaire du DOM servi (Playwright/Chromium) : 0 élément <video>, <audio>, <object>, <embed>, <iframe>, <canvas>, <svg>, <bgsound> ou role=\"img\", et 0 lien vers un fichier audio ou vidéo ou une plateforme vidéo, sur 43 liens. Aucun média temporel à identifier : non applicable."
+		},
+		{
+			"criterion": "4.7",
+			"page": "https://chikimuras.github.io/rampe/referentiel/glossaire/",
+			"status": "NA",
+			"note": "Tests 4.7.1 : Page examinée : page Glossaire (/referentiel/glossaire/). Inventaire du DOM servi (Playwright/Chromium) : 0 élément <video>, <audio>, <object>, <embed>, <iframe>, <canvas>, <svg>, <bgsound> ou role=\"img\", et 0 lien vers un fichier audio ou vidéo ou une plateforme vidéo, sur 76 liens. Aucun média temporel à identifier : non applicable."
+		},
+		{
+			"criterion": "4.7",
+			"page": "https://chikimuras.github.io/rampe/audit/",
+			"status": "NA",
+			"note": "Tests 4.7.1 : DOM et arbre d’accessibilité examinés avec Playwright/Chromium, état initial puis états interactifs : deux pages ajoutées, les 106 critères affichés un à un avec les sections « Tests » et « Méthodologie » ouvertes, résultat complet affiché, action libre ajoutée et tableau d’actions mis à jour depuis l’audit ; la page ne contient aucun élément <video>, <audio>, <object>, <embed>, <iframe>, <canvas>, <svg>, <bgsound> ni élément role=\"img\", et aucun lien vers un fichier audio ou vidéo. Le seul renvoi à une vidéo est un lien texte vers YouTube dans la méthodologie du test 13.7.1 (affichée pour le critère 13.7) : c’est un lien vers une page externe, pas un média de la page. Aucun média temporel à identifier : non applicable."
+		},
+		{
+			"criterion": "4.7",
+			"page": "https://chikimuras.github.io/rampe/cockpit/",
+			"status": "NA",
+			"note": "Tests 4.7.1 : Page examinée : page Cockpit (/cockpit/). Inventaire du DOM servi (Playwright/Chromium) : 0 élément <video>, <audio>, <object>, <embed>, <iframe>, <canvas>, <svg>, <bgsound> ou role=\"img\", et 0 lien vers un fichier audio ou vidéo ou une plateforme vidéo, sur 39 liens. Aucun média temporel à identifier : non applicable."
+		},
+		{
+			"criterion": "4.7",
+			"page": "https://chikimuras.github.io/rampe/cockpit/adr/0011-cli-audit-playwright/",
+			"status": "NA",
+			"note": "Tests 4.7.1 : Page examinée : page ADR-0011 (/cockpit/adr/0011-cli-audit-playwright/). Inventaire du DOM servi (Playwright/Chromium) : 0 élément <video>, <audio>, <object>, <embed>, <iframe>, <canvas>, <svg>, <bgsound> ou role=\"img\", et 0 lien vers un fichier audio ou vidéo ou une plateforme vidéo, sur 10 liens. Aucun média temporel à identifier : non applicable."
+		},
+		{
+			"criterion": "4.7",
+			"page": "https://chikimuras.github.io/rampe/cockpit/journal/2026-10-15/",
+			"status": "NA",
+			"note": "Tests 4.7.1 : Page examinée : page du journal du 15/10/2026 (/cockpit/journal/2026-10-15/). Inventaire du DOM servi (Playwright/Chromium) : 0 élément <video>, <audio>, <object>, <embed>, <iframe>, <canvas>, <svg>, <bgsound> ou role=\"img\", et 0 lien vers un fichier audio ou vidéo ou une plateforme vidéo, sur 10 liens. Aucun média temporel à identifier : non applicable."
+		},
+		{
+			"criterion": "4.7",
+			"page": "https://chikimuras.github.io/rampe/cockpit/docs/roadmap/",
+			"status": "NA",
+			"note": "Tests 4.7.1 : Page examinée : page Roadmap (/cockpit/docs/roadmap/). Inventaire du DOM servi (Playwright/Chromium) : 0 élément <video>, <audio>, <object>, <embed>, <iframe>, <canvas>, <svg>, <bgsound> ou role=\"img\", et 0 lien vers un fichier audio ou vidéo ou une plateforme vidéo, sur 10 liens. Aucun média temporel à identifier : non applicable."
+		},
+		{
+			"criterion": "4.7",
+			"page": "https://chikimuras.github.io/rampe/referentiel/5-1/",
+			"status": "NA",
+			"note": "Tests 4.7.1 : Page examinée : fiche du critère 5.1 (/referentiel/5-1/). Inventaire du DOM servi (Playwright/Chromium) : 0 élément <video>, <audio>, <object>, <embed>, <iframe>, <canvas>, <svg>, <bgsound> ou role=\"img\", et 0 lien vers un fichier audio ou vidéo ou une plateforme vidéo, sur 19 liens. Aucun média temporel à identifier : non applicable."
+		},
+		{
+			"criterion": "4.7",
+			"page": "https://chikimuras.github.io/rampe/referentiel/1-9/",
+			"status": "NA",
+			"note": "Tests 4.7.1 : Page examinée : fiche du critère 1.9 (/referentiel/1-9/). Inventaire du DOM servi (Playwright/Chromium) : 0 élément <video>, <audio>, <object>, <embed>, <iframe>, <canvas>, <svg>, <bgsound> ou role=\"img\", et 0 lien vers un fichier audio ou vidéo ou une plateforme vidéo, sur 45 liens. Aucun média temporel à identifier : non applicable."
+		},
+		{
+			"criterion": "4.8",
+			"page": "https://chikimuras.github.io/rampe/",
+			"status": "NA",
+			"note": "Tests 4.8.1 et 4.8.2 : Page examinée : page d’accueil (/). Inventaire du DOM servi (Playwright/Chromium) : 0 élément <video>, <audio>, <object>, <embed>, <iframe>, <canvas>, <svg>, <bgsound> ou role=\"img\", et 0 lien vers un fichier audio ou vidéo ou une plateforme vidéo, sur 9 liens. Aucun média non temporel : non applicable."
+		},
+		{
+			"criterion": "4.8",
+			"page": "https://chikimuras.github.io/rampe/referentiel/",
+			"status": "NA",
+			"note": "Tests 4.8.1 et 4.8.2 : Page examinée : page Référentiel (/referentiel/). Inventaire du DOM servi (Playwright/Chromium) : 0 élément <video>, <audio>, <object>, <embed>, <iframe>, <canvas>, <svg>, <bgsound> ou role=\"img\", et 0 lien vers un fichier audio ou vidéo ou une plateforme vidéo, sur 131 liens. Aucun média non temporel : non applicable."
+		},
+		{
+			"criterion": "4.8",
+			"page": "https://chikimuras.github.io/rampe/referentiel/1-1/",
+			"status": "NA",
+			"note": "Tests 4.8.1 et 4.8.2 : Page examinée : fiche du critère 1.1 (/referentiel/1-1/). Inventaire du DOM servi (Playwright/Chromium) : 0 élément <video>, <audio>, <object>, <embed>, <iframe>, <canvas>, <svg>, <bgsound> ou role=\"img\", et 0 lien vers un fichier audio ou vidéo ou une plateforme vidéo, sur 43 liens. Aucun média non temporel : non applicable."
+		},
+		{
+			"criterion": "4.8",
+			"page": "https://chikimuras.github.io/rampe/referentiel/glossaire/",
+			"status": "NA",
+			"note": "Tests 4.8.1 et 4.8.2 : Page examinée : page Glossaire (/referentiel/glossaire/). Inventaire du DOM servi (Playwright/Chromium) : 0 élément <video>, <audio>, <object>, <embed>, <iframe>, <canvas>, <svg>, <bgsound> ou role=\"img\", et 0 lien vers un fichier audio ou vidéo ou une plateforme vidéo, sur 76 liens. Aucun média non temporel : non applicable."
+		},
+		{
+			"criterion": "4.8",
+			"page": "https://chikimuras.github.io/rampe/audit/",
+			"status": "NA",
+			"note": "Tests 4.8.1 et 4.8.2 : DOM et arbre d’accessibilité examinés avec Playwright/Chromium, état initial puis états interactifs : deux pages ajoutées, les 106 critères affichés un à un avec les sections « Tests » et « Méthodologie » ouvertes, résultat complet affiché, action libre ajoutée et tableau d’actions mis à jour depuis l’audit ; la page ne contient aucun élément <video>, <audio>, <object>, <embed>, <iframe>, <canvas>, <svg>, <bgsound> ni élément role=\"img\", et aucun lien vers un fichier audio ou vidéo. Le seul renvoi à une vidéo est un lien texte vers YouTube dans la méthodologie du test 13.7.1 (affichée pour le critère 13.7) : c’est un lien vers une page externe, pas un média de la page. Aucun média non temporel (plugin, <svg> ou <canvas> interactif, diaporama) : non applicable."
+		},
+		{
+			"criterion": "4.8",
+			"page": "https://chikimuras.github.io/rampe/cockpit/",
+			"status": "NA",
+			"note": "Tests 4.8.1 et 4.8.2 : Page examinée : page Cockpit (/cockpit/). Inventaire du DOM servi (Playwright/Chromium) : 0 élément <video>, <audio>, <object>, <embed>, <iframe>, <canvas>, <svg>, <bgsound> ou role=\"img\", et 0 lien vers un fichier audio ou vidéo ou une plateforme vidéo, sur 39 liens. Aucun média non temporel : non applicable."
+		},
+		{
+			"criterion": "4.8",
+			"page": "https://chikimuras.github.io/rampe/cockpit/adr/0011-cli-audit-playwright/",
+			"status": "NA",
+			"note": "Tests 4.8.1 et 4.8.2 : Page examinée : page ADR-0011 (/cockpit/adr/0011-cli-audit-playwright/). Inventaire du DOM servi (Playwright/Chromium) : 0 élément <video>, <audio>, <object>, <embed>, <iframe>, <canvas>, <svg>, <bgsound> ou role=\"img\", et 0 lien vers un fichier audio ou vidéo ou une plateforme vidéo, sur 10 liens. Aucun média non temporel : non applicable."
+		},
+		{
+			"criterion": "4.8",
+			"page": "https://chikimuras.github.io/rampe/cockpit/journal/2026-10-15/",
+			"status": "NA",
+			"note": "Tests 4.8.1 et 4.8.2 : Page examinée : page du journal du 15/10/2026 (/cockpit/journal/2026-10-15/). Inventaire du DOM servi (Playwright/Chromium) : 0 élément <video>, <audio>, <object>, <embed>, <iframe>, <canvas>, <svg>, <bgsound> ou role=\"img\", et 0 lien vers un fichier audio ou vidéo ou une plateforme vidéo, sur 10 liens. Aucun média non temporel : non applicable."
+		},
+		{
+			"criterion": "4.8",
+			"page": "https://chikimuras.github.io/rampe/cockpit/docs/roadmap/",
+			"status": "NA",
+			"note": "Tests 4.8.1 et 4.8.2 : Page examinée : page Roadmap (/cockpit/docs/roadmap/). Inventaire du DOM servi (Playwright/Chromium) : 0 élément <video>, <audio>, <object>, <embed>, <iframe>, <canvas>, <svg>, <bgsound> ou role=\"img\", et 0 lien vers un fichier audio ou vidéo ou une plateforme vidéo, sur 10 liens. Aucun média non temporel : non applicable."
+		},
+		{
+			"criterion": "4.8",
+			"page": "https://chikimuras.github.io/rampe/referentiel/5-1/",
+			"status": "NA",
+			"note": "Tests 4.8.1 et 4.8.2 : Page examinée : fiche du critère 5.1 (/referentiel/5-1/). Inventaire du DOM servi (Playwright/Chromium) : 0 élément <video>, <audio>, <object>, <embed>, <iframe>, <canvas>, <svg>, <bgsound> ou role=\"img\", et 0 lien vers un fichier audio ou vidéo ou une plateforme vidéo, sur 19 liens. Aucun média non temporel : non applicable."
+		},
+		{
+			"criterion": "4.8",
+			"page": "https://chikimuras.github.io/rampe/referentiel/1-9/",
+			"status": "NA",
+			"note": "Tests 4.8.1 et 4.8.2 : Page examinée : fiche du critère 1.9 (/referentiel/1-9/). Inventaire du DOM servi (Playwright/Chromium) : 0 élément <video>, <audio>, <object>, <embed>, <iframe>, <canvas>, <svg>, <bgsound> ou role=\"img\", et 0 lien vers un fichier audio ou vidéo ou une plateforme vidéo, sur 45 liens. Aucun média non temporel : non applicable."
+		},
+		{
+			"criterion": "4.9",
+			"page": "https://chikimuras.github.io/rampe/",
+			"status": "NA",
+			"note": "Tests 4.9.1 : Page examinée : page d’accueil (/). Inventaire du DOM servi (Playwright/Chromium) : 0 élément <video>, <audio>, <object>, <embed>, <iframe>, <canvas>, <svg>, <bgsound> ou role=\"img\", et 0 lien vers un fichier audio ou vidéo ou une plateforme vidéo, sur 9 liens. Aucun média non temporel à alternative : non applicable."
+		},
+		{
+			"criterion": "4.9",
+			"page": "https://chikimuras.github.io/rampe/referentiel/",
+			"status": "NA",
+			"note": "Tests 4.9.1 : Page examinée : page Référentiel (/referentiel/). Inventaire du DOM servi (Playwright/Chromium) : 0 élément <video>, <audio>, <object>, <embed>, <iframe>, <canvas>, <svg>, <bgsound> ou role=\"img\", et 0 lien vers un fichier audio ou vidéo ou une plateforme vidéo, sur 131 liens. Aucun média non temporel à alternative : non applicable."
+		},
+		{
+			"criterion": "4.9",
+			"page": "https://chikimuras.github.io/rampe/referentiel/1-1/",
+			"status": "NA",
+			"note": "Tests 4.9.1 : Page examinée : fiche du critère 1.1 (/referentiel/1-1/). Inventaire du DOM servi (Playwright/Chromium) : 0 élément <video>, <audio>, <object>, <embed>, <iframe>, <canvas>, <svg>, <bgsound> ou role=\"img\", et 0 lien vers un fichier audio ou vidéo ou une plateforme vidéo, sur 43 liens. Aucun média non temporel à alternative : non applicable."
+		},
+		{
+			"criterion": "4.9",
+			"page": "https://chikimuras.github.io/rampe/referentiel/glossaire/",
+			"status": "NA",
+			"note": "Tests 4.9.1 : Page examinée : page Glossaire (/referentiel/glossaire/). Inventaire du DOM servi (Playwright/Chromium) : 0 élément <video>, <audio>, <object>, <embed>, <iframe>, <canvas>, <svg>, <bgsound> ou role=\"img\", et 0 lien vers un fichier audio ou vidéo ou une plateforme vidéo, sur 76 liens. Aucun média non temporel à alternative : non applicable."
+		},
+		{
+			"criterion": "4.9",
+			"page": "https://chikimuras.github.io/rampe/audit/",
+			"status": "NA",
+			"note": "Tests 4.9.1 : DOM et arbre d’accessibilité examinés avec Playwright/Chromium, état initial puis états interactifs : deux pages ajoutées, les 106 critères affichés un à un avec les sections « Tests » et « Méthodologie » ouvertes, résultat complet affiché, action libre ajoutée et tableau d’actions mis à jour depuis l’audit ; la page ne contient aucun élément <video>, <audio>, <object>, <embed>, <iframe>, <canvas>, <svg>, <bgsound> ni élément role=\"img\", et aucun lien vers un fichier audio ou vidéo. Le seul renvoi à une vidéo est un lien texte vers YouTube dans la méthodologie du test 13.7.1 (affichée pour le critère 13.7) : c’est un lien vers une page externe, pas un média de la page. Aucun média non temporel ayant une alternative : non applicable."
+		},
+		{
+			"criterion": "4.9",
+			"page": "https://chikimuras.github.io/rampe/cockpit/",
+			"status": "NA",
+			"note": "Tests 4.9.1 : Page examinée : page Cockpit (/cockpit/). Inventaire du DOM servi (Playwright/Chromium) : 0 élément <video>, <audio>, <object>, <embed>, <iframe>, <canvas>, <svg>, <bgsound> ou role=\"img\", et 0 lien vers un fichier audio ou vidéo ou une plateforme vidéo, sur 39 liens. Aucun média non temporel à alternative : non applicable."
+		},
+		{
+			"criterion": "4.9",
+			"page": "https://chikimuras.github.io/rampe/cockpit/adr/0011-cli-audit-playwright/",
+			"status": "NA",
+			"note": "Tests 4.9.1 : Page examinée : page ADR-0011 (/cockpit/adr/0011-cli-audit-playwright/). Inventaire du DOM servi (Playwright/Chromium) : 0 élément <video>, <audio>, <object>, <embed>, <iframe>, <canvas>, <svg>, <bgsound> ou role=\"img\", et 0 lien vers un fichier audio ou vidéo ou une plateforme vidéo, sur 10 liens. Aucun média non temporel à alternative : non applicable."
+		},
+		{
+			"criterion": "4.9",
+			"page": "https://chikimuras.github.io/rampe/cockpit/journal/2026-10-15/",
+			"status": "NA",
+			"note": "Tests 4.9.1 : Page examinée : page du journal du 15/10/2026 (/cockpit/journal/2026-10-15/). Inventaire du DOM servi (Playwright/Chromium) : 0 élément <video>, <audio>, <object>, <embed>, <iframe>, <canvas>, <svg>, <bgsound> ou role=\"img\", et 0 lien vers un fichier audio ou vidéo ou une plateforme vidéo, sur 10 liens. Aucun média non temporel à alternative : non applicable."
+		},
+		{
+			"criterion": "4.9",
+			"page": "https://chikimuras.github.io/rampe/cockpit/docs/roadmap/",
+			"status": "NA",
+			"note": "Tests 4.9.1 : Page examinée : page Roadmap (/cockpit/docs/roadmap/). Inventaire du DOM servi (Playwright/Chromium) : 0 élément <video>, <audio>, <object>, <embed>, <iframe>, <canvas>, <svg>, <bgsound> ou role=\"img\", et 0 lien vers un fichier audio ou vidéo ou une plateforme vidéo, sur 10 liens. Aucun média non temporel à alternative : non applicable."
+		},
+		{
+			"criterion": "4.9",
+			"page": "https://chikimuras.github.io/rampe/referentiel/5-1/",
+			"status": "NA",
+			"note": "Tests 4.9.1 : Page examinée : fiche du critère 5.1 (/referentiel/5-1/). Inventaire du DOM servi (Playwright/Chromium) : 0 élément <video>, <audio>, <object>, <embed>, <iframe>, <canvas>, <svg>, <bgsound> ou role=\"img\", et 0 lien vers un fichier audio ou vidéo ou une plateforme vidéo, sur 19 liens. Aucun média non temporel à alternative : non applicable."
+		},
+		{
+			"criterion": "4.9",
+			"page": "https://chikimuras.github.io/rampe/referentiel/1-9/",
+			"status": "NA",
+			"note": "Tests 4.9.1 : Page examinée : fiche du critère 1.9 (/referentiel/1-9/). Inventaire du DOM servi (Playwright/Chromium) : 0 élément <video>, <audio>, <object>, <embed>, <iframe>, <canvas>, <svg>, <bgsound> ou role=\"img\", et 0 lien vers un fichier audio ou vidéo ou une plateforme vidéo, sur 45 liens. Aucun média non temporel à alternative : non applicable."
+		},
+		{
+			"criterion": "4.10",
+			"page": "https://chikimuras.github.io/rampe/",
+			"status": "NA",
+			"note": "Tests 4.10.1 : Page examinée : page d’accueil (/). Inventaire du DOM servi (Playwright/Chromium) : 0 élément <video>, <audio>, <object>, <embed>, <iframe>, <canvas>, <svg>, <bgsound> ou role=\"img\", et 0 lien vers un fichier audio ou vidéo ou une plateforme vidéo, sur 9 liens. Aucun son déclenché automatiquement : non applicable."
+		},
+		{
+			"criterion": "4.10",
+			"page": "https://chikimuras.github.io/rampe/referentiel/",
+			"status": "NA",
+			"note": "Tests 4.10.1 : Page examinée : page Référentiel (/referentiel/). Inventaire du DOM servi (Playwright/Chromium) : 0 élément <video>, <audio>, <object>, <embed>, <iframe>, <canvas>, <svg>, <bgsound> ou role=\"img\", et 0 lien vers un fichier audio ou vidéo ou une plateforme vidéo, sur 131 liens. Aucun son déclenché automatiquement : non applicable."
+		},
+		{
+			"criterion": "4.10",
+			"page": "https://chikimuras.github.io/rampe/referentiel/1-1/",
+			"status": "NA",
+			"note": "Tests 4.10.1 : Page examinée : fiche du critère 1.1 (/referentiel/1-1/). Inventaire du DOM servi (Playwright/Chromium) : 0 élément <video>, <audio>, <object>, <embed>, <iframe>, <canvas>, <svg>, <bgsound> ou role=\"img\", et 0 lien vers un fichier audio ou vidéo ou une plateforme vidéo, sur 43 liens. Aucun son déclenché automatiquement : non applicable."
+		},
+		{
+			"criterion": "4.10",
+			"page": "https://chikimuras.github.io/rampe/referentiel/glossaire/",
+			"status": "NA",
+			"note": "Tests 4.10.1 : Page examinée : page Glossaire (/referentiel/glossaire/). Inventaire du DOM servi (Playwright/Chromium) : 0 élément <video>, <audio>, <object>, <embed>, <iframe>, <canvas>, <svg>, <bgsound> ou role=\"img\", et 0 lien vers un fichier audio ou vidéo ou une plateforme vidéo, sur 76 liens. Aucun son déclenché automatiquement : non applicable."
+		},
+		{
+			"criterion": "4.10",
+			"page": "https://chikimuras.github.io/rampe/audit/",
+			"status": "NA",
+			"note": "Tests 4.10.1 : DOM et arbre d’accessibilité examinés avec Playwright/Chromium, état initial puis états interactifs : deux pages ajoutées, les 106 critères affichés un à un avec les sections « Tests » et « Méthodologie » ouvertes, résultat complet affiché, action libre ajoutée et tableau d’actions mis à jour depuis l’audit ; la page ne contient aucun élément <video>, <audio>, <object>, <embed>, <iframe>, <canvas>, <svg>, <bgsound> ni élément role=\"img\", et aucun lien vers un fichier audio ou vidéo. Le seul renvoi à une vidéo est un lien texte vers YouTube dans la méthodologie du test 13.7.1 (affichée pour le critère 13.7) : c’est un lien vers une page externe, pas un média de la page. Aucun son déclenché automatiquement (ni <audio>/<video> en autoplay, ni <bgsound>, ni script audio) : non applicable."
+		},
+		{
+			"criterion": "4.10",
+			"page": "https://chikimuras.github.io/rampe/cockpit/",
+			"status": "NA",
+			"note": "Tests 4.10.1 : Page examinée : page Cockpit (/cockpit/). Inventaire du DOM servi (Playwright/Chromium) : 0 élément <video>, <audio>, <object>, <embed>, <iframe>, <canvas>, <svg>, <bgsound> ou role=\"img\", et 0 lien vers un fichier audio ou vidéo ou une plateforme vidéo, sur 39 liens. Aucun son déclenché automatiquement : non applicable."
+		},
+		{
+			"criterion": "4.10",
+			"page": "https://chikimuras.github.io/rampe/cockpit/adr/0011-cli-audit-playwright/",
+			"status": "NA",
+			"note": "Tests 4.10.1 : Page examinée : page ADR-0011 (/cockpit/adr/0011-cli-audit-playwright/). Inventaire du DOM servi (Playwright/Chromium) : 0 élément <video>, <audio>, <object>, <embed>, <iframe>, <canvas>, <svg>, <bgsound> ou role=\"img\", et 0 lien vers un fichier audio ou vidéo ou une plateforme vidéo, sur 10 liens. Aucun son déclenché automatiquement : non applicable."
+		},
+		{
+			"criterion": "4.10",
+			"page": "https://chikimuras.github.io/rampe/cockpit/journal/2026-10-15/",
+			"status": "NA",
+			"note": "Tests 4.10.1 : Page examinée : page du journal du 15/10/2026 (/cockpit/journal/2026-10-15/). Inventaire du DOM servi (Playwright/Chromium) : 0 élément <video>, <audio>, <object>, <embed>, <iframe>, <canvas>, <svg>, <bgsound> ou role=\"img\", et 0 lien vers un fichier audio ou vidéo ou une plateforme vidéo, sur 10 liens. Aucun son déclenché automatiquement : non applicable."
+		},
+		{
+			"criterion": "4.10",
+			"page": "https://chikimuras.github.io/rampe/cockpit/docs/roadmap/",
+			"status": "NA",
+			"note": "Tests 4.10.1 : Page examinée : page Roadmap (/cockpit/docs/roadmap/). Inventaire du DOM servi (Playwright/Chromium) : 0 élément <video>, <audio>, <object>, <embed>, <iframe>, <canvas>, <svg>, <bgsound> ou role=\"img\", et 0 lien vers un fichier audio ou vidéo ou une plateforme vidéo, sur 10 liens. Aucun son déclenché automatiquement : non applicable."
+		},
+		{
+			"criterion": "4.10",
+			"page": "https://chikimuras.github.io/rampe/referentiel/5-1/",
+			"status": "NA",
+			"note": "Tests 4.10.1 : Page examinée : fiche du critère 5.1 (/referentiel/5-1/). Inventaire du DOM servi (Playwright/Chromium) : 0 élément <video>, <audio>, <object>, <embed>, <iframe>, <canvas>, <svg>, <bgsound> ou role=\"img\", et 0 lien vers un fichier audio ou vidéo ou une plateforme vidéo, sur 19 liens. Aucun son déclenché automatiquement : non applicable."
+		},
+		{
+			"criterion": "4.10",
+			"page": "https://chikimuras.github.io/rampe/referentiel/1-9/",
+			"status": "NA",
+			"note": "Tests 4.10.1 : Page examinée : fiche du critère 1.9 (/referentiel/1-9/). Inventaire du DOM servi (Playwright/Chromium) : 0 élément <video>, <audio>, <object>, <embed>, <iframe>, <canvas>, <svg>, <bgsound> ou role=\"img\", et 0 lien vers un fichier audio ou vidéo ou une plateforme vidéo, sur 45 liens. Aucun son déclenché automatiquement : non applicable."
+		},
+		{
+			"criterion": "4.11",
+			"page": "https://chikimuras.github.io/rampe/",
+			"status": "NA",
+			"note": "Tests 4.11.1 à 4.11.3 : Page examinée : page d’accueil (/). Inventaire du DOM servi (Playwright/Chromium) : 0 élément <video>, <audio>, <object>, <embed>, <iframe>, <canvas>, <svg>, <bgsound> ou role=\"img\", et 0 lien vers un fichier audio ou vidéo ou une plateforme vidéo, sur 9 liens. Aucun média à contrôler au clavier : non applicable."
+		},
+		{
+			"criterion": "4.11",
+			"page": "https://chikimuras.github.io/rampe/referentiel/",
+			"status": "NA",
+			"note": "Tests 4.11.1 à 4.11.3 : Page examinée : page Référentiel (/referentiel/). Inventaire du DOM servi (Playwright/Chromium) : 0 élément <video>, <audio>, <object>, <embed>, <iframe>, <canvas>, <svg>, <bgsound> ou role=\"img\", et 0 lien vers un fichier audio ou vidéo ou une plateforme vidéo, sur 131 liens. Aucun média à contrôler au clavier : non applicable."
+		},
+		{
+			"criterion": "4.11",
+			"page": "https://chikimuras.github.io/rampe/referentiel/1-1/",
+			"status": "NA",
+			"note": "Tests 4.11.1 à 4.11.3 : Page examinée : fiche du critère 1.1 (/referentiel/1-1/). Inventaire du DOM servi (Playwright/Chromium) : 0 élément <video>, <audio>, <object>, <embed>, <iframe>, <canvas>, <svg>, <bgsound> ou role=\"img\", et 0 lien vers un fichier audio ou vidéo ou une plateforme vidéo, sur 43 liens. Aucun média à contrôler au clavier : non applicable."
+		},
+		{
+			"criterion": "4.11",
+			"page": "https://chikimuras.github.io/rampe/referentiel/glossaire/",
+			"status": "NA",
+			"note": "Tests 4.11.1 à 4.11.3 : Page examinée : page Glossaire (/referentiel/glossaire/). Inventaire du DOM servi (Playwright/Chromium) : 0 élément <video>, <audio>, <object>, <embed>, <iframe>, <canvas>, <svg>, <bgsound> ou role=\"img\", et 0 lien vers un fichier audio ou vidéo ou une plateforme vidéo, sur 76 liens. Aucun média à contrôler au clavier : non applicable."
+		},
+		{
+			"criterion": "4.11",
+			"page": "https://chikimuras.github.io/rampe/audit/",
+			"status": "NA",
+			"note": "Tests 4.11.1 à 4.11.3 : DOM et arbre d’accessibilité examinés avec Playwright/Chromium, état initial puis états interactifs : deux pages ajoutées, les 106 critères affichés un à un avec les sections « Tests » et « Méthodologie » ouvertes, résultat complet affiché, action libre ajoutée et tableau d’actions mis à jour depuis l’audit ; la page ne contient aucun élément <video>, <audio>, <object>, <embed>, <iframe>, <canvas>, <svg>, <bgsound> ni élément role=\"img\", et aucun lien vers un fichier audio ou vidéo. Le seul renvoi à une vidéo est un lien texte vers YouTube dans la méthodologie du test 13.7.1 (affichée pour le critère 13.7) : c’est un lien vers une page externe, pas un média de la page. Aucun média temporel à contrôler au clavier et au pointeur : non applicable."
+		},
+		{
+			"criterion": "4.11",
+			"page": "https://chikimuras.github.io/rampe/cockpit/",
+			"status": "NA",
+			"note": "Tests 4.11.1 à 4.11.3 : Page examinée : page Cockpit (/cockpit/). Inventaire du DOM servi (Playwright/Chromium) : 0 élément <video>, <audio>, <object>, <embed>, <iframe>, <canvas>, <svg>, <bgsound> ou role=\"img\", et 0 lien vers un fichier audio ou vidéo ou une plateforme vidéo, sur 39 liens. Aucun média à contrôler au clavier : non applicable."
+		},
+		{
+			"criterion": "4.11",
+			"page": "https://chikimuras.github.io/rampe/cockpit/adr/0011-cli-audit-playwright/",
+			"status": "NA",
+			"note": "Tests 4.11.1 à 4.11.3 : Page examinée : page ADR-0011 (/cockpit/adr/0011-cli-audit-playwright/). Inventaire du DOM servi (Playwright/Chromium) : 0 élément <video>, <audio>, <object>, <embed>, <iframe>, <canvas>, <svg>, <bgsound> ou role=\"img\", et 0 lien vers un fichier audio ou vidéo ou une plateforme vidéo, sur 10 liens. Aucun média à contrôler au clavier : non applicable."
+		},
+		{
+			"criterion": "4.11",
+			"page": "https://chikimuras.github.io/rampe/cockpit/journal/2026-10-15/",
+			"status": "NA",
+			"note": "Tests 4.11.1 à 4.11.3 : Page examinée : page du journal du 15/10/2026 (/cockpit/journal/2026-10-15/). Inventaire du DOM servi (Playwright/Chromium) : 0 élément <video>, <audio>, <object>, <embed>, <iframe>, <canvas>, <svg>, <bgsound> ou role=\"img\", et 0 lien vers un fichier audio ou vidéo ou une plateforme vidéo, sur 10 liens. Aucun média à contrôler au clavier : non applicable."
+		},
+		{
+			"criterion": "4.11",
+			"page": "https://chikimuras.github.io/rampe/cockpit/docs/roadmap/",
+			"status": "NA",
+			"note": "Tests 4.11.1 à 4.11.3 : Page examinée : page Roadmap (/cockpit/docs/roadmap/). Inventaire du DOM servi (Playwright/Chromium) : 0 élément <video>, <audio>, <object>, <embed>, <iframe>, <canvas>, <svg>, <bgsound> ou role=\"img\", et 0 lien vers un fichier audio ou vidéo ou une plateforme vidéo, sur 10 liens. Aucun média à contrôler au clavier : non applicable."
+		},
+		{
+			"criterion": "4.11",
+			"page": "https://chikimuras.github.io/rampe/referentiel/5-1/",
+			"status": "NA",
+			"note": "Tests 4.11.1 à 4.11.3 : Page examinée : fiche du critère 5.1 (/referentiel/5-1/). Inventaire du DOM servi (Playwright/Chromium) : 0 élément <video>, <audio>, <object>, <embed>, <iframe>, <canvas>, <svg>, <bgsound> ou role=\"img\", et 0 lien vers un fichier audio ou vidéo ou une plateforme vidéo, sur 19 liens. Aucun média à contrôler au clavier : non applicable."
+		},
+		{
+			"criterion": "4.11",
+			"page": "https://chikimuras.github.io/rampe/referentiel/1-9/",
+			"status": "NA",
+			"note": "Tests 4.11.1 à 4.11.3 : Page examinée : fiche du critère 1.9 (/referentiel/1-9/). Inventaire du DOM servi (Playwright/Chromium) : 0 élément <video>, <audio>, <object>, <embed>, <iframe>, <canvas>, <svg>, <bgsound> ou role=\"img\", et 0 lien vers un fichier audio ou vidéo ou une plateforme vidéo, sur 45 liens. Aucun média à contrôler au clavier : non applicable."
+		},
+		{
+			"criterion": "4.12",
+			"page": "https://chikimuras.github.io/rampe/",
+			"status": "NA",
+			"note": "Tests 4.12.1 et 4.12.2 : Page examinée : page d’accueil (/). Inventaire du DOM servi (Playwright/Chromium) : 0 élément <video>, <audio>, <object>, <embed>, <iframe>, <canvas>, <svg>, <bgsound> ou role=\"img\", et 0 lien vers un fichier audio ou vidéo ou une plateforme vidéo, sur 9 liens. Aucun média non temporel à contrôler : non applicable."
+		},
+		{
+			"criterion": "4.12",
+			"page": "https://chikimuras.github.io/rampe/referentiel/",
+			"status": "NA",
+			"note": "Tests 4.12.1 et 4.12.2 : Page examinée : page Référentiel (/referentiel/). Inventaire du DOM servi (Playwright/Chromium) : 0 élément <video>, <audio>, <object>, <embed>, <iframe>, <canvas>, <svg>, <bgsound> ou role=\"img\", et 0 lien vers un fichier audio ou vidéo ou une plateforme vidéo, sur 131 liens. Aucun média non temporel à contrôler : non applicable."
+		},
+		{
+			"criterion": "4.12",
+			"page": "https://chikimuras.github.io/rampe/referentiel/1-1/",
+			"status": "NA",
+			"note": "Tests 4.12.1 et 4.12.2 : Page examinée : fiche du critère 1.1 (/referentiel/1-1/). Inventaire du DOM servi (Playwright/Chromium) : 0 élément <video>, <audio>, <object>, <embed>, <iframe>, <canvas>, <svg>, <bgsound> ou role=\"img\", et 0 lien vers un fichier audio ou vidéo ou une plateforme vidéo, sur 43 liens. Aucun média non temporel à contrôler : non applicable."
+		},
+		{
+			"criterion": "4.12",
+			"page": "https://chikimuras.github.io/rampe/referentiel/glossaire/",
+			"status": "NA",
+			"note": "Tests 4.12.1 et 4.12.2 : Page examinée : page Glossaire (/referentiel/glossaire/). Inventaire du DOM servi (Playwright/Chromium) : 0 élément <video>, <audio>, <object>, <embed>, <iframe>, <canvas>, <svg>, <bgsound> ou role=\"img\", et 0 lien vers un fichier audio ou vidéo ou une plateforme vidéo, sur 76 liens. Aucun média non temporel à contrôler : non applicable."
+		},
+		{
+			"criterion": "4.12",
+			"page": "https://chikimuras.github.io/rampe/audit/",
+			"status": "NA",
+			"note": "Tests 4.12.1 et 4.12.2 : DOM et arbre d’accessibilité examinés avec Playwright/Chromium, état initial puis états interactifs : deux pages ajoutées, les 106 critères affichés un à un avec les sections « Tests » et « Méthodologie » ouvertes, résultat complet affiché, action libre ajoutée et tableau d’actions mis à jour depuis l’audit ; la page ne contient aucun élément <video>, <audio>, <object>, <embed>, <iframe>, <canvas>, <svg>, <bgsound> ni élément role=\"img\", et aucun lien vers un fichier audio ou vidéo. Le seul renvoi à une vidéo est un lien texte vers YouTube dans la méthodologie du test 13.7.1 (affichée pour le critère 13.7) : c’est un lien vers une page externe, pas un média de la page. Aucun média non temporel à contrôler au clavier et au pointeur : non applicable."
+		},
+		{
+			"criterion": "4.12",
+			"page": "https://chikimuras.github.io/rampe/cockpit/",
+			"status": "NA",
+			"note": "Tests 4.12.1 et 4.12.2 : Page examinée : page Cockpit (/cockpit/). Inventaire du DOM servi (Playwright/Chromium) : 0 élément <video>, <audio>, <object>, <embed>, <iframe>, <canvas>, <svg>, <bgsound> ou role=\"img\", et 0 lien vers un fichier audio ou vidéo ou une plateforme vidéo, sur 39 liens. Aucun média non temporel à contrôler : non applicable."
+		},
+		{
+			"criterion": "4.12",
+			"page": "https://chikimuras.github.io/rampe/cockpit/adr/0011-cli-audit-playwright/",
+			"status": "NA",
+			"note": "Tests 4.12.1 et 4.12.2 : Page examinée : page ADR-0011 (/cockpit/adr/0011-cli-audit-playwright/). Inventaire du DOM servi (Playwright/Chromium) : 0 élément <video>, <audio>, <object>, <embed>, <iframe>, <canvas>, <svg>, <bgsound> ou role=\"img\", et 0 lien vers un fichier audio ou vidéo ou une plateforme vidéo, sur 10 liens. Aucun média non temporel à contrôler : non applicable."
+		},
+		{
+			"criterion": "4.12",
+			"page": "https://chikimuras.github.io/rampe/cockpit/journal/2026-10-15/",
+			"status": "NA",
+			"note": "Tests 4.12.1 et 4.12.2 : Page examinée : page du journal du 15/10/2026 (/cockpit/journal/2026-10-15/). Inventaire du DOM servi (Playwright/Chromium) : 0 élément <video>, <audio>, <object>, <embed>, <iframe>, <canvas>, <svg>, <bgsound> ou role=\"img\", et 0 lien vers un fichier audio ou vidéo ou une plateforme vidéo, sur 10 liens. Aucun média non temporel à contrôler : non applicable."
+		},
+		{
+			"criterion": "4.12",
+			"page": "https://chikimuras.github.io/rampe/cockpit/docs/roadmap/",
+			"status": "NA",
+			"note": "Tests 4.12.1 et 4.12.2 : Page examinée : page Roadmap (/cockpit/docs/roadmap/). Inventaire du DOM servi (Playwright/Chromium) : 0 élément <video>, <audio>, <object>, <embed>, <iframe>, <canvas>, <svg>, <bgsound> ou role=\"img\", et 0 lien vers un fichier audio ou vidéo ou une plateforme vidéo, sur 10 liens. Aucun média non temporel à contrôler : non applicable."
+		},
+		{
+			"criterion": "4.12",
+			"page": "https://chikimuras.github.io/rampe/referentiel/5-1/",
+			"status": "NA",
+			"note": "Tests 4.12.1 et 4.12.2 : Page examinée : fiche du critère 5.1 (/referentiel/5-1/). Inventaire du DOM servi (Playwright/Chromium) : 0 élément <video>, <audio>, <object>, <embed>, <iframe>, <canvas>, <svg>, <bgsound> ou role=\"img\", et 0 lien vers un fichier audio ou vidéo ou une plateforme vidéo, sur 19 liens. Aucun média non temporel à contrôler : non applicable."
+		},
+		{
+			"criterion": "4.12",
+			"page": "https://chikimuras.github.io/rampe/referentiel/1-9/",
+			"status": "NA",
+			"note": "Tests 4.12.1 et 4.12.2 : Page examinée : fiche du critère 1.9 (/referentiel/1-9/). Inventaire du DOM servi (Playwright/Chromium) : 0 élément <video>, <audio>, <object>, <embed>, <iframe>, <canvas>, <svg>, <bgsound> ou role=\"img\", et 0 lien vers un fichier audio ou vidéo ou une plateforme vidéo, sur 45 liens. Aucun média non temporel à contrôler : non applicable."
+		},
+		{
+			"criterion": "4.13",
+			"page": "https://chikimuras.github.io/rampe/",
+			"status": "NA",
+			"note": "Tests 4.13.1 et 4.13.2 : Page examinée : page d’accueil (/). Inventaire du DOM servi (Playwright/Chromium) : 0 élément <video>, <audio>, <object>, <embed>, <iframe>, <canvas>, <svg>, <bgsound> ou role=\"img\", et 0 lien vers un fichier audio ou vidéo ou une plateforme vidéo, sur 9 liens. Aucun média compatible avec les technologies d’assistance à vérifier : non applicable."
+		},
+		{
+			"criterion": "4.13",
+			"page": "https://chikimuras.github.io/rampe/referentiel/",
+			"status": "NA",
+			"note": "Tests 4.13.1 et 4.13.2 : Page examinée : page Référentiel (/referentiel/). Inventaire du DOM servi (Playwright/Chromium) : 0 élément <video>, <audio>, <object>, <embed>, <iframe>, <canvas>, <svg>, <bgsound> ou role=\"img\", et 0 lien vers un fichier audio ou vidéo ou une plateforme vidéo, sur 131 liens. Aucun média compatible avec les technologies d’assistance à vérifier : non applicable."
+		},
+		{
+			"criterion": "4.13",
+			"page": "https://chikimuras.github.io/rampe/referentiel/1-1/",
+			"status": "NA",
+			"note": "Tests 4.13.1 et 4.13.2 : Page examinée : fiche du critère 1.1 (/referentiel/1-1/). Inventaire du DOM servi (Playwright/Chromium) : 0 élément <video>, <audio>, <object>, <embed>, <iframe>, <canvas>, <svg>, <bgsound> ou role=\"img\", et 0 lien vers un fichier audio ou vidéo ou une plateforme vidéo, sur 43 liens. Aucun média compatible avec les technologies d’assistance à vérifier : non applicable."
+		},
+		{
+			"criterion": "4.13",
+			"page": "https://chikimuras.github.io/rampe/referentiel/glossaire/",
+			"status": "NA",
+			"note": "Tests 4.13.1 et 4.13.2 : Page examinée : page Glossaire (/referentiel/glossaire/). Inventaire du DOM servi (Playwright/Chromium) : 0 élément <video>, <audio>, <object>, <embed>, <iframe>, <canvas>, <svg>, <bgsound> ou role=\"img\", et 0 lien vers un fichier audio ou vidéo ou une plateforme vidéo, sur 76 liens. Aucun média compatible avec les technologies d’assistance à vérifier : non applicable."
+		},
+		{
+			"criterion": "4.13",
+			"page": "https://chikimuras.github.io/rampe/audit/",
+			"status": "NA",
+			"note": "Tests 4.13.1 et 4.13.2 : DOM et arbre d’accessibilité examinés avec Playwright/Chromium, état initial puis états interactifs : deux pages ajoutées, les 106 critères affichés un à un avec les sections « Tests » et « Méthodologie » ouvertes, résultat complet affiché, action libre ajoutée et tableau d’actions mis à jour depuis l’audit ; la page ne contient aucun élément <video>, <audio>, <object>, <embed>, <iframe>, <canvas>, <svg>, <bgsound> ni élément role=\"img\", et aucun lien vers un fichier audio ou vidéo. Le seul renvoi à une vidéo est un lien texte vers YouTube dans la méthodologie du test 13.7.1 (affichée pour le critère 13.7) : c’est un lien vers une page externe, pas un média de la page. Aucun média temporel ou non temporel (compatibilité avec les technologies d’assistance) : non applicable."
+		},
+		{
+			"criterion": "4.13",
+			"page": "https://chikimuras.github.io/rampe/cockpit/",
+			"status": "NA",
+			"note": "Tests 4.13.1 et 4.13.2 : Page examinée : page Cockpit (/cockpit/). Inventaire du DOM servi (Playwright/Chromium) : 0 élément <video>, <audio>, <object>, <embed>, <iframe>, <canvas>, <svg>, <bgsound> ou role=\"img\", et 0 lien vers un fichier audio ou vidéo ou une plateforme vidéo, sur 39 liens. Aucun média compatible avec les technologies d’assistance à vérifier : non applicable."
+		},
+		{
+			"criterion": "4.13",
+			"page": "https://chikimuras.github.io/rampe/cockpit/adr/0011-cli-audit-playwright/",
+			"status": "NA",
+			"note": "Tests 4.13.1 et 4.13.2 : Page examinée : page ADR-0011 (/cockpit/adr/0011-cli-audit-playwright/). Inventaire du DOM servi (Playwright/Chromium) : 0 élément <video>, <audio>, <object>, <embed>, <iframe>, <canvas>, <svg>, <bgsound> ou role=\"img\", et 0 lien vers un fichier audio ou vidéo ou une plateforme vidéo, sur 10 liens. Aucun média compatible avec les technologies d’assistance à vérifier : non applicable."
+		},
+		{
+			"criterion": "4.13",
+			"page": "https://chikimuras.github.io/rampe/cockpit/journal/2026-10-15/",
+			"status": "NA",
+			"note": "Tests 4.13.1 et 4.13.2 : Page examinée : page du journal du 15/10/2026 (/cockpit/journal/2026-10-15/). Inventaire du DOM servi (Playwright/Chromium) : 0 élément <video>, <audio>, <object>, <embed>, <iframe>, <canvas>, <svg>, <bgsound> ou role=\"img\", et 0 lien vers un fichier audio ou vidéo ou une plateforme vidéo, sur 10 liens. Aucun média compatible avec les technologies d’assistance à vérifier : non applicable."
+		},
+		{
+			"criterion": "4.13",
+			"page": "https://chikimuras.github.io/rampe/cockpit/docs/roadmap/",
+			"status": "NA",
+			"note": "Tests 4.13.1 et 4.13.2 : Page examinée : page Roadmap (/cockpit/docs/roadmap/). Inventaire du DOM servi (Playwright/Chromium) : 0 élément <video>, <audio>, <object>, <embed>, <iframe>, <canvas>, <svg>, <bgsound> ou role=\"img\", et 0 lien vers un fichier audio ou vidéo ou une plateforme vidéo, sur 10 liens. Aucun média compatible avec les technologies d’assistance à vérifier : non applicable."
+		},
+		{
+			"criterion": "4.13",
+			"page": "https://chikimuras.github.io/rampe/referentiel/5-1/",
+			"status": "NA",
+			"note": "Tests 4.13.1 et 4.13.2 : Page examinée : fiche du critère 5.1 (/referentiel/5-1/). Inventaire du DOM servi (Playwright/Chromium) : 0 élément <video>, <audio>, <object>, <embed>, <iframe>, <canvas>, <svg>, <bgsound> ou role=\"img\", et 0 lien vers un fichier audio ou vidéo ou une plateforme vidéo, sur 19 liens. Aucun média compatible avec les technologies d’assistance à vérifier : non applicable."
+		},
+		{
+			"criterion": "4.13",
+			"page": "https://chikimuras.github.io/rampe/referentiel/1-9/",
+			"status": "NA",
+			"note": "Tests 4.13.1 et 4.13.2 : Page examinée : fiche du critère 1.9 (/referentiel/1-9/). Inventaire du DOM servi (Playwright/Chromium) : 0 élément <video>, <audio>, <object>, <embed>, <iframe>, <canvas>, <svg>, <bgsound> ou role=\"img\", et 0 lien vers un fichier audio ou vidéo ou une plateforme vidéo, sur 45 liens. Aucun média compatible avec les technologies d’assistance à vérifier : non applicable."
+		}
+	]
+}
