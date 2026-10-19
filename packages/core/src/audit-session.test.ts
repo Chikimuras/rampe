@@ -670,7 +670,7 @@ describe("contre-relecture de la PR #18", () => {
 		expect(bytes).toBeGreaterThan(MAX_REPORT_BYTES);
 		expect(bytes).toBeLessThanOrEqual(MAX_SESSION_BYTES);
 		expect(parse(JSON.parse(text))).toEqual(s);
-	});
+	}, 30_000); // Gros volume (~50 Mo de JSON) : ~3 s seul, dépasse les 5 s par défaut sous charge CI ou locale.
 });
 
 describe("source et indices (ADR-0014)", () => {

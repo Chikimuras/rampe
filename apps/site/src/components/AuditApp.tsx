@@ -100,6 +100,11 @@ export interface AuditCriterion {
 }
 
 type Filter = "all" | "NT" | "NC" | "auto";
+/**
+ * Annonce aux technologies d'assistance (RGAA 7.5) : message d'état (`role="status"`) ou, avec `error`, erreur
+ * affichée sans déplacement du focus (`role="alert"`). Une seule région parle à la fois : pas de double annonce.
+ */
+type Announce = (message: string, error?: boolean) => void;
 
 const STORAGE_KEY = "rampe.audit.session";
 /** Copies d'une session illisible mises de côté, chacune sous sa clé horodatée : jamais écrasées (ADR-0016). */
@@ -234,6 +239,12 @@ function loadSession(
 	return { session: null, ignored: { raw, kept: keepAside(raw) }, future: false };
 }
 
+/**
+ * Focus sur un champ en erreur APRÈS le rendu (Preact rend en microtâche) : il porte alors son message
+ * (`aria-describedby`), lu avec lui ; aucune alerte en plus, pour ne pas l'annoncer deux fois (RGAA 7.5).
+ */
+const focusAfterRender = (target: () => HTMLElement | null | undefined) => setTimeout(() => target()?.focus());
+
 /** Fichier fabriqué dans le navigateur (Blob et lien) : rien ne part sur le réseau. */
 function saveFile(name: string, text: string, type = "application/json") {
 	const a = document.createElement("a");
@@ -287,10 +298,14 @@ export default function AuditApp({
 	const [currentId, setCurrentId] = useState<string | null>(criteria[0]?.id ?? null);
 	const [topicNumber, setTopicNumber] = useState(criteria[0]?.topic ?? 1);
 	const [filter, setFilter] = useState<Filter>("all");
-	const [announce, setAnnounce] = useState("");
+	/** Deux régions indépendantes : un message d'état ne vide jamais l'alerte. `n` : un message répété est réinséré. */
+	const [status, setStatus] = useState({ text: "", n: 0 });
+	const [alert, setAlert] = useState({ text: "", n: 0 });
+	const setAnnounce: Announce = (text, error = false) => (error ? setAlert : setStatus)((l) => ({ text, n: l.n + 1 }));
 	const narrow = useNarrow();
 	const known = useMemo(() => new Set(criteria.map((c) => c.id)), [criteria]);
 	const headingRef = useRef<HTMLHeadingElement>(null);
+	const ignoredRef = useRef<HTMLButtonElement>(null);
 	/** Dernière session écrite ou relue : on n'écrit qu'après un vrai changement. */
 	const saved = useRef<AuditSession>(session);
 	const focusHeading = useRef(false);
@@ -442,8 +457,8 @@ export default function AuditApp({
 			{inTopic.map((c) => (
 				<li key={c.id}>
 					<button type="button" aria-current={c.id === currentId ? "true" : undefined} onClick={() => goTo(c)}>
-						<span class="audit-num">{c.id}</span>
-						<span {...trustedBuildHtml(c.titleTextHtml)} />
+						{/* Espaces réels entre les parties : le nom accessible reprend l'intitulé visible (RGAA 7.1.3). */}
+						<span class="audit-num">{c.id}</span> <span {...trustedBuildHtml(c.titleTextHtml)} />{" "}
 						<CriterionSummary session={session} id={c.id} />
 					</button>
 				</li>
@@ -487,6 +502,7 @@ export default function AuditApp({
 					</p>
 					<button
 						type="button"
+						ref={ignoredRef}
 						onClick={() => {
 							const name = `session-mise-de-cote-${new Date().toISOString().slice(0, 10)}.json`;
 							saveFile(name, ignored.raw);
@@ -498,7 +514,14 @@ export default function AuditApp({
 						Télécharger la session mise de côté
 					</button>
 					{!ignored.kept && ignored.downloaded && (
-						<button type="button" onClick={() => setIgnored({ ...ignored, kept: true })}>
+						<button
+							type="button"
+							onClick={() => {
+								setIgnored({ ...ignored, kept: true });
+								// Ce bouton disparaît : le focus va sur celui qui reste dans le bandeau (RGAA 7.3).
+								ignoredRef.current?.focus();
+							}}
+						>
 							J’ai bien enregistré le fichier, continuer
 						</button>
 					)}
@@ -545,8 +568,9 @@ export default function AuditApp({
 				<fieldset class="audit-filter">
 					<legend>Afficher</legend>
 					{FILTERS.map(([value, label]) => (
-						<label key={value}>
+						<label key={value} for={`audit-filtre-${value}`}>
 							<input
+								id={`audit-filtre-${value}`}
 								type="radio"
 								name="audit-filtre"
 								value={value}
@@ -570,7 +594,7 @@ export default function AuditApp({
 										aria-current={t.number === topic?.number ? "true" : undefined}
 										onClick={() => chooseTopic(t)}
 									>
-										{t.number}. {t.title}
+										{t.number}. {t.title}{" "}
 										{count && count.total > 0 && (
 											<span class="audit-count">
 												{count.remaining === 0 ? "terminé" : `${count.remaining} à évaluer`}
@@ -687,8 +711,11 @@ export default function AuditApp({
 
 			<Schema session={session} setSession={setSession} setAnnounce={setAnnounce} criteria={criteria} r={conformity} />
 
-			<p aria-live="polite" class="audit-live">
-				{announce}
+			<p role="status" aria-live="polite" aria-atomic="true" class="audit-live">
+				<span key={status.n}>{status.text}</span>
+			</p>
+			<p role="alert" aria-atomic="true" class="audit-live">
+				<span key={alert.n}>{alert.text}</span>
 			</p>
 
 			<section aria-labelledby="audit-recommencer" class="audit-restart">
@@ -717,7 +744,7 @@ function Attribution({
 }: {
 	session: AuditSession;
 	setSession: (update: (s: AuditSession) => AuditSession) => void;
-	setAnnounce: (message: string) => void;
+	setAnnounce: Announce;
 }) {
 	const [taken, setTaken] = useState<{ by: EvaluatedBy; createdAt: string } | null>(null);
 	const takeRef = useRef<HTMLButtonElement>(null);
@@ -815,7 +842,7 @@ function PageEvaluation({
 	page: SessionPage;
 	session: AuditSession;
 	setSession: (update: (s: AuditSession) => AuditSession) => void;
-	setAnnounce: (message: string) => void;
+	setAnnounce: Announce;
 }) {
 	const groupRef = useRef<HTMLFieldSetElement>(null);
 	const evaluation = getEvaluation(session, criterionId, page.id);
@@ -856,8 +883,13 @@ function PageEvaluation({
 			)}
 			<div class="audit-statuses">
 				{STATUS_LABELS.map(([status, label]) => (
-					<label key={status} class={`audit-status audit-status-${status}`}>
+					<label
+						key={status}
+						for={`statut-${criterionId}-${page.id}-${status}`}
+						class={`audit-status audit-status-${status}`}
+					>
 						<input
+							id={`statut-${criterionId}-${page.id}-${status}`}
 							type="radio"
 							name={`statut-${criterionId}-${page.id}`}
 							value={status}
@@ -914,7 +946,7 @@ function Pages({
 }: {
 	session: AuditSession;
 	setSession: (update: AuditSession | ((s: AuditSession) => AuditSession)) => void;
-	setAnnounce: (message: string) => void;
+	setAnnounce: Announce;
 	children: ComponentChildren;
 }) {
 	const [url, setUrl] = useState("");
@@ -962,7 +994,10 @@ function Pages({
 		}
 		if (error || !u) {
 			setUrlError(error ?? "");
-			urlRef.current?.focus();
+			// Focus déjà sur le champ (Entrée) : le message relié n'est pas relu, il est annoncé (RGAA 7.5) ; sinon le
+			// focus y est déplacé, et le champ lu avec son message.
+			if (document.activeElement === urlRef.current) setAnnounce(error ?? "", true);
+			else focusAfterRender(() => urlRef.current);
 			return;
 		}
 		const added = u.href;
@@ -989,7 +1024,7 @@ function Pages({
 			}
 		} catch (err) {
 			setSampleMessage({ error: true, text: (err as Error).message });
-			sampleRef.current?.focus();
+			focusAfterRender(() => sampleRef.current);
 			return;
 		}
 		const added = next.pages.length - session.pages.length;
@@ -1064,6 +1099,8 @@ function Pages({
 						ref={urlRef}
 						type="url"
 						inputMode="url"
+						/* Jeton « url » (liste WCAG 1.3.5, glossaire RGAA « Liste des valeurs… ») : page Web de l'organisation ; une
+						page du site audité y entre (RGAA 11.13). */
 						autoComplete="url"
 						value={url}
 						onInput={(e) => setUrl(e.currentTarget.value)}
@@ -1127,7 +1164,7 @@ function ImportReport({
 }: {
 	session: AuditSession;
 	setSession: (update: AuditSession) => void;
-	setAnnounce: (message: string) => void;
+	setAnnounce: Announce;
 	known: ReadonlySet<string>;
 }) {
 	const imp = useFileImport<ImportSummary>(session, setSession, setAnnounce, MAX_REPORT_BYTES);
@@ -1220,7 +1257,7 @@ function ImportError({ id, error }: { id: string; error: ImportFailure }) {
 function useFileImport<S>(
 	session: AuditSession,
 	setSession: (update: AuditSession) => void,
-	setAnnounce: (message: string) => void,
+	setAnnounce: Announce,
 	maxBytes: number,
 ) {
 	const [error, setError] = useState<ImportFailure | null>(null);
@@ -1234,7 +1271,7 @@ function useFileImport<S>(
 		setError({ message, detail });
 		setDone(null);
 		setUndone(false);
-		setAnnounce(message);
+		setAnnounce(message, true);
 	};
 	return {
 		error,
@@ -1295,7 +1332,7 @@ function Backup({
 }: {
 	session: AuditSession;
 	setSession: (update: AuditSession) => void;
-	setAnnounce: (message: string) => void;
+	setAnnounce: Announce;
 	known: ReadonlySet<string>;
 }) {
 	const imp = useFileImport<{ pages: number; evaluations: number; findings: number }>(
@@ -1527,8 +1564,11 @@ function Result({
 					<dd>
 						<strong class="audit-rate">{rate(r.globalRate)}</strong>
 						<p>
-							« Le pourcentage de critères RGAA respectés s’obtient en divisant le nombre de critères validés par le
-							nombre de critères applicables. » Ici : {plural(r.validated, "critère")} validé
+							<q cite={METHOD_URL}>
+								Le pourcentage de critères RGAA respectés s’obtient en divisant le nombre de critères validés par le
+								nombre de critères applicables.
+							</q>{" "}
+							Ici : {plural(r.validated, "critère")} validé
 							{r.validated > 1 ? "s" : ""} sur {r.applicable} applicable{r.applicable > 1 ? "s" : ""}.
 						</p>
 					</dd>
@@ -1536,8 +1576,11 @@ function Result({
 					<dd>
 						<strong class="audit-rate">{rate(r.averageRate)}</strong>
 						<p>
-							« Le taux moyen de conformité du service en ligne s’obtient en faisant la moyenne des taux de conformité
-							de chaque page. » Une page sans critère applicable n’a pas de taux et n’entre pas dans la moyenne.
+							<q cite={METHOD_URL}>
+								Le taux moyen de conformité du service en ligne s’obtient en faisant la moyenne des taux de conformité
+								de chaque page.
+							</q>{" "}
+							Une page sans critère applicable n’a pas de taux et n’entre pas dans la moyenne.
 						</p>
 					</dd>
 				</dl>
@@ -1613,12 +1656,24 @@ function Result({
 }
 
 /** Champ de la déclaration : étiquette, aide courte, et nature (une ligne, une par ligne, adresse, date). */
-type DeclarationInput = { field: DeclarationField; label: string; help?: string; kind?: "lines" | "url" | "date" };
+type DeclarationInput = {
+	field: DeclarationField;
+	label: string;
+	help?: string;
+	kind?: "lines" | "url" | "date";
+	/** Information concernant l'utilisateur (RGAA 11.13). */
+	autoComplete?: string;
+};
 const DECLARATION_GROUPS: { legend: string; fields: DeclarationInput[] }[] = [
 	{
 		legend: "Organisme et site",
 		fields: [
-			{ field: "organization", label: "Nom de l’organisme", help: "Tel qu’il figure dans vos mentions légales." },
+			{
+				field: "organization",
+				label: "Nom de l’organisme",
+				help: "Tel qu’il figure dans vos mentions légales.",
+				autoComplete: "organization",
+			},
 			{
 				field: "commitment",
 				label: "Ce que l’organisme s’engage à rendre accessible",
@@ -1711,13 +1766,18 @@ const DECLARATION_GROUPS: { legend: string; fields: DeclarationInput[] }[] = [
 				label: "Formulaire de contact ou adresse e-mail",
 				help: "Pour signaler un défaut d’accessibilité, par exemple https://exemple.fr/contact ou accessibilite@exemple.fr.",
 				kind: "url",
+				// Pas de jeton autocomplete (RGAA 11.13) : le champ accepte une adresse Web OU une adresse e-mail, et aucun
+				// jeton de la liste ne couvre les deux (« url » ou « email » ferait proposer la mauvaise nature de donnée).
 			},
 			{ field: "contactEntity", label: "Service à contacter", help: "Par exemple « Service client »." },
-			{ field: "contactPageUrl", label: "Page web de ses coordonnées", kind: "url" },
+			{ field: "contactPageUrl", label: "Page web de ses coordonnées", kind: "url", autoComplete: "url" },
 		],
 	},
 ];
 const LIMITS = { lines: MAX_NOTE, url: MAX_URL, text: MAX_TITLE } as const;
+const DATE_ERROR = "Date incomplète ou hors limites (années 1900 à 9999) : elle n’est pas enregistrée.";
+const URL_ERROR =
+	"Adresse non reconnue : commencez par https:// ou saisissez une adresse e-mail. En attendant, elle reste « à compléter » dans la déclaration.";
 
 /** Aperçu rendu par Preact depuis le modèle : chaque saisie est du texte, échappé par Preact (jamais d'innerHTML). */
 function Inlines({ content }: { content: Inline[] }) {
@@ -1784,7 +1844,7 @@ function Declaration({
 }: {
 	session: AuditSession;
 	setSession: (update: (s: AuditSession) => AuditSession) => void;
-	setAnnounce: (message: string) => void;
+	setAnnounce: Announce;
 	criteria: AuditCriterion[];
 	r: Conformity;
 	rgaaVersion: string;
@@ -1792,6 +1852,8 @@ function Declaration({
 	const [touched, setTouched] = useState<ReadonlySet<DeclarationField>>(new Set());
 	/** Date en cours de saisie hors limites (« 0010-10-14 ») : affichée, jamais enregistrée ni publiée. */
 	const [drafts, setDrafts] = useState<Partial<Record<DeclarationField, string>>>({});
+	/** Valeur erronée déjà annoncée à la sortie du champ, par champ. */
+	const alerted = useRef<Partial<Record<DeclarationField, string>>>({});
 	const fields = session.declaration ?? {};
 	const titles = useMemo(() => Object.fromEntries(criteria.map((c) => [c.id, c.titleText])), [criteria]);
 	const options = { date: new Date(), rgaaVersion, criterionTitles: titles };
@@ -1820,7 +1882,7 @@ function Declaration({
 		for (const [field, value] of Object.entries(drafts) as [DeclarationField, string][]) {
 			if (value !== "" && !isDay(value)) {
 				setTouched((t) => new Set(t).add(field));
-				document.getElementById(`declaration-${field}`)?.focus();
+				focusAfterRender(() => document.getElementById(`declaration-${field}`));
 				setAnnounce("Export impossible : une date est incomplète ou hors limites (années 1900 à 9999).");
 				return null;
 			}
@@ -1860,7 +1922,7 @@ function Declaration({
 			await navigator.clipboard.writeText(render(current, "html"));
 			setAnnounce("Code HTML de la déclaration copié dans le presse-papiers.");
 		} catch {
-			setAnnounce("Copie impossible dans ce navigateur : utilisez « Télécharger (HTML) ».");
+			setAnnounce("Copie impossible dans ce navigateur : utilisez « Télécharger (HTML) ».", true);
 		}
 	};
 
@@ -1901,15 +1963,16 @@ function Declaration({
 			</p>
 		);
 
-	const input = ({ field, label, help, kind }: DeclarationInput) => {
+	const input = ({ field, label, help, kind, autoComplete }: DeclarationInput) => {
 		const id = `declaration-${field}`;
 		const value = drafts[field] ?? fields[field] ?? "";
 		const draft = drafts[field];
-		const invalid =
-			touched.has(field) &&
-			(kind === "url"
+		const wrong =
+			kind === "url"
 				? value.trim() !== "" && safeUrl(value) === null
-				: draft !== undefined && draft !== "" && !isDay(draft));
+				: draft !== undefined && draft !== "" && !isDay(draft);
+		const invalid = touched.has(field) && wrong;
+		const error = kind === "url" ? URL_ERROR : DATE_ERROR;
 		const describedBy = [help && `${id}-aide`, invalid && `${id}-erreur`].filter(Boolean).join(" ") || undefined;
 		const common = {
 			id,
@@ -1924,6 +1987,10 @@ function Declaration({
 			onBlur: () => {
 				if (kind === "date") commitDate(field);
 				setTouched((t) => new Set(t).add(field));
+				// Erreur affichée alors que le focus est déjà sur le champ suivant : annoncée (RGAA 7.5).
+				// Seulement si la valeur a changé depuis la dernière annonce : traverser le champ ne la répète pas.
+				if (wrong && alerted.current[field] !== value) setAnnounce(`${label} : ${error}`, true);
+				alerted.current[field] = wrong ? value : undefined;
 			},
 		};
 		return (
@@ -1942,19 +2009,14 @@ function Declaration({
 					<input
 						{...common}
 						type="text"
+						autoComplete={autoComplete}
 						inputMode={kind === "url" ? "url" : undefined}
 						maxLength={Math.max(kind === "url" ? LIMITS.url : LIMITS.text, value.length)}
 					/>
 				)}
-				{invalid && kind === "date" && (
+				{invalid && (
 					<p id={`${id}-erreur`} class="audit-error">
-						Date incomplète ou hors limites (années 1900 à 9999) : elle n’est pas enregistrée.
-					</p>
-				)}
-				{invalid && kind === "url" && (
-					<p id={`${id}-erreur`} class="audit-error">
-						Adresse non reconnue : commencez par https:// ou saisissez une adresse e-mail. En attendant, elle reste « à
-						compléter » dans la déclaration.
+						{error}
 					</p>
 				)}
 			</div>
@@ -2013,8 +2075,9 @@ function Declaration({
 									["prestataire", "Par un prestataire"],
 								] as const
 							).map(([value, label]) => (
-								<label key={value}>
+								<label key={value} for={`declaration-auditBy-${value}`}>
 									<input
+										id={`declaration-auditBy-${value}`}
 										type="radio"
 										name="declaration-auditBy"
 										value={value}
@@ -2053,6 +2116,7 @@ function Declaration({
 	);
 }
 
+const NEW_ACTION_ERROR = "Saisissez l’intitulé de l’action.";
 const YEAR_ERROR =
 	"Année incomplète ou hors limites (1900 à 9999, période terminée au plus tard en 9999) : elle n’est pas enregistrée.";
 
@@ -2069,7 +2133,7 @@ function Schema({
 }: {
 	session: AuditSession;
 	setSession: (update: (s: AuditSession) => AuditSession) => void;
-	setAnnounce: (message: string) => void;
+	setAnnounce: Announce;
 	criteria: AuditCriterion[];
 	r: Conformity;
 }) {
@@ -2078,6 +2142,8 @@ function Schema({
 	/** Année de début en cours de saisie : enregistrée à la sortie du champ, ou avant un export, si elle est valide. */
 	const [startDraft, setStartDraft] = useState<string | undefined>(undefined);
 	const [startInvalid, setStartInvalid] = useState(false);
+	/** Année erronée déjà annoncée à la sortie du champ. */
+	const alertedStart = useRef<string | undefined>(undefined);
 	const [newTitle, setNewTitle] = useState("");
 	const [newInvalid, setNewInvalid] = useState(false);
 	const [chosenYear, setChosenYear] = useState<number | null>(null);
@@ -2092,7 +2158,7 @@ function Schema({
 		try {
 			op(session);
 		} catch (e) {
-			setAnnounce(refused ?? (e as Error).message);
+			setAnnounce(refused ?? (e as Error).message, true);
 			return false;
 		}
 		setSession(op);
@@ -2129,6 +2195,7 @@ function Schema({
 		} catch {
 			setAnnounce(
 				"Mise à jour impossible : le tableau dépasserait 1 000 actions. Retirez définitivement des actions libres (Recommencer) ou regroupez-les.",
+				true,
 			);
 			return;
 		}
@@ -2143,7 +2210,9 @@ function Schema({
 		e.preventDefault();
 		if (!newTitle.trim()) {
 			setNewInvalid(true);
-			document.getElementById("schema-nouvelle-action")?.focus();
+			const field = document.getElementById("schema-nouvelle-action");
+			if (document.activeElement === field) setAnnounce(NEW_ACTION_ERROR, true);
+			else focusAfterRender(() => field);
 			return;
 		}
 		if (apply((s) => addFreeAction(s, newTitle))) {
@@ -2153,20 +2222,29 @@ function Schema({
 		}
 	};
 	const update = (a: SchemaAction, patch: ActionPatch) => apply((s) => updateAction(s, a.id, patch));
+	/**
+	 * Étiquette d'un champ du tableau : l'en-tête de colonne, visible et accolé au champ dans chaque ligne (RGAA 11.1.3),
+	 * complété pour les technologies d'assistance par l'action de la ligne.
+	 */
+	const cellLabel = (id: string, column: string, n: string) => (
+		<label for={id}>
+			{column}
+			<span class="visually-hidden"> de l’action {n}</span>
+		</label>
+	);
 	/** Liste de choix d'une ligne du tableau, étiquetée par l'action ; la première option est « vide ». */
 	const choice = (
-		label: string,
+		id: string,
+		column: string,
+		n: string,
 		value: string | number | undefined,
 		empty: string,
 		options: readonly (string | number)[],
 		set: (value: string) => void,
 	) => (
 		<td>
-			<select
-				aria-label={label}
-				value={value ?? ""}
-				onChange={(e) => set((e.currentTarget as HTMLSelectElement).value)}
-			>
+			{cellLabel(id, column, n)}
+			<select id={id} value={value ?? ""} onChange={(e) => set((e.currentTarget as HTMLSelectElement).value)}>
 				<option value="">{empty}</option>
 				{options.map((v) => (
 					<option key={v} value={v}>
@@ -2180,7 +2258,7 @@ function Schema({
 	const download = (doc: "schema" | "plan", format: "html" | "markdown") => {
 		const current = commitStart();
 		if (!current) {
-			document.getElementById("schema-debut")?.focus();
+			focusAfterRender(() => document.getElementById("schema-debut"));
 			setAnnounce("Export impossible : l’année de début est incomplète ou hors limites.");
 			return;
 		}
@@ -2250,7 +2328,14 @@ function Schema({
 						aria-invalid={startInvalid ? "true" : undefined}
 						aria-describedby={startInvalid ? "schema-debut-erreur" : undefined}
 						onInput={(e) => setStartDraft((e.currentTarget as HTMLInputElement).value)}
-						onBlur={commitStart}
+						onBlur={() => {
+							// Erreur affichée alors que le focus est déjà sur le champ suivant : annoncée (RGAA 7.5).
+							const value = startDraft;
+							const ok = commitStart();
+							// Seulement si la valeur a changé depuis la dernière annonce.
+							if (!ok && alertedStart.current !== value) setAnnounce(`Année de début : ${YEAR_ERROR}`, true);
+							alertedStart.current = ok ? undefined : value;
+						}}
 					/>
 					{startInvalid && (
 						<p id="schema-debut-erreur" class="audit-error">
@@ -2348,26 +2433,29 @@ function Schema({
 											{outside && <strong> Année cible hors période.</strong>}
 											{a.removed && <strong> Retirée.</strong>}
 										</th>
-										{choice(`Priorité de l’action ${n}`, a.priority, "à définir", PRIORITIES, (v) =>
+										{choice(`action-priorite-${a.id}`, "Priorité", n, a.priority, "à définir", PRIORITIES, (v) =>
 											update(a, { priority: (v || undefined) as ActionPatch["priority"] }),
 										)}
 										{choice(
-											`Année cible de l’action ${n}`,
+											`action-annee-${a.id}`,
+											"Année cible",
+											n,
 											a.targetYear,
 											"à définir",
 											outside ? [a.targetYear as number, ...years] : years,
 											(v) => update(a, { targetYear: v ? Number(v) : undefined }),
 										)}
 										<td>
+											{cellLabel(`action-commentaire-${a.id}`, "Commentaire", n)}
 											<input
+												id={`action-commentaire-${a.id}`}
 												type="text"
-												aria-label={`Commentaire de l’action ${n}`}
 												value={a.comment}
 												maxLength={Math.max(MAX_NOTE, a.comment.length)}
 												onInput={(e) => update(a, { comment: (e.currentTarget as HTMLInputElement).value })}
 											/>
 										</td>
-										{choice(`Bilan de l’action ${n}`, a.status, "à renseigner", ACTION_STATUSES, (v) =>
+										{choice(`action-bilan-${a.id}`, "Bilan", n, a.status, "à renseigner", ACTION_STATUSES, (v) =>
 											update(a, { status: (v || undefined) as ActionPatch["status"] }),
 										)}
 										<td>
@@ -2406,7 +2494,7 @@ function Schema({
 					/>
 					{newInvalid && (
 						<p id="schema-nouvelle-action-erreur" class="audit-error">
-							Saisissez l’intitulé de l’action.
+							{NEW_ACTION_ERROR}
 						</p>
 					)}
 				</div>

@@ -37,6 +37,9 @@ const criteria: AuditCriterion[] = rgaa.criteria.map((c) => ({
 	title="Audit guidé"
 	description={`Évaluer à la main les ${rgaa.criteria.length} critères du RGAA ${rgaa.version}, page par page, avec le texte officiel sous les yeux.`}
 >
+	{/* Sans JavaScript, les contrôles rendus au build seraient inopérants : masqués (RGAA 7.2). Avec JavaScript, ils
+	sont dans la page dès le chargement, sans décalage à l'hydratation. */}
+	<noscript slot="head"><style is:inline>.audit { display: none; }</style></noscript>
 	<h1>Audit guidé</h1>
 	<p>
 		Pour chaque critère du RGAA {rgaa.version} et chaque page de votre échantillon, indiquez si la page est
@@ -47,11 +50,9 @@ const criteria: AuditCriterion[] = rgaa.criteria.map((c) => ({
 		Rampe vous guide mais ne certifie rien : c’est votre évaluation qui fait foi. Votre travail est enregistré
 		automatiquement dans ce navigateur, et nulle part ailleurs.
 	</p>
+	{/* Message sur une ligne : la compression du HTML avale l'espace d'un retour à la ligne avant le lien. */}
 	<noscript>
-		<p class="audit-banner">
-			L’audit guidé a besoin de JavaScript pour enregistrer vos réponses. Sans JavaScript, vous pouvez consulter
-			le <a href={url("referentiel/")}>référentiel</a>.
-		</p>
+		<p class="audit-banner">L’audit guidé nécessite JavaScript : il ne s’affiche pas sans. Le <a href={url("referentiel/")}>référentiel</a> reste consultable.</p>
 	</noscript>
 
 	{/* client:load : l'outil est tout le contenu de la page, visible dès l'arrivée ; client:visible ne ferait que retarder. */}
@@ -152,10 +153,21 @@ const criteria: AuditCriterion[] = rgaa.criteria.map((c) => ({
 	.audit-rates dd p {
 		margin-top: 0.25rem;
 	}
+	/* Citations de la méthode officielle (RGAA 9.4) : guillemets français fournis par <q>, jamais saisis en plus. */
+	.audit q {
+		quotes: "«\00a0" "\00a0»";
+	}
+	.audit-schema-table td label {
+		display: block;
+		font-size: 0.875rem;
+		font-weight: 600;
+	}
 	.audit-result-actions button {
 		margin: 0 0.5rem 0.5rem 0;
 	}
 	.audit-table {
+		/* Contient les textes masqués positionnés (étiquettes du tableau d'actions) : sinon la page défilerait. */
+		position: relative;
 		overflow-x: auto;
 		margin: 1rem 0;
 	}
@@ -354,11 +366,11 @@ const criteria: AuditCriterion[] = rgaa.criteria.map((c) => ({
 		grid-template-columns: repeat(auto-fill, minmax(15rem, 1fr));
 		gap: 0.4rem;
 	}
+	/* Bordure au moins 3:1 contre le fond : c'est elle qui fait reconnaître ces boutons (RGAA 3.3). */
 	.audit-topics button,
 	.audit-list button {
 		width: 100%;
 		text-align: left;
-		border-color: var(--line);
 	}
 	.audit-topics button[aria-current],
 	.audit-list button[aria-current] {
@@ -377,7 +389,7 @@ const criteria: AuditCriterion[] = rgaa.criteria.map((c) => ({
 	}
 	.audit-num {
 		font-weight: 700;
-		margin-right: 0.5rem;
+		margin-right: 0.25rem;
 	}
 	.audit-criterion {
 		margin-top: 2rem;
