@@ -89,12 +89,17 @@ afterAll(async () => {
 	if (reportPath) await rm(dirname(reportPath), { recursive: true, force: true });
 });
 
-/** Ouvre /audit/ et attend l'hydratation de l'îlot (Astro retire alors l'attribut `ssr`). */
+/** Ouvre /audit/ et attend l'hydratation de l'îlot. */
 async function openAudit(page: Page) {
 	await page.goto(`${base}/audit/`);
 	await expect(page.title()).resolves.toBe("Audit guidé · Rampe");
-	await page.waitForSelector("astro-island:not([ssr])");
+	// Contrôles rendus seulement après l'hydratation et la relecture de la session (RGAA 7.2).
+	await page.waitForSelector("#audit-echantillon");
 }
+
+/** Régions d'annonce (RGAA 7.5) : messages d'état (role="status") et erreurs sans déplacement du focus (role="alert"). */
+const statusText = (page: Page) => page.locator(".audit-live[role=status]").textContent();
+const alertText = (page: Page) => page.locator(".audit-live[role=alert]").textContent();
 
 async function axeViolations(page: Page) {
 	await page.evaluate(axe.source);
@@ -228,7 +233,7 @@ describe("audit guidé (bout en bout)", { timeout: 60_000 }, () => {
 
 		// Reprise après rechargement : la page et le statut sont toujours là.
 		await page.reload();
-		await page.waitForSelector("astro-island:not([ssr])");
+		await page.waitForSelector("#audit-echantillon");
 		await expect(page.locator(".audit-page-list li").textContent()).resolves.toContain("Accueil");
 		// Au rechargement, le parcours repart du critère 1.1.
 		await expect(page.getByLabel("Non conforme", { exact: true }).isChecked()).resolves.toBe(true);
@@ -261,7 +266,7 @@ describe("audit guidé (bout en bout)", { timeout: 60_000 }, () => {
 			await page.getByRole("button", { name: "Critère précédent : 1.1" }).click();
 			await page.getByRole("button", { name: "Critère suivant : 1.2" }).click();
 			await page.getByLabel("Critères non conformes sur au moins une page").check();
-			await expect(page.locator("[aria-live=polite]").textContent()).resolves.toBe("1 critère affiché");
+			await expect(statusText(page)).resolves.toBe("1 critère affiché");
 			await page.getByRole("button", { name: /^2\. / }).click();
 			await page.getByRole("button", { name: /^1\. / }).click();
 			if (captures) await page.screenshot({ path: join(captures, `audit-${name}.png`), fullPage: true });
@@ -280,7 +285,7 @@ describe("audit guidé (bout en bout)", { timeout: 60_000 }, () => {
 		await openAudit(page);
 		await addPage(page, "https://exemple.fr/", "Accueil");
 		await page.getByLabel("Critères non conformes sur au moins une page").check();
-		await expect(page.locator("[aria-live=polite]").textContent()).resolves.toBe("0 critère affiché");
+		await expect(statusText(page)).resolves.toBe("0 critère affiché");
 		await expect.poll(() => page.locator("article").count()).toBe(0);
 		await expect(
 			page.getByText("Aucun critère ne correspond à ce filtre dans cette thématique.").count(),
@@ -294,9 +299,7 @@ describe("audit guidé (bout en bout)", { timeout: 60_000 }, () => {
 		await addPage(page, "https://exemple.fr/", "Accueil");
 		await page.getByLabel("Conforme", { exact: true }).check(); // 1.1 évalué
 		await page.getByLabel("Critères avec des pages non testées").check();
-		await expect(page.locator("[aria-live=polite]").textContent()).resolves.toBe(
-			"105 critères affichés ; critère 1.2 affiché",
-		);
+		await expect(statusText(page)).resolves.toBe("105 critères affichés ; critère 1.2 affiché");
 		await expect(page.locator("#audit-titre").textContent()).resolves.toMatch(/^Critère 1\.2,/);
 		await page.close();
 	});
@@ -306,17 +309,13 @@ describe("audit guidé (bout en bout)", { timeout: 60_000 }, () => {
 		await openAudit(page);
 		await addPage(page, "https://exemple.fr/", "Accueil");
 		await page.getByRole("button", { name: /^3\. Couleurs/ }).click();
-		await expect(page.locator("[aria-live=polite]").textContent()).resolves.toBe(
-			"Thématique 3 « Couleurs » : critère 3.1 affiché",
-		);
+		await expect(statusText(page)).resolves.toBe("Thématique 3 « Couleurs » : critère 3.1 affiché");
 		await expect(page.locator("#audit-titre").textContent()).resolves.toMatch(
 			/^Critère 3\.1, thématique 3 « Couleurs » /,
 		);
 		await page.getByLabel("Non applicable").check();
 		await page.waitForFunction(() => localStorage.getItem("rampe.audit.session")?.includes('"NA"'));
-		await expect(page.locator("[aria-live=polite]").textContent()).resolves.toBe(
-			"Thématique 3 « Couleurs » : critère 3.1 affiché",
-		);
+		await expect(statusText(page)).resolves.toBe("Thématique 3 « Couleurs » : critère 3.1 affiché");
 		await page.close();
 	});
 
@@ -398,11 +397,11 @@ describe("audit guidé (bout en bout)", { timeout: 60_000 }, () => {
 			(window as unknown as { plein: boolean }).plein = true;
 		});
 		await addPage(page, "https://exemple.fr/", "Accueil");
-		const alert = page.getByRole("alert");
+		const alert = page.locator(".audit-banner[role=alert]");
 		await alert.waitFor();
 		await expect(alert.textContent()).resolves.toContain("Échec de l’enregistrement.");
 		await page.waitForFunction(
-			() => document.querySelector("[aria-live=polite]")?.textContent === "Échec de l’enregistrement",
+			() => document.querySelector(".audit-live[role=status]")?.textContent === "Échec de l’enregistrement",
 		);
 		await page.getByLabel("Conforme", { exact: true }).check(); // nouvel essai : toujours plein
 		await page.waitForTimeout(600);
@@ -426,12 +425,13 @@ describe("audit guidé (bout en bout)", { timeout: 60_000 }, () => {
 		await a.getByLabel("Non conforme", { exact: true }).check();
 		await a.waitForFunction(() => localStorage.getItem("rampe.audit.session")?.includes('"NC"'));
 		await b.waitForFunction(
-			() => document.querySelector("[aria-live=polite]")?.textContent === "Audit mis à jour depuis un autre onglet",
+			() =>
+				document.querySelector(".audit-live[role=status]")?.textContent === "Audit mis à jour depuis un autre onglet",
 		);
 		await addPage(b, "https://exemple.fr/contact", "Contact"); // écriture de B après celle de A
 		await b.waitForFunction(() => localStorage.getItem("rampe.audit.session")?.includes("Contact"));
 		await a.reload();
-		await a.waitForSelector("astro-island:not([ssr])");
+		await a.waitForSelector("#audit-echantillon");
 		await expect(a.locator(".audit-page-list li").allTextContents()).resolves.toEqual([
 			expect.stringContaining("Accueil"),
 			expect.stringContaining("Contact"),
@@ -516,7 +516,7 @@ describe("audit guidé (bout en bout)", { timeout: 60_000 }, () => {
 		for (const n of [1, 2, 3, 4]) {
 			await page.evaluate((v) => localStorage.setItem("rampe.audit.session", v), broken(n));
 			await page.reload();
-			await page.waitForSelector("astro-island:not([ssr])");
+			await page.waitForSelector("#audit-echantillon");
 			await expect.poll(() => page.getByText(/n’a pas pu être relue/).count()).toBe(1);
 			if (n === 1) {
 				const [file] = await Promise.all([
@@ -552,7 +552,9 @@ describe("audit guidé (bout en bout)", { timeout: 60_000 }, () => {
 			};
 		});
 		await openAudit(page);
-		await expect(page.getByRole("alert").textContent()).resolves.toMatch(/ni mise de côté \(stockage plein\)/);
+		await expect(page.locator(".audit-banner[role=alert]").textContent()).resolves.toMatch(
+			/ni mise de côté \(stockage plein\)/,
+		);
 		await addPage(page, "https://exemple.fr/", "Accueil");
 		await page.waitForTimeout(600);
 		await expect(page.evaluate(() => localStorage.getItem("rampe.audit.session"))).resolves.toBe(
@@ -583,7 +585,7 @@ describe("audit guidé (bout en bout)", { timeout: 60_000 }, () => {
 		});
 		for (let i = 0; i < 5; i++) {
 			await page.reload();
-			await page.waitForSelector("astro-island:not([ssr])");
+			await page.waitForSelector("#audit-echantillon");
 		}
 		await expect(copies(page)).resolves.toEqual(["X du 1er janvier", '{"schemaVersion":2,"pages":"Y illisible"}']);
 		await page.close();
@@ -599,7 +601,7 @@ describe("audit guidé (bout en bout)", { timeout: 60_000 }, () => {
 			localStorage.setItem("rampe.audit.session", '{"schemaVersion":2,"pages":"Z"}');
 		});
 		await page.reload();
-		await page.waitForSelector("astro-island:not([ssr])");
+		await page.waitForSelector("#audit-echantillon");
 		// Copie gardée (pas d'alerte de stockage plein), la plus ancienne ÉCRITE retirée.
 		await expect.poll(() => page.getByText(/ni mise de côté/).count()).toBe(0);
 		await expect(copies(page)).resolves.toEqual(["copie 2", "copie 3", '{"schemaVersion":2,"pages":"Z"}']);
@@ -623,7 +625,7 @@ describe("audit guidé (bout en bout)", { timeout: 60_000 }, () => {
 		}, text);
 		await openAudit(page);
 		await page.reload();
-		await page.waitForSelector("astro-island:not([ssr])");
+		await page.waitForSelector("#audit-echantillon");
 		await expect.poll(() => page.getByText(/n’a pas pu être relue/).count()).toBe(0);
 		await expect.poll(() => page.locator(".audit-page-list li").count()).toBe(2);
 		await expect(page.locator(`#processus-${FA}`).inputValue()).resolves.toBe(value.pages[0].process);
@@ -672,7 +674,7 @@ describe("audit guidé (bout en bout)", { timeout: 60_000 }, () => {
 
 	describe("import d'un rapport de la CLI (ADR-0014)", () => {
 		const IMPORT_LABEL = "Importer un rapport automatique (CLI ou extension, JSON)";
-		const live = (page: Page) => page.locator("[aria-live=polite]").textContent();
+		const live = statusText;
 		const stored = (page: Page) => page.evaluate(() => localStorage.getItem("rampe.audit.session"));
 		const group = (page: Page, criterion: string) =>
 			page.getByRole("group", { name: new RegExp(`^Critère ${criterion.replace(".", "\\.")}, page Défauts`) });
@@ -897,7 +899,7 @@ describe("audit guidé (bout en bout)", { timeout: 60_000 }, () => {
 				}
 				await expect(input.getAttribute("aria-describedby")).resolves.toContain("audit-rapport-erreur");
 				await expect(input.getAttribute("aria-invalid")).resolves.toBe("true");
-				await expect(live(page)).resolves.toMatch(message);
+				await expect(alertText(page)).resolves.toMatch(message);
 			}
 			expect(await page.evaluate(() => "polluted" in {})).toBe(false);
 			await page.waitForTimeout(600);
@@ -945,7 +947,7 @@ describe("audit guidé (bout en bout)", { timeout: 60_000 }, () => {
 			}
 		}, future);
 		await openAudit(page);
-		await expect(page.getByRole("alert").textContent()).resolves.toMatch(
+		await expect(page.locator(".audit-banner[role=alert]").textContent()).resolves.toMatch(
 			/^Cet audit a été créé par une version plus récente de Rampe : rechargez la page\./,
 		);
 		await addPage(page, "https://exemple.fr/", "Accueil");
@@ -1120,7 +1122,7 @@ describe("audit guidé (bout en bout)", { timeout: 60_000 }, () => {
 	describe("sauvegarde : export et import de l'audit en JSON (ADR-0016)", () => {
 		const SESSION_LABEL = "Importer un audit (JSON)";
 		const REPORT_LABEL = "Importer un rapport automatique (CLI ou extension, JSON)";
-		const live = (page: Page) => page.locator("[aria-live=polite]").textContent();
+		const live = statusText;
 		const stored = (page: Page) => page.evaluate(() => localStorage.getItem("rampe.audit.session"));
 		const reminder = (page: Page) => page.locator(".audit-backup > p").first().textContent();
 		const dialog = (page: Page) => page.getByRole("dialog", { name: "Remplacer l’audit en cours ?" });
@@ -1418,7 +1420,7 @@ describe("audit guidé (bout en bout)", { timeout: 60_000 }, () => {
 				}
 				await expect(input.getAttribute("aria-describedby")).resolves.toContain("audit-session-erreur");
 				await expect(input.getAttribute("aria-invalid")).resolves.toBe("true");
-				await expect(live(page)).resolves.toMatch(message);
+				await expect(alertText(page)).resolves.toMatch(message);
 			}
 			expect(await page.evaluate(() => "polluted" in {})).toBe(false);
 			await page.waitForTimeout(600);
@@ -1660,7 +1662,7 @@ describe("audit guidé (bout en bout)", { timeout: 60_000 }, () => {
 				JSON.parse((await a.evaluate(() => localStorage.getItem("rampe.audit.session"))) ?? "{}").declaration,
 			).toEqual(expected);
 			await a.reload();
-			await a.waitForSelector("astro-island:not([ssr])");
+			await a.waitForSelector("#audit-echantillon");
 			await check(a);
 
 			const file = await download(a, "Télécharger l’audit (JSON)");
@@ -1810,7 +1812,7 @@ describe("audit guidé (bout en bout)", { timeout: 60_000 }, () => {
 				/^Date incomplète ou hors limites/,
 			);
 			await expect
-				.poll(() => page.locator("[aria-live=polite]").textContent())
+				.poll(() => alertText(page))
 				.toBe("Export impossible : une date est incomplète ou hors limites (années 1900 à 9999).");
 			await page.getByRole("button", { name: "Télécharger (Markdown)" }).click();
 			await page.waitForTimeout(800);
@@ -1877,7 +1879,7 @@ describe("audit guidé (bout en bout)", { timeout: 60_000 }, () => {
 		const planPreview = (page: Page) =>
 			page.locator("#plan-apercu + *").evaluate((el) => (el as HTMLElement).parentElement?.innerText ?? "");
 		const rowHeads = (page: Page) => page.locator(".audit-schema-table tbody th").allTextContents();
-		const live = (page: Page) => page.locator("[aria-live=polite]").textContent();
+		const live = statusText;
 		const stored = async (page: Page) =>
 			JSON.parse((await page.evaluate(() => localStorage.getItem("rampe.audit.session"))) ?? "{}");
 		const control = (page: Page, kind: string, criterion: string) =>
@@ -1927,7 +1929,7 @@ describe("audit guidé (bout en bout)", { timeout: 60_000 }, () => {
 			json.evaluations["8.3"][P1] = { status: "C", note: "", source: "humain" };
 			await page.evaluate((v) => localStorage.setItem("rampe.audit.session", v), JSON.stringify(json));
 			await page.reload();
-			await page.waitForSelector("astro-island:not([ssr])");
+			await page.waitForSelector("#audit-echantillon");
 			await expect
 				.poll(() => rowHeads(page))
 				.toEqual([expect.any(String), expect.stringMatching(/Critère désormais validé\.$/)]);
@@ -2082,7 +2084,7 @@ describe("audit guidé (bout en bout)", { timeout: 60_000 }, () => {
 			};
 			await check(a);
 			await a.reload();
-			await a.waitForSelector("astro-island:not([ssr])");
+			await a.waitForSelector("#audit-echantillon");
 			await check(a);
 			const file = await download(a, "Télécharger l’audit (JSON)");
 			expect(file.json.schemaVersion).toBe(5);
@@ -2140,7 +2142,9 @@ describe("audit guidé (bout en bout)", { timeout: 60_000 }, () => {
 			await page.getByLabel("Année de début").fill("0010");
 			await page.getByRole("button", { name: "Télécharger le schéma (HTML)" }).click();
 			await expect.poll(() => page.evaluate(() => document.activeElement?.id)).toBe("schema-debut");
-			await expect.poll(() => live(page)).toBe("Export impossible : l’année de début est incomplète ou hors limites.");
+			await expect
+				.poll(() => alertText(page))
+				.toBe("Export impossible : l’année de début est incomplète ou hors limites.");
 			await page.waitForTimeout(600);
 			expect(downloads).toEqual([]);
 			expect((await stored(page)).schema.startYear).toBe(2026);
@@ -2183,7 +2187,7 @@ describe("audit guidé (bout en bout)", { timeout: 60_000 }, () => {
 			delete json.evaluations["11.1"][P1];
 			await page.evaluate((v) => localStorage.setItem("rampe.audit.session", v), JSON.stringify(json));
 			await page.reload();
-			await page.waitForSelector("astro-island:not([ssr])");
+			await page.waitForSelector("#audit-echantillon");
 			await expect
 				.poll(() => page.locator(".audit-schema").textContent())
 				.toContain("Attention : l’audit n’est plus complet.");
@@ -2204,7 +2208,9 @@ describe("audit guidé (bout en bout)", { timeout: 60_000 }, () => {
 			await expect.poll(() => rowHeads(page)).toEqual(["Audit annuel", "Audit annuel"]);
 			const labels = await page
 				.locator(".audit-schema-table select, .audit-schema-table input, .audit-schema-table button")
-				.evaluateAll((els) => els.map((el) => el.getAttribute("aria-label")));
+				.evaluateAll((els) =>
+					els.map((el) => (el as HTMLInputElement).labels?.[0]?.textContent ?? el.getAttribute("aria-label")),
+				);
 			expect(new Set(labels).size).toBe(labels.length);
 			expect(labels).toContain("Priorité de l’action 2 : Audit annuel");
 			await page.close();
@@ -2229,7 +2235,9 @@ describe("audit guidé (bout en bout)", { timeout: 60_000 }, () => {
 			const errors: string[] = [];
 			page.on("pageerror", (e) => errors.push(e.message));
 			await syncButton(page).click();
-			await expect.poll(() => live(page)).toMatch(/^Mise à jour impossible : le tableau dépasserait 1 000 actions/);
+			await expect
+				.poll(() => alertText(page))
+				.toMatch(/^Mise à jour impossible : le tableau dépasserait 1 000 actions/);
 			expect(errors).toEqual([]);
 			await page.close();
 		});
@@ -2244,7 +2252,7 @@ describe("audit guidé (bout en bout)", { timeout: 60_000 }, () => {
 			await page.keyboard.press("Enter");
 			await expect.poll(() => rowHeads(page)).toEqual(["Former l’équipe éditoriale"]);
 			await expect.poll(() => live(page)).toBe("Action ajoutée : Former l’équipe éditoriale");
-			await tabUntil(page, "el.getAttribute('aria-label') === 'Priorité de l’action 1 : Former l’équipe éditoriale'", {
+			await tabUntil(page, "el.labels?.[0]?.textContent === 'Priorité de l’action 1 : Former l’équipe éditoriale'", {
 				back: true,
 				max: 20,
 			});
@@ -2381,8 +2389,216 @@ describe("audit guidé (bout en bout)", { timeout: 60_000 }, () => {
 				)
 				.toBe("Claude");
 			await page.reload();
-			await page.waitForSelector("astro-island:not([ssr])");
+			await page.waitForSelector("#audit-echantillon");
 			expect(await banner(page)).toContain(NOTICE);
+			await page.close();
+		});
+	});
+	// Corrections des non-conformités de l'auto-évaluation sur /audit/ (docs/audit-rampe/evaluations/{3,7,9,11}.json).
+	describe("conformité RGAA de l'audit guidé (auto-évaluation)", () => {
+		/** Rapport de contraste WCAG entre deux couleurs calculées « rgb(r, g, b) ». */
+		const contrast = (a: string, b: string) => {
+			const lum = (c: string) => {
+				const [r, g, bl] = (c.match(/\d+(\.\d+)?/g) ?? []).slice(0, 3).map((v) => {
+					const x = Number(v) / 255;
+					return x <= 0.04045 ? x / 12.92 : ((x + 0.055) / 1.055) ** 2.4;
+				}) as [number, number, number];
+				return 0.2126 * r + 0.7152 * g + 0.0722 * bl;
+			};
+			const [hi, lo] = [lum(a), lum(b)].sort((x, y) => y - x) as [number, number];
+			return (hi + 0.05) / (lo + 0.05);
+		};
+
+		it("11.1 : chaque bouton radio a un id unique et un <label for> ; champs du tableau d'actions étiquetés en clair", async () => {
+			const page = await browser.newPage();
+			await openWith(page, sessionJson());
+			await page.getByLabel("Intitulé d’une action libre").fill("Former l’équipe");
+			await page.getByRole("button", { name: "Ajouter l’action" }).click();
+			await page.waitForSelector(".audit-schema-table select");
+			const radios = await page.locator(".audit input[type=radio]").evaluateAll((els) =>
+				els.map((el) => ({
+					id: el.id,
+					label: el.id ? document.querySelector(`label[for="${CSS.escape(el.id)}"]`)?.textContent?.trim() : undefined,
+				})),
+			);
+			// Filtre (4), statuts des 3 pages (12), « En interne / Par un prestataire » (2).
+			expect(radios.length).toBe(18);
+			expect(new Set(radios.map((r) => r.id)).size).toBe(radios.length);
+			for (const r of radios) expect(r.label, r.id).toMatch(/\S/);
+			// 11.1.3 : un <label for> visible, accolé au champ (pas seulement un aria-label).
+			const fields = await page.locator(".audit-schema-table select, .audit-schema-table input").evaluateAll((els) =>
+				els.map((el) => {
+					const label = (el as HTMLInputElement).labels?.[0];
+					return {
+						ariaLabel: el.getAttribute("aria-label"),
+						visible: label?.firstChild?.textContent?.trim() ?? "",
+						sameCell: label?.closest("td") === el.closest("td"),
+					};
+				}),
+			);
+			expect(fields.length).toBe(4);
+			expect(fields.map((f) => f.visible)).toEqual(["Priorité", "Année cible", "Commentaire", "Bilan"]);
+			for (const f of fields) expect(f).toMatchObject({ ariaLabel: null, sameCell: true });
+			await expect(page.getByLabel("Priorité de l’action 1 : Former l’équipe").count()).resolves.toBe(1);
+			await page.close();
+		});
+
+		it("11.13 : « Nom de l’organisme » en autocomplete organization ; adresse de page auditée sans autocomplete", async () => {
+			const page = await browser.newPage();
+			await openAudit(page);
+			await expect(page.getByLabel("Nom de l’organisme").getAttribute("autocomplete")).resolves.toBe("organization");
+			await expect(page.getByLabel("Adresse de la page").getAttribute("autocomplete")).resolves.toBe("off");
+			await page.close();
+		});
+
+		it("7.1 : le nom des boutons de thématique et de critère contient l'intitulé visible, espaces compris", async () => {
+			const page = await browser.newPage();
+			await openWith(page, sessionJson());
+			for (const nav of [".audit-topics", "nav.audit-list"]) {
+				const names = (await page.locator(nav).ariaSnapshot())
+					.split("\n")
+					.flatMap((line) => /- button "(.*)"/.exec(line)?.[1] ?? []);
+				const visible = await page
+					.locator(`${nav} button`)
+					.evaluateAll((els) => els.map((el) => (el as HTMLElement).innerText.replace(/\s+/g, " ").trim()));
+				expect(names.length).toBeGreaterThan(0);
+				expect(names).toEqual(visible);
+			}
+			await expect(
+				page.getByRole("button", { name: "1.1 Chaque image porteuse d’information a-t-elle une alternative" }).count(),
+			).resolves.toBe(1);
+			await page.close();
+		});
+
+		it("7.2 : sans JavaScript, aucun contrôle inopérant ; un message renvoie au référentiel", async () => {
+			const context = await browser.newContext({ javaScriptEnabled: false });
+			const page = await context.newPage();
+			await page.goto(`${base}/audit/`);
+			await expect(page.title()).resolves.toBe("Audit guidé · Rampe");
+			await expect(page.locator("main").getByRole("button").count()).resolves.toBe(0);
+			await expect(page.locator("main :is(input, select, textarea, button, form)").count()).resolves.toBe(0);
+			// Le moteur de texte de Playwright ignore <noscript> : sélecteur CSS.
+			const message = page.locator("main noscript p");
+			await expect(message.isVisible()).resolves.toBe(true);
+			await expect(message.textContent()).resolves.toMatch(/^\s*L’audit guidé nécessite JavaScript/);
+			await expect(message.locator("a").getAttribute("href")).resolves.toMatch(/\/referentiel\/$/);
+			await context.close();
+		});
+
+		it("7.3 : « J’ai bien enregistré le fichier, continuer » disparaît : le focus va sur le bouton restant", async () => {
+			const page = await browser.newPage();
+			await page.addInitScript(() => {
+				localStorage.setItem("rampe.audit.session", '{"schemaVersion":2,"pages":"abîmé"}');
+				const set = Storage.prototype.setItem;
+				Storage.prototype.setItem = function (key: string, value: string) {
+					if (key.startsWith("rampe.audit.session.ignoree")) throw new DOMException("plein", "QuotaExceededError");
+					return set.call(this, key, value);
+				};
+			});
+			await openAudit(page);
+			await Promise.all([
+				page.waitForEvent("download"),
+				page.getByRole("button", { name: "Télécharger la session mise de côté" }).click(),
+			]);
+			await page.getByRole("button", { name: "J’ai bien enregistré le fichier, continuer" }).focus();
+			await page.keyboard.press("Enter");
+			await expect
+				.poll(() => page.evaluate(() => document.activeElement?.textContent))
+				.toBe("Télécharger la session mise de côté");
+			await expect(
+				page.getByRole("button", { name: "J’ai bien enregistré le fichier, continuer" }).count(),
+			).resolves.toBe(0);
+			await page.close();
+		});
+
+		it("7.5 : messages d'état en role=status atomique ; erreurs sans déplacement du focus en role=alert, sans doublon", async () => {
+			const page = await browser.newPage();
+			await openWith(page, sessionJson());
+			const region = page.locator(".audit-live[role=status]");
+			await expect(region.getAttribute("aria-atomic")).resolves.toBe("true");
+			await expect(page.locator(".audit-live[role=alert]").count()).resolves.toBe(1);
+			// Entrée dans le champ : le focus y reste, l'erreur est annoncée par la région d'alerte.
+			await page.getByLabel("Adresse de la page").fill("https://exemple.fr/");
+			await page.getByLabel("Adresse de la page").press("Enter");
+			await expect.poll(() => alertText(page)).toBe("Cette page est déjà dans l’échantillon.");
+			await expect(statusText(page)).resolves.toBe("");
+			await page.getByLabel("Adresse de la page").fill("https://exemple.fr/contact");
+			await page.getByLabel("Adresse de la page").press("Enter");
+			await expect.poll(() => statusText(page)).toBe("Page ajoutée : https://exemple.fr/contact");
+			await expect(alertText(page)).resolves.toBe("");
+			await page.getByLabel("Intitulé d’une action libre").press("Enter");
+			await expect.poll(() => alertText(page)).toBe("Saisissez l’intitulé de l’action.");
+			// Erreurs affichées à la sortie du champ : le focus est déjà sur le champ suivant.
+			await page.getByLabel("Page web de ses coordonnées").fill("pas une adresse");
+			await page.getByLabel("Page web de ses coordonnées").press("Tab");
+			await expect.poll(() => alertText(page)).toMatch(/^Page web de ses coordonnées : Adresse non reconnue/);
+			await page.getByLabel("Année de début").fill("12");
+			await page.getByLabel("Année de début").press("Tab");
+			await expect.poll(() => alertText(page)).toMatch(/^Année de début : Année incomplète ou hors limites/);
+			// Refus d'import : alerte.
+			await page.getByLabel("Importer un audit (JSON)").setInputFiles({
+				name: "x.json",
+				mimeType: "application/json",
+				buffer: Buffer.from("pas du json"),
+			});
+			await expect.poll(() => alertText(page)).toMatch(/^Ce fichier n’est pas un fichier JSON lisible/);
+			await expect(statusText(page)).resolves.toBe("");
+			await page.close();
+		});
+
+		for (const colorScheme of ["light", "dark"] as const) {
+			it(`3.3 : bordures des boutons et des champs à 3:1 au moins contre le fond (${colorScheme === "light" ? "clair" : "sombre"})`, async () => {
+				const page = await browser.newPage({ colorScheme });
+				await openWith(page, sessionJson());
+				await page.getByLabel("Intitulé d’une action libre").fill("Former l’équipe");
+				await page.getByRole("button", { name: "Ajouter l’action" }).click();
+				await page.waitForSelector(".audit-schema-table select");
+				const { backgrounds, borders } = await page.evaluate(() => {
+					const probe = document.createElement("span");
+					document.body.append(probe);
+					const color = (v: string) => {
+						probe.style.color = `var(${v})`;
+						return getComputedStyle(probe).color;
+					};
+					const backgrounds = [color("--bg"), color("--surface")];
+					probe.remove();
+					const selector =
+						".audit button:not([aria-current]), .audit input:is([type=text], [type=url], [type=date]), .audit textarea, .audit select";
+					const borders = [...document.querySelectorAll<HTMLElement>(selector)].map((el) => ({
+						what: `${el.tagName} ${el.closest("[class]")?.className ?? ""}`,
+						color: getComputedStyle(el).borderTopColor,
+					}));
+					return { backgrounds, borders };
+				});
+				const ratios = new Map<string, number>();
+				for (const b of borders)
+					for (const bg of backgrounds) {
+						const r = contrast(b.color, bg);
+						ratios.set(`${b.color} / ${bg}`, Math.round(r * 100) / 100);
+						expect(r, `${b.what} : ${b.color} sur ${bg}`).toBeGreaterThanOrEqual(3);
+					}
+				console.log(`3.3 (${colorScheme}) : ${[...ratios].map(([k, v]) => `${k} = ${v}:1`).join(" ; ")}`);
+				expect(borders.filter((b) => /audit-topics|audit-list/.test(b.what)).length).toBeGreaterThan(10);
+				await page.close();
+			});
+		}
+
+		it("9.4 : citations de la méthode officielle en <q cite>, sans guillemets doublés", async () => {
+			const page = await browser.newPage();
+			await openWith(page, sessionJson());
+			const quotes = page.locator(
+				'.audit-rates q[cite="https://accessibilite.numerique.gouv.fr/obligations/evaluation-conformite/"]',
+			);
+			await expect(quotes.allTextContents()).resolves.toEqual([
+				expect.stringMatching(/^Le pourcentage de critères RGAA respectés .* applicables\.$/),
+				expect.stringMatching(/^Le taux moyen de conformité .* de chaque page\.$/),
+			]);
+			const paragraphs = await page.locator(".audit-rates dd p").allTextContents();
+			for (const p of paragraphs) expect(p).not.toMatch(/[«»]/);
+			// Les guillemets sont rendus par <q> (propriété quotes), une seule fois.
+			await expect(
+				quotes.first().evaluate((q) => [getComputedStyle(q).quotes, getComputedStyle(q, "::before").content]),
+			).resolves.toEqual(['"« " " »"', "open-quote"]);
 			await page.close();
 		});
 	});
