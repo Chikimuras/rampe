@@ -7,7 +7,7 @@ import { dirname, resolve } from "node:path";
 import { parseArgs } from "node:util";
 import { AXE_RUN_OPTIONS } from "@rampe/core";
 import axe from "axe-core";
-import { type Browser, chromium, type Page } from "playwright";
+import { type Browser, chromium, type Page, type Request } from "playwright";
 import {
 	type AuditPage,
 	buildReport,
@@ -219,7 +219,7 @@ async function evaluateIsolated(page: Page, expression: string): Promise<unknown
 			});
 		} catch {
 			// Monde isolé détruit : la page a navigué (ou s'est fermée) pendant l'évaluation.
-			throw new Error("La page a navigué pendant l’analyse : audit impossible.");
+			throw new Error(NAVIGATED);
 		}
 		const { result, exceptionDetails } = response;
 		if (exceptionDetails)
@@ -228,27 +228,45 @@ async function evaluateIsolated(page: Page, expression: string): Promise<unknown
 			);
 		return result.value;
 	} finally {
-		await cdp.detach().catch(() => {});
+		// Sans attente : pendant une navigation en suspens, Chromium ne répond au détachement qu'à sa fin (jamais si le
+		// serveur ne répond pas). La fermeture de la page libère la session de toute façon.
+		cdp.detach().catch(() => {});
 	}
 }
 
+const NAVIGATED = "La page a navigué pendant l’analyse : audit impossible.";
+
 /**
  * Règles par défaut d'axe.run (sans règles expérimentales), options communes avec l'extension (`AXE_RUN_OPTIONS` :
- * jamais d'interrogation des iframes, ADR-0020). Le titre est lu dans la même évaluation, avant l'analyse : une page
- * qui se réécrit pendant l'analyse ne change pas le titre du rapport. Résultat sérialisé dans le monde isolé, validé ici.
+ * jamais d'interrogation des iframes, ADR-0020). Le titre et l'URL sont lus dans la même évaluation, avant l'analyse :
+ * une page qui se réécrit pendant l'analyse ne change pas le titre du rapport, et l'URL est celle du document analysé.
+ * Résultat sérialisé dans le monde isolé, validé ici.
  */
 const AXE_RUN = `${axe.source}
 ;(async () => {
 	const title = document.title;
+	const url = location.href;
 	const r = await axe.run(document, ${JSON.stringify(AXE_RUN_OPTIONS)});
-	return JSON.stringify({ title, violations: r.violations, incomplete: r.incomplete });
+	return JSON.stringify({ title, url, violations: r.violations, incomplete: r.incomplete });
 })()`;
 
-/** Charge la page et lance axe-core. */
+/**
+ * Charge la page et lance axe-core. Toute navigation du cadre principal pendant l'analyse arrête l'audit (ADR-0020) :
+ * la requête de navigation suffit, sans attendre la validation du nouveau document (qui peut n'arriver qu'après la fin
+ * d'axe), et l'URL du document analysé doit être encore celle de la page. Les résultats ne sont donc jamais attribués
+ * à une autre page que celle analysée.
+ */
 async function inspect(page: Page, url: URL, timeout: number): Promise<AuditPage> {
 	await load(page, url, timeout);
+	let navigated = false;
+	const onRequest = (r: Request) => {
+		if (r.isNavigationRequest() && r.frame() === page.mainFrame()) navigated = true;
+	};
+	page.on("request", onRequest);
 	const raw = parseAxeOutput(await evaluateIsolated(page, AXE_RUN));
-	const finalUrl = page.url();
+	page.off("request", onRequest);
+	if (navigated || page.url() !== raw.url) throw new Error(NAVIGATED);
+	const finalUrl = raw.url;
 	if (!isHttp(finalUrl)) throw new Error(`la page a quitté le web (http/https) : ${finalUrl}`);
 	return {
 		url: redact(url.href),

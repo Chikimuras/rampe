@@ -65,6 +65,7 @@ function isAxeResult(r: unknown): r is AxeRawResult {
  */
 export function parseAxeOutput(value: unknown): {
 	title: string;
+	url: string;
 	violations: AxeRawResult[];
 	incomplete: AxeRawResult[];
 } {
@@ -74,15 +75,16 @@ export function parseAxeOutput(value: unknown): {
 	} catch {
 		parsed = null;
 	}
-	const { title, violations, incomplete } = (parsed ?? {}) as Record<string, unknown>;
+	const { title, url, violations, incomplete } = (parsed ?? {}) as Record<string, unknown>;
 	if (
 		typeof title !== "string" ||
+		typeof url !== "string" ||
 		!Array.isArray(violations) ||
 		!Array.isArray(incomplete) ||
 		![...violations, ...incomplete].every(isAxeResult)
 	)
 		throw new Error("résultat d’axe-core illisible : audit impossible.");
-	return { title, violations, incomplete };
+	return { title, url, violations, incomplete };
 }
 
 // Forme du JSON : partagée avec le site (import dans l'audit guidé, ADR-0014), elle vit dans @rampe/core.

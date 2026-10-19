@@ -25,16 +25,18 @@ describe("parseAxeOutput", () => {
 	it("relit un résultat axe bien formé", () => {
 		const r = raw("image-alt", ["wcag2a"]);
 		const shadow = { ...raw("label", []), nodes: [{ target: [["#hote", "input"]], html: "<input>" }] };
-		const ok = { title: "Titre", violations: [r], incomplete: [shadow] };
+		const ok = { title: "Titre", url: "https://exemple.fr/", violations: [r], incomplete: [shadow] };
 		expect(parseAxeOutput(JSON.stringify(ok))).toEqual(ok);
 	});
 
-	const out = (o: object) => JSON.stringify({ title: "T", violations: [], incomplete: [], ...o });
+	const out = (o: object) =>
+		JSON.stringify({ title: "T", url: "https://exemple.fr/", violations: [], incomplete: [], ...o });
 	it.each([
 		["non-chaîne", { title: "T", violations: [], incomplete: [] }],
 		["JSON invalide", "{"],
 		["sans titre", JSON.stringify({ violations: [], incomplete: [] })],
 		["sans incomplete", JSON.stringify({ title: "T", violations: [] })],
+		["sans URL", JSON.stringify({ title: "T", violations: [], incomplete: [] })],
 		["règle sans id", out({ violations: [{ tags: [], nodes: [] }] })],
 		["nœud sans html", out({ incomplete: [{ id: "x", tags: [], nodes: [{ target: [] }] }] })],
 		["cible objet", out({ violations: [{ id: "x", tags: [], nodes: [{ target: [{}], html: "<x>" }] }] })],
