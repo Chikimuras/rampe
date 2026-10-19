@@ -1,6 +1,8 @@
 ---
 import { type CollectionEntry, getCollection } from "astro:content";
 import Base from "../../../layouts/Base.astro";
+import { ADR_STATUS, journalTitle } from "../../../lib/labels";
+import { markEnglishHtml, TECH_TERMS } from "../../../lib/lang";
 import { url } from "../../../lib/url";
 
 type Entry = CollectionEntry<"adr" | "journal" | "docs">;
@@ -18,26 +20,28 @@ const { entry } = Astro.props as { entry: Entry };
 // Les listes de tâches Markdown produisent des cases à cocher désactivées sans étiquette
 // (violation axe « label », critère RGAA 11.1) : on les remplace par un statut textuel.
 if (!entry.rendered) throw new Error(`${entry.id} : rendu Markdown absent`);
-const html = entry.rendered.html
+const rendered = entry.rendered.html
 	.replace(/<input type="checkbox" checked disabled>/g, '<span class="task done">Fait</span>')
 	.replace(/<input type="checkbox" disabled>/g, '<span class="task todo">À faire</span>');
 // Garde-fou : on contourne render() d'Astro, qui traite aussi les images locales.
 // Une case restée sans étiquette ou une image non traitée doit casser le build, pas la page.
-if (html.includes("<input") || html.includes("__ASTRO_IMAGE_")) {
+if (rendered.includes("<input") || rendered.includes("__ASTRO_IMAGE_")) {
 	throw new Error(`${entry.id} : case à cocher ou image Markdown non prise en charge par le cockpit`);
 }
+// Jargon anglais balisé au rendu (critère 8.7), sans retoucher l’historique de docs/ (lib/lang.ts).
+const html = markEnglishHtml(rendered, TECH_TERMS);
 const meta =
 	entry.collection === "adr"
-		? `${entry.data.status} · ${entry.data.date.toLocaleDateString("fr-FR")} · ${entry.data.deciders}`
-		: entry.collection === "journal"
-			? entry.data.date.toLocaleDateString("fr-FR")
-			: "";
+		? `${ADR_STATUS[entry.data.status]} · ${entry.data.date.toLocaleDateString("fr-FR")} · ${entry.data.deciders}`
+		: "";
+// Une entrée du journal couvre toute une journée : son titre dit d’abord laquelle (critères 8.6 et 9.1).
+const title = entry.collection === "journal" ? journalTitle(entry) : entry.data.title;
 const source = `${entry.collection === "docs" ? "" : `${entry.collection}/`}${entry.id}.md`;
 ---
 
-<Base title={entry.data.title}>
+<Base title={title}>
 	<p><a href={url("cockpit/")}>← Cockpit</a></p>
-	<h1>{entry.data.title}</h1>
+	<h1>{title}</h1>
 	{meta && <p class="meta">{meta}</p>}
 	<article set:html={html} />
 	<p><a href={`https://github.com/Chikimuras/rampe/blob/main/docs/${source}`}>Voir la source sur GitHub</a></p>

@@ -5,6 +5,7 @@ import { parseSessionStrict, progress } from "@rampe/core/audit-session";
 import { computeConformity, formatRate } from "@rampe/core/conformity";
 import sessionText from "../../../../../docs/audit-rampe/session.json?raw";
 import Base from "../../layouts/Base.astro";
+import { ADR_STATUS, frDate } from "../../lib/labels";
 import { url } from "../../lib/url";
 
 const byDate = <T extends { data: { date: Date } }>(a: T, b: T) => b.data.date.getTime() - a.data.date.getTime();
@@ -47,12 +48,6 @@ const autoSession = parseSessionStrict(JSON.parse(sessionText), new Set(criterio
 const autoTotal = progress(autoSession, rgaa.criteria).total;
 const autoConformity = computeConformity(autoSession, criterionIds);
 const rate = (r: number | null) => (r === null ? "sans objet" : formatRate(r));
-const fr = (d: Date) =>
-	d.toLocaleDateString("fr-FR", {
-		day: "numeric",
-		month: "long",
-		year: "numeric",
-	});
 ---
 
 <Base title="Cockpit">
@@ -91,11 +86,11 @@ const fr = (d: Date) =>
 			))
 		}
 	</ul>
-	<p><a href={url("cockpit/docs/roadmap/")}>Voir la roadmap détaillée</a></p>
+	<p><a href={url("cockpit/docs/roadmap/")}>Voir la <span lang="en">roadmap</span> détaillée</a></p>
 
 	<section aria-labelledby="rampe-audite">
 		<h2 id="rampe-audite">Rampe audité par Rampe</h2>
-		<h3>Gate automatique</h3>
+		<h3><span lang="en">Gate</span> automatique</h3>
 		<p>0 non-conformité automatique sur les {builtPages} pages, en clair et en sombre.</p>
 		<p>
 			La CI audite chaque page construite avec la CLI de Rampe en mode strict, à chaque modification : le site n’est publié
@@ -126,7 +121,7 @@ const fr = (d: Date) =>
 
 	<h2 id="journal">Journal de bord</h2>
 	<ul>
-		{journal.map((j) => <li><a href={url(`cockpit/journal/${j.id}/`)}>{fr(j.data.date)} — {j.data.title}</a></li>)}
+		{journal.map((j) => <li><a href={url(`cockpit/journal/${j.id}/`)}>{frDate(j.data.date)} — {j.data.title}</a></li>)}
 	</ul>
 
 	<h2 id="adr">Décisions d’architecture (ADR), dans l’ordre</h2>
@@ -135,7 +130,7 @@ const fr = (d: Date) =>
 			adrs.map((a) => (
 				<li>
 					<a href={url(`cockpit/adr/${a.id}/`)}>{a.data.title}</a>
-					<span class={`status ${a.data.status}`}>{a.data.status}</span>
+					<span class={`status ${a.data.status}`}>{ADR_STATUS[a.data.status]}</span>
 				</li>
 			))
 		}
