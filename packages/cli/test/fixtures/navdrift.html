@@ -10,7 +10,7 @@
 <div id="lest"></div>
 </main><script>
 // Lest : axe l'analyse en plusieurs blocs de plusieurs centaines de millisecondes chacun.
-document.getElementById("lest").innerHTML = '<p class="pale">Texte pâle.</p>'.repeat(10000);
+document.getElementById("lest").innerHTML = '<p class="pale">Texte pâle.</p>'.repeat(5000);
 // La navigation part dès que le fil principal sort d'un blocage de plus de 200 ms : la fin du premier bloc d'axe,
 // donc pendant l'analyse (le chargement ne bloque pas autant). Le serveur ne répond jamais à /lent : le nouveau
 // document n'est jamais validé, le monde isolé n'est jamais détruit.

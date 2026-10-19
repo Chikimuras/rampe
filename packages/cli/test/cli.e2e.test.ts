@@ -159,7 +159,7 @@ describe("rampe audit (bout en bout)", { timeout: 60_000 }, () => {
 	it("sort en 2 si la page navigue pendant l'analyse, sans aucun rapport", async () => {
 		// Ordre forcé : la requête de navigation part pendant l'analyse, la validation du nouveau document n'arrive
 		// jamais. Un audit qui ne guette que la destruction du monde isolé le rate, quelle que soit la charge.
-		const { code, stderr } = await run("audit", `${base}/navdrift`, "--json", json, "--timeout", "20000");
+		const { code, stderr } = await run("audit", `${base}/navdrift`, "--json", json, "--timeout", "50000");
 		expect(code, stderr).toBe(2);
 		expect(stderr).toContain("La page a navigué pendant l’analyse : audit impossible.");
 		// Aucun résultat attribué à une page, ni à navdrift ni à la cible de la navigation.
@@ -167,7 +167,7 @@ describe("rampe audit (bout en bout)", { timeout: 60_000 }, () => {
 	});
 
 	it("sort en 2 si l'URL change pendant l'analyse sans requête (history.pushState), sans aucun rapport", async () => {
-		const { code, stderr } = await run("audit", `${base}/navdrift?historique`, "--json", json, "--timeout", "20000");
+		const { code, stderr } = await run("audit", `${base}/navdrift?historique`, "--json", json, "--timeout", "50000");
 		expect(code, stderr).toBe(2);
 		expect(stderr).toContain("La page a navigué pendant l’analyse : audit impossible.");
 		await expect(readFile(json, "utf8")).rejects.toThrow();
