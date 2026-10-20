@@ -29,6 +29,7 @@ export const TECH_TERMS = [
 	"cron",
 	"diff",
 	"dogfooding",
+	"e2e",
 	"fixture",
 	"force-push",
 	"fork",
@@ -55,6 +56,9 @@ export const TECH_TERMS = [
 	"workflow",
 	"workspace",
 	"worktree",
+	// Acronyme anglais prononcé comme un mot (« You Aren't Gonna Need It ») : cas (c). Les sigles épelés lettre à lettre
+	// (CLI, CI, PR) se lisent sans voix anglaise : pas de changement de langue.
+	"YAGNI",
 ];
 
 /**
