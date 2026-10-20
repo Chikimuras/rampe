@@ -16,12 +16,21 @@ describe("markEnglishHtml", () => {
 		expect(mark("<p>des commits et des forks</p>")).toBe(`<p>des ${en("commits")} et des ${en("forks")}</p>`);
 	});
 
-	it.each(["backend", "fixtures", "headless", "monorepo", "runner", "dogfooding", "bidi", "squash", "jobs", "e2e", "YAGNI"])(
-		"balise %s",
-		(w) => {
-			expect(mark(`<p>un ${w} ici</p>`)).toBe(`<p>un ${en(w)} ici</p>`);
-		},
-	);
+	it.each([
+		"backend",
+		"fixtures",
+		"headless",
+		"monorepo",
+		"runner",
+		"dogfooding",
+		"bidi",
+		"squash",
+		"jobs",
+		"e2e",
+		"YAGNI",
+	])("balise %s", (w) => {
+		expect(mark(`<p>un ${w} ici</p>`)).toBe(`<p>un ${en(w)} ici</p>`);
+	});
 
 	// Note 1 du critère 8.7 (dictionnaire de l'Académie) et note 2 (mot passé dans le langage commun) : pas de `lang`.
 	it.each([
