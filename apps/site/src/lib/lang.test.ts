@@ -81,6 +81,8 @@ describe("markEnglishText (intitulés officiels)", () => {
 		["(pop-up ou pop-under, par exemple)", `(pop-up ou ${en("pop-under")}, par exemple)`],
 		["checker (all frames) ».", `checker (${en("all frames")}) ».`],
 		["de type “field name” de", `de type “${en("field name")}” de`],
+		["(e.g., un numéro de carte bancaire)", `(${en("e.g.")}, un numéro de carte bancaire)`],
+		["(e.g. Visa)", `(${en("e.g.")} Visa)`],
 	])("balise %s", (input, expected) => {
 		expect(markEnglishText(input, OFFICIAL_TERMS)).toBe(expected);
 	});

@@ -64,7 +64,7 @@ export const TECH_TERMS = [
  * d'outils (Ace by DAISY, PAC, W3C Nu markup checker, Word Accessibility Plug-in), identifiants (`submit`, `click`…),
  * titres d'œuvres (notes et techniques du W3C, vidéo citée).
  */
-export const OFFICIAL_TERMS = ["all frames", "field name", "landmark", "pop-under", "style switcher"];
+export const OFFICIAL_TERMS = ["all frames", "e.g.", "field name", "landmark", "pop-under", "style switcher"];
 
 const SKIP = new Set(["code", "kbd", "pre", "samp", "script", "style", "var"]);
 
