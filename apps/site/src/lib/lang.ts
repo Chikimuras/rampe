@@ -15,7 +15,8 @@ import { htmlToHast } from "satteri";
 
 /**
  * Jargon technique anglais des pages du cockpit (ADR, journal, documentation), cas (c). Pluriel en -s reconnu.
- * Hors liste : cas (a) et (b) (squash, job, focus, bug, cookie, e-mail, proxy, plugin, widget…) et (d) (titres
+ * « squash » (sens git) et « job » (sens CI) sont des homonymes : jargon, cas (c).
+ * Hors liste : cas (a) et (b) (focus, bug, cookie, e-mail, proxy, plugin, widget…) et (d) (titres
  * d'œuvres comme les OWASP Cheat Sheets).
  */
 export const TECH_TERMS = [
@@ -38,6 +39,7 @@ export const TECH_TERMS = [
 	"headless",
 	"hook",
 	"incomplete",
+	"job",
 	"lint",
 	"merge",
 	"monorepo",
@@ -47,6 +49,7 @@ export const TECH_TERMS = [
 	"run",
 	"runner",
 	"shell",
+	"squash",
 	"token",
 	"typecheck",
 	"workflow",

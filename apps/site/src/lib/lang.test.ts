@@ -16,14 +16,15 @@ describe("markEnglishHtml", () => {
 		expect(mark("<p>des commits et des forks</p>")).toBe(`<p>des ${en("commits")} et des ${en("forks")}</p>`);
 	});
 
-	it.each(["backend", "fixtures", "headless", "monorepo", "runner", "dogfooding", "bidi"])("balise %s", (w) => {
-		expect(mark(`<p>un ${w} ici</p>`)).toBe(`<p>un ${en(w)} ici</p>`);
-	});
+	it.each(["backend", "fixtures", "headless", "monorepo", "runner", "dogfooding", "bidi", "squash", "jobs"])(
+		"balise %s",
+		(w) => {
+			expect(mark(`<p>un ${w} ici</p>`)).toBe(`<p>un ${en(w)} ici</p>`);
+		},
+	);
 
 	// Note 1 du critère 8.7 (dictionnaire de l'Académie) et note 2 (mot passé dans le langage commun) : pas de `lang`.
 	it.each([
-		"squash",
-		"job",
 		"focus",
 		"bug",
 		"cookie",
@@ -156,7 +157,8 @@ const ENGLISH = new Set([
 	"squashes",
 ]);
 const francizedRe = new RegExp(
-	`\\b(?:${VERB_STEMS.join("|")})(?:${ENDINGS.join("|")})(?![\\p{L}])|adversaria\\p{L}*`,
+	// Début de mot Unicode (\\b ignore les lettres accentuées : « émergent » serait signalé).
+	`(?<![\\p{L}\\p{N}_])(?:${VERB_STEMS.join("|")})(?:${ENDINGS.join("|")})(?![\\p{L}])|adversaria\\p{L}*`,
 	"giu",
 );
 const francized = (text: string) =>
@@ -179,6 +181,10 @@ describe("garde-fou des formes francisées", () => {
 		"adversariale",
 	])("repère %s", (w) => {
 		expect(francized(`un ${w} ici`)).toHaveLength(1);
+	});
+
+	it("ne signale pas un mot français qui contient un radical : émerger, émergent, émergée", () => {
+		expect(francized("émerger, émergent, émergée, submergé")).toEqual([]);
 	});
 
 	it("laisse les mots anglais et les noms : merge, rebase, checker, linter, commit, builds", () => {
