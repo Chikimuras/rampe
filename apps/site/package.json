@@ -15,7 +15,7 @@
 		"astro": "7.3.8",
 		"hast-util-sanitize": "5.0.2",
 		"hast-util-to-html": "9.0.5",
-		"preact": "10.29.8",
+		"preact": "11.0.1",
 		"satteri": "0.10.5",
 		"typescript": "^6"
 	},
