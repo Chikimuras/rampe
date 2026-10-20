@@ -1,600 +1,654 @@
 {
 	"evaluator": "Claude (IA)",
-	"date": "2026-10-16",
+	"date": "2026-10-20",
 	"entries": [
 		{
 			"criterion": "1.1",
 			"page": "https://chikimuras.github.io/rampe/",
 			"status": "NA",
-			"note": "Tests 1.1.1 à 1.1.8 : Inventaire du DOM rendu dans Chromium (Playwright) : 0 <img>, 0 <svg>, 0 élément role=\"img\", 0 <area>, 0 <object>, 0 <embed>, 0 <canvas>, 0 <input type=\"image\">, 0 <picture>, 0 <figure>, aucune image CSS (background-image à « none » sur tous les éléments, aucun contenu ::before/::after) sur l’accueil (titre, trois paragraphes, navigation principale, pied de page). Aucune image porteuse d’information, aucune zone d’image réactive, aucun bouton image : rien à évaluer. Non applicable."
+			"note": "Tests 1.1.1 à 1.1.8 sur l’accueil : inventaire du DOM rendu dans Chromium (Playwright), thèmes clair et sombre : 0 <img>, 0 <svg>, 0 role=\"img\", 0 <area>, 0 <object>, 0 <embed>, 0 <canvas>, 0 <input type=\"image\">, 0 <picture>, 0 <figure>, aucune image CSS (background-image, list-style-image, border-image et mask-image à « none » sur tous les éléments). Aucune image porteuse d’information, aucune zone d’image réactive, aucun bouton image : rien à évaluer. Non applicable."
 		},
 		{
 			"criterion": "1.1",
 			"page": "https://chikimuras.github.io/rampe/referentiel/",
 			"status": "NA",
-			"note": "Tests 1.1.1 à 1.1.8 : Inventaire du DOM rendu dans Chromium (Playwright) : 0 <img>, 0 <svg>, 0 élément role=\"img\", 0 <area>, 0 <object>, 0 <embed>, 0 <canvas>, 0 <input type=\"image\">, 0 <picture>, 0 <figure>, aucune image CSS (background-image à « none » sur tous les éléments, aucun contenu ::before/::after) sur la page Référentiel (13 thématiques, 106 liens de critères, encadrés « Explication Rampe »). Aucune image porteuse d’information, aucune zone d’image réactive, aucun bouton image : rien à évaluer. Non applicable."
+			"note": "Tests 1.1.1 à 1.1.8 sur la page Référentiel (liste des 106 critères) : inventaire du DOM rendu dans Chromium (Playwright), thèmes clair et sombre : 0 <img>, 0 <svg>, 0 role=\"img\", 0 <area>, 0 <object>, 0 <embed>, 0 <canvas>, 0 <input type=\"image\">, 0 <picture>, 0 <figure>, aucune image CSS (background-image, list-style-image, border-image et mask-image à « none » sur tous les éléments). Aucune image porteuse d’information, aucune zone d’image réactive, aucun bouton image : rien à évaluer. Non applicable."
 		},
 		{
 			"criterion": "1.1",
 			"page": "https://chikimuras.github.io/rampe/referentiel/1-1/",
 			"status": "NA",
-			"note": "Tests 1.1.1 à 1.1.8 : Inventaire du DOM rendu dans Chromium (Playwright) : 0 <img>, 0 <svg>, 0 élément role=\"img\", 0 <area>, 0 <object>, 0 <embed>, 0 <canvas>, 0 <input type=\"image\">, 0 <picture>, 0 <figure>, aucune image CSS (background-image à « none » sur tous les éléments, aucun contenu ::before/::after) sur la fiche du critère 1.1 (texte officiel, 8 tests, blocs <details> de méthodologie, liens vers le glossaire). Aucune image porteuse d’information, aucune zone d’image réactive, aucun bouton image : rien à évaluer. Non applicable."
+			"note": "Tests 1.1.1 à 1.1.8 sur la fiche du critère 1.1 : inventaire du DOM rendu dans Chromium (Playwright), thèmes clair et sombre : 0 <img>, 0 <svg>, 0 role=\"img\", 0 <area>, 0 <object>, 0 <embed>, 0 <canvas>, 0 <input type=\"image\">, 0 <picture>, 0 <figure>, aucune image CSS (background-image, list-style-image, border-image et mask-image à « none » sur tous les éléments). Le séparateur « › » du fil d’Ariane est un contenu CSS ::before de type texte, avec un texte de remplacement vide : ce n’est pas une image au sens du RGAA. Aucune image porteuse d’information, aucune zone d’image réactive, aucun bouton image : rien à évaluer. Non applicable."
 		},
 		{
 			"criterion": "1.1",
 			"page": "https://chikimuras.github.io/rampe/referentiel/glossaire/",
 			"status": "NA",
-			"note": "Tests 1.1.1 à 1.1.8 : Inventaire du DOM rendu dans Chromium (Playwright) : 0 <img>, 0 <svg>, 0 élément role=\"img\", 0 <area>, 0 <object>, 0 <embed>, 0 <canvas>, 0 <input type=\"image\">, 0 <picture>, 0 <figure>, aucune image CSS (background-image à « none » sur tous les éléments, aucun contenu ::before/::after) sur le glossaire (liste de définitions <dl>, ancres). Aucune image porteuse d’information, aucune zone d’image réactive, aucun bouton image : rien à évaluer. Non applicable."
+			"note": "Tests 1.1.1 à 1.1.8 sur le glossaire : inventaire du DOM rendu dans Chromium (Playwright), thèmes clair et sombre : 0 <img>, 0 <svg>, 0 role=\"img\", 0 <area>, 0 <object>, 0 <embed>, 0 <canvas>, 0 <input type=\"image\">, 0 <picture>, 0 <figure>, aucune image CSS (background-image, list-style-image, border-image et mask-image à « none » sur tous les éléments). Aucune image porteuse d’information, aucune zone d’image réactive, aucun bouton image : rien à évaluer. Non applicable."
 		},
 		{
 			"criterion": "1.1",
 			"page": "https://chikimuras.github.io/rampe/audit/",
 			"status": "NA",
-			"note": "Tests 1.1.1 à 1.1.8 : Inventaire du DOM rendu dans Chromium (Playwright) : 0 <img>, 0 <svg>, 0 élément role=\"img\", 0 <area>, 0 <object>, 0 <embed>, 0 <canvas>, 0 <input type=\"image\">, 0 <picture>, 0 <figure>, aucune image CSS (background-image à « none » sur tous les éléments, aucun contenu ::before/::after) sur l’audit guidé (îlot Preact) (états de l’îlot examinés : état initial, erreur d’adresse (champ aria-invalid + message), 2 pages ajoutées, import d’un rapport automatique (statut « à confirmer », conflit, indices), critère 3.2 affiché, tous les <details> ouverts, boîte de dialogue « Remplacer l’audit en cours ? » ouverte, puis audit complet importé (tableau « Résultat par page », déclaration, schéma pluriannuel)). Aucune image porteuse d’information, aucune zone d’image réactive, aucun bouton image : rien à évaluer. Non applicable."
+			"note": "Tests 1.1.1 à 1.1.8 sur l’audit guidé (îlot Preact ; états de l’îlot examinés : état initial, adresse invalide soumise (message d’erreur), deux pages ajoutées, rapport automatique importé (statuts « à confirmer » sur 1.1 et 3.2, indice 9.2), critère 3.2 affiché, boîte de dialogue « Remplacer l’audit en cours ? » ouverte, puis audit complet de 11 pages importé (résultat, tableau « Résultat par page », déclaration, schéma pluriannuel avec période choisie, actions mises à jour depuis l’audit et action libre ajoutée : tableau des actions), tous les <details> ouverts) : inventaire du DOM rendu dans Chromium (Playwright), thèmes clair et sombre : 0 <img>, 0 <svg>, 0 role=\"img\", 0 <area>, 0 <object>, 0 <embed>, 0 <canvas>, 0 <input type=\"image\">, 0 <picture>, 0 <figure>, aucune image CSS (background-image, list-style-image, border-image et mask-image à « none » sur tous les éléments). Seuls contenus générés : les guillemets ::before/::after des <q> de l’aperçu de la déclaration (texte). Aucune image porteuse d’information, aucune zone d’image réactive, aucun bouton image : rien à évaluer. Non applicable."
 		},
 		{
 			"criterion": "1.1",
 			"page": "https://chikimuras.github.io/rampe/cockpit/",
 			"status": "NA",
-			"note": "Tests 1.1.1 à 1.1.8 : Inventaire du DOM rendu dans Chromium (Playwright) : 0 <img>, 0 <svg>, 0 élément role=\"img\", 0 <area>, 0 <object>, 0 <embed>, 0 <canvas>, 0 <input type=\"image\">, 0 <picture>, 0 <figure>, aucune image CSS (background-image à « none » sur tous les éléments, aucun contenu ::before/::after) sur le cockpit (encadré « En attente d’Alexandre », 7 barres <progress>, liste des ADR avec pastilles de statut « Accepted », liste des pages du journal). Aucune image porteuse d’information, aucune zone d’image réactive, aucun bouton image : rien à évaluer. Non applicable."
+			"note": "Tests 1.1.1 à 1.1.8 sur le cockpit : inventaire du DOM rendu dans Chromium (Playwright), thèmes clair et sombre : 0 <img>, 0 <svg>, 0 role=\"img\", 0 <area>, 0 <object>, 0 <embed>, 0 <canvas>, 0 <input type=\"image\">, 0 <picture>, 0 <figure>, aucune image CSS (background-image, list-style-image, border-image et mask-image à « none » sur tous les éléments). Aucune image porteuse d’information, aucune zone d’image réactive, aucun bouton image : rien à évaluer. Non applicable."
 		},
 		{
 			"criterion": "1.1",
 			"page": "https://chikimuras.github.io/rampe/cockpit/adr/0011-cli-audit-playwright/",
 			"status": "NA",
-			"note": "Tests 1.1.1 à 1.1.8 : Inventaire du DOM rendu dans Chromium (Playwright) : 0 <img>, 0 <svg>, 0 élément role=\"img\", 0 <area>, 0 <object>, 0 <embed>, 0 <canvas>, 0 <input type=\"image\">, 0 <picture>, 0 <figure>, aucune image CSS (background-image à « none » sur tous les éléments, aucun contenu ::before/::after) sur la page ADR-0011 (Markdown rendu, tableau, blocs de code). Aucune image porteuse d’information, aucune zone d’image réactive, aucun bouton image : rien à évaluer. Le caractère Unicode « ⛔ » présent dans le texte est du texte (glyphe d’une police), pas une image au sens du RGAA (aucune balise d’image ni role=\"img\"). Non applicable."
+			"note": "Tests 1.1.1 à 1.1.8 sur la page de l’ADR-0011 : inventaire du DOM rendu dans Chromium (Playwright), thèmes clair et sombre : 0 <img>, 0 <svg>, 0 role=\"img\", 0 <area>, 0 <object>, 0 <embed>, 0 <canvas>, 0 <input type=\"image\">, 0 <picture>, 0 <figure>, aucune image CSS (background-image, list-style-image, border-image et mask-image à « none » sur tous les éléments). Aucune image porteuse d’information, aucune zone d’image réactive, aucun bouton image : rien à évaluer. Non applicable."
 		},
 		{
 			"criterion": "1.1",
 			"page": "https://chikimuras.github.io/rampe/cockpit/journal/2026-10-15/",
 			"status": "NA",
-			"note": "Tests 1.1.1 à 1.1.8 : Inventaire du DOM rendu dans Chromium (Playwright) : 0 <img>, 0 <svg>, 0 élément role=\"img\", 0 <area>, 0 <object>, 0 <embed>, 0 <canvas>, 0 <input type=\"image\">, 0 <picture>, 0 <figure>, aucune image CSS (background-image à « none » sur tous les éléments, aucun contenu ::before/::after) sur la page de journal du 15/10/2026 (Markdown rendu, titres, listes, code). Aucune image porteuse d’information, aucune zone d’image réactive, aucun bouton image : rien à évaluer. Le caractère Unicode « ⛔ » présent dans le texte est du texte (glyphe d’une police), pas une image au sens du RGAA (aucune balise d’image ni role=\"img\"). Non applicable."
+			"note": "Tests 1.1.1 à 1.1.8 sur la page du journal du 15 octobre 2026 : inventaire du DOM rendu dans Chromium (Playwright), thèmes clair et sombre : 0 <img>, 0 <svg>, 0 role=\"img\", 0 <area>, 0 <object>, 0 <embed>, 0 <canvas>, 0 <input type=\"image\">, 0 <picture>, 0 <figure>, aucune image CSS (background-image, list-style-image, border-image et mask-image à « none » sur tous les éléments). Aucune image porteuse d’information, aucune zone d’image réactive, aucun bouton image : rien à évaluer. Non applicable."
 		},
 		{
 			"criterion": "1.1",
 			"page": "https://chikimuras.github.io/rampe/cockpit/docs/roadmap/",
 			"status": "NA",
-			"note": "Tests 1.1.1 à 1.1.8 : Inventaire du DOM rendu dans Chromium (Playwright) : 0 <img>, 0 <svg>, 0 élément role=\"img\", 0 <area>, 0 <object>, 0 <embed>, 0 <canvas>, 0 <input type=\"image\">, 0 <picture>, 0 <figure>, aucune image CSS (background-image à « none » sur tous les éléments, aucun contenu ::before/::after) sur la feuille de route (listes de tâches avec pastilles « Fait » / « À faire »). Aucune image porteuse d’information, aucune zone d’image réactive, aucun bouton image : rien à évaluer. Le caractère Unicode « ⛔ » présent dans le texte est du texte (glyphe d’une police), pas une image au sens du RGAA (aucune balise d’image ni role=\"img\"). Non applicable."
+			"note": "Tests 1.1.1 à 1.1.8 sur la feuille de route (roadmap) : inventaire du DOM rendu dans Chromium (Playwright), thèmes clair et sombre : 0 <img>, 0 <svg>, 0 role=\"img\", 0 <area>, 0 <object>, 0 <embed>, 0 <canvas>, 0 <input type=\"image\">, 0 <picture>, 0 <figure>, aucune image CSS (background-image, list-style-image, border-image et mask-image à « none » sur tous les éléments). Le symbole ⛔ (2 occurrences, dont la légende « Les ⛔ signalent un besoin d’action humaine ») est un caractère Unicode du texte, pas une image (ni <img>, ni SVG, ni image CSS). Aucune image porteuse d’information, aucune zone d’image réactive, aucun bouton image : rien à évaluer. Non applicable."
 		},
 		{
 			"criterion": "1.1",
 			"page": "https://chikimuras.github.io/rampe/referentiel/5-1/",
 			"status": "NA",
-			"note": "Tests 1.1.1 à 1.1.8 : Inventaire du DOM rendu dans Chromium (Playwright) : 0 <img>, 0 <svg>, 0 élément role=\"img\", 0 <area>, 0 <object>, 0 <embed>, 0 <canvas>, 0 <input type=\"image\">, 0 <picture>, 0 <figure>, aucune image CSS (background-image à « none » sur tous les éléments, aucun contenu ::before/::after) sur la fiche du critère 5.1 (texte officiel, test, méthodologie, encadré de vérification humaine). Aucune image porteuse d’information, aucune zone d’image réactive, aucun bouton image : rien à évaluer. Non applicable."
+			"note": "Tests 1.1.1 à 1.1.8 sur la fiche du critère 5.1 : inventaire du DOM rendu dans Chromium (Playwright), thèmes clair et sombre : 0 <img>, 0 <svg>, 0 role=\"img\", 0 <area>, 0 <object>, 0 <embed>, 0 <canvas>, 0 <input type=\"image\">, 0 <picture>, 0 <figure>, aucune image CSS (background-image, list-style-image, border-image et mask-image à « none » sur tous les éléments). Le séparateur « › » du fil d’Ariane est un contenu CSS ::before de type texte, avec un texte de remplacement vide : ce n’est pas une image au sens du RGAA. Aucune image porteuse d’information, aucune zone d’image réactive, aucun bouton image : rien à évaluer. Non applicable."
 		},
 		{
 			"criterion": "1.1",
 			"page": "https://chikimuras.github.io/rampe/referentiel/1-9/",
 			"status": "NA",
-			"note": "Tests 1.1.1 à 1.1.8 : Inventaire du DOM rendu dans Chromium (Playwright) : 0 <img>, 0 <svg>, 0 élément role=\"img\", 0 <area>, 0 <object>, 0 <embed>, 0 <canvas>, 0 <input type=\"image\">, 0 <picture>, 0 <figure>, aucune image CSS (background-image à « none » sur tous les éléments, aucun contenu ::before/::after) sur la fiche du critère 1.9 (texte officiel, tests, méthodologie, encadré de vérification humaine). Aucune image porteuse d’information, aucune zone d’image réactive, aucun bouton image : rien à évaluer. Non applicable."
+			"note": "Tests 1.1.1 à 1.1.8 sur la fiche du critère 1.9 : inventaire du DOM rendu dans Chromium (Playwright), thèmes clair et sombre : 0 <img>, 0 <svg>, 0 role=\"img\", 0 <area>, 0 <object>, 0 <embed>, 0 <canvas>, 0 <input type=\"image\">, 0 <picture>, 0 <figure>, aucune image CSS (background-image, list-style-image, border-image et mask-image à « none » sur tous les éléments). Le séparateur « › » du fil d’Ariane est un contenu CSS ::before de type texte, avec un texte de remplacement vide : ce n’est pas une image au sens du RGAA. Aucune image porteuse d’information, aucune zone d’image réactive, aucun bouton image : rien à évaluer. Non applicable."
+		},
+		{
+			"criterion": "1.1",
+			"page": "https://chikimuras.github.io/rampe/plan-du-site/",
+			"status": "NA",
+			"note": "Tests 1.1.1 à 1.1.8 sur le plan du site : inventaire du DOM rendu dans Chromium (Playwright), thèmes clair et sombre : 0 <img>, 0 <svg>, 0 role=\"img\", 0 <area>, 0 <object>, 0 <embed>, 0 <canvas>, 0 <input type=\"image\">, 0 <picture>, 0 <figure>, aucune image CSS (background-image, list-style-image, border-image et mask-image à « none » sur tous les éléments). Aucune image porteuse d’information, aucune zone d’image réactive, aucun bouton image : rien à évaluer. Non applicable."
 		},
 		{
 			"criterion": "1.2",
 			"page": "https://chikimuras.github.io/rampe/",
 			"status": "NA",
-			"note": "Tests 1.2.1 à 1.2.6 : Inventaire du DOM rendu dans Chromium (Playwright) : 0 <img>, 0 <svg>, 0 élément role=\"img\", 0 <area>, 0 <object>, 0 <embed>, 0 <canvas>, 0 <input type=\"image\">, 0 <picture>, 0 <figure>, aucune image CSS (background-image à « none » sur tous les éléments, aucun contenu ::before/::after) sur l’accueil (titre, trois paragraphes, navigation principale, pied de page). Aucune image de décoration (<img>, <area>, <object>, <svg>, <canvas>, <embed>) à vérifier. Non applicable."
+			"note": "Tests 1.2.1 à 1.2.6 sur l’accueil : inventaire du DOM rendu dans Chromium (Playwright), thèmes clair et sombre : 0 <img>, 0 <svg>, 0 role=\"img\", 0 <area>, 0 <object>, 0 <embed>, 0 <canvas>, 0 <input type=\"image\">, 0 <picture>, 0 <figure>, aucune image CSS (background-image, list-style-image, border-image et mask-image à « none » sur tous les éléments). Aucune image de décoration à vérifier. Non applicable."
 		},
 		{
 			"criterion": "1.2",
 			"page": "https://chikimuras.github.io/rampe/referentiel/",
 			"status": "NA",
-			"note": "Tests 1.2.1 à 1.2.6 : Inventaire du DOM rendu dans Chromium (Playwright) : 0 <img>, 0 <svg>, 0 élément role=\"img\", 0 <area>, 0 <object>, 0 <embed>, 0 <canvas>, 0 <input type=\"image\">, 0 <picture>, 0 <figure>, aucune image CSS (background-image à « none » sur tous les éléments, aucun contenu ::before/::after) sur la page Référentiel (13 thématiques, 106 liens de critères, encadrés « Explication Rampe »). Aucune image de décoration (<img>, <area>, <object>, <svg>, <canvas>, <embed>) à vérifier. Non applicable."
+			"note": "Tests 1.2.1 à 1.2.6 sur la page Référentiel (liste des 106 critères) : inventaire du DOM rendu dans Chromium (Playwright), thèmes clair et sombre : 0 <img>, 0 <svg>, 0 role=\"img\", 0 <area>, 0 <object>, 0 <embed>, 0 <canvas>, 0 <input type=\"image\">, 0 <picture>, 0 <figure>, aucune image CSS (background-image, list-style-image, border-image et mask-image à « none » sur tous les éléments). Aucune image de décoration à vérifier. Non applicable."
 		},
 		{
 			"criterion": "1.2",
 			"page": "https://chikimuras.github.io/rampe/referentiel/1-1/",
 			"status": "NA",
-			"note": "Tests 1.2.1 à 1.2.6 : Inventaire du DOM rendu dans Chromium (Playwright) : 0 <img>, 0 <svg>, 0 élément role=\"img\", 0 <area>, 0 <object>, 0 <embed>, 0 <canvas>, 0 <input type=\"image\">, 0 <picture>, 0 <figure>, aucune image CSS (background-image à « none » sur tous les éléments, aucun contenu ::before/::after) sur la fiche du critère 1.1 (texte officiel, 8 tests, blocs <details> de méthodologie, liens vers le glossaire). Aucune image de décoration (<img>, <area>, <object>, <svg>, <canvas>, <embed>) à vérifier. Non applicable."
+			"note": "Tests 1.2.1 à 1.2.6 sur la fiche du critère 1.1 : inventaire du DOM rendu dans Chromium (Playwright), thèmes clair et sombre : 0 <img>, 0 <svg>, 0 role=\"img\", 0 <area>, 0 <object>, 0 <embed>, 0 <canvas>, 0 <input type=\"image\">, 0 <picture>, 0 <figure>, aucune image CSS (background-image, list-style-image, border-image et mask-image à « none » sur tous les éléments). Le séparateur « › » du fil d’Ariane est un contenu CSS ::before de type texte, avec un texte de remplacement vide : ce n’est pas une image au sens du RGAA. Aucune image de décoration à vérifier. Non applicable."
 		},
 		{
 			"criterion": "1.2",
 			"page": "https://chikimuras.github.io/rampe/referentiel/glossaire/",
 			"status": "NA",
-			"note": "Tests 1.2.1 à 1.2.6 : Inventaire du DOM rendu dans Chromium (Playwright) : 0 <img>, 0 <svg>, 0 élément role=\"img\", 0 <area>, 0 <object>, 0 <embed>, 0 <canvas>, 0 <input type=\"image\">, 0 <picture>, 0 <figure>, aucune image CSS (background-image à « none » sur tous les éléments, aucun contenu ::before/::after) sur le glossaire (liste de définitions <dl>, ancres). Aucune image de décoration (<img>, <area>, <object>, <svg>, <canvas>, <embed>) à vérifier. Non applicable."
+			"note": "Tests 1.2.1 à 1.2.6 sur le glossaire : inventaire du DOM rendu dans Chromium (Playwright), thèmes clair et sombre : 0 <img>, 0 <svg>, 0 role=\"img\", 0 <area>, 0 <object>, 0 <embed>, 0 <canvas>, 0 <input type=\"image\">, 0 <picture>, 0 <figure>, aucune image CSS (background-image, list-style-image, border-image et mask-image à « none » sur tous les éléments). Aucune image de décoration à vérifier. Non applicable."
 		},
 		{
 			"criterion": "1.2",
 			"page": "https://chikimuras.github.io/rampe/audit/",
 			"status": "NA",
-			"note": "Tests 1.2.1 à 1.2.6 : Inventaire du DOM rendu dans Chromium (Playwright) : 0 <img>, 0 <svg>, 0 élément role=\"img\", 0 <area>, 0 <object>, 0 <embed>, 0 <canvas>, 0 <input type=\"image\">, 0 <picture>, 0 <figure>, aucune image CSS (background-image à « none » sur tous les éléments, aucun contenu ::before/::after) sur l’audit guidé (îlot Preact) (états de l’îlot examinés : état initial, erreur d’adresse (champ aria-invalid + message), 2 pages ajoutées, import d’un rapport automatique (statut « à confirmer », conflit, indices), critère 3.2 affiché, tous les <details> ouverts, boîte de dialogue « Remplacer l’audit en cours ? » ouverte, puis audit complet importé (tableau « Résultat par page », déclaration, schéma pluriannuel)). Aucune image de décoration (<img>, <area>, <object>, <svg>, <canvas>, <embed>) à vérifier. Non applicable."
+			"note": "Tests 1.2.1 à 1.2.6 sur l’audit guidé (îlot Preact ; états de l’îlot examinés : état initial, adresse invalide soumise (message d’erreur), deux pages ajoutées, rapport automatique importé (statuts « à confirmer » sur 1.1 et 3.2, indice 9.2), critère 3.2 affiché, boîte de dialogue « Remplacer l’audit en cours ? » ouverte, puis audit complet de 11 pages importé (résultat, tableau « Résultat par page », déclaration, schéma pluriannuel avec période choisie, actions mises à jour depuis l’audit et action libre ajoutée : tableau des actions), tous les <details> ouverts) : inventaire du DOM rendu dans Chromium (Playwright), thèmes clair et sombre : 0 <img>, 0 <svg>, 0 role=\"img\", 0 <area>, 0 <object>, 0 <embed>, 0 <canvas>, 0 <input type=\"image\">, 0 <picture>, 0 <figure>, aucune image CSS (background-image, list-style-image, border-image et mask-image à « none » sur tous les éléments). Seuls contenus générés : les guillemets ::before/::after des <q> de l’aperçu de la déclaration (texte). Aucune image de décoration à vérifier. Non applicable."
 		},
 		{
 			"criterion": "1.2",
 			"page": "https://chikimuras.github.io/rampe/cockpit/",
 			"status": "NA",
-			"note": "Tests 1.2.1 à 1.2.6 : Inventaire du DOM rendu dans Chromium (Playwright) : 0 <img>, 0 <svg>, 0 élément role=\"img\", 0 <area>, 0 <object>, 0 <embed>, 0 <canvas>, 0 <input type=\"image\">, 0 <picture>, 0 <figure>, aucune image CSS (background-image à « none » sur tous les éléments, aucun contenu ::before/::after) sur le cockpit (encadré « En attente d’Alexandre », 7 barres <progress>, liste des ADR avec pastilles de statut « Accepted », liste des pages du journal). Aucune image de décoration (<img>, <area>, <object>, <svg>, <canvas>, <embed>) à vérifier. Non applicable."
+			"note": "Tests 1.2.1 à 1.2.6 sur le cockpit : inventaire du DOM rendu dans Chromium (Playwright), thèmes clair et sombre : 0 <img>, 0 <svg>, 0 role=\"img\", 0 <area>, 0 <object>, 0 <embed>, 0 <canvas>, 0 <input type=\"image\">, 0 <picture>, 0 <figure>, aucune image CSS (background-image, list-style-image, border-image et mask-image à « none » sur tous les éléments). Aucune image de décoration à vérifier. Non applicable."
 		},
 		{
 			"criterion": "1.2",
 			"page": "https://chikimuras.github.io/rampe/cockpit/adr/0011-cli-audit-playwright/",
 			"status": "NA",
-			"note": "Tests 1.2.1 à 1.2.6 : Inventaire du DOM rendu dans Chromium (Playwright) : 0 <img>, 0 <svg>, 0 élément role=\"img\", 0 <area>, 0 <object>, 0 <embed>, 0 <canvas>, 0 <input type=\"image\">, 0 <picture>, 0 <figure>, aucune image CSS (background-image à « none » sur tous les éléments, aucun contenu ::before/::after) sur la page ADR-0011 (Markdown rendu, tableau, blocs de code). Aucune image de décoration (<img>, <area>, <object>, <svg>, <canvas>, <embed>) à vérifier. Le caractère Unicode « ⛔ » présent dans le texte est du texte (glyphe d’une police), pas une image au sens du RGAA (aucune balise d’image ni role=\"img\"). Non applicable."
+			"note": "Tests 1.2.1 à 1.2.6 sur la page de l’ADR-0011 : inventaire du DOM rendu dans Chromium (Playwright), thèmes clair et sombre : 0 <img>, 0 <svg>, 0 role=\"img\", 0 <area>, 0 <object>, 0 <embed>, 0 <canvas>, 0 <input type=\"image\">, 0 <picture>, 0 <figure>, aucune image CSS (background-image, list-style-image, border-image et mask-image à « none » sur tous les éléments). Aucune image de décoration à vérifier. Non applicable."
 		},
 		{
 			"criterion": "1.2",
 			"page": "https://chikimuras.github.io/rampe/cockpit/journal/2026-10-15/",
 			"status": "NA",
-			"note": "Tests 1.2.1 à 1.2.6 : Inventaire du DOM rendu dans Chromium (Playwright) : 0 <img>, 0 <svg>, 0 élément role=\"img\", 0 <area>, 0 <object>, 0 <embed>, 0 <canvas>, 0 <input type=\"image\">, 0 <picture>, 0 <figure>, aucune image CSS (background-image à « none » sur tous les éléments, aucun contenu ::before/::after) sur la page de journal du 15/10/2026 (Markdown rendu, titres, listes, code). Aucune image de décoration (<img>, <area>, <object>, <svg>, <canvas>, <embed>) à vérifier. Le caractère Unicode « ⛔ » présent dans le texte est du texte (glyphe d’une police), pas une image au sens du RGAA (aucune balise d’image ni role=\"img\"). Non applicable."
+			"note": "Tests 1.2.1 à 1.2.6 sur la page du journal du 15 octobre 2026 : inventaire du DOM rendu dans Chromium (Playwright), thèmes clair et sombre : 0 <img>, 0 <svg>, 0 role=\"img\", 0 <area>, 0 <object>, 0 <embed>, 0 <canvas>, 0 <input type=\"image\">, 0 <picture>, 0 <figure>, aucune image CSS (background-image, list-style-image, border-image et mask-image à « none » sur tous les éléments). Aucune image de décoration à vérifier. Non applicable."
 		},
 		{
 			"criterion": "1.2",
 			"page": "https://chikimuras.github.io/rampe/cockpit/docs/roadmap/",
 			"status": "NA",
-			"note": "Tests 1.2.1 à 1.2.6 : Inventaire du DOM rendu dans Chromium (Playwright) : 0 <img>, 0 <svg>, 0 élément role=\"img\", 0 <area>, 0 <object>, 0 <embed>, 0 <canvas>, 0 <input type=\"image\">, 0 <picture>, 0 <figure>, aucune image CSS (background-image à « none » sur tous les éléments, aucun contenu ::before/::after) sur la feuille de route (listes de tâches avec pastilles « Fait » / « À faire »). Aucune image de décoration (<img>, <area>, <object>, <svg>, <canvas>, <embed>) à vérifier. Le caractère Unicode « ⛔ » présent dans le texte est du texte (glyphe d’une police), pas une image au sens du RGAA (aucune balise d’image ni role=\"img\"). Non applicable."
+			"note": "Tests 1.2.1 à 1.2.6 sur la feuille de route (roadmap) : inventaire du DOM rendu dans Chromium (Playwright), thèmes clair et sombre : 0 <img>, 0 <svg>, 0 role=\"img\", 0 <area>, 0 <object>, 0 <embed>, 0 <canvas>, 0 <input type=\"image\">, 0 <picture>, 0 <figure>, aucune image CSS (background-image, list-style-image, border-image et mask-image à « none » sur tous les éléments). Le symbole ⛔ (2 occurrences, dont la légende « Les ⛔ signalent un besoin d’action humaine ») est un caractère Unicode du texte, pas une image (ni <img>, ni SVG, ni image CSS). Aucune image de décoration à vérifier. Non applicable."
 		},
 		{
 			"criterion": "1.2",
 			"page": "https://chikimuras.github.io/rampe/referentiel/5-1/",
 			"status": "NA",
-			"note": "Tests 1.2.1 à 1.2.6 : Inventaire du DOM rendu dans Chromium (Playwright) : 0 <img>, 0 <svg>, 0 élément role=\"img\", 0 <area>, 0 <object>, 0 <embed>, 0 <canvas>, 0 <input type=\"image\">, 0 <picture>, 0 <figure>, aucune image CSS (background-image à « none » sur tous les éléments, aucun contenu ::before/::after) sur la fiche du critère 5.1 (texte officiel, test, méthodologie, encadré de vérification humaine). Aucune image de décoration (<img>, <area>, <object>, <svg>, <canvas>, <embed>) à vérifier. Non applicable."
+			"note": "Tests 1.2.1 à 1.2.6 sur la fiche du critère 5.1 : inventaire du DOM rendu dans Chromium (Playwright), thèmes clair et sombre : 0 <img>, 0 <svg>, 0 role=\"img\", 0 <area>, 0 <object>, 0 <embed>, 0 <canvas>, 0 <input type=\"image\">, 0 <picture>, 0 <figure>, aucune image CSS (background-image, list-style-image, border-image et mask-image à « none » sur tous les éléments). Le séparateur « › » du fil d’Ariane est un contenu CSS ::before de type texte, avec un texte de remplacement vide : ce n’est pas une image au sens du RGAA. Aucune image de décoration à vérifier. Non applicable."
 		},
 		{
 			"criterion": "1.2",
 			"page": "https://chikimuras.github.io/rampe/referentiel/1-9/",
 			"status": "NA",
-			"note": "Tests 1.2.1 à 1.2.6 : Inventaire du DOM rendu dans Chromium (Playwright) : 0 <img>, 0 <svg>, 0 élément role=\"img\", 0 <area>, 0 <object>, 0 <embed>, 0 <canvas>, 0 <input type=\"image\">, 0 <picture>, 0 <figure>, aucune image CSS (background-image à « none » sur tous les éléments, aucun contenu ::before/::after) sur la fiche du critère 1.9 (texte officiel, tests, méthodologie, encadré de vérification humaine). Aucune image de décoration (<img>, <area>, <object>, <svg>, <canvas>, <embed>) à vérifier. Non applicable."
+			"note": "Tests 1.2.1 à 1.2.6 sur la fiche du critère 1.9 : inventaire du DOM rendu dans Chromium (Playwright), thèmes clair et sombre : 0 <img>, 0 <svg>, 0 role=\"img\", 0 <area>, 0 <object>, 0 <embed>, 0 <canvas>, 0 <input type=\"image\">, 0 <picture>, 0 <figure>, aucune image CSS (background-image, list-style-image, border-image et mask-image à « none » sur tous les éléments). Le séparateur « › » du fil d’Ariane est un contenu CSS ::before de type texte, avec un texte de remplacement vide : ce n’est pas une image au sens du RGAA. Aucune image de décoration à vérifier. Non applicable."
+		},
+		{
+			"criterion": "1.2",
+			"page": "https://chikimuras.github.io/rampe/plan-du-site/",
+			"status": "NA",
+			"note": "Tests 1.2.1 à 1.2.6 sur le plan du site : inventaire du DOM rendu dans Chromium (Playwright), thèmes clair et sombre : 0 <img>, 0 <svg>, 0 role=\"img\", 0 <area>, 0 <object>, 0 <embed>, 0 <canvas>, 0 <input type=\"image\">, 0 <picture>, 0 <figure>, aucune image CSS (background-image, list-style-image, border-image et mask-image à « none » sur tous les éléments). Aucune image de décoration à vérifier. Non applicable."
 		},
 		{
 			"criterion": "1.3",
 			"page": "https://chikimuras.github.io/rampe/",
 			"status": "NA",
-			"note": "Tests 1.3.1 à 1.3.9 : Inventaire du DOM rendu dans Chromium (Playwright) : 0 <img>, 0 <svg>, 0 élément role=\"img\", 0 <area>, 0 <object>, 0 <embed>, 0 <canvas>, 0 <input type=\"image\">, 0 <picture>, 0 <figure>, aucune image CSS (background-image à « none » sur tous les éléments, aucun contenu ::before/::after) sur l’accueil (titre, trois paragraphes, navigation principale, pied de page). Aucune image porteuse d’information, donc aucune alternative textuelle dont juger la pertinence ou la concision. Non applicable."
+			"note": "Tests 1.3.1 à 1.3.9 sur l’accueil : inventaire du DOM rendu dans Chromium (Playwright), thèmes clair et sombre : 0 <img>, 0 <svg>, 0 role=\"img\", 0 <area>, 0 <object>, 0 <embed>, 0 <canvas>, 0 <input type=\"image\">, 0 <picture>, 0 <figure>, aucune image CSS (background-image, list-style-image, border-image et mask-image à « none » sur tous les éléments). Aucune image porteuse d’information, donc aucune alternative dont juger la pertinence. Non applicable."
 		},
 		{
 			"criterion": "1.3",
 			"page": "https://chikimuras.github.io/rampe/referentiel/",
 			"status": "NA",
-			"note": "Tests 1.3.1 à 1.3.9 : Inventaire du DOM rendu dans Chromium (Playwright) : 0 <img>, 0 <svg>, 0 élément role=\"img\", 0 <area>, 0 <object>, 0 <embed>, 0 <canvas>, 0 <input type=\"image\">, 0 <picture>, 0 <figure>, aucune image CSS (background-image à « none » sur tous les éléments, aucun contenu ::before/::after) sur la page Référentiel (13 thématiques, 106 liens de critères, encadrés « Explication Rampe »). Aucune image porteuse d’information, donc aucune alternative textuelle dont juger la pertinence ou la concision. Non applicable."
+			"note": "Tests 1.3.1 à 1.3.9 sur la page Référentiel (liste des 106 critères) : inventaire du DOM rendu dans Chromium (Playwright), thèmes clair et sombre : 0 <img>, 0 <svg>, 0 role=\"img\", 0 <area>, 0 <object>, 0 <embed>, 0 <canvas>, 0 <input type=\"image\">, 0 <picture>, 0 <figure>, aucune image CSS (background-image, list-style-image, border-image et mask-image à « none » sur tous les éléments). Aucune image porteuse d’information, donc aucune alternative dont juger la pertinence. Non applicable."
 		},
 		{
 			"criterion": "1.3",
 			"page": "https://chikimuras.github.io/rampe/referentiel/1-1/",
 			"status": "NA",
-			"note": "Tests 1.3.1 à 1.3.9 : Inventaire du DOM rendu dans Chromium (Playwright) : 0 <img>, 0 <svg>, 0 élément role=\"img\", 0 <area>, 0 <object>, 0 <embed>, 0 <canvas>, 0 <input type=\"image\">, 0 <picture>, 0 <figure>, aucune image CSS (background-image à « none » sur tous les éléments, aucun contenu ::before/::after) sur la fiche du critère 1.1 (texte officiel, 8 tests, blocs <details> de méthodologie, liens vers le glossaire). Aucune image porteuse d’information, donc aucune alternative textuelle dont juger la pertinence ou la concision. Non applicable."
+			"note": "Tests 1.3.1 à 1.3.9 sur la fiche du critère 1.1 : inventaire du DOM rendu dans Chromium (Playwright), thèmes clair et sombre : 0 <img>, 0 <svg>, 0 role=\"img\", 0 <area>, 0 <object>, 0 <embed>, 0 <canvas>, 0 <input type=\"image\">, 0 <picture>, 0 <figure>, aucune image CSS (background-image, list-style-image, border-image et mask-image à « none » sur tous les éléments). Le séparateur « › » du fil d’Ariane est un contenu CSS ::before de type texte, avec un texte de remplacement vide : ce n’est pas une image au sens du RGAA. Aucune image porteuse d’information, donc aucune alternative dont juger la pertinence. Non applicable."
 		},
 		{
 			"criterion": "1.3",
 			"page": "https://chikimuras.github.io/rampe/referentiel/glossaire/",
 			"status": "NA",
-			"note": "Tests 1.3.1 à 1.3.9 : Inventaire du DOM rendu dans Chromium (Playwright) : 0 <img>, 0 <svg>, 0 élément role=\"img\", 0 <area>, 0 <object>, 0 <embed>, 0 <canvas>, 0 <input type=\"image\">, 0 <picture>, 0 <figure>, aucune image CSS (background-image à « none » sur tous les éléments, aucun contenu ::before/::after) sur le glossaire (liste de définitions <dl>, ancres). Aucune image porteuse d’information, donc aucune alternative textuelle dont juger la pertinence ou la concision. Non applicable."
+			"note": "Tests 1.3.1 à 1.3.9 sur le glossaire : inventaire du DOM rendu dans Chromium (Playwright), thèmes clair et sombre : 0 <img>, 0 <svg>, 0 role=\"img\", 0 <area>, 0 <object>, 0 <embed>, 0 <canvas>, 0 <input type=\"image\">, 0 <picture>, 0 <figure>, aucune image CSS (background-image, list-style-image, border-image et mask-image à « none » sur tous les éléments). Aucune image porteuse d’information, donc aucune alternative dont juger la pertinence. Non applicable."
 		},
 		{
 			"criterion": "1.3",
 			"page": "https://chikimuras.github.io/rampe/audit/",
 			"status": "NA",
-			"note": "Tests 1.3.1 à 1.3.9 : Inventaire du DOM rendu dans Chromium (Playwright) : 0 <img>, 0 <svg>, 0 élément role=\"img\", 0 <area>, 0 <object>, 0 <embed>, 0 <canvas>, 0 <input type=\"image\">, 0 <picture>, 0 <figure>, aucune image CSS (background-image à « none » sur tous les éléments, aucun contenu ::before/::after) sur l’audit guidé (îlot Preact) (états de l’îlot examinés : état initial, erreur d’adresse (champ aria-invalid + message), 2 pages ajoutées, import d’un rapport automatique (statut « à confirmer », conflit, indices), critère 3.2 affiché, tous les <details> ouverts, boîte de dialogue « Remplacer l’audit en cours ? » ouverte, puis audit complet importé (tableau « Résultat par page », déclaration, schéma pluriannuel)). Aucune image porteuse d’information, donc aucune alternative textuelle dont juger la pertinence ou la concision. Non applicable."
+			"note": "Tests 1.3.1 à 1.3.9 sur l’audit guidé (îlot Preact ; états de l’îlot examinés : état initial, adresse invalide soumise (message d’erreur), deux pages ajoutées, rapport automatique importé (statuts « à confirmer » sur 1.1 et 3.2, indice 9.2), critère 3.2 affiché, boîte de dialogue « Remplacer l’audit en cours ? » ouverte, puis audit complet de 11 pages importé (résultat, tableau « Résultat par page », déclaration, schéma pluriannuel avec période choisie, actions mises à jour depuis l’audit et action libre ajoutée : tableau des actions), tous les <details> ouverts) : inventaire du DOM rendu dans Chromium (Playwright), thèmes clair et sombre : 0 <img>, 0 <svg>, 0 role=\"img\", 0 <area>, 0 <object>, 0 <embed>, 0 <canvas>, 0 <input type=\"image\">, 0 <picture>, 0 <figure>, aucune image CSS (background-image, list-style-image, border-image et mask-image à « none » sur tous les éléments). Seuls contenus générés : les guillemets ::before/::after des <q> de l’aperçu de la déclaration (texte). Aucune image porteuse d’information, donc aucune alternative dont juger la pertinence. Non applicable."
 		},
 		{
 			"criterion": "1.3",
 			"page": "https://chikimuras.github.io/rampe/cockpit/",
 			"status": "NA",
-			"note": "Tests 1.3.1 à 1.3.9 : Inventaire du DOM rendu dans Chromium (Playwright) : 0 <img>, 0 <svg>, 0 élément role=\"img\", 0 <area>, 0 <object>, 0 <embed>, 0 <canvas>, 0 <input type=\"image\">, 0 <picture>, 0 <figure>, aucune image CSS (background-image à « none » sur tous les éléments, aucun contenu ::before/::after) sur le cockpit (encadré « En attente d’Alexandre », 7 barres <progress>, liste des ADR avec pastilles de statut « Accepted », liste des pages du journal). Aucune image porteuse d’information, donc aucune alternative textuelle dont juger la pertinence ou la concision. Non applicable."
+			"note": "Tests 1.3.1 à 1.3.9 sur le cockpit : inventaire du DOM rendu dans Chromium (Playwright), thèmes clair et sombre : 0 <img>, 0 <svg>, 0 role=\"img\", 0 <area>, 0 <object>, 0 <embed>, 0 <canvas>, 0 <input type=\"image\">, 0 <picture>, 0 <figure>, aucune image CSS (background-image, list-style-image, border-image et mask-image à « none » sur tous les éléments). Aucune image porteuse d’information, donc aucune alternative dont juger la pertinence. Non applicable."
 		},
 		{
 			"criterion": "1.3",
 			"page": "https://chikimuras.github.io/rampe/cockpit/adr/0011-cli-audit-playwright/",
 			"status": "NA",
-			"note": "Tests 1.3.1 à 1.3.9 : Inventaire du DOM rendu dans Chromium (Playwright) : 0 <img>, 0 <svg>, 0 élément role=\"img\", 0 <area>, 0 <object>, 0 <embed>, 0 <canvas>, 0 <input type=\"image\">, 0 <picture>, 0 <figure>, aucune image CSS (background-image à « none » sur tous les éléments, aucun contenu ::before/::after) sur la page ADR-0011 (Markdown rendu, tableau, blocs de code). Aucune image porteuse d’information, donc aucune alternative textuelle dont juger la pertinence ou la concision. Le caractère Unicode « ⛔ » présent dans le texte est du texte (glyphe d’une police), pas une image au sens du RGAA (aucune balise d’image ni role=\"img\"). Non applicable."
+			"note": "Tests 1.3.1 à 1.3.9 sur la page de l’ADR-0011 : inventaire du DOM rendu dans Chromium (Playwright), thèmes clair et sombre : 0 <img>, 0 <svg>, 0 role=\"img\", 0 <area>, 0 <object>, 0 <embed>, 0 <canvas>, 0 <input type=\"image\">, 0 <picture>, 0 <figure>, aucune image CSS (background-image, list-style-image, border-image et mask-image à « none » sur tous les éléments). Aucune image porteuse d’information, donc aucune alternative dont juger la pertinence. Non applicable."
 		},
 		{
 			"criterion": "1.3",
 			"page": "https://chikimuras.github.io/rampe/cockpit/journal/2026-10-15/",
 			"status": "NA",
-			"note": "Tests 1.3.1 à 1.3.9 : Inventaire du DOM rendu dans Chromium (Playwright) : 0 <img>, 0 <svg>, 0 élément role=\"img\", 0 <area>, 0 <object>, 0 <embed>, 0 <canvas>, 0 <input type=\"image\">, 0 <picture>, 0 <figure>, aucune image CSS (background-image à « none » sur tous les éléments, aucun contenu ::before/::after) sur la page de journal du 15/10/2026 (Markdown rendu, titres, listes, code). Aucune image porteuse d’information, donc aucune alternative textuelle dont juger la pertinence ou la concision. Le caractère Unicode « ⛔ » présent dans le texte est du texte (glyphe d’une police), pas une image au sens du RGAA (aucune balise d’image ni role=\"img\"). Non applicable."
+			"note": "Tests 1.3.1 à 1.3.9 sur la page du journal du 15 octobre 2026 : inventaire du DOM rendu dans Chromium (Playwright), thèmes clair et sombre : 0 <img>, 0 <svg>, 0 role=\"img\", 0 <area>, 0 <object>, 0 <embed>, 0 <canvas>, 0 <input type=\"image\">, 0 <picture>, 0 <figure>, aucune image CSS (background-image, list-style-image, border-image et mask-image à « none » sur tous les éléments). Aucune image porteuse d’information, donc aucune alternative dont juger la pertinence. Non applicable."
 		},
 		{
 			"criterion": "1.3",
 			"page": "https://chikimuras.github.io/rampe/cockpit/docs/roadmap/",
 			"status": "NA",
-			"note": "Tests 1.3.1 à 1.3.9 : Inventaire du DOM rendu dans Chromium (Playwright) : 0 <img>, 0 <svg>, 0 élément role=\"img\", 0 <area>, 0 <object>, 0 <embed>, 0 <canvas>, 0 <input type=\"image\">, 0 <picture>, 0 <figure>, aucune image CSS (background-image à « none » sur tous les éléments, aucun contenu ::before/::after) sur la feuille de route (listes de tâches avec pastilles « Fait » / « À faire »). Aucune image porteuse d’information, donc aucune alternative textuelle dont juger la pertinence ou la concision. Le caractère Unicode « ⛔ » présent dans le texte est du texte (glyphe d’une police), pas une image au sens du RGAA (aucune balise d’image ni role=\"img\"). Non applicable."
+			"note": "Tests 1.3.1 à 1.3.9 sur la feuille de route (roadmap) : inventaire du DOM rendu dans Chromium (Playwright), thèmes clair et sombre : 0 <img>, 0 <svg>, 0 role=\"img\", 0 <area>, 0 <object>, 0 <embed>, 0 <canvas>, 0 <input type=\"image\">, 0 <picture>, 0 <figure>, aucune image CSS (background-image, list-style-image, border-image et mask-image à « none » sur tous les éléments). Le symbole ⛔ (2 occurrences, dont la légende « Les ⛔ signalent un besoin d’action humaine ») est un caractère Unicode du texte, pas une image (ni <img>, ni SVG, ni image CSS). Aucune image porteuse d’information, donc aucune alternative dont juger la pertinence. Non applicable."
 		},
 		{
 			"criterion": "1.3",
 			"page": "https://chikimuras.github.io/rampe/referentiel/5-1/",
 			"status": "NA",
-			"note": "Tests 1.3.1 à 1.3.9 : Inventaire du DOM rendu dans Chromium (Playwright) : 0 <img>, 0 <svg>, 0 élément role=\"img\", 0 <area>, 0 <object>, 0 <embed>, 0 <canvas>, 0 <input type=\"image\">, 0 <picture>, 0 <figure>, aucune image CSS (background-image à « none » sur tous les éléments, aucun contenu ::before/::after) sur la fiche du critère 5.1 (texte officiel, test, méthodologie, encadré de vérification humaine). Aucune image porteuse d’information, donc aucune alternative textuelle dont juger la pertinence ou la concision. Non applicable."
+			"note": "Tests 1.3.1 à 1.3.9 sur la fiche du critère 5.1 : inventaire du DOM rendu dans Chromium (Playwright), thèmes clair et sombre : 0 <img>, 0 <svg>, 0 role=\"img\", 0 <area>, 0 <object>, 0 <embed>, 0 <canvas>, 0 <input type=\"image\">, 0 <picture>, 0 <figure>, aucune image CSS (background-image, list-style-image, border-image et mask-image à « none » sur tous les éléments). Le séparateur « › » du fil d’Ariane est un contenu CSS ::before de type texte, avec un texte de remplacement vide : ce n’est pas une image au sens du RGAA. Aucune image porteuse d’information, donc aucune alternative dont juger la pertinence. Non applicable."
 		},
 		{
 			"criterion": "1.3",
 			"page": "https://chikimuras.github.io/rampe/referentiel/1-9/",
 			"status": "NA",
-			"note": "Tests 1.3.1 à 1.3.9 : Inventaire du DOM rendu dans Chromium (Playwright) : 0 <img>, 0 <svg>, 0 élément role=\"img\", 0 <area>, 0 <object>, 0 <embed>, 0 <canvas>, 0 <input type=\"image\">, 0 <picture>, 0 <figure>, aucune image CSS (background-image à « none » sur tous les éléments, aucun contenu ::before/::after) sur la fiche du critère 1.9 (texte officiel, tests, méthodologie, encadré de vérification humaine). Aucune image porteuse d’information, donc aucune alternative textuelle dont juger la pertinence ou la concision. Non applicable."
+			"note": "Tests 1.3.1 à 1.3.9 sur la fiche du critère 1.9 : inventaire du DOM rendu dans Chromium (Playwright), thèmes clair et sombre : 0 <img>, 0 <svg>, 0 role=\"img\", 0 <area>, 0 <object>, 0 <embed>, 0 <canvas>, 0 <input type=\"image\">, 0 <picture>, 0 <figure>, aucune image CSS (background-image, list-style-image, border-image et mask-image à « none » sur tous les éléments). Le séparateur « › » du fil d’Ariane est un contenu CSS ::before de type texte, avec un texte de remplacement vide : ce n’est pas une image au sens du RGAA. Aucune image porteuse d’information, donc aucune alternative dont juger la pertinence. Non applicable."
+		},
+		{
+			"criterion": "1.3",
+			"page": "https://chikimuras.github.io/rampe/plan-du-site/",
+			"status": "NA",
+			"note": "Tests 1.3.1 à 1.3.9 sur le plan du site : inventaire du DOM rendu dans Chromium (Playwright), thèmes clair et sombre : 0 <img>, 0 <svg>, 0 role=\"img\", 0 <area>, 0 <object>, 0 <embed>, 0 <canvas>, 0 <input type=\"image\">, 0 <picture>, 0 <figure>, aucune image CSS (background-image, list-style-image, border-image et mask-image à « none » sur tous les éléments). Aucune image porteuse d’information, donc aucune alternative dont juger la pertinence. Non applicable."
 		},
 		{
 			"criterion": "1.4",
 			"page": "https://chikimuras.github.io/rampe/",
 			"status": "NA",
-			"note": "Tests 1.4.1 à 1.4.7 : Inventaire du DOM rendu dans Chromium (Playwright) : 0 <img>, 0 <svg>, 0 élément role=\"img\", 0 <area>, 0 <object>, 0 <embed>, 0 <canvas>, 0 <input type=\"image\">, 0 <picture>, 0 <figure>, aucune image CSS (background-image à « none » sur tous les éléments, aucun contenu ::before/::after) sur l’accueil (titre, trois paragraphes, navigation principale, pied de page). Aucun CAPTCHA ni image-test sur la page. Non applicable."
+			"note": "Tests 1.4.1 à 1.4.7 sur l’accueil : inventaire du DOM rendu dans Chromium (Playwright), thèmes clair et sombre : 0 <img>, 0 <svg>, 0 role=\"img\", 0 <area>, 0 <object>, 0 <embed>, 0 <canvas>, 0 <input type=\"image\">, 0 <picture>, 0 <figure>, aucune image CSS (background-image, list-style-image, border-image et mask-image à « none » sur tous les éléments). Aucune image utilisée comme CAPTCHA ou image-test. Non applicable."
 		},
 		{
 			"criterion": "1.4",
 			"page": "https://chikimuras.github.io/rampe/referentiel/",
 			"status": "NA",
-			"note": "Tests 1.4.1 à 1.4.7 : Inventaire du DOM rendu dans Chromium (Playwright) : 0 <img>, 0 <svg>, 0 élément role=\"img\", 0 <area>, 0 <object>, 0 <embed>, 0 <canvas>, 0 <input type=\"image\">, 0 <picture>, 0 <figure>, aucune image CSS (background-image à « none » sur tous les éléments, aucun contenu ::before/::after) sur la page Référentiel (13 thématiques, 106 liens de critères, encadrés « Explication Rampe »). Aucun CAPTCHA ni image-test sur la page. Non applicable."
+			"note": "Tests 1.4.1 à 1.4.7 sur la page Référentiel (liste des 106 critères) : inventaire du DOM rendu dans Chromium (Playwright), thèmes clair et sombre : 0 <img>, 0 <svg>, 0 role=\"img\", 0 <area>, 0 <object>, 0 <embed>, 0 <canvas>, 0 <input type=\"image\">, 0 <picture>, 0 <figure>, aucune image CSS (background-image, list-style-image, border-image et mask-image à « none » sur tous les éléments). Aucune image utilisée comme CAPTCHA ou image-test. Non applicable."
 		},
 		{
 			"criterion": "1.4",
 			"page": "https://chikimuras.github.io/rampe/referentiel/1-1/",
 			"status": "NA",
-			"note": "Tests 1.4.1 à 1.4.7 : Inventaire du DOM rendu dans Chromium (Playwright) : 0 <img>, 0 <svg>, 0 élément role=\"img\", 0 <area>, 0 <object>, 0 <embed>, 0 <canvas>, 0 <input type=\"image\">, 0 <picture>, 0 <figure>, aucune image CSS (background-image à « none » sur tous les éléments, aucun contenu ::before/::after) sur la fiche du critère 1.1 (texte officiel, 8 tests, blocs <details> de méthodologie, liens vers le glossaire). Aucun CAPTCHA ni image-test sur la page. Non applicable."
+			"note": "Tests 1.4.1 à 1.4.7 sur la fiche du critère 1.1 : inventaire du DOM rendu dans Chromium (Playwright), thèmes clair et sombre : 0 <img>, 0 <svg>, 0 role=\"img\", 0 <area>, 0 <object>, 0 <embed>, 0 <canvas>, 0 <input type=\"image\">, 0 <picture>, 0 <figure>, aucune image CSS (background-image, list-style-image, border-image et mask-image à « none » sur tous les éléments). Le séparateur « › » du fil d’Ariane est un contenu CSS ::before de type texte, avec un texte de remplacement vide : ce n’est pas une image au sens du RGAA. Aucune image utilisée comme CAPTCHA ou image-test. Non applicable."
 		},
 		{
 			"criterion": "1.4",
 			"page": "https://chikimuras.github.io/rampe/referentiel/glossaire/",
 			"status": "NA",
-			"note": "Tests 1.4.1 à 1.4.7 : Inventaire du DOM rendu dans Chromium (Playwright) : 0 <img>, 0 <svg>, 0 élément role=\"img\", 0 <area>, 0 <object>, 0 <embed>, 0 <canvas>, 0 <input type=\"image\">, 0 <picture>, 0 <figure>, aucune image CSS (background-image à « none » sur tous les éléments, aucun contenu ::before/::after) sur le glossaire (liste de définitions <dl>, ancres). Aucun CAPTCHA ni image-test sur la page. Non applicable."
+			"note": "Tests 1.4.1 à 1.4.7 sur le glossaire : inventaire du DOM rendu dans Chromium (Playwright), thèmes clair et sombre : 0 <img>, 0 <svg>, 0 role=\"img\", 0 <area>, 0 <object>, 0 <embed>, 0 <canvas>, 0 <input type=\"image\">, 0 <picture>, 0 <figure>, aucune image CSS (background-image, list-style-image, border-image et mask-image à « none » sur tous les éléments). Aucune image utilisée comme CAPTCHA ou image-test. Non applicable."
 		},
 		{
 			"criterion": "1.4",
 			"page": "https://chikimuras.github.io/rampe/audit/",
 			"status": "NA",
-			"note": "Tests 1.4.1 à 1.4.7 : Inventaire du DOM rendu dans Chromium (Playwright) : 0 <img>, 0 <svg>, 0 élément role=\"img\", 0 <area>, 0 <object>, 0 <embed>, 0 <canvas>, 0 <input type=\"image\">, 0 <picture>, 0 <figure>, aucune image CSS (background-image à « none » sur tous les éléments, aucun contenu ::before/::after) sur l’audit guidé (îlot Preact) (états de l’îlot examinés : état initial, erreur d’adresse (champ aria-invalid + message), 2 pages ajoutées, import d’un rapport automatique (statut « à confirmer », conflit, indices), critère 3.2 affiché, tous les <details> ouverts, boîte de dialogue « Remplacer l’audit en cours ? » ouverte, puis audit complet importé (tableau « Résultat par page », déclaration, schéma pluriannuel)). Aucun CAPTCHA ni image-test sur la page. Non applicable."
+			"note": "Tests 1.4.1 à 1.4.7 sur l’audit guidé (îlot Preact ; états de l’îlot examinés : état initial, adresse invalide soumise (message d’erreur), deux pages ajoutées, rapport automatique importé (statuts « à confirmer » sur 1.1 et 3.2, indice 9.2), critère 3.2 affiché, boîte de dialogue « Remplacer l’audit en cours ? » ouverte, puis audit complet de 11 pages importé (résultat, tableau « Résultat par page », déclaration, schéma pluriannuel avec période choisie, actions mises à jour depuis l’audit et action libre ajoutée : tableau des actions), tous les <details> ouverts) : inventaire du DOM rendu dans Chromium (Playwright), thèmes clair et sombre : 0 <img>, 0 <svg>, 0 role=\"img\", 0 <area>, 0 <object>, 0 <embed>, 0 <canvas>, 0 <input type=\"image\">, 0 <picture>, 0 <figure>, aucune image CSS (background-image, list-style-image, border-image et mask-image à « none » sur tous les éléments). Seuls contenus générés : les guillemets ::before/::after des <q> de l’aperçu de la déclaration (texte). Aucune image utilisée comme CAPTCHA ou image-test. Non applicable."
 		},
 		{
 			"criterion": "1.4",
 			"page": "https://chikimuras.github.io/rampe/cockpit/",
 			"status": "NA",
-			"note": "Tests 1.4.1 à 1.4.7 : Inventaire du DOM rendu dans Chromium (Playwright) : 0 <img>, 0 <svg>, 0 élément role=\"img\", 0 <area>, 0 <object>, 0 <embed>, 0 <canvas>, 0 <input type=\"image\">, 0 <picture>, 0 <figure>, aucune image CSS (background-image à « none » sur tous les éléments, aucun contenu ::before/::after) sur le cockpit (encadré « En attente d’Alexandre », 7 barres <progress>, liste des ADR avec pastilles de statut « Accepted », liste des pages du journal). Aucun CAPTCHA ni image-test sur la page. Non applicable."
+			"note": "Tests 1.4.1 à 1.4.7 sur le cockpit : inventaire du DOM rendu dans Chromium (Playwright), thèmes clair et sombre : 0 <img>, 0 <svg>, 0 role=\"img\", 0 <area>, 0 <object>, 0 <embed>, 0 <canvas>, 0 <input type=\"image\">, 0 <picture>, 0 <figure>, aucune image CSS (background-image, list-style-image, border-image et mask-image à « none » sur tous les éléments). Aucune image utilisée comme CAPTCHA ou image-test. Non applicable."
 		},
 		{
 			"criterion": "1.4",
 			"page": "https://chikimuras.github.io/rampe/cockpit/adr/0011-cli-audit-playwright/",
 			"status": "NA",
-			"note": "Tests 1.4.1 à 1.4.7 : Inventaire du DOM rendu dans Chromium (Playwright) : 0 <img>, 0 <svg>, 0 élément role=\"img\", 0 <area>, 0 <object>, 0 <embed>, 0 <canvas>, 0 <input type=\"image\">, 0 <picture>, 0 <figure>, aucune image CSS (background-image à « none » sur tous les éléments, aucun contenu ::before/::after) sur la page ADR-0011 (Markdown rendu, tableau, blocs de code). Aucun CAPTCHA ni image-test sur la page. Le caractère Unicode « ⛔ » présent dans le texte est du texte (glyphe d’une police), pas une image au sens du RGAA (aucune balise d’image ni role=\"img\"). Non applicable."
+			"note": "Tests 1.4.1 à 1.4.7 sur la page de l’ADR-0011 : inventaire du DOM rendu dans Chromium (Playwright), thèmes clair et sombre : 0 <img>, 0 <svg>, 0 role=\"img\", 0 <area>, 0 <object>, 0 <embed>, 0 <canvas>, 0 <input type=\"image\">, 0 <picture>, 0 <figure>, aucune image CSS (background-image, list-style-image, border-image et mask-image à « none » sur tous les éléments). Aucune image utilisée comme CAPTCHA ou image-test. Non applicable."
 		},
 		{
 			"criterion": "1.4",
 			"page": "https://chikimuras.github.io/rampe/cockpit/journal/2026-10-15/",
 			"status": "NA",
-			"note": "Tests 1.4.1 à 1.4.7 : Inventaire du DOM rendu dans Chromium (Playwright) : 0 <img>, 0 <svg>, 0 élément role=\"img\", 0 <area>, 0 <object>, 0 <embed>, 0 <canvas>, 0 <input type=\"image\">, 0 <picture>, 0 <figure>, aucune image CSS (background-image à « none » sur tous les éléments, aucun contenu ::before/::after) sur la page de journal du 15/10/2026 (Markdown rendu, titres, listes, code). Aucun CAPTCHA ni image-test sur la page. Le caractère Unicode « ⛔ » présent dans le texte est du texte (glyphe d’une police), pas une image au sens du RGAA (aucune balise d’image ni role=\"img\"). Non applicable."
+			"note": "Tests 1.4.1 à 1.4.7 sur la page du journal du 15 octobre 2026 : inventaire du DOM rendu dans Chromium (Playwright), thèmes clair et sombre : 0 <img>, 0 <svg>, 0 role=\"img\", 0 <area>, 0 <object>, 0 <embed>, 0 <canvas>, 0 <input type=\"image\">, 0 <picture>, 0 <figure>, aucune image CSS (background-image, list-style-image, border-image et mask-image à « none » sur tous les éléments). Aucune image utilisée comme CAPTCHA ou image-test. Non applicable."
 		},
 		{
 			"criterion": "1.4",
 			"page": "https://chikimuras.github.io/rampe/cockpit/docs/roadmap/",
 			"status": "NA",
-			"note": "Tests 1.4.1 à 1.4.7 : Inventaire du DOM rendu dans Chromium (Playwright) : 0 <img>, 0 <svg>, 0 élément role=\"img\", 0 <area>, 0 <object>, 0 <embed>, 0 <canvas>, 0 <input type=\"image\">, 0 <picture>, 0 <figure>, aucune image CSS (background-image à « none » sur tous les éléments, aucun contenu ::before/::after) sur la feuille de route (listes de tâches avec pastilles « Fait » / « À faire »). Aucun CAPTCHA ni image-test sur la page. Le caractère Unicode « ⛔ » présent dans le texte est du texte (glyphe d’une police), pas une image au sens du RGAA (aucune balise d’image ni role=\"img\"). Non applicable."
+			"note": "Tests 1.4.1 à 1.4.7 sur la feuille de route (roadmap) : inventaire du DOM rendu dans Chromium (Playwright), thèmes clair et sombre : 0 <img>, 0 <svg>, 0 role=\"img\", 0 <area>, 0 <object>, 0 <embed>, 0 <canvas>, 0 <input type=\"image\">, 0 <picture>, 0 <figure>, aucune image CSS (background-image, list-style-image, border-image et mask-image à « none » sur tous les éléments). Le symbole ⛔ (2 occurrences, dont la légende « Les ⛔ signalent un besoin d’action humaine ») est un caractère Unicode du texte, pas une image (ni <img>, ni SVG, ni image CSS). Aucune image utilisée comme CAPTCHA ou image-test. Non applicable."
 		},
 		{
 			"criterion": "1.4",
 			"page": "https://chikimuras.github.io/rampe/referentiel/5-1/",
 			"status": "NA",
-			"note": "Tests 1.4.1 à 1.4.7 : Inventaire du DOM rendu dans Chromium (Playwright) : 0 <img>, 0 <svg>, 0 élément role=\"img\", 0 <area>, 0 <object>, 0 <embed>, 0 <canvas>, 0 <input type=\"image\">, 0 <picture>, 0 <figure>, aucune image CSS (background-image à « none » sur tous les éléments, aucun contenu ::before/::after) sur la fiche du critère 5.1 (texte officiel, test, méthodologie, encadré de vérification humaine). Aucun CAPTCHA ni image-test sur la page. Non applicable."
+			"note": "Tests 1.4.1 à 1.4.7 sur la fiche du critère 5.1 : inventaire du DOM rendu dans Chromium (Playwright), thèmes clair et sombre : 0 <img>, 0 <svg>, 0 role=\"img\", 0 <area>, 0 <object>, 0 <embed>, 0 <canvas>, 0 <input type=\"image\">, 0 <picture>, 0 <figure>, aucune image CSS (background-image, list-style-image, border-image et mask-image à « none » sur tous les éléments). Le séparateur « › » du fil d’Ariane est un contenu CSS ::before de type texte, avec un texte de remplacement vide : ce n’est pas une image au sens du RGAA. Aucune image utilisée comme CAPTCHA ou image-test. Non applicable."
 		},
 		{
 			"criterion": "1.4",
 			"page": "https://chikimuras.github.io/rampe/referentiel/1-9/",
 			"status": "NA",
-			"note": "Tests 1.4.1 à 1.4.7 : Inventaire du DOM rendu dans Chromium (Playwright) : 0 <img>, 0 <svg>, 0 élément role=\"img\", 0 <area>, 0 <object>, 0 <embed>, 0 <canvas>, 0 <input type=\"image\">, 0 <picture>, 0 <figure>, aucune image CSS (background-image à « none » sur tous les éléments, aucun contenu ::before/::after) sur la fiche du critère 1.9 (texte officiel, tests, méthodologie, encadré de vérification humaine). Aucun CAPTCHA ni image-test sur la page. Non applicable."
+			"note": "Tests 1.4.1 à 1.4.7 sur la fiche du critère 1.9 : inventaire du DOM rendu dans Chromium (Playwright), thèmes clair et sombre : 0 <img>, 0 <svg>, 0 role=\"img\", 0 <area>, 0 <object>, 0 <embed>, 0 <canvas>, 0 <input type=\"image\">, 0 <picture>, 0 <figure>, aucune image CSS (background-image, list-style-image, border-image et mask-image à « none » sur tous les éléments). Le séparateur « › » du fil d’Ariane est un contenu CSS ::before de type texte, avec un texte de remplacement vide : ce n’est pas une image au sens du RGAA. Aucune image utilisée comme CAPTCHA ou image-test. Non applicable."
+		},
+		{
+			"criterion": "1.4",
+			"page": "https://chikimuras.github.io/rampe/plan-du-site/",
+			"status": "NA",
+			"note": "Tests 1.4.1 à 1.4.7 sur le plan du site : inventaire du DOM rendu dans Chromium (Playwright), thèmes clair et sombre : 0 <img>, 0 <svg>, 0 role=\"img\", 0 <area>, 0 <object>, 0 <embed>, 0 <canvas>, 0 <input type=\"image\">, 0 <picture>, 0 <figure>, aucune image CSS (background-image, list-style-image, border-image et mask-image à « none » sur tous les éléments). Aucune image utilisée comme CAPTCHA ou image-test. Non applicable."
 		},
 		{
 			"criterion": "1.5",
 			"page": "https://chikimuras.github.io/rampe/",
 			"status": "NA",
-			"note": "Tests 1.5.1 et 1.5.2 : Inventaire du DOM rendu dans Chromium (Playwright) : 0 <img>, 0 <svg>, 0 élément role=\"img\", 0 <area>, 0 <object>, 0 <embed>, 0 <canvas>, 0 <input type=\"image\">, 0 <picture>, 0 <figure>, aucune image CSS (background-image à « none » sur tous les éléments, aucun contenu ::before/::after) sur l’accueil (titre, trois paragraphes, navigation principale, pied de page). Aucun CAPTCHA (graphique ou bouton image) sur la page. Non applicable."
+			"note": "Tests 1.5.1 et 1.5.2 sur l’accueil : inventaire du DOM rendu dans Chromium (Playwright), thèmes clair et sombre : 0 <img>, 0 <svg>, 0 role=\"img\", 0 <area>, 0 <object>, 0 <embed>, 0 <canvas>, 0 <input type=\"image\">, 0 <picture>, 0 <figure>, aucune image CSS (background-image, list-style-image, border-image et mask-image à « none » sur tous les éléments). Aucun CAPTCHA. Non applicable."
 		},
 		{
 			"criterion": "1.5",
 			"page": "https://chikimuras.github.io/rampe/referentiel/",
 			"status": "NA",
-			"note": "Tests 1.5.1 et 1.5.2 : Inventaire du DOM rendu dans Chromium (Playwright) : 0 <img>, 0 <svg>, 0 élément role=\"img\", 0 <area>, 0 <object>, 0 <embed>, 0 <canvas>, 0 <input type=\"image\">, 0 <picture>, 0 <figure>, aucune image CSS (background-image à « none » sur tous les éléments, aucun contenu ::before/::after) sur la page Référentiel (13 thématiques, 106 liens de critères, encadrés « Explication Rampe »). Aucun CAPTCHA (graphique ou bouton image) sur la page. Non applicable."
+			"note": "Tests 1.5.1 et 1.5.2 sur la page Référentiel (liste des 106 critères) : inventaire du DOM rendu dans Chromium (Playwright), thèmes clair et sombre : 0 <img>, 0 <svg>, 0 role=\"img\", 0 <area>, 0 <object>, 0 <embed>, 0 <canvas>, 0 <input type=\"image\">, 0 <picture>, 0 <figure>, aucune image CSS (background-image, list-style-image, border-image et mask-image à « none » sur tous les éléments). Aucun CAPTCHA. Non applicable."
 		},
 		{
 			"criterion": "1.5",
 			"page": "https://chikimuras.github.io/rampe/referentiel/1-1/",
 			"status": "NA",
-			"note": "Tests 1.5.1 et 1.5.2 : Inventaire du DOM rendu dans Chromium (Playwright) : 0 <img>, 0 <svg>, 0 élément role=\"img\", 0 <area>, 0 <object>, 0 <embed>, 0 <canvas>, 0 <input type=\"image\">, 0 <picture>, 0 <figure>, aucune image CSS (background-image à « none » sur tous les éléments, aucun contenu ::before/::after) sur la fiche du critère 1.1 (texte officiel, 8 tests, blocs <details> de méthodologie, liens vers le glossaire). Aucun CAPTCHA (graphique ou bouton image) sur la page. Non applicable."
+			"note": "Tests 1.5.1 et 1.5.2 sur la fiche du critère 1.1 : inventaire du DOM rendu dans Chromium (Playwright), thèmes clair et sombre : 0 <img>, 0 <svg>, 0 role=\"img\", 0 <area>, 0 <object>, 0 <embed>, 0 <canvas>, 0 <input type=\"image\">, 0 <picture>, 0 <figure>, aucune image CSS (background-image, list-style-image, border-image et mask-image à « none » sur tous les éléments). Le séparateur « › » du fil d’Ariane est un contenu CSS ::before de type texte, avec un texte de remplacement vide : ce n’est pas une image au sens du RGAA. Aucun CAPTCHA. Non applicable."
 		},
 		{
 			"criterion": "1.5",
 			"page": "https://chikimuras.github.io/rampe/referentiel/glossaire/",
 			"status": "NA",
-			"note": "Tests 1.5.1 et 1.5.2 : Inventaire du DOM rendu dans Chromium (Playwright) : 0 <img>, 0 <svg>, 0 élément role=\"img\", 0 <area>, 0 <object>, 0 <embed>, 0 <canvas>, 0 <input type=\"image\">, 0 <picture>, 0 <figure>, aucune image CSS (background-image à « none » sur tous les éléments, aucun contenu ::before/::after) sur le glossaire (liste de définitions <dl>, ancres). Aucun CAPTCHA (graphique ou bouton image) sur la page. Non applicable."
+			"note": "Tests 1.5.1 et 1.5.2 sur le glossaire : inventaire du DOM rendu dans Chromium (Playwright), thèmes clair et sombre : 0 <img>, 0 <svg>, 0 role=\"img\", 0 <area>, 0 <object>, 0 <embed>, 0 <canvas>, 0 <input type=\"image\">, 0 <picture>, 0 <figure>, aucune image CSS (background-image, list-style-image, border-image et mask-image à « none » sur tous les éléments). Aucun CAPTCHA. Non applicable."
 		},
 		{
 			"criterion": "1.5",
 			"page": "https://chikimuras.github.io/rampe/audit/",
 			"status": "NA",
-			"note": "Tests 1.5.1 et 1.5.2 : Inventaire du DOM rendu dans Chromium (Playwright) : 0 <img>, 0 <svg>, 0 élément role=\"img\", 0 <area>, 0 <object>, 0 <embed>, 0 <canvas>, 0 <input type=\"image\">, 0 <picture>, 0 <figure>, aucune image CSS (background-image à « none » sur tous les éléments, aucun contenu ::before/::after) sur l’audit guidé (îlot Preact) (états de l’îlot examinés : état initial, erreur d’adresse (champ aria-invalid + message), 2 pages ajoutées, import d’un rapport automatique (statut « à confirmer », conflit, indices), critère 3.2 affiché, tous les <details> ouverts, boîte de dialogue « Remplacer l’audit en cours ? » ouverte, puis audit complet importé (tableau « Résultat par page », déclaration, schéma pluriannuel)). Aucun CAPTCHA (graphique ou bouton image) sur la page. Non applicable."
+			"note": "Tests 1.5.1 et 1.5.2 sur l’audit guidé (îlot Preact ; états de l’îlot examinés : état initial, adresse invalide soumise (message d’erreur), deux pages ajoutées, rapport automatique importé (statuts « à confirmer » sur 1.1 et 3.2, indice 9.2), critère 3.2 affiché, boîte de dialogue « Remplacer l’audit en cours ? » ouverte, puis audit complet de 11 pages importé (résultat, tableau « Résultat par page », déclaration, schéma pluriannuel avec période choisie, actions mises à jour depuis l’audit et action libre ajoutée : tableau des actions), tous les <details> ouverts) : inventaire du DOM rendu dans Chromium (Playwright), thèmes clair et sombre : 0 <img>, 0 <svg>, 0 role=\"img\", 0 <area>, 0 <object>, 0 <embed>, 0 <canvas>, 0 <input type=\"image\">, 0 <picture>, 0 <figure>, aucune image CSS (background-image, list-style-image, border-image et mask-image à « none » sur tous les éléments). Seuls contenus générés : les guillemets ::before/::after des <q> de l’aperçu de la déclaration (texte). Aucun CAPTCHA. Non applicable."
 		},
 		{
 			"criterion": "1.5",
 			"page": "https://chikimuras.github.io/rampe/cockpit/",
 			"status": "NA",
-			"note": "Tests 1.5.1 et 1.5.2 : Inventaire du DOM rendu dans Chromium (Playwright) : 0 <img>, 0 <svg>, 0 élément role=\"img\", 0 <area>, 0 <object>, 0 <embed>, 0 <canvas>, 0 <input type=\"image\">, 0 <picture>, 0 <figure>, aucune image CSS (background-image à « none » sur tous les éléments, aucun contenu ::before/::after) sur le cockpit (encadré « En attente d’Alexandre », 7 barres <progress>, liste des ADR avec pastilles de statut « Accepted », liste des pages du journal). Aucun CAPTCHA (graphique ou bouton image) sur la page. Non applicable."
+			"note": "Tests 1.5.1 et 1.5.2 sur le cockpit : inventaire du DOM rendu dans Chromium (Playwright), thèmes clair et sombre : 0 <img>, 0 <svg>, 0 role=\"img\", 0 <area>, 0 <object>, 0 <embed>, 0 <canvas>, 0 <input type=\"image\">, 0 <picture>, 0 <figure>, aucune image CSS (background-image, list-style-image, border-image et mask-image à « none » sur tous les éléments). Aucun CAPTCHA. Non applicable."
 		},
 		{
 			"criterion": "1.5",
 			"page": "https://chikimuras.github.io/rampe/cockpit/adr/0011-cli-audit-playwright/",
 			"status": "NA",
-			"note": "Tests 1.5.1 et 1.5.2 : Inventaire du DOM rendu dans Chromium (Playwright) : 0 <img>, 0 <svg>, 0 élément role=\"img\", 0 <area>, 0 <object>, 0 <embed>, 0 <canvas>, 0 <input type=\"image\">, 0 <picture>, 0 <figure>, aucune image CSS (background-image à « none » sur tous les éléments, aucun contenu ::before/::after) sur la page ADR-0011 (Markdown rendu, tableau, blocs de code). Aucun CAPTCHA (graphique ou bouton image) sur la page. Le caractère Unicode « ⛔ » présent dans le texte est du texte (glyphe d’une police), pas une image au sens du RGAA (aucune balise d’image ni role=\"img\"). Non applicable."
+			"note": "Tests 1.5.1 et 1.5.2 sur la page de l’ADR-0011 : inventaire du DOM rendu dans Chromium (Playwright), thèmes clair et sombre : 0 <img>, 0 <svg>, 0 role=\"img\", 0 <area>, 0 <object>, 0 <embed>, 0 <canvas>, 0 <input type=\"image\">, 0 <picture>, 0 <figure>, aucune image CSS (background-image, list-style-image, border-image et mask-image à « none » sur tous les éléments). Aucun CAPTCHA. Non applicable."
 		},
 		{
 			"criterion": "1.5",
 			"page": "https://chikimuras.github.io/rampe/cockpit/journal/2026-10-15/",
 			"status": "NA",
-			"note": "Tests 1.5.1 et 1.5.2 : Inventaire du DOM rendu dans Chromium (Playwright) : 0 <img>, 0 <svg>, 0 élément role=\"img\", 0 <area>, 0 <object>, 0 <embed>, 0 <canvas>, 0 <input type=\"image\">, 0 <picture>, 0 <figure>, aucune image CSS (background-image à « none » sur tous les éléments, aucun contenu ::before/::after) sur la page de journal du 15/10/2026 (Markdown rendu, titres, listes, code). Aucun CAPTCHA (graphique ou bouton image) sur la page. Le caractère Unicode « ⛔ » présent dans le texte est du texte (glyphe d’une police), pas une image au sens du RGAA (aucune balise d’image ni role=\"img\"). Non applicable."
+			"note": "Tests 1.5.1 et 1.5.2 sur la page du journal du 15 octobre 2026 : inventaire du DOM rendu dans Chromium (Playwright), thèmes clair et sombre : 0 <img>, 0 <svg>, 0 role=\"img\", 0 <area>, 0 <object>, 0 <embed>, 0 <canvas>, 0 <input type=\"image\">, 0 <picture>, 0 <figure>, aucune image CSS (background-image, list-style-image, border-image et mask-image à « none » sur tous les éléments). Aucun CAPTCHA. Non applicable."
 		},
 		{
 			"criterion": "1.5",
 			"page": "https://chikimuras.github.io/rampe/cockpit/docs/roadmap/",
 			"status": "NA",
-			"note": "Tests 1.5.1 et 1.5.2 : Inventaire du DOM rendu dans Chromium (Playwright) : 0 <img>, 0 <svg>, 0 élément role=\"img\", 0 <area>, 0 <object>, 0 <embed>, 0 <canvas>, 0 <input type=\"image\">, 0 <picture>, 0 <figure>, aucune image CSS (background-image à « none » sur tous les éléments, aucun contenu ::before/::after) sur la feuille de route (listes de tâches avec pastilles « Fait » / « À faire »). Aucun CAPTCHA (graphique ou bouton image) sur la page. Le caractère Unicode « ⛔ » présent dans le texte est du texte (glyphe d’une police), pas une image au sens du RGAA (aucune balise d’image ni role=\"img\"). Non applicable."
+			"note": "Tests 1.5.1 et 1.5.2 sur la feuille de route (roadmap) : inventaire du DOM rendu dans Chromium (Playwright), thèmes clair et sombre : 0 <img>, 0 <svg>, 0 role=\"img\", 0 <area>, 0 <object>, 0 <embed>, 0 <canvas>, 0 <input type=\"image\">, 0 <picture>, 0 <figure>, aucune image CSS (background-image, list-style-image, border-image et mask-image à « none » sur tous les éléments). Le symbole ⛔ (2 occurrences, dont la légende « Les ⛔ signalent un besoin d’action humaine ») est un caractère Unicode du texte, pas une image (ni <img>, ni SVG, ni image CSS). Aucun CAPTCHA. Non applicable."
 		},
 		{
 			"criterion": "1.5",
 			"page": "https://chikimuras.github.io/rampe/referentiel/5-1/",
 			"status": "NA",
-			"note": "Tests 1.5.1 et 1.5.2 : Inventaire du DOM rendu dans Chromium (Playwright) : 0 <img>, 0 <svg>, 0 élément role=\"img\", 0 <area>, 0 <object>, 0 <embed>, 0 <canvas>, 0 <input type=\"image\">, 0 <picture>, 0 <figure>, aucune image CSS (background-image à « none » sur tous les éléments, aucun contenu ::before/::after) sur la fiche du critère 5.1 (texte officiel, test, méthodologie, encadré de vérification humaine). Aucun CAPTCHA (graphique ou bouton image) sur la page. Non applicable."
+			"note": "Tests 1.5.1 et 1.5.2 sur la fiche du critère 5.1 : inventaire du DOM rendu dans Chromium (Playwright), thèmes clair et sombre : 0 <img>, 0 <svg>, 0 role=\"img\", 0 <area>, 0 <object>, 0 <embed>, 0 <canvas>, 0 <input type=\"image\">, 0 <picture>, 0 <figure>, aucune image CSS (background-image, list-style-image, border-image et mask-image à « none » sur tous les éléments). Le séparateur « › » du fil d’Ariane est un contenu CSS ::before de type texte, avec un texte de remplacement vide : ce n’est pas une image au sens du RGAA. Aucun CAPTCHA. Non applicable."
 		},
 		{
 			"criterion": "1.5",
 			"page": "https://chikimuras.github.io/rampe/referentiel/1-9/",
 			"status": "NA",
-			"note": "Tests 1.5.1 et 1.5.2 : Inventaire du DOM rendu dans Chromium (Playwright) : 0 <img>, 0 <svg>, 0 élément role=\"img\", 0 <area>, 0 <object>, 0 <embed>, 0 <canvas>, 0 <input type=\"image\">, 0 <picture>, 0 <figure>, aucune image CSS (background-image à « none » sur tous les éléments, aucun contenu ::before/::after) sur la fiche du critère 1.9 (texte officiel, tests, méthodologie, encadré de vérification humaine). Aucun CAPTCHA (graphique ou bouton image) sur la page. Non applicable."
+			"note": "Tests 1.5.1 et 1.5.2 sur la fiche du critère 1.9 : inventaire du DOM rendu dans Chromium (Playwright), thèmes clair et sombre : 0 <img>, 0 <svg>, 0 role=\"img\", 0 <area>, 0 <object>, 0 <embed>, 0 <canvas>, 0 <input type=\"image\">, 0 <picture>, 0 <figure>, aucune image CSS (background-image, list-style-image, border-image et mask-image à « none » sur tous les éléments). Le séparateur « › » du fil d’Ariane est un contenu CSS ::before de type texte, avec un texte de remplacement vide : ce n’est pas une image au sens du RGAA. Aucun CAPTCHA. Non applicable."
+		},
+		{
+			"criterion": "1.5",
+			"page": "https://chikimuras.github.io/rampe/plan-du-site/",
+			"status": "NA",
+			"note": "Tests 1.5.1 et 1.5.2 sur le plan du site : inventaire du DOM rendu dans Chromium (Playwright), thèmes clair et sombre : 0 <img>, 0 <svg>, 0 role=\"img\", 0 <area>, 0 <object>, 0 <embed>, 0 <canvas>, 0 <input type=\"image\">, 0 <picture>, 0 <figure>, aucune image CSS (background-image, list-style-image, border-image et mask-image à « none » sur tous les éléments). Aucun CAPTCHA. Non applicable."
 		},
 		{
 			"criterion": "1.6",
 			"page": "https://chikimuras.github.io/rampe/",
 			"status": "NA",
-			"note": "Tests 1.6.1 à 1.6.10 : Inventaire du DOM rendu dans Chromium (Playwright) : 0 <img>, 0 <svg>, 0 élément role=\"img\", 0 <area>, 0 <object>, 0 <embed>, 0 <canvas>, 0 <input type=\"image\">, 0 <picture>, 0 <figure>, aucune image CSS (background-image à « none » sur tous les éléments, aucun contenu ::before/::after) sur l’accueil (titre, trois paragraphes, navigation principale, pied de page). Aucune image porteuse d’information, donc aucune image nécessitant une description détaillée. Non applicable."
+			"note": "Tests 1.6.1 à 1.6.10 sur l’accueil : inventaire du DOM rendu dans Chromium (Playwright), thèmes clair et sombre : 0 <img>, 0 <svg>, 0 role=\"img\", 0 <area>, 0 <object>, 0 <embed>, 0 <canvas>, 0 <input type=\"image\">, 0 <picture>, 0 <figure>, aucune image CSS (background-image, list-style-image, border-image et mask-image à « none » sur tous les éléments). Aucune image porteuse d’information nécessitant une description détaillée. Non applicable."
 		},
 		{
 			"criterion": "1.6",
 			"page": "https://chikimuras.github.io/rampe/referentiel/",
 			"status": "NA",
-			"note": "Tests 1.6.1 à 1.6.10 : Inventaire du DOM rendu dans Chromium (Playwright) : 0 <img>, 0 <svg>, 0 élément role=\"img\", 0 <area>, 0 <object>, 0 <embed>, 0 <canvas>, 0 <input type=\"image\">, 0 <picture>, 0 <figure>, aucune image CSS (background-image à « none » sur tous les éléments, aucun contenu ::before/::after) sur la page Référentiel (13 thématiques, 106 liens de critères, encadrés « Explication Rampe »). Aucune image porteuse d’information, donc aucune image nécessitant une description détaillée. Non applicable."
+			"note": "Tests 1.6.1 à 1.6.10 sur la page Référentiel (liste des 106 critères) : inventaire du DOM rendu dans Chromium (Playwright), thèmes clair et sombre : 0 <img>, 0 <svg>, 0 role=\"img\", 0 <area>, 0 <object>, 0 <embed>, 0 <canvas>, 0 <input type=\"image\">, 0 <picture>, 0 <figure>, aucune image CSS (background-image, list-style-image, border-image et mask-image à « none » sur tous les éléments). Aucune image porteuse d’information nécessitant une description détaillée. Non applicable."
 		},
 		{
 			"criterion": "1.6",
 			"page": "https://chikimuras.github.io/rampe/referentiel/1-1/",
 			"status": "NA",
-			"note": "Tests 1.6.1 à 1.6.10 : Inventaire du DOM rendu dans Chromium (Playwright) : 0 <img>, 0 <svg>, 0 élément role=\"img\", 0 <area>, 0 <object>, 0 <embed>, 0 <canvas>, 0 <input type=\"image\">, 0 <picture>, 0 <figure>, aucune image CSS (background-image à « none » sur tous les éléments, aucun contenu ::before/::after) sur la fiche du critère 1.1 (texte officiel, 8 tests, blocs <details> de méthodologie, liens vers le glossaire). Aucune image porteuse d’information, donc aucune image nécessitant une description détaillée. Non applicable."
+			"note": "Tests 1.6.1 à 1.6.10 sur la fiche du critère 1.1 : inventaire du DOM rendu dans Chromium (Playwright), thèmes clair et sombre : 0 <img>, 0 <svg>, 0 role=\"img\", 0 <area>, 0 <object>, 0 <embed>, 0 <canvas>, 0 <input type=\"image\">, 0 <picture>, 0 <figure>, aucune image CSS (background-image, list-style-image, border-image et mask-image à « none » sur tous les éléments). Le séparateur « › » du fil d’Ariane est un contenu CSS ::before de type texte, avec un texte de remplacement vide : ce n’est pas une image au sens du RGAA. Aucune image porteuse d’information nécessitant une description détaillée. Non applicable."
 		},
 		{
 			"criterion": "1.6",
 			"page": "https://chikimuras.github.io/rampe/referentiel/glossaire/",
 			"status": "NA",
-			"note": "Tests 1.6.1 à 1.6.10 : Inventaire du DOM rendu dans Chromium (Playwright) : 0 <img>, 0 <svg>, 0 élément role=\"img\", 0 <area>, 0 <object>, 0 <embed>, 0 <canvas>, 0 <input type=\"image\">, 0 <picture>, 0 <figure>, aucune image CSS (background-image à « none » sur tous les éléments, aucun contenu ::before/::after) sur le glossaire (liste de définitions <dl>, ancres). Aucune image porteuse d’information, donc aucune image nécessitant une description détaillée. Non applicable."
+			"note": "Tests 1.6.1 à 1.6.10 sur le glossaire : inventaire du DOM rendu dans Chromium (Playwright), thèmes clair et sombre : 0 <img>, 0 <svg>, 0 role=\"img\", 0 <area>, 0 <object>, 0 <embed>, 0 <canvas>, 0 <input type=\"image\">, 0 <picture>, 0 <figure>, aucune image CSS (background-image, list-style-image, border-image et mask-image à « none » sur tous les éléments). Aucune image porteuse d’information nécessitant une description détaillée. Non applicable."
 		},
 		{
 			"criterion": "1.6",
 			"page": "https://chikimuras.github.io/rampe/audit/",
 			"status": "NA",
-			"note": "Tests 1.6.1 à 1.6.10 : Inventaire du DOM rendu dans Chromium (Playwright) : 0 <img>, 0 <svg>, 0 élément role=\"img\", 0 <area>, 0 <object>, 0 <embed>, 0 <canvas>, 0 <input type=\"image\">, 0 <picture>, 0 <figure>, aucune image CSS (background-image à « none » sur tous les éléments, aucun contenu ::before/::after) sur l’audit guidé (îlot Preact) (états de l’îlot examinés : état initial, erreur d’adresse (champ aria-invalid + message), 2 pages ajoutées, import d’un rapport automatique (statut « à confirmer », conflit, indices), critère 3.2 affiché, tous les <details> ouverts, boîte de dialogue « Remplacer l’audit en cours ? » ouverte, puis audit complet importé (tableau « Résultat par page », déclaration, schéma pluriannuel)). Aucune image porteuse d’information, donc aucune image nécessitant une description détaillée. Non applicable."
+			"note": "Tests 1.6.1 à 1.6.10 sur l’audit guidé (îlot Preact ; états de l’îlot examinés : état initial, adresse invalide soumise (message d’erreur), deux pages ajoutées, rapport automatique importé (statuts « à confirmer » sur 1.1 et 3.2, indice 9.2), critère 3.2 affiché, boîte de dialogue « Remplacer l’audit en cours ? » ouverte, puis audit complet de 11 pages importé (résultat, tableau « Résultat par page », déclaration, schéma pluriannuel avec période choisie, actions mises à jour depuis l’audit et action libre ajoutée : tableau des actions), tous les <details> ouverts) : inventaire du DOM rendu dans Chromium (Playwright), thèmes clair et sombre : 0 <img>, 0 <svg>, 0 role=\"img\", 0 <area>, 0 <object>, 0 <embed>, 0 <canvas>, 0 <input type=\"image\">, 0 <picture>, 0 <figure>, aucune image CSS (background-image, list-style-image, border-image et mask-image à « none » sur tous les éléments). Seuls contenus générés : les guillemets ::before/::after des <q> de l’aperçu de la déclaration (texte). Aucune image porteuse d’information nécessitant une description détaillée. Non applicable."
 		},
 		{
 			"criterion": "1.6",
 			"page": "https://chikimuras.github.io/rampe/cockpit/",
 			"status": "NA",
-			"note": "Tests 1.6.1 à 1.6.10 : Inventaire du DOM rendu dans Chromium (Playwright) : 0 <img>, 0 <svg>, 0 élément role=\"img\", 0 <area>, 0 <object>, 0 <embed>, 0 <canvas>, 0 <input type=\"image\">, 0 <picture>, 0 <figure>, aucune image CSS (background-image à « none » sur tous les éléments, aucun contenu ::before/::after) sur le cockpit (encadré « En attente d’Alexandre », 7 barres <progress>, liste des ADR avec pastilles de statut « Accepted », liste des pages du journal). Aucune image porteuse d’information, donc aucune image nécessitant une description détaillée. Non applicable."
+			"note": "Tests 1.6.1 à 1.6.10 sur le cockpit : inventaire du DOM rendu dans Chromium (Playwright), thèmes clair et sombre : 0 <img>, 0 <svg>, 0 role=\"img\", 0 <area>, 0 <object>, 0 <embed>, 0 <canvas>, 0 <input type=\"image\">, 0 <picture>, 0 <figure>, aucune image CSS (background-image, list-style-image, border-image et mask-image à « none » sur tous les éléments). Aucune image porteuse d’information nécessitant une description détaillée. Non applicable."
 		},
 		{
 			"criterion": "1.6",
 			"page": "https://chikimuras.github.io/rampe/cockpit/adr/0011-cli-audit-playwright/",
 			"status": "NA",
-			"note": "Tests 1.6.1 à 1.6.10 : Inventaire du DOM rendu dans Chromium (Playwright) : 0 <img>, 0 <svg>, 0 élément role=\"img\", 0 <area>, 0 <object>, 0 <embed>, 0 <canvas>, 0 <input type=\"image\">, 0 <picture>, 0 <figure>, aucune image CSS (background-image à « none » sur tous les éléments, aucun contenu ::before/::after) sur la page ADR-0011 (Markdown rendu, tableau, blocs de code). Aucune image porteuse d’information, donc aucune image nécessitant une description détaillée. Le caractère Unicode « ⛔ » présent dans le texte est du texte (glyphe d’une police), pas une image au sens du RGAA (aucune balise d’image ni role=\"img\"). Non applicable."
+			"note": "Tests 1.6.1 à 1.6.10 sur la page de l’ADR-0011 : inventaire du DOM rendu dans Chromium (Playwright), thèmes clair et sombre : 0 <img>, 0 <svg>, 0 role=\"img\", 0 <area>, 0 <object>, 0 <embed>, 0 <canvas>, 0 <input type=\"image\">, 0 <picture>, 0 <figure>, aucune image CSS (background-image, list-style-image, border-image et mask-image à « none » sur tous les éléments). Aucune image porteuse d’information nécessitant une description détaillée. Non applicable."
 		},
 		{
 			"criterion": "1.6",
 			"page": "https://chikimuras.github.io/rampe/cockpit/journal/2026-10-15/",
 			"status": "NA",
-			"note": "Tests 1.6.1 à 1.6.10 : Inventaire du DOM rendu dans Chromium (Playwright) : 0 <img>, 0 <svg>, 0 élément role=\"img\", 0 <area>, 0 <object>, 0 <embed>, 0 <canvas>, 0 <input type=\"image\">, 0 <picture>, 0 <figure>, aucune image CSS (background-image à « none » sur tous les éléments, aucun contenu ::before/::after) sur la page de journal du 15/10/2026 (Markdown rendu, titres, listes, code). Aucune image porteuse d’information, donc aucune image nécessitant une description détaillée. Le caractère Unicode « ⛔ » présent dans le texte est du texte (glyphe d’une police), pas une image au sens du RGAA (aucune balise d’image ni role=\"img\"). Non applicable."
+			"note": "Tests 1.6.1 à 1.6.10 sur la page du journal du 15 octobre 2026 : inventaire du DOM rendu dans Chromium (Playwright), thèmes clair et sombre : 0 <img>, 0 <svg>, 0 role=\"img\", 0 <area>, 0 <object>, 0 <embed>, 0 <canvas>, 0 <input type=\"image\">, 0 <picture>, 0 <figure>, aucune image CSS (background-image, list-style-image, border-image et mask-image à « none » sur tous les éléments). Aucune image porteuse d’information nécessitant une description détaillée. Non applicable."
 		},
 		{
 			"criterion": "1.6",
 			"page": "https://chikimuras.github.io/rampe/cockpit/docs/roadmap/",
 			"status": "NA",
-			"note": "Tests 1.6.1 à 1.6.10 : Inventaire du DOM rendu dans Chromium (Playwright) : 0 <img>, 0 <svg>, 0 élément role=\"img\", 0 <area>, 0 <object>, 0 <embed>, 0 <canvas>, 0 <input type=\"image\">, 0 <picture>, 0 <figure>, aucune image CSS (background-image à « none » sur tous les éléments, aucun contenu ::before/::after) sur la feuille de route (listes de tâches avec pastilles « Fait » / « À faire »). Aucune image porteuse d’information, donc aucune image nécessitant une description détaillée. Le caractère Unicode « ⛔ » présent dans le texte est du texte (glyphe d’une police), pas une image au sens du RGAA (aucune balise d’image ni role=\"img\"). Non applicable."
+			"note": "Tests 1.6.1 à 1.6.10 sur la feuille de route (roadmap) : inventaire du DOM rendu dans Chromium (Playwright), thèmes clair et sombre : 0 <img>, 0 <svg>, 0 role=\"img\", 0 <area>, 0 <object>, 0 <embed>, 0 <canvas>, 0 <input type=\"image\">, 0 <picture>, 0 <figure>, aucune image CSS (background-image, list-style-image, border-image et mask-image à « none » sur tous les éléments). Le symbole ⛔ (2 occurrences, dont la légende « Les ⛔ signalent un besoin d’action humaine ») est un caractère Unicode du texte, pas une image (ni <img>, ni SVG, ni image CSS). Aucune image porteuse d’information nécessitant une description détaillée. Non applicable."
 		},
 		{
 			"criterion": "1.6",
 			"page": "https://chikimuras.github.io/rampe/referentiel/5-1/",
 			"status": "NA",
-			"note": "Tests 1.6.1 à 1.6.10 : Inventaire du DOM rendu dans Chromium (Playwright) : 0 <img>, 0 <svg>, 0 élément role=\"img\", 0 <area>, 0 <object>, 0 <embed>, 0 <canvas>, 0 <input type=\"image\">, 0 <picture>, 0 <figure>, aucune image CSS (background-image à « none » sur tous les éléments, aucun contenu ::before/::after) sur la fiche du critère 5.1 (texte officiel, test, méthodologie, encadré de vérification humaine). Aucune image porteuse d’information, donc aucune image nécessitant une description détaillée. Non applicable."
+			"note": "Tests 1.6.1 à 1.6.10 sur la fiche du critère 5.1 : inventaire du DOM rendu dans Chromium (Playwright), thèmes clair et sombre : 0 <img>, 0 <svg>, 0 role=\"img\", 0 <area>, 0 <object>, 0 <embed>, 0 <canvas>, 0 <input type=\"image\">, 0 <picture>, 0 <figure>, aucune image CSS (background-image, list-style-image, border-image et mask-image à « none » sur tous les éléments). Le séparateur « › » du fil d’Ariane est un contenu CSS ::before de type texte, avec un texte de remplacement vide : ce n’est pas une image au sens du RGAA. Aucune image porteuse d’information nécessitant une description détaillée. Non applicable."
 		},
 		{
 			"criterion": "1.6",
 			"page": "https://chikimuras.github.io/rampe/referentiel/1-9/",
 			"status": "NA",
-			"note": "Tests 1.6.1 à 1.6.10 : Inventaire du DOM rendu dans Chromium (Playwright) : 0 <img>, 0 <svg>, 0 élément role=\"img\", 0 <area>, 0 <object>, 0 <embed>, 0 <canvas>, 0 <input type=\"image\">, 0 <picture>, 0 <figure>, aucune image CSS (background-image à « none » sur tous les éléments, aucun contenu ::before/::after) sur la fiche du critère 1.9 (texte officiel, tests, méthodologie, encadré de vérification humaine). Aucune image porteuse d’information, donc aucune image nécessitant une description détaillée. Non applicable."
+			"note": "Tests 1.6.1 à 1.6.10 sur la fiche du critère 1.9 : inventaire du DOM rendu dans Chromium (Playwright), thèmes clair et sombre : 0 <img>, 0 <svg>, 0 role=\"img\", 0 <area>, 0 <object>, 0 <embed>, 0 <canvas>, 0 <input type=\"image\">, 0 <picture>, 0 <figure>, aucune image CSS (background-image, list-style-image, border-image et mask-image à « none » sur tous les éléments). Le séparateur « › » du fil d’Ariane est un contenu CSS ::before de type texte, avec un texte de remplacement vide : ce n’est pas une image au sens du RGAA. Aucune image porteuse d’information nécessitant une description détaillée. Non applicable."
+		},
+		{
+			"criterion": "1.6",
+			"page": "https://chikimuras.github.io/rampe/plan-du-site/",
+			"status": "NA",
+			"note": "Tests 1.6.1 à 1.6.10 sur le plan du site : inventaire du DOM rendu dans Chromium (Playwright), thèmes clair et sombre : 0 <img>, 0 <svg>, 0 role=\"img\", 0 <area>, 0 <object>, 0 <embed>, 0 <canvas>, 0 <input type=\"image\">, 0 <picture>, 0 <figure>, aucune image CSS (background-image, list-style-image, border-image et mask-image à « none » sur tous les éléments). Aucune image porteuse d’information nécessitant une description détaillée. Non applicable."
 		},
 		{
 			"criterion": "1.7",
 			"page": "https://chikimuras.github.io/rampe/",
 			"status": "NA",
-			"note": "Tests 1.7.1 à 1.7.6 : Inventaire du DOM rendu dans Chromium (Playwright) : 0 <img>, 0 <svg>, 0 élément role=\"img\", 0 <area>, 0 <object>, 0 <embed>, 0 <canvas>, 0 <input type=\"image\">, 0 <picture>, 0 <figure>, aucune image CSS (background-image à « none » sur tous les éléments, aucun contenu ::before/::after) sur l’accueil (titre, trois paragraphes, navigation principale, pied de page). Aucune image pourvue d’une description détaillée. Non applicable."
+			"note": "Tests 1.7.1 à 1.7.6 sur l’accueil : inventaire du DOM rendu dans Chromium (Playwright), thèmes clair et sombre : 0 <img>, 0 <svg>, 0 role=\"img\", 0 <area>, 0 <object>, 0 <embed>, 0 <canvas>, 0 <input type=\"image\">, 0 <picture>, 0 <figure>, aucune image CSS (background-image, list-style-image, border-image et mask-image à « none » sur tous les éléments). Aucune image pourvue d’une description détaillée. Non applicable."
 		},
 		{
 			"criterion": "1.7",
 			"page": "https://chikimuras.github.io/rampe/referentiel/",
 			"status": "NA",
-			"note": "Tests 1.7.1 à 1.7.6 : Inventaire du DOM rendu dans Chromium (Playwright) : 0 <img>, 0 <svg>, 0 élément role=\"img\", 0 <area>, 0 <object>, 0 <embed>, 0 <canvas>, 0 <input type=\"image\">, 0 <picture>, 0 <figure>, aucune image CSS (background-image à « none » sur tous les éléments, aucun contenu ::before/::after) sur la page Référentiel (13 thématiques, 106 liens de critères, encadrés « Explication Rampe »). Aucune image pourvue d’une description détaillée. Non applicable."
+			"note": "Tests 1.7.1 à 1.7.6 sur la page Référentiel (liste des 106 critères) : inventaire du DOM rendu dans Chromium (Playwright), thèmes clair et sombre : 0 <img>, 0 <svg>, 0 role=\"img\", 0 <area>, 0 <object>, 0 <embed>, 0 <canvas>, 0 <input type=\"image\">, 0 <picture>, 0 <figure>, aucune image CSS (background-image, list-style-image, border-image et mask-image à « none » sur tous les éléments). Aucune image pourvue d’une description détaillée. Non applicable."
 		},
 		{
 			"criterion": "1.7",
 			"page": "https://chikimuras.github.io/rampe/referentiel/1-1/",
 			"status": "NA",
-			"note": "Tests 1.7.1 à 1.7.6 : Inventaire du DOM rendu dans Chromium (Playwright) : 0 <img>, 0 <svg>, 0 élément role=\"img\", 0 <area>, 0 <object>, 0 <embed>, 0 <canvas>, 0 <input type=\"image\">, 0 <picture>, 0 <figure>, aucune image CSS (background-image à « none » sur tous les éléments, aucun contenu ::before/::after) sur la fiche du critère 1.1 (texte officiel, 8 tests, blocs <details> de méthodologie, liens vers le glossaire). Aucune image pourvue d’une description détaillée. Non applicable."
+			"note": "Tests 1.7.1 à 1.7.6 sur la fiche du critère 1.1 : inventaire du DOM rendu dans Chromium (Playwright), thèmes clair et sombre : 0 <img>, 0 <svg>, 0 role=\"img\", 0 <area>, 0 <object>, 0 <embed>, 0 <canvas>, 0 <input type=\"image\">, 0 <picture>, 0 <figure>, aucune image CSS (background-image, list-style-image, border-image et mask-image à « none » sur tous les éléments). Le séparateur « › » du fil d’Ariane est un contenu CSS ::before de type texte, avec un texte de remplacement vide : ce n’est pas une image au sens du RGAA. Aucune image pourvue d’une description détaillée. Non applicable."
 		},
 		{
 			"criterion": "1.7",
 			"page": "https://chikimuras.github.io/rampe/referentiel/glossaire/",
 			"status": "NA",
-			"note": "Tests 1.7.1 à 1.7.6 : Inventaire du DOM rendu dans Chromium (Playwright) : 0 <img>, 0 <svg>, 0 élément role=\"img\", 0 <area>, 0 <object>, 0 <embed>, 0 <canvas>, 0 <input type=\"image\">, 0 <picture>, 0 <figure>, aucune image CSS (background-image à « none » sur tous les éléments, aucun contenu ::before/::after) sur le glossaire (liste de définitions <dl>, ancres). Aucune image pourvue d’une description détaillée. Non applicable."
+			"note": "Tests 1.7.1 à 1.7.6 sur le glossaire : inventaire du DOM rendu dans Chromium (Playwright), thèmes clair et sombre : 0 <img>, 0 <svg>, 0 role=\"img\", 0 <area>, 0 <object>, 0 <embed>, 0 <canvas>, 0 <input type=\"image\">, 0 <picture>, 0 <figure>, aucune image CSS (background-image, list-style-image, border-image et mask-image à « none » sur tous les éléments). Aucune image pourvue d’une description détaillée. Non applicable."
 		},
 		{
 			"criterion": "1.7",
 			"page": "https://chikimuras.github.io/rampe/audit/",
 			"status": "NA",
-			"note": "Tests 1.7.1 à 1.7.6 : Inventaire du DOM rendu dans Chromium (Playwright) : 0 <img>, 0 <svg>, 0 élément role=\"img\", 0 <area>, 0 <object>, 0 <embed>, 0 <canvas>, 0 <input type=\"image\">, 0 <picture>, 0 <figure>, aucune image CSS (background-image à « none » sur tous les éléments, aucun contenu ::before/::after) sur l’audit guidé (îlot Preact) (états de l’îlot examinés : état initial, erreur d’adresse (champ aria-invalid + message), 2 pages ajoutées, import d’un rapport automatique (statut « à confirmer », conflit, indices), critère 3.2 affiché, tous les <details> ouverts, boîte de dialogue « Remplacer l’audit en cours ? » ouverte, puis audit complet importé (tableau « Résultat par page », déclaration, schéma pluriannuel)). Aucune image pourvue d’une description détaillée. Non applicable."
+			"note": "Tests 1.7.1 à 1.7.6 sur l’audit guidé (îlot Preact ; états de l’îlot examinés : état initial, adresse invalide soumise (message d’erreur), deux pages ajoutées, rapport automatique importé (statuts « à confirmer » sur 1.1 et 3.2, indice 9.2), critère 3.2 affiché, boîte de dialogue « Remplacer l’audit en cours ? » ouverte, puis audit complet de 11 pages importé (résultat, tableau « Résultat par page », déclaration, schéma pluriannuel avec période choisie, actions mises à jour depuis l’audit et action libre ajoutée : tableau des actions), tous les <details> ouverts) : inventaire du DOM rendu dans Chromium (Playwright), thèmes clair et sombre : 0 <img>, 0 <svg>, 0 role=\"img\", 0 <area>, 0 <object>, 0 <embed>, 0 <canvas>, 0 <input type=\"image\">, 0 <picture>, 0 <figure>, aucune image CSS (background-image, list-style-image, border-image et mask-image à « none » sur tous les éléments). Seuls contenus générés : les guillemets ::before/::after des <q> de l’aperçu de la déclaration (texte). Aucune image pourvue d’une description détaillée. Non applicable."
 		},
 		{
 			"criterion": "1.7",
 			"page": "https://chikimuras.github.io/rampe/cockpit/",
 			"status": "NA",
-			"note": "Tests 1.7.1 à 1.7.6 : Inventaire du DOM rendu dans Chromium (Playwright) : 0 <img>, 0 <svg>, 0 élément role=\"img\", 0 <area>, 0 <object>, 0 <embed>, 0 <canvas>, 0 <input type=\"image\">, 0 <picture>, 0 <figure>, aucune image CSS (background-image à « none » sur tous les éléments, aucun contenu ::before/::after) sur le cockpit (encadré « En attente d’Alexandre », 7 barres <progress>, liste des ADR avec pastilles de statut « Accepted », liste des pages du journal). Aucune image pourvue d’une description détaillée. Non applicable."
+			"note": "Tests 1.7.1 à 1.7.6 sur le cockpit : inventaire du DOM rendu dans Chromium (Playwright), thèmes clair et sombre : 0 <img>, 0 <svg>, 0 role=\"img\", 0 <area>, 0 <object>, 0 <embed>, 0 <canvas>, 0 <input type=\"image\">, 0 <picture>, 0 <figure>, aucune image CSS (background-image, list-style-image, border-image et mask-image à « none » sur tous les éléments). Aucune image pourvue d’une description détaillée. Non applicable."
 		},
 		{
 			"criterion": "1.7",
 			"page": "https://chikimuras.github.io/rampe/cockpit/adr/0011-cli-audit-playwright/",
 			"status": "NA",
-			"note": "Tests 1.7.1 à 1.7.6 : Inventaire du DOM rendu dans Chromium (Playwright) : 0 <img>, 0 <svg>, 0 élément role=\"img\", 0 <area>, 0 <object>, 0 <embed>, 0 <canvas>, 0 <input type=\"image\">, 0 <picture>, 0 <figure>, aucune image CSS (background-image à « none » sur tous les éléments, aucun contenu ::before/::after) sur la page ADR-0011 (Markdown rendu, tableau, blocs de code). Aucune image pourvue d’une description détaillée. Le caractère Unicode « ⛔ » présent dans le texte est du texte (glyphe d’une police), pas une image au sens du RGAA (aucune balise d’image ni role=\"img\"). Non applicable."
+			"note": "Tests 1.7.1 à 1.7.6 sur la page de l’ADR-0011 : inventaire du DOM rendu dans Chromium (Playwright), thèmes clair et sombre : 0 <img>, 0 <svg>, 0 role=\"img\", 0 <area>, 0 <object>, 0 <embed>, 0 <canvas>, 0 <input type=\"image\">, 0 <picture>, 0 <figure>, aucune image CSS (background-image, list-style-image, border-image et mask-image à « none » sur tous les éléments). Aucune image pourvue d’une description détaillée. Non applicable."
 		},
 		{
 			"criterion": "1.7",
 			"page": "https://chikimuras.github.io/rampe/cockpit/journal/2026-10-15/",
 			"status": "NA",
-			"note": "Tests 1.7.1 à 1.7.6 : Inventaire du DOM rendu dans Chromium (Playwright) : 0 <img>, 0 <svg>, 0 élément role=\"img\", 0 <area>, 0 <object>, 0 <embed>, 0 <canvas>, 0 <input type=\"image\">, 0 <picture>, 0 <figure>, aucune image CSS (background-image à « none » sur tous les éléments, aucun contenu ::before/::after) sur la page de journal du 15/10/2026 (Markdown rendu, titres, listes, code). Aucune image pourvue d’une description détaillée. Le caractère Unicode « ⛔ » présent dans le texte est du texte (glyphe d’une police), pas une image au sens du RGAA (aucune balise d’image ni role=\"img\"). Non applicable."
+			"note": "Tests 1.7.1 à 1.7.6 sur la page du journal du 15 octobre 2026 : inventaire du DOM rendu dans Chromium (Playwright), thèmes clair et sombre : 0 <img>, 0 <svg>, 0 role=\"img\", 0 <area>, 0 <object>, 0 <embed>, 0 <canvas>, 0 <input type=\"image\">, 0 <picture>, 0 <figure>, aucune image CSS (background-image, list-style-image, border-image et mask-image à « none » sur tous les éléments). Aucune image pourvue d’une description détaillée. Non applicable."
 		},
 		{
 			"criterion": "1.7",
 			"page": "https://chikimuras.github.io/rampe/cockpit/docs/roadmap/",
 			"status": "NA",
-			"note": "Tests 1.7.1 à 1.7.6 : Inventaire du DOM rendu dans Chromium (Playwright) : 0 <img>, 0 <svg>, 0 élément role=\"img\", 0 <area>, 0 <object>, 0 <embed>, 0 <canvas>, 0 <input type=\"image\">, 0 <picture>, 0 <figure>, aucune image CSS (background-image à « none » sur tous les éléments, aucun contenu ::before/::after) sur la feuille de route (listes de tâches avec pastilles « Fait » / « À faire »). Aucune image pourvue d’une description détaillée. Le caractère Unicode « ⛔ » présent dans le texte est du texte (glyphe d’une police), pas une image au sens du RGAA (aucune balise d’image ni role=\"img\"). Non applicable."
+			"note": "Tests 1.7.1 à 1.7.6 sur la feuille de route (roadmap) : inventaire du DOM rendu dans Chromium (Playwright), thèmes clair et sombre : 0 <img>, 0 <svg>, 0 role=\"img\", 0 <area>, 0 <object>, 0 <embed>, 0 <canvas>, 0 <input type=\"image\">, 0 <picture>, 0 <figure>, aucune image CSS (background-image, list-style-image, border-image et mask-image à « none » sur tous les éléments). Le symbole ⛔ (2 occurrences, dont la légende « Les ⛔ signalent un besoin d’action humaine ») est un caractère Unicode du texte, pas une image (ni <img>, ni SVG, ni image CSS). Aucune image pourvue d’une description détaillée. Non applicable."
 		},
 		{
 			"criterion": "1.7",
 			"page": "https://chikimuras.github.io/rampe/referentiel/5-1/",
 			"status": "NA",
-			"note": "Tests 1.7.1 à 1.7.6 : Inventaire du DOM rendu dans Chromium (Playwright) : 0 <img>, 0 <svg>, 0 élément role=\"img\", 0 <area>, 0 <object>, 0 <embed>, 0 <canvas>, 0 <input type=\"image\">, 0 <picture>, 0 <figure>, aucune image CSS (background-image à « none » sur tous les éléments, aucun contenu ::before/::after) sur la fiche du critère 5.1 (texte officiel, test, méthodologie, encadré de vérification humaine). Aucune image pourvue d’une description détaillée. Non applicable."
+			"note": "Tests 1.7.1 à 1.7.6 sur la fiche du critère 5.1 : inventaire du DOM rendu dans Chromium (Playwright), thèmes clair et sombre : 0 <img>, 0 <svg>, 0 role=\"img\", 0 <area>, 0 <object>, 0 <embed>, 0 <canvas>, 0 <input type=\"image\">, 0 <picture>, 0 <figure>, aucune image CSS (background-image, list-style-image, border-image et mask-image à « none » sur tous les éléments). Le séparateur « › » du fil d’Ariane est un contenu CSS ::before de type texte, avec un texte de remplacement vide : ce n’est pas une image au sens du RGAA. Aucune image pourvue d’une description détaillée. Non applicable."
 		},
 		{
 			"criterion": "1.7",
 			"page": "https://chikimuras.github.io/rampe/referentiel/1-9/",
 			"status": "NA",
-			"note": "Tests 1.7.1 à 1.7.6 : Inventaire du DOM rendu dans Chromium (Playwright) : 0 <img>, 0 <svg>, 0 élément role=\"img\", 0 <area>, 0 <object>, 0 <embed>, 0 <canvas>, 0 <input type=\"image\">, 0 <picture>, 0 <figure>, aucune image CSS (background-image à « none » sur tous les éléments, aucun contenu ::before/::after) sur la fiche du critère 1.9 (texte officiel, tests, méthodologie, encadré de vérification humaine). Aucune image pourvue d’une description détaillée. Non applicable."
+			"note": "Tests 1.7.1 à 1.7.6 sur la fiche du critère 1.9 : inventaire du DOM rendu dans Chromium (Playwright), thèmes clair et sombre : 0 <img>, 0 <svg>, 0 role=\"img\", 0 <area>, 0 <object>, 0 <embed>, 0 <canvas>, 0 <input type=\"image\">, 0 <picture>, 0 <figure>, aucune image CSS (background-image, list-style-image, border-image et mask-image à « none » sur tous les éléments). Le séparateur « › » du fil d’Ariane est un contenu CSS ::before de type texte, avec un texte de remplacement vide : ce n’est pas une image au sens du RGAA. Aucune image pourvue d’une description détaillée. Non applicable."
+		},
+		{
+			"criterion": "1.7",
+			"page": "https://chikimuras.github.io/rampe/plan-du-site/",
+			"status": "NA",
+			"note": "Tests 1.7.1 à 1.7.6 sur le plan du site : inventaire du DOM rendu dans Chromium (Playwright), thèmes clair et sombre : 0 <img>, 0 <svg>, 0 role=\"img\", 0 <area>, 0 <object>, 0 <embed>, 0 <canvas>, 0 <input type=\"image\">, 0 <picture>, 0 <figure>, aucune image CSS (background-image, list-style-image, border-image et mask-image à « none » sur tous les éléments). Aucune image pourvue d’une description détaillée. Non applicable."
 		},
 		{
 			"criterion": "1.8",
 			"page": "https://chikimuras.github.io/rampe/",
 			"status": "NA",
-			"note": "Tests 1.8.1 à 1.8.6 : Inventaire du DOM rendu dans Chromium (Playwright) : 0 <img>, 0 <svg>, 0 élément role=\"img\", 0 <area>, 0 <object>, 0 <embed>, 0 <canvas>, 0 <input type=\"image\">, 0 <picture>, 0 <figure>, aucune image CSS (background-image à « none » sur tous les éléments, aucun contenu ::before/::after) sur l’accueil (titre, trois paragraphes, navigation principale, pied de page). Aucune image texte : tous les textes, y compris le nom « Rampe » de l’en-tête, sont du texte stylé en HTML/CSS. Non applicable."
+			"note": "Tests 1.8.1 à 1.8.6 sur l’accueil : inventaire du DOM rendu dans Chromium (Playwright), thèmes clair et sombre : 0 <img>, 0 <svg>, 0 role=\"img\", 0 <area>, 0 <object>, 0 <embed>, 0 <canvas>, 0 <input type=\"image\">, 0 <picture>, 0 <figure>, aucune image CSS (background-image, list-style-image, border-image et mask-image à « none » sur tous les éléments). Aucune image texte : tous les textes, y compris le nom « Rampe » de l’en-tête, sont du texte HTML stylé en CSS. Non applicable."
 		},
 		{
 			"criterion": "1.8",
 			"page": "https://chikimuras.github.io/rampe/referentiel/",
 			"status": "NA",
-			"note": "Tests 1.8.1 à 1.8.6 : Inventaire du DOM rendu dans Chromium (Playwright) : 0 <img>, 0 <svg>, 0 élément role=\"img\", 0 <area>, 0 <object>, 0 <embed>, 0 <canvas>, 0 <input type=\"image\">, 0 <picture>, 0 <figure>, aucune image CSS (background-image à « none » sur tous les éléments, aucun contenu ::before/::after) sur la page Référentiel (13 thématiques, 106 liens de critères, encadrés « Explication Rampe »). Aucune image texte : tous les textes, y compris le nom « Rampe » de l’en-tête, sont du texte stylé en HTML/CSS. Non applicable."
+			"note": "Tests 1.8.1 à 1.8.6 sur la page Référentiel (liste des 106 critères) : inventaire du DOM rendu dans Chromium (Playwright), thèmes clair et sombre : 0 <img>, 0 <svg>, 0 role=\"img\", 0 <area>, 0 <object>, 0 <embed>, 0 <canvas>, 0 <input type=\"image\">, 0 <picture>, 0 <figure>, aucune image CSS (background-image, list-style-image, border-image et mask-image à « none » sur tous les éléments). Aucune image texte : tous les textes, y compris le nom « Rampe » de l’en-tête, sont du texte HTML stylé en CSS. Non applicable."
 		},
 		{
 			"criterion": "1.8",
 			"page": "https://chikimuras.github.io/rampe/referentiel/1-1/",
 			"status": "NA",
-			"note": "Tests 1.8.1 à 1.8.6 : Inventaire du DOM rendu dans Chromium (Playwright) : 0 <img>, 0 <svg>, 0 élément role=\"img\", 0 <area>, 0 <object>, 0 <embed>, 0 <canvas>, 0 <input type=\"image\">, 0 <picture>, 0 <figure>, aucune image CSS (background-image à « none » sur tous les éléments, aucun contenu ::before/::after) sur la fiche du critère 1.1 (texte officiel, 8 tests, blocs <details> de méthodologie, liens vers le glossaire). Aucune image texte : tous les textes, y compris le nom « Rampe » de l’en-tête, sont du texte stylé en HTML/CSS. Non applicable."
+			"note": "Tests 1.8.1 à 1.8.6 sur la fiche du critère 1.1 : inventaire du DOM rendu dans Chromium (Playwright), thèmes clair et sombre : 0 <img>, 0 <svg>, 0 role=\"img\", 0 <area>, 0 <object>, 0 <embed>, 0 <canvas>, 0 <input type=\"image\">, 0 <picture>, 0 <figure>, aucune image CSS (background-image, list-style-image, border-image et mask-image à « none » sur tous les éléments). Le séparateur « › » du fil d’Ariane est un contenu CSS ::before de type texte, avec un texte de remplacement vide : ce n’est pas une image au sens du RGAA. Aucune image texte : tous les textes, y compris le nom « Rampe » de l’en-tête, sont du texte HTML stylé en CSS. Non applicable."
 		},
 		{
 			"criterion": "1.8",
 			"page": "https://chikimuras.github.io/rampe/referentiel/glossaire/",
 			"status": "NA",
-			"note": "Tests 1.8.1 à 1.8.6 : Inventaire du DOM rendu dans Chromium (Playwright) : 0 <img>, 0 <svg>, 0 élément role=\"img\", 0 <area>, 0 <object>, 0 <embed>, 0 <canvas>, 0 <input type=\"image\">, 0 <picture>, 0 <figure>, aucune image CSS (background-image à « none » sur tous les éléments, aucun contenu ::before/::after) sur le glossaire (liste de définitions <dl>, ancres). Aucune image texte : tous les textes, y compris le nom « Rampe » de l’en-tête, sont du texte stylé en HTML/CSS. Non applicable."
+			"note": "Tests 1.8.1 à 1.8.6 sur le glossaire : inventaire du DOM rendu dans Chromium (Playwright), thèmes clair et sombre : 0 <img>, 0 <svg>, 0 role=\"img\", 0 <area>, 0 <object>, 0 <embed>, 0 <canvas>, 0 <input type=\"image\">, 0 <picture>, 0 <figure>, aucune image CSS (background-image, list-style-image, border-image et mask-image à « none » sur tous les éléments). Aucune image texte : tous les textes, y compris le nom « Rampe » de l’en-tête, sont du texte HTML stylé en CSS. Non applicable."
 		},
 		{
 			"criterion": "1.8",
 			"page": "https://chikimuras.github.io/rampe/audit/",
 			"status": "NA",
-			"note": "Tests 1.8.1 à 1.8.6 : Inventaire du DOM rendu dans Chromium (Playwright) : 0 <img>, 0 <svg>, 0 élément role=\"img\", 0 <area>, 0 <object>, 0 <embed>, 0 <canvas>, 0 <input type=\"image\">, 0 <picture>, 0 <figure>, aucune image CSS (background-image à « none » sur tous les éléments, aucun contenu ::before/::after) sur l’audit guidé (îlot Preact) (états de l’îlot examinés : état initial, erreur d’adresse (champ aria-invalid + message), 2 pages ajoutées, import d’un rapport automatique (statut « à confirmer », conflit, indices), critère 3.2 affiché, tous les <details> ouverts, boîte de dialogue « Remplacer l’audit en cours ? » ouverte, puis audit complet importé (tableau « Résultat par page », déclaration, schéma pluriannuel)). Aucune image texte : tous les textes, y compris le nom « Rampe » de l’en-tête, sont du texte stylé en HTML/CSS. Non applicable."
+			"note": "Tests 1.8.1 à 1.8.6 sur l’audit guidé (îlot Preact ; états de l’îlot examinés : état initial, adresse invalide soumise (message d’erreur), deux pages ajoutées, rapport automatique importé (statuts « à confirmer » sur 1.1 et 3.2, indice 9.2), critère 3.2 affiché, boîte de dialogue « Remplacer l’audit en cours ? » ouverte, puis audit complet de 11 pages importé (résultat, tableau « Résultat par page », déclaration, schéma pluriannuel avec période choisie, actions mises à jour depuis l’audit et action libre ajoutée : tableau des actions), tous les <details> ouverts) : inventaire du DOM rendu dans Chromium (Playwright), thèmes clair et sombre : 0 <img>, 0 <svg>, 0 role=\"img\", 0 <area>, 0 <object>, 0 <embed>, 0 <canvas>, 0 <input type=\"image\">, 0 <picture>, 0 <figure>, aucune image CSS (background-image, list-style-image, border-image et mask-image à « none » sur tous les éléments). Seuls contenus générés : les guillemets ::before/::after des <q> de l’aperçu de la déclaration (texte). Aucune image texte : tous les textes, y compris le nom « Rampe » de l’en-tête, sont du texte HTML stylé en CSS. Non applicable."
 		},
 		{
 			"criterion": "1.8",
 			"page": "https://chikimuras.github.io/rampe/cockpit/",
 			"status": "NA",
-			"note": "Tests 1.8.1 à 1.8.6 : Inventaire du DOM rendu dans Chromium (Playwright) : 0 <img>, 0 <svg>, 0 élément role=\"img\", 0 <area>, 0 <object>, 0 <embed>, 0 <canvas>, 0 <input type=\"image\">, 0 <picture>, 0 <figure>, aucune image CSS (background-image à « none » sur tous les éléments, aucun contenu ::before/::after) sur le cockpit (encadré « En attente d’Alexandre », 7 barres <progress>, liste des ADR avec pastilles de statut « Accepted », liste des pages du journal). Aucune image texte : tous les textes, y compris le nom « Rampe » de l’en-tête, sont du texte stylé en HTML/CSS. Non applicable."
+			"note": "Tests 1.8.1 à 1.8.6 sur le cockpit : inventaire du DOM rendu dans Chromium (Playwright), thèmes clair et sombre : 0 <img>, 0 <svg>, 0 role=\"img\", 0 <area>, 0 <object>, 0 <embed>, 0 <canvas>, 0 <input type=\"image\">, 0 <picture>, 0 <figure>, aucune image CSS (background-image, list-style-image, border-image et mask-image à « none » sur tous les éléments). Aucune image texte : tous les textes, y compris le nom « Rampe » de l’en-tête, sont du texte HTML stylé en CSS. Non applicable."
 		},
 		{
 			"criterion": "1.8",
 			"page": "https://chikimuras.github.io/rampe/cockpit/adr/0011-cli-audit-playwright/",
 			"status": "NA",
-			"note": "Tests 1.8.1 à 1.8.6 : Inventaire du DOM rendu dans Chromium (Playwright) : 0 <img>, 0 <svg>, 0 élément role=\"img\", 0 <area>, 0 <object>, 0 <embed>, 0 <canvas>, 0 <input type=\"image\">, 0 <picture>, 0 <figure>, aucune image CSS (background-image à « none » sur tous les éléments, aucun contenu ::before/::after) sur la page ADR-0011 (Markdown rendu, tableau, blocs de code). Aucune image texte : tous les textes, y compris le nom « Rampe » de l’en-tête, sont du texte stylé en HTML/CSS. Le caractère Unicode « ⛔ » présent dans le texte est du texte (glyphe d’une police), pas une image au sens du RGAA (aucune balise d’image ni role=\"img\"). Non applicable."
+			"note": "Tests 1.8.1 à 1.8.6 sur la page de l’ADR-0011 : inventaire du DOM rendu dans Chromium (Playwright), thèmes clair et sombre : 0 <img>, 0 <svg>, 0 role=\"img\", 0 <area>, 0 <object>, 0 <embed>, 0 <canvas>, 0 <input type=\"image\">, 0 <picture>, 0 <figure>, aucune image CSS (background-image, list-style-image, border-image et mask-image à « none » sur tous les éléments). Aucune image texte : tous les textes, y compris le nom « Rampe » de l’en-tête, sont du texte HTML stylé en CSS. Non applicable."
 		},
 		{
 			"criterion": "1.8",
 			"page": "https://chikimuras.github.io/rampe/cockpit/journal/2026-10-15/",
 			"status": "NA",
-			"note": "Tests 1.8.1 à 1.8.6 : Inventaire du DOM rendu dans Chromium (Playwright) : 0 <img>, 0 <svg>, 0 élément role=\"img\", 0 <area>, 0 <object>, 0 <embed>, 0 <canvas>, 0 <input type=\"image\">, 0 <picture>, 0 <figure>, aucune image CSS (background-image à « none » sur tous les éléments, aucun contenu ::before/::after) sur la page de journal du 15/10/2026 (Markdown rendu, titres, listes, code). Aucune image texte : tous les textes, y compris le nom « Rampe » de l’en-tête, sont du texte stylé en HTML/CSS. Le caractère Unicode « ⛔ » présent dans le texte est du texte (glyphe d’une police), pas une image au sens du RGAA (aucune balise d’image ni role=\"img\"). Non applicable."
+			"note": "Tests 1.8.1 à 1.8.6 sur la page du journal du 15 octobre 2026 : inventaire du DOM rendu dans Chromium (Playwright), thèmes clair et sombre : 0 <img>, 0 <svg>, 0 role=\"img\", 0 <area>, 0 <object>, 0 <embed>, 0 <canvas>, 0 <input type=\"image\">, 0 <picture>, 0 <figure>, aucune image CSS (background-image, list-style-image, border-image et mask-image à « none » sur tous les éléments). Aucune image texte : tous les textes, y compris le nom « Rampe » de l’en-tête, sont du texte HTML stylé en CSS. Non applicable."
 		},
 		{
 			"criterion": "1.8",
 			"page": "https://chikimuras.github.io/rampe/cockpit/docs/roadmap/",
 			"status": "NA",
-			"note": "Tests 1.8.1 à 1.8.6 : Inventaire du DOM rendu dans Chromium (Playwright) : 0 <img>, 0 <svg>, 0 élément role=\"img\", 0 <area>, 0 <object>, 0 <embed>, 0 <canvas>, 0 <input type=\"image\">, 0 <picture>, 0 <figure>, aucune image CSS (background-image à « none » sur tous les éléments, aucun contenu ::before/::after) sur la feuille de route (listes de tâches avec pastilles « Fait » / « À faire »). Aucune image texte : tous les textes, y compris le nom « Rampe » de l’en-tête, sont du texte stylé en HTML/CSS. Le caractère Unicode « ⛔ » présent dans le texte est du texte (glyphe d’une police), pas une image au sens du RGAA (aucune balise d’image ni role=\"img\"). Non applicable."
+			"note": "Tests 1.8.1 à 1.8.6 sur la feuille de route (roadmap) : inventaire du DOM rendu dans Chromium (Playwright), thèmes clair et sombre : 0 <img>, 0 <svg>, 0 role=\"img\", 0 <area>, 0 <object>, 0 <embed>, 0 <canvas>, 0 <input type=\"image\">, 0 <picture>, 0 <figure>, aucune image CSS (background-image, list-style-image, border-image et mask-image à « none » sur tous les éléments). Le symbole ⛔ (2 occurrences, dont la légende « Les ⛔ signalent un besoin d’action humaine ») est un caractère Unicode du texte, pas une image (ni <img>, ni SVG, ni image CSS). Aucune image texte : tous les textes, y compris le nom « Rampe » de l’en-tête, sont du texte HTML stylé en CSS. Non applicable."
 		},
 		{
 			"criterion": "1.8",
 			"page": "https://chikimuras.github.io/rampe/referentiel/5-1/",
 			"status": "NA",
-			"note": "Tests 1.8.1 à 1.8.6 : Inventaire du DOM rendu dans Chromium (Playwright) : 0 <img>, 0 <svg>, 0 élément role=\"img\", 0 <area>, 0 <object>, 0 <embed>, 0 <canvas>, 0 <input type=\"image\">, 0 <picture>, 0 <figure>, aucune image CSS (background-image à « none » sur tous les éléments, aucun contenu ::before/::after) sur la fiche du critère 5.1 (texte officiel, test, méthodologie, encadré de vérification humaine). Aucune image texte : tous les textes, y compris le nom « Rampe » de l’en-tête, sont du texte stylé en HTML/CSS. Non applicable."
+			"note": "Tests 1.8.1 à 1.8.6 sur la fiche du critère 5.1 : inventaire du DOM rendu dans Chromium (Playwright), thèmes clair et sombre : 0 <img>, 0 <svg>, 0 role=\"img\", 0 <area>, 0 <object>, 0 <embed>, 0 <canvas>, 0 <input type=\"image\">, 0 <picture>, 0 <figure>, aucune image CSS (background-image, list-style-image, border-image et mask-image à « none » sur tous les éléments). Le séparateur « › » du fil d’Ariane est un contenu CSS ::before de type texte, avec un texte de remplacement vide : ce n’est pas une image au sens du RGAA. Aucune image texte : tous les textes, y compris le nom « Rampe » de l’en-tête, sont du texte HTML stylé en CSS. Non applicable."
 		},
 		{
 			"criterion": "1.8",
 			"page": "https://chikimuras.github.io/rampe/referentiel/1-9/",
 			"status": "NA",
-			"note": "Tests 1.8.1 à 1.8.6 : Inventaire du DOM rendu dans Chromium (Playwright) : 0 <img>, 0 <svg>, 0 élément role=\"img\", 0 <area>, 0 <object>, 0 <embed>, 0 <canvas>, 0 <input type=\"image\">, 0 <picture>, 0 <figure>, aucune image CSS (background-image à « none » sur tous les éléments, aucun contenu ::before/::after) sur la fiche du critère 1.9 (texte officiel, tests, méthodologie, encadré de vérification humaine). Aucune image texte : tous les textes, y compris le nom « Rampe » de l’en-tête, sont du texte stylé en HTML/CSS. Non applicable."
+			"note": "Tests 1.8.1 à 1.8.6 sur la fiche du critère 1.9 : inventaire du DOM rendu dans Chromium (Playwright), thèmes clair et sombre : 0 <img>, 0 <svg>, 0 role=\"img\", 0 <area>, 0 <object>, 0 <embed>, 0 <canvas>, 0 <input type=\"image\">, 0 <picture>, 0 <figure>, aucune image CSS (background-image, list-style-image, border-image et mask-image à « none » sur tous les éléments). Le séparateur « › » du fil d’Ariane est un contenu CSS ::before de type texte, avec un texte de remplacement vide : ce n’est pas une image au sens du RGAA. Aucune image texte : tous les textes, y compris le nom « Rampe » de l’en-tête, sont du texte HTML stylé en CSS. Non applicable."
+		},
+		{
+			"criterion": "1.8",
+			"page": "https://chikimuras.github.io/rampe/plan-du-site/",
+			"status": "NA",
+			"note": "Tests 1.8.1 à 1.8.6 sur le plan du site : inventaire du DOM rendu dans Chromium (Playwright), thèmes clair et sombre : 0 <img>, 0 <svg>, 0 role=\"img\", 0 <area>, 0 <object>, 0 <embed>, 0 <canvas>, 0 <input type=\"image\">, 0 <picture>, 0 <figure>, aucune image CSS (background-image, list-style-image, border-image et mask-image à « none » sur tous les éléments). Aucune image texte : tous les textes, y compris le nom « Rampe » de l’en-tête, sont du texte HTML stylé en CSS. Non applicable."
 		},
 		{
 			"criterion": "1.9",
 			"page": "https://chikimuras.github.io/rampe/",
 			"status": "NA",
-			"note": "Tests 1.9.1 à 1.9.5 : Inventaire du DOM rendu dans Chromium (Playwright) : 0 <img>, 0 <svg>, 0 élément role=\"img\", 0 <area>, 0 <object>, 0 <embed>, 0 <canvas>, 0 <input type=\"image\">, 0 <picture>, 0 <figure>, aucune image CSS (background-image à « none » sur tous les éléments, aucun contenu ::before/::after) sur l’accueil (titre, trois paragraphes, navigation principale, pied de page). Aucune image, donc aucune légende d’image ; aucun élément <figure>/<figcaption>. Non applicable."
+			"note": "Tests 1.9.1 à 1.9.5 sur l’accueil : inventaire du DOM rendu dans Chromium (Playwright), thèmes clair et sombre : 0 <img>, 0 <svg>, 0 role=\"img\", 0 <area>, 0 <object>, 0 <embed>, 0 <canvas>, 0 <input type=\"image\">, 0 <picture>, 0 <figure>, aucune image CSS (background-image, list-style-image, border-image et mask-image à « none » sur tous les éléments). Aucune image, donc aucune légende d’image ; aucun <figure>/<figcaption>. Non applicable."
 		},
 		{
 			"criterion": "1.9",
 			"page": "https://chikimuras.github.io/rampe/referentiel/",
 			"status": "NA",
-			"note": "Tests 1.9.1 à 1.9.5 : Inventaire du DOM rendu dans Chromium (Playwright) : 0 <img>, 0 <svg>, 0 élément role=\"img\", 0 <area>, 0 <object>, 0 <embed>, 0 <canvas>, 0 <input type=\"image\">, 0 <picture>, 0 <figure>, aucune image CSS (background-image à « none » sur tous les éléments, aucun contenu ::before/::after) sur la page Référentiel (13 thématiques, 106 liens de critères, encadrés « Explication Rampe »). Aucune image, donc aucune légende d’image ; aucun élément <figure>/<figcaption>. Non applicable."
+			"note": "Tests 1.9.1 à 1.9.5 sur la page Référentiel (liste des 106 critères) : inventaire du DOM rendu dans Chromium (Playwright), thèmes clair et sombre : 0 <img>, 0 <svg>, 0 role=\"img\", 0 <area>, 0 <object>, 0 <embed>, 0 <canvas>, 0 <input type=\"image\">, 0 <picture>, 0 <figure>, aucune image CSS (background-image, list-style-image, border-image et mask-image à « none » sur tous les éléments). Aucune image, donc aucune légende d’image ; aucun <figure>/<figcaption>. Non applicable."
 		},
 		{
 			"criterion": "1.9",
 			"page": "https://chikimuras.github.io/rampe/referentiel/1-1/",
 			"status": "NA",
-			"note": "Tests 1.9.1 à 1.9.5 : Inventaire du DOM rendu dans Chromium (Playwright) : 0 <img>, 0 <svg>, 0 élément role=\"img\", 0 <area>, 0 <object>, 0 <embed>, 0 <canvas>, 0 <input type=\"image\">, 0 <picture>, 0 <figure>, aucune image CSS (background-image à « none » sur tous les éléments, aucun contenu ::before/::after) sur la fiche du critère 1.1 (texte officiel, 8 tests, blocs <details> de méthodologie, liens vers le glossaire). Aucune image, donc aucune légende d’image ; aucun élément <figure>/<figcaption>. Non applicable."
+			"note": "Tests 1.9.1 à 1.9.5 sur la fiche du critère 1.1 : inventaire du DOM rendu dans Chromium (Playwright), thèmes clair et sombre : 0 <img>, 0 <svg>, 0 role=\"img\", 0 <area>, 0 <object>, 0 <embed>, 0 <canvas>, 0 <input type=\"image\">, 0 <picture>, 0 <figure>, aucune image CSS (background-image, list-style-image, border-image et mask-image à « none » sur tous les éléments). Le séparateur « › » du fil d’Ariane est un contenu CSS ::before de type texte, avec un texte de remplacement vide : ce n’est pas une image au sens du RGAA. Aucune image, donc aucune légende d’image ; aucun <figure>/<figcaption>. Non applicable."
 		},
 		{
 			"criterion": "1.9",
 			"page": "https://chikimuras.github.io/rampe/referentiel/glossaire/",
 			"status": "NA",
-			"note": "Tests 1.9.1 à 1.9.5 : Inventaire du DOM rendu dans Chromium (Playwright) : 0 <img>, 0 <svg>, 0 élément role=\"img\", 0 <area>, 0 <object>, 0 <embed>, 0 <canvas>, 0 <input type=\"image\">, 0 <picture>, 0 <figure>, aucune image CSS (background-image à « none » sur tous les éléments, aucun contenu ::before/::after) sur le glossaire (liste de définitions <dl>, ancres). Aucune image, donc aucune légende d’image ; aucun élément <figure>/<figcaption>. Non applicable."
+			"note": "Tests 1.9.1 à 1.9.5 sur le glossaire : inventaire du DOM rendu dans Chromium (Playwright), thèmes clair et sombre : 0 <img>, 0 <svg>, 0 role=\"img\", 0 <area>, 0 <object>, 0 <embed>, 0 <canvas>, 0 <input type=\"image\">, 0 <picture>, 0 <figure>, aucune image CSS (background-image, list-style-image, border-image et mask-image à « none » sur tous les éléments). Aucune image, donc aucune légende d’image ; aucun <figure>/<figcaption>. Non applicable."
 		},
 		{
 			"criterion": "1.9",
 			"page": "https://chikimuras.github.io/rampe/audit/",
 			"status": "NA",
-			"note": "Tests 1.9.1 à 1.9.5 : Inventaire du DOM rendu dans Chromium (Playwright) : 0 <img>, 0 <svg>, 0 élément role=\"img\", 0 <area>, 0 <object>, 0 <embed>, 0 <canvas>, 0 <input type=\"image\">, 0 <picture>, 0 <figure>, aucune image CSS (background-image à « none » sur tous les éléments, aucun contenu ::before/::after) sur l’audit guidé (îlot Preact) (états de l’îlot examinés : état initial, erreur d’adresse (champ aria-invalid + message), 2 pages ajoutées, import d’un rapport automatique (statut « à confirmer », conflit, indices), critère 3.2 affiché, tous les <details> ouverts, boîte de dialogue « Remplacer l’audit en cours ? » ouverte, puis audit complet importé (tableau « Résultat par page », déclaration, schéma pluriannuel)). Aucune image, donc aucune légende d’image ; aucun élément <figure>/<figcaption>. Non applicable."
+			"note": "Tests 1.9.1 à 1.9.5 sur l’audit guidé (îlot Preact ; états de l’îlot examinés : état initial, adresse invalide soumise (message d’erreur), deux pages ajoutées, rapport automatique importé (statuts « à confirmer » sur 1.1 et 3.2, indice 9.2), critère 3.2 affiché, boîte de dialogue « Remplacer l’audit en cours ? » ouverte, puis audit complet de 11 pages importé (résultat, tableau « Résultat par page », déclaration, schéma pluriannuel avec période choisie, actions mises à jour depuis l’audit et action libre ajoutée : tableau des actions), tous les <details> ouverts) : inventaire du DOM rendu dans Chromium (Playwright), thèmes clair et sombre : 0 <img>, 0 <svg>, 0 role=\"img\", 0 <area>, 0 <object>, 0 <embed>, 0 <canvas>, 0 <input type=\"image\">, 0 <picture>, 0 <figure>, aucune image CSS (background-image, list-style-image, border-image et mask-image à « none » sur tous les éléments). Seuls contenus générés : les guillemets ::before/::after des <q> de l’aperçu de la déclaration (texte). Aucune image, donc aucune légende d’image ; aucun <figure>/<figcaption>. Non applicable."
 		},
 		{
 			"criterion": "1.9",
 			"page": "https://chikimuras.github.io/rampe/cockpit/",
 			"status": "NA",
-			"note": "Tests 1.9.1 à 1.9.5 : Inventaire du DOM rendu dans Chromium (Playwright) : 0 <img>, 0 <svg>, 0 élément role=\"img\", 0 <area>, 0 <object>, 0 <embed>, 0 <canvas>, 0 <input type=\"image\">, 0 <picture>, 0 <figure>, aucune image CSS (background-image à « none » sur tous les éléments, aucun contenu ::before/::after) sur le cockpit (encadré « En attente d’Alexandre », 7 barres <progress>, liste des ADR avec pastilles de statut « Accepted », liste des pages du journal). Aucune image, donc aucune légende d’image ; aucun élément <figure>/<figcaption>. Non applicable."
+			"note": "Tests 1.9.1 à 1.9.5 sur le cockpit : inventaire du DOM rendu dans Chromium (Playwright), thèmes clair et sombre : 0 <img>, 0 <svg>, 0 role=\"img\", 0 <area>, 0 <object>, 0 <embed>, 0 <canvas>, 0 <input type=\"image\">, 0 <picture>, 0 <figure>, aucune image CSS (background-image, list-style-image, border-image et mask-image à « none » sur tous les éléments). Aucune image, donc aucune légende d’image ; aucun <figure>/<figcaption>. Non applicable."
 		},
 		{
 			"criterion": "1.9",
 			"page": "https://chikimuras.github.io/rampe/cockpit/adr/0011-cli-audit-playwright/",
 			"status": "NA",
-			"note": "Tests 1.9.1 à 1.9.5 : Inventaire du DOM rendu dans Chromium (Playwright) : 0 <img>, 0 <svg>, 0 élément role=\"img\", 0 <area>, 0 <object>, 0 <embed>, 0 <canvas>, 0 <input type=\"image\">, 0 <picture>, 0 <figure>, aucune image CSS (background-image à « none » sur tous les éléments, aucun contenu ::before/::after) sur la page ADR-0011 (Markdown rendu, tableau, blocs de code). Aucune image, donc aucune légende d’image ; aucun élément <figure>/<figcaption>. Le caractère Unicode « ⛔ » présent dans le texte est du texte (glyphe d’une police), pas une image au sens du RGAA (aucune balise d’image ni role=\"img\"). Non applicable."
+			"note": "Tests 1.9.1 à 1.9.5 sur la page de l’ADR-0011 : inventaire du DOM rendu dans Chromium (Playwright), thèmes clair et sombre : 0 <img>, 0 <svg>, 0 role=\"img\", 0 <area>, 0 <object>, 0 <embed>, 0 <canvas>, 0 <input type=\"image\">, 0 <picture>, 0 <figure>, aucune image CSS (background-image, list-style-image, border-image et mask-image à « none » sur tous les éléments). Aucune image, donc aucune légende d’image ; aucun <figure>/<figcaption>. Non applicable."
 		},
 		{
 			"criterion": "1.9",
 			"page": "https://chikimuras.github.io/rampe/cockpit/journal/2026-10-15/",
 			"status": "NA",
-			"note": "Tests 1.9.1 à 1.9.5 : Inventaire du DOM rendu dans Chromium (Playwright) : 0 <img>, 0 <svg>, 0 élément role=\"img\", 0 <area>, 0 <object>, 0 <embed>, 0 <canvas>, 0 <input type=\"image\">, 0 <picture>, 0 <figure>, aucune image CSS (background-image à « none » sur tous les éléments, aucun contenu ::before/::after) sur la page de journal du 15/10/2026 (Markdown rendu, titres, listes, code). Aucune image, donc aucune légende d’image ; aucun élément <figure>/<figcaption>. Le caractère Unicode « ⛔ » présent dans le texte est du texte (glyphe d’une police), pas une image au sens du RGAA (aucune balise d’image ni role=\"img\"). Non applicable."
+			"note": "Tests 1.9.1 à 1.9.5 sur la page du journal du 15 octobre 2026 : inventaire du DOM rendu dans Chromium (Playwright), thèmes clair et sombre : 0 <img>, 0 <svg>, 0 role=\"img\", 0 <area>, 0 <object>, 0 <embed>, 0 <canvas>, 0 <input type=\"image\">, 0 <picture>, 0 <figure>, aucune image CSS (background-image, list-style-image, border-image et mask-image à « none » sur tous les éléments). Aucune image, donc aucune légende d’image ; aucun <figure>/<figcaption>. Non applicable."
 		},
 		{
 			"criterion": "1.9",
 			"page": "https://chikimuras.github.io/rampe/cockpit/docs/roadmap/",
 			"status": "NA",
-			"note": "Tests 1.9.1 à 1.9.5 : Inventaire du DOM rendu dans Chromium (Playwright) : 0 <img>, 0 <svg>, 0 élément role=\"img\", 0 <area>, 0 <object>, 0 <embed>, 0 <canvas>, 0 <input type=\"image\">, 0 <picture>, 0 <figure>, aucune image CSS (background-image à « none » sur tous les éléments, aucun contenu ::before/::after) sur la feuille de route (listes de tâches avec pastilles « Fait » / « À faire »). Aucune image, donc aucune légende d’image ; aucun élément <figure>/<figcaption>. Le caractère Unicode « ⛔ » présent dans le texte est du texte (glyphe d’une police), pas une image au sens du RGAA (aucune balise d’image ni role=\"img\"). Non applicable."
+			"note": "Tests 1.9.1 à 1.9.5 sur la feuille de route (roadmap) : inventaire du DOM rendu dans Chromium (Playwright), thèmes clair et sombre : 0 <img>, 0 <svg>, 0 role=\"img\", 0 <area>, 0 <object>, 0 <embed>, 0 <canvas>, 0 <input type=\"image\">, 0 <picture>, 0 <figure>, aucune image CSS (background-image, list-style-image, border-image et mask-image à « none » sur tous les éléments). Le symbole ⛔ (2 occurrences, dont la légende « Les ⛔ signalent un besoin d’action humaine ») est un caractère Unicode du texte, pas une image (ni <img>, ni SVG, ni image CSS). Aucune image, donc aucune légende d’image ; aucun <figure>/<figcaption>. Non applicable."
 		},
 		{
 			"criterion": "1.9",
 			"page": "https://chikimuras.github.io/rampe/referentiel/5-1/",
 			"status": "NA",
-			"note": "Tests 1.9.1 à 1.9.5 : Inventaire du DOM rendu dans Chromium (Playwright) : 0 <img>, 0 <svg>, 0 élément role=\"img\", 0 <area>, 0 <object>, 0 <embed>, 0 <canvas>, 0 <input type=\"image\">, 0 <picture>, 0 <figure>, aucune image CSS (background-image à « none » sur tous les éléments, aucun contenu ::before/::after) sur la fiche du critère 5.1 (texte officiel, test, méthodologie, encadré de vérification humaine). Aucune image, donc aucune légende d’image ; aucun élément <figure>/<figcaption>. Non applicable."
+			"note": "Tests 1.9.1 à 1.9.5 sur la fiche du critère 5.1 : inventaire du DOM rendu dans Chromium (Playwright), thèmes clair et sombre : 0 <img>, 0 <svg>, 0 role=\"img\", 0 <area>, 0 <object>, 0 <embed>, 0 <canvas>, 0 <input type=\"image\">, 0 <picture>, 0 <figure>, aucune image CSS (background-image, list-style-image, border-image et mask-image à « none » sur tous les éléments). Le séparateur « › » du fil d’Ariane est un contenu CSS ::before de type texte, avec un texte de remplacement vide : ce n’est pas une image au sens du RGAA. Aucune image, donc aucune légende d’image ; aucun <figure>/<figcaption>. Non applicable."
 		},
 		{
 			"criterion": "1.9",
 			"page": "https://chikimuras.github.io/rampe/referentiel/1-9/",
 			"status": "NA",
-			"note": "Tests 1.9.1 à 1.9.5 : Inventaire du DOM rendu dans Chromium (Playwright) : 0 <img>, 0 <svg>, 0 élément role=\"img\", 0 <area>, 0 <object>, 0 <embed>, 0 <canvas>, 0 <input type=\"image\">, 0 <picture>, 0 <figure>, aucune image CSS (background-image à « none » sur tous les éléments, aucun contenu ::before/::after) sur la fiche du critère 1.9 (texte officiel, tests, méthodologie, encadré de vérification humaine). Aucune image, donc aucune légende d’image ; aucun élément <figure>/<figcaption>. Non applicable."
+			"note": "Tests 1.9.1 à 1.9.5 sur la fiche du critère 1.9 : inventaire du DOM rendu dans Chromium (Playwright), thèmes clair et sombre : 0 <img>, 0 <svg>, 0 role=\"img\", 0 <area>, 0 <object>, 0 <embed>, 0 <canvas>, 0 <input type=\"image\">, 0 <picture>, 0 <figure>, aucune image CSS (background-image, list-style-image, border-image et mask-image à « none » sur tous les éléments). Le séparateur « › » du fil d’Ariane est un contenu CSS ::before de type texte, avec un texte de remplacement vide : ce n’est pas une image au sens du RGAA. Aucune image, donc aucune légende d’image ; aucun <figure>/<figcaption>. Non applicable."
+		},
+		{
+			"criterion": "1.9",
+			"page": "https://chikimuras.github.io/rampe/plan-du-site/",
+			"status": "NA",
+			"note": "Tests 1.9.1 à 1.9.5 sur le plan du site : inventaire du DOM rendu dans Chromium (Playwright), thèmes clair et sombre : 0 <img>, 0 <svg>, 0 role=\"img\", 0 <area>, 0 <object>, 0 <embed>, 0 <canvas>, 0 <input type=\"image\">, 0 <picture>, 0 <figure>, aucune image CSS (background-image, list-style-image, border-image et mask-image à « none » sur tous les éléments). Aucune image, donc aucune légende d’image ; aucun <figure>/<figcaption>. Non applicable."
 		}
 	]
 }
