@@ -16,9 +16,10 @@ Le site de Rampe doit lui-même être conforme au RGAA. Or l’auto-évaluation 
 1. **Une seule exception à l’ADR-0001** : le titre et le texte d’un ADR accepté peuvent recevoir des corrections **purement éditoriales** d’accessibilité ou de langue (critère RGAA 8.7 notamment) : traduire un mot anglais, réécrire une forme francisée, reformuler un titre en français.
 2. Une telle correction **ne change jamais la décision**, ni son contexte, ni ses conséquences. Le nom du fichier et l’identifiant de l’ADR restent les mêmes.
 3. Toute autre modification d’un ADR accepté reste interdite : elle passe par un nouvel ADR, comme le veut l’ADR-0001.
-4. **Traçabilité** : chaque correction est visible dans l’historique git (un commit dédié, qui la nomme) et consignée dans le journal du jour.
+4. **Traçabilité** : les PR sont fusionnées en *squash* (ADR-0006). Le commit de fusion de la PR qui porte une telle correction nomme l’ADR-0024, et l’entrée du journal du jour la consigne.
 
 ## Conséquences
 
-- Les titres d’ADR-0003, 0005, 0006 et 0021, et le texte d’ADR-0009 et 0023, sont corrigés dans ce cadre (branche `fix/rgaa-dernieres-nc`).
+- Sont corrigés dans ce cadre (branche `fix/rgaa-dernieres-nc`) : les titres d’ADR-0003, 0005, 0006 et 0021, le texte d’ADR-0009 et 0023 (formes francisées), et celui d’ADR-0019 (« même cheat sheet » devient « même fiche OWASP »).
+- L’ADR-0001 renvoie vers cette exception.
 - Un relecteur vérifie que chaque correction de ce type reste éditoriale ; au moindre doute sur le sens, c’est un nouvel ADR.
