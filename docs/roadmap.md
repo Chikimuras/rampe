@@ -1,9 +1,9 @@
 ---
-title: Roadmap
+title: Feuille de route
 order: 2
 ---
 
-Chaque case cochée correspond à du code mergé sur `main` avec la CI verte. Les ⛔ signalent un besoin d’action humaine.
+Chaque case cochée correspond à du code fusionné sur `main` avec la CI verte. Les ⛔ signalent un besoin d’action humaine.
 
 ## Phase 0 — Socle et cockpit
 
