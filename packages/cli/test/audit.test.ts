@@ -9,6 +9,7 @@ import {
 	parseAuditUrl,
 	parseAxeOutput,
 	redact,
+	sameDocument,
 	stripControl,
 } from "../src/audit.ts";
 
@@ -25,16 +26,18 @@ describe("parseAxeOutput", () => {
 	it("relit un résultat axe bien formé", () => {
 		const r = raw("image-alt", ["wcag2a"]);
 		const shadow = { ...raw("label", []), nodes: [{ target: [["#hote", "input"]], html: "<input>" }] };
-		const ok = { title: "Titre", violations: [r], incomplete: [shadow] };
+		const ok = { title: "Titre", url: "https://exemple.fr/", violations: [r], incomplete: [shadow] };
 		expect(parseAxeOutput(JSON.stringify(ok))).toEqual(ok);
 	});
 
-	const out = (o: object) => JSON.stringify({ title: "T", violations: [], incomplete: [], ...o });
+	const out = (o: object) =>
+		JSON.stringify({ title: "T", url: "https://exemple.fr/", violations: [], incomplete: [], ...o });
 	it.each([
 		["non-chaîne", { title: "T", violations: [], incomplete: [] }],
 		["JSON invalide", "{"],
 		["sans titre", JSON.stringify({ violations: [], incomplete: [] })],
 		["sans incomplete", JSON.stringify({ title: "T", violations: [] })],
+		["sans URL", JSON.stringify({ title: "T", violations: [], incomplete: [] })],
 		["règle sans id", out({ violations: [{ tags: [], nodes: [] }] })],
 		["nœud sans html", out({ incomplete: [{ id: "x", tags: [], nodes: [{ target: [] }] }] })],
 		["cible objet", out({ violations: [{ id: "x", tags: [], nodes: [{ target: [{}], html: "<x>" }] }] })],
@@ -44,6 +47,16 @@ describe("parseAxeOutput", () => {
 		],
 	])("refuse un résultat %s", (_, value) => {
 		expect(() => parseAxeOutput(value)).toThrow("résultat d’axe-core illisible");
+	});
+});
+
+describe("sameDocument", () => {
+	it("ignore identifiants et fragment, pas le chemin ni la requête", () => {
+		expect(sameDocument("http://a:b@h.fr/p?q=1#x", "http://h.fr/p?q=1")).toBe(true);
+		expect(sameDocument("http://h.fr/p", "http://h.fr/p#ancre")).toBe(true);
+		expect(sameDocument("http://h.fr/p", "http://h.fr/ailleurs")).toBe(false);
+		expect(sameDocument("http://h.fr/p?q=1", "http://h.fr/p?q=2")).toBe(false);
+		expect(sameDocument("http://h.fr/p", "https://h.fr/p")).toBe(false);
 	});
 });
 
