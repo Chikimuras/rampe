@@ -244,7 +244,9 @@ pnpm --filter rampe build
 cd packages/cli && npm publish --access public
 ```
 
-Pas de `--provenance` ici : l’attestation n’est possible que depuis la CI. Ensuite, sur npmjs.com, page du paquet `rampe`, *Settings*, section *Trusted Publisher* :
+Pas de `--provenance` ici : l’attestation n’est possible que depuis la CI.
+
+Ensuite, déclarer l’éditeur de confiance **juste avant de poser l’étiquette de la version suivante** : une configuration doit être validée par une publication réussie **dans les 2 jours** (documentation npm), sinon elle expire et il faut la supprimer puis la recréer. Sur npmjs.com, page du paquet `rampe`, *Settings*, section *Trusted Publisher* :
 
 - fournisseur : GitHub Actions ;
 - *Organization or user* : `Chikimuras` ;
@@ -253,4 +255,4 @@ Pas de `--provenance` ici : l’attestation n’est possible que depuis la CI. E
 - *Environment name* : vide ;
 - autoriser la publication directe (`npm publish`).
 
-Une configuration doit être validée par une publication réussie **dans les 2 jours** (documentation npm), sinon elle expire et il faut la recréer : la déclarer au moment de publier la version suivante par la CI. Une fois validée, npm recommande d’interdire la publication par jeton classique (*Publishing access* : exiger la double authentification et refuser les jetons).
+Puis, dans les 2 jours, publier la version suivante par la CI (PR de version, puis étiquette, voir plus haut). Une fois la configuration validée, npm recommande d’interdire la publication par jeton classique (*Publishing access* : exiger la double authentification et refuser les jetons).
