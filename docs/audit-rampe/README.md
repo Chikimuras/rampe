@@ -15,7 +15,7 @@ Deux étapes distinctes (ADR-0021) :
 
 `session.json` est une session de l’audit guidé (format de l’ADR-0016) : on peut l’importer dans `/audit/` (champ « Importer un audit (JSON) ») pour relire chaque évaluation et sa justification. La CI lance `pnpm auto-evaluation --verifier`, qui échoue si `session.json` ne correspond pas exactement aux fragments.
 
-Total attendu : **106 critères × nombre de pages de l’échantillon** (12 pages aujourd’hui, soit 1 272 évaluations ; la page « plan du site », ajoutée en dernier, reste à évaluer). Le taux de conformité (ADR-0015) n’est calculé et affiché qu’une fois toutes les évaluations présentes.
+Total attendu : **106 critères × nombre de pages de l’échantillon** (12 pages aujourd’hui, soit 1 272 évaluations). Le taux de conformité (ADR-0015) n’est calculé et affiché qu’une fois toutes les évaluations présentes.
 
 ## Format d’un fragment
 

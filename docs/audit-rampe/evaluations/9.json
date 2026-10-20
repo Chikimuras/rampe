@@ -24,7 +24,7 @@
 			"criterion": "9.1",
 			"page": "https://chikimuras.github.io/rampe/referentiel/glossaire/",
 			"status": "C",
-			"note": "Tests 9.1.1, 9.1.2 et 9.1.3 : Page examinée : page Glossaire (/referentiel/glossaire/). Titres relevés : un seul h1 « Glossaire du RGAA 4.1.2 » ; les 238 termes sont des <dt> d’une liste de description (<dl>), structure prévue par le RGAA pour un glossaire (glossaire « Listes »). Test 9.1.3 : les termes, en gras 18 px, sont des intitulés de liste de description et non des titres de section ; aucun autre passage mis en forme comme un titre. Hiérarchie sans saut et cohérente, chaque titre décrit la section qui le suit ; aucun role=\"heading\"."
+			"note": "Tests 9.1.1, 9.1.2 et 9.1.3 : Page examinée : page Glossaire (/referentiel/glossaire/). Titres relevés : un seul h1 « Glossaire du RGAA 4.1.2 » ; les 119 termes sont des <dt> d’une liste de description (<dl>), structure prévue par le RGAA pour un glossaire (glossaire « Listes »). Test 9.1.3 : les termes, en gras 18 px, sont des intitulés de liste de description et non des titres de section ; aucun autre passage mis en forme comme un titre. Hiérarchie sans saut et cohérente, chaque titre décrit la section qui le suit ; aucun role=\"heading\"."
 		},
 		{
 			"criterion": "9.1",
@@ -168,7 +168,7 @@
 			"criterion": "9.3",
 			"page": "https://chikimuras.github.io/rampe/referentiel/glossaire/",
 			"status": "C",
-			"note": "Tests 9.3.1, 9.3.2 et 9.3.3 : Page examinée : page Glossaire (/referentiel/glossaire/). Listes relevées : navigation principale en <ul>/<li> ; les 238 couples terme/définition en <dl>/<dt>/<dd> (9.3.3) ; énumérations des définitions en <ul>, imbriquées au besoin (78 listes). Aucune énumération hors balisage de liste."
+			"note": "Tests 9.3.1, 9.3.2 et 9.3.3 : Page examinée : page Glossaire (/referentiel/glossaire/). Listes relevées : navigation principale en <ul>/<li> ; les 119 couples terme/définition (119 <dt>, 119 <dd> comptés dans le HTML servi) en <dl>/<dt>/<dd> (9.3.3) ; énumérations des définitions en <ul>, imbriquées au besoin (78 listes). Aucune énumération hors balisage de liste."
 		},
 		{
 			"criterion": "9.3",
@@ -240,7 +240,7 @@
 			"criterion": "9.4",
 			"page": "https://chikimuras.github.io/rampe/referentiel/glossaire/",
 			"status": "NA",
-			"note": "Tests 9.4.1 et 9.4.2 : Page examinée : page Glossaire (/referentiel/glossaire/). 0 <q>/<blockquote> ; textes entre guillemets : renvois à des termes (« nom accessible », « base de référence »), exemples d’intitulés ou de phrases faisant partie des définitions officielles (« Lancer votre recherche », « L’une des exportations importantes est la goyave ») et valeurs d’attributs. Mentions et exemples, pas des citations d’une source. Non applicable."
+			"note": "Tests 9.4.1 et 9.4.2 : Page examinée : page Glossaire (/referentiel/glossaire/). 0 <q>/<blockquote> ; textes entre guillemets : renvois à des termes (« nom accessible », « base de référence »), exemples d’intitulés ou de phrases faisant partie des définitions officielles (« Lancer votre recherche », « L’une des exportations importantes est la goyave ») et valeurs d’attributs. Cas examiné en particulier : « Note : “signalés uniquement par la couleur” signifie que le lien n’est accompagné d’aucun marqueur visuel… » (définition « Lien signalé uniquement par la couleur ») : le glossaire officiel commente l’expression de ses propres critères (emploi autonyme dans le texte même du RGAA, que la page reproduit en entier avec sa source), ce n’est pas un extrait d’une autre source inséré dans un texte d’auteur. Mentions et exemples, pas des citations. Non applicable. Règle appliquée aux deux pages (glossaire et journal) : est une citation un passage reproduit mot pour mot d’une autre source et inséré dans un texte d’auteur, qui en attribue la formulation à cette source ; n’en est pas une l’emploi autonyme d’une expression par le document même qui la définit (un texte qui commente ses propres termes)."
 		},
 		{
 			"criterion": "9.4",
@@ -264,7 +264,7 @@
 			"criterion": "9.4",
 			"page": "https://chikimuras.github.io/rampe/cockpit/journal/2026-10-15/",
 			"status": "NC",
-			"note": "Test 9.4.1 en échec : Page examinée : page du journal du 15/10/2026 (/cockpit/journal/2026-10-15/). Dans la section « Phase 3 — Taux de conformité selon la méthode RGAA (PR #17) », la phrase « Le texte officiel, au niveau de l’échantillon, parle d’« invalidé sur une seule page ». » reprend un extrait de la méthode officielle entre guillemets dans un simple <li>, sans élément <q> (0 <q> dans la page). Les autres textes entre « » sont des libellés d’interface ou de messages de Rampe (« Non testé », « Conforme », « aucune non-conformité détectée »…), des mentions et non des citations d’une source. Test 9.4.2 : aucun bloc de citation. Correction : <q cite=\"https://accessibilite.numerique.gouv.fr/obligations/evaluation-conformite/\">invalidé sur une seule page</q>."
+			"note": "Test 9.4.1 en échec : Page examinée : page du journal du 15/10/2026 (/cockpit/journal/2026-10-15/). Dans la section « Phase 3 — Taux de conformité selon la méthode RGAA (PR #17) », la phrase « Le texte officiel, au niveau de l’échantillon, parle d’« invalidé sur une seule page ». » reprend un extrait de la méthode officielle entre guillemets dans un simple <li>, sans élément <q> (0 <q> dans la page). Les autres textes entre « » sont des libellés d’interface ou de messages de Rampe (« Non testé », « Conforme », « aucune non-conformité détectée »…), des mentions et non des citations d’une source. Ici, un texte d’auteur (le journal de Rampe) reproduit la formulation d’une autre source, la méthode officielle, et la lui attribue (« Le texte officiel […] parle de ») : c’est une citation, au contraire de la note du glossaire qui commente ses propres termes. Règle appliquée aux deux pages (glossaire et journal) : est une citation un passage reproduit mot pour mot d’une autre source et inséré dans un texte d’auteur, qui en attribue la formulation à cette source ; n’en est pas une l’emploi autonyme d’une expression par le document même qui la définit (un texte qui commente ses propres termes). Test 9.4.2 : aucun bloc de citation. Correction : <q cite=\"https://accessibilite.numerique.gouv.fr/obligations/evaluation-conformite/\">invalidé sur une seule page</q>."
 		},
 		{
 			"criterion": "9.4",

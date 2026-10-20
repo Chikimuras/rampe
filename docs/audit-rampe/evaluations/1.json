@@ -54,7 +54,7 @@
 			"criterion": "1.1",
 			"page": "https://chikimuras.github.io/rampe/cockpit/docs/roadmap/",
 			"status": "NA",
-			"note": "Tests 1.1.1 à 1.1.8 sur la feuille de route (roadmap) : inventaire du DOM rendu dans Chromium (Playwright), thèmes clair et sombre : 0 <img>, 0 <svg>, 0 role=\"img\", 0 <area>, 0 <object>, 0 <embed>, 0 <canvas>, 0 <input type=\"image\">, 0 <picture>, 0 <figure>, aucune image CSS (background-image, list-style-image, border-image et mask-image à « none » sur tous les éléments). Le symbole ⛔ (2 occurrences, dont la légende « Les ⛔ signalent un besoin d’action humaine ») est un caractère Unicode du texte, pas une image (ni <img>, ni SVG, ni image CSS). Aucune image porteuse d’information, aucune zone d’image réactive, aucun bouton image : rien à évaluer. Non applicable."
+			"note": "Tests 1.1.1 à 1.1.8 sur la feuille de route (roadmap) : inventaire du DOM rendu dans Chromium (Playwright), thèmes clair et sombre : 0 <img>, 0 <svg>, 0 role=\"img\", 0 <area>, 0 <object>, 0 <embed>, 0 <canvas>, 0 <input type=\"image\">, 0 <picture>, 0 <figure>, aucune image CSS (background-image, list-style-image, border-image et mask-image à « none » sur tous les éléments). Le symbole ⛔ (7 occurrences dans le HTML servi : la légende et les 6 tâches en attente d’une action humaine, dont la légende « Les ⛔ signalent un besoin d’action humaine ») est un caractère Unicode du texte, pas une image (ni <img>, ni SVG, ni image CSS). Aucune image porteuse d’information, aucune zone d’image réactive, aucun bouton image : rien à évaluer. Non applicable."
 		},
 		{
 			"criterion": "1.1",
