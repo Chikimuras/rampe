@@ -1815,7 +1815,8 @@ describe("audit guidé (bout en bout)", { timeout: 60_000 }, () => {
 			);
 			// Le focus est sur le champ, relié à son message : aucune annonce de plus pour l'export bloqué (7.5).
 			await expect(field.getAttribute("aria-describedby")).resolves.toContain("declaration-updatedOn-erreur");
-			await expect(alertText(page)).resolves.not.toContain("Export impossible");
+			// Le clic sur l'export ne déclenche pas l'alerte de sortie du champ : l'erreur n'est lue qu'une fois (7.5).
+			await expect(alertText(page)).resolves.toBe("");
 			await expect(statusText(page)).resolves.not.toContain("Export impossible");
 			await page.getByRole("button", { name: "Télécharger (Markdown)" }).click();
 			await page.waitForTimeout(800);
@@ -2149,7 +2150,8 @@ describe("audit guidé (bout en bout)", { timeout: 60_000 }, () => {
 			await expect
 				.poll(() => page.getByLabel("Année de début").getAttribute("aria-describedby"))
 				.toBe("schema-debut-erreur");
-			await expect(alertText(page)).resolves.not.toContain("Export impossible");
+			// Le clic sur l'export ne déclenche pas l'alerte de sortie du champ : l'erreur n'est lue qu'une fois (7.5).
+			await expect(alertText(page)).resolves.toBe("");
 			await expect(statusText(page)).resolves.not.toContain("Export impossible");
 			await page.waitForTimeout(600);
 			expect(downloads).toEqual([]);

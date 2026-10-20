@@ -106,6 +106,12 @@ type Filter = "all" | "NT" | "NC" | "auto";
  */
 type Announce = (message: string, error?: boolean) => void;
 
+/**
+ * Le focus quitte le champ vers un bouton d'export (`data-export`) : l'export, bloqué par une date ou une année
+ * invalide, remettra le focus sur le champ, relié à son message. Une alerte de sortie ferait lire l'erreur deux fois (RGAA 7.5).
+ */
+const towardsExport = (e: FocusEvent) => (e.relatedTarget as HTMLElement | null)?.closest?.("[data-export]") != null;
+
 const STORAGE_KEY = "rampe.audit.session";
 /** Copies d'une session illisible mises de côté, chacune sous sa clé horodatée : jamais écrasées (ADR-0016). */
 const IGNORED_PREFIX = `${STORAGE_KEY}.ignoree.`;
@@ -1991,12 +1997,13 @@ function Declaration({
 				if (kind === "date") setDrafts((d) => ({ ...d, [field]: v }));
 				else set(field, v);
 			},
-			onBlur: () => {
+			onBlur: (e: FocusEvent) => {
 				if (kind === "date") commitDate(field);
 				setTouched((t) => new Set(t).add(field));
 				// Erreur affichée alors que le focus est déjà sur le champ suivant : annoncée (RGAA 7.5).
 				// Seulement si la valeur a changé depuis la dernière annonce : traverser le champ ne la répète pas.
-				if (wrong && alerted.current[field] !== value) setAnnounce(`${label} : ${error}`, true);
+				if (wrong && alerted.current[field] !== value && !(kind === "date" && towardsExport(e)))
+					setAnnounce(`${label} : ${error}`, true);
 				alerted.current[field] = wrong ? value : undefined;
 			},
 		};
@@ -2109,13 +2116,13 @@ function Declaration({
 				<Preview blocks={blocks} />
 			</section>
 			<p class="audit-declaration-actions">
-				<button type="button" onClick={copy}>
+				<button type="button" data-export onClick={copy}>
 					Copier le HTML
 				</button>
-				<button type="button" onClick={() => download("html")}>
+				<button type="button" data-export onClick={() => download("html")}>
 					Télécharger (HTML)
 				</button>
-				<button type="button" onClick={() => download("markdown")}>
+				<button type="button" data-export onClick={() => download("markdown")}>
 					Télécharger (Markdown)
 				</button>
 			</p>
@@ -2335,12 +2342,13 @@ function Schema({
 						aria-invalid={startInvalid ? "true" : undefined}
 						aria-describedby={startInvalid ? "schema-debut-erreur" : undefined}
 						onInput={(e) => setStartDraft((e.currentTarget as HTMLInputElement).value)}
-						onBlur={() => {
+						onBlur={(e) => {
 							// Erreur affichée alors que le focus est déjà sur le champ suivant : annoncée (RGAA 7.5).
 							const value = startDraft;
 							const ok = commitStart();
 							// Seulement si la valeur a changé depuis la dernière annonce.
-							if (!ok && alertedStart.current !== value) setAnnounce(`Année de début : ${YEAR_ERROR}`, true);
+							if (!ok && alertedStart.current !== value && !towardsExport(e))
+								setAnnounce(`Année de début : ${YEAR_ERROR}`, true);
 							alertedStart.current = ok ? undefined : value;
 						}}
 					/>
@@ -2546,18 +2554,18 @@ function Schema({
 				</section>
 			)}
 			<p class="audit-declaration-actions">
-				<button type="button" onClick={() => download("schema", "html")}>
+				<button type="button" data-export onClick={() => download("schema", "html")}>
 					Télécharger le schéma (HTML)
 				</button>
-				<button type="button" onClick={() => download("schema", "markdown")}>
+				<button type="button" data-export onClick={() => download("schema", "markdown")}>
 					Télécharger le schéma (Markdown)
 				</button>
 				{year !== undefined && (
 					<>
-						<button type="button" onClick={() => download("plan", "html")}>
+						<button type="button" data-export onClick={() => download("plan", "html")}>
 							Télécharger le plan d’action {year} (HTML)
 						</button>
-						<button type="button" onClick={() => download("plan", "markdown")}>
+						<button type="button" data-export onClick={() => download("plan", "markdown")}>
 							Télécharger le plan d’action {year} (Markdown)
 						</button>
 					</>
