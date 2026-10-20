@@ -37,8 +37,10 @@ const officialUrl = `https://accessibilite.numerique.gouv.fr/methode/criteres-et
 
 <Base title={`Critère RGAA ${c.id}`} description={`Critère ${c.id} du RGAA ${rgaa.version} : texte officiel, tests et méthodologie.`}>
 	<nav aria-label="Fil d’Ariane" class="crumbs">
-		<a href={url("referentiel/")}>Référentiel</a> ›{" "}
-		<a href={url(`referentiel/#thematique-${c.topic}`)}>Thématique {c.topic} : {topic?.title}</a>
+		<ol>
+			<li><a href={url("referentiel/")}>Référentiel</a></li>
+			<li><a href={url(`referentiel/#thematique-${c.topic}`)}>Thématique {c.topic} : {topic?.title}</a></li>
+		</ol>
 	</nav>
 
 	<h1><span class="num">Critère {c.id}</span> <span set:html={md(c.title)} /></h1>
@@ -200,6 +202,20 @@ const officialUrl = `https://accessibilite.numerique.gouv.fr/methode/criteres-et
 	.crumbs {
 		font-size: 0.875rem;
 		color: var(--muted);
+	}
+	/* Fil d’Ariane en liste (critère 9.3), affiché en ligne ; le séparateur est décoratif : texte de remplacement vide,
+	   donc non restitué (la première déclaration sert aux navigateurs sans cette syntaxe). */
+	.crumbs ol {
+		display: flex;
+		flex-wrap: wrap;
+		list-style: none;
+		margin: 0;
+		padding: 0;
+	}
+	.crumbs li + li::before {
+		content: "›";
+		content: "›" / "";
+		margin: 0 0.4em;
 	}
 	h1 .num {
 		display: block;

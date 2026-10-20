@@ -2,6 +2,7 @@
 import { rgaa } from "@rampe/core";
 import RgaaSource from "../../components/RgaaSource.astro";
 import Base from "../../layouts/Base.astro";
+import { markEnglishText, OFFICIAL_TERMS } from "../../lib/lang";
 import { renderGlossaryHtml } from "../../lib/render";
 import { url } from "../../lib/url";
 ---
@@ -18,7 +19,7 @@ import { url } from "../../lib/url";
 		{
 			rgaa.glossary.map((e) => (
 				<>
-					<dt id={e.anchor}>{e.title}</dt>
+					<dt id={e.anchor} set:html={markEnglishText(e.title, OFFICIAL_TERMS)} />
 					<dd set:html={renderGlossaryHtml(e.body)} />
 				</>
 			))

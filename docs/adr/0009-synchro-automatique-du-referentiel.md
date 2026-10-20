@@ -23,7 +23,7 @@ GitHub pose une contrainte : une PR ouverte avec le `GITHUB_TOKEN` d’un workfl
    - aucun secret ni jeton personnel : seul le `GITHUB_TOKEN` éphémère est utilisé (**CICD-SEC-6**) ;
    - le contenu téléchargé n’est **jamais exécuté**. Il est seulement validé comme JSON puis écrit, et ce sont les tests de la CI qui le jugent (**CICD-SEC-4**, *Poisoned Pipeline Execution*) ;
    - la PR n’est jamais mergée automatiquement : elle suit le flux normal (ADR-0006).
-4. Le réglage du dépôt « Allow GitHub Actions to create pull requests » est activé. Attention : avec zéro approbation requise sur `main`, un jeton `contents: write` **pourrait** techniquement merger une PR dont le check est vert. Ce n’est pas un contrôle qui l’empêche, mais le code du workflow, qui n’appelle jamais `gh pr merge` ; toute modification de `sync-rgaa.yml` passe elle-même par une PR relue.
+4. Le réglage du dépôt « <span lang="en">Allow GitHub Actions to create pull requests</span> » est activé. Attention : avec zéro approbation requise sur `main`, un jeton `contents: write` **pourrait** techniquement merger une PR dont le check est vert. Ce n’est pas un contrôle qui l’empêche, mais le code du workflow, qui n’appelle jamais `gh pr merge` ; toute modification de `sync-rgaa.yml` passe elle-même par une PR relue.
 
 ## Conséquences
 

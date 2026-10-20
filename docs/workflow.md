@@ -7,11 +7,15 @@ Comment Claude construit Rampe sans intervention humaine, et où l’humain gard
 
 ## Rôles
 
-| Rôle | Qui | Fait | Ne fait pas |
-|---|---|---|---|
-| **Orchestrateur** | Session Claude principale | Choisit la prochaine tâche de la roadmap, écrit les ADR, découpe, délègue, merge | N’écrit pas le gros du code |
-| **Implémenteur** | Sous-agent, worktree git isolé | TDD : test qui échoue → code → `pnpm check` vert → PR | Ne merge jamais |
-| **Relecteur** | Sous-agent neuf, sans le contexte de l’implémenteur | Relecture adversariale du diff : bugs, écarts aux ADR, sécurité. **Doit avoir un shell** pour exécuter tests et scripts : ce qui n’est pas exécuté reste une hypothèse | Ne corrige pas lui-même |
+<table>
+<caption>Rôles</caption>
+<thead><tr><th>Rôle</th><th>Qui</th><th>Fait</th><th>Ne fait pas</th></tr></thead>
+<tbody>
+<tr><td><strong>Orchestrateur</strong></td><td>Session Claude principale</td><td>Choisit la prochaine tâche de la roadmap, écrit les ADR, découpe, délègue, merge</td><td>N’écrit pas le gros du code</td></tr>
+<tr><td><strong>Implémenteur</strong></td><td>Sous-agent, worktree git isolé</td><td>TDD : test qui échoue → code → <code>pnpm check</code> vert → PR</td><td>Ne merge jamais</td></tr>
+<tr><td><strong>Relecteur</strong></td><td>Sous-agent neuf, sans le contexte de l’implémenteur</td><td>Relecture adversariale du diff : bugs, écarts aux ADR, sécurité. <strong>Doit avoir un shell</strong> pour exécuter tests et scripts : ce qui n’est pas exécuté reste une hypothèse</td><td>Ne corrige pas lui-même</td></tr>
+</tbody>
+</table>
 
 Un relecteur qui n’a pas écrit le code n’a pas ses angles morts : c’est l’intérêt de le lancer sans contexte.
 
@@ -28,11 +32,15 @@ Un relecteur qui n’a pas écrit le code n’a pas ses angles morts : c’est l
 
 ## Gates
 
-| Gate | Exécuté par | Contenu |
-|---|---|---|
-| Local | Hook `Stop` (`.claude/gate.sh`) | `pnpm check` : Biome, typecheck, tests |
-| Relecture | Sous-agent relecteur | Diff de la PR |
-| Final | GitHub Actions (`ci.yml`), check requis sur `main` | `pnpm check` + build ; déploiement si `main` |
+<table>
+<caption>Gates</caption>
+<thead><tr><th>Gate</th><th>Exécuté par</th><th>Contenu</th></tr></thead>
+<tbody>
+<tr><td>Local</td><td>Hook <code>Stop</code> (<code>.claude/gate.sh</code>)</td><td><code>pnpm check</code> : Biome, typecheck, tests</td></tr>
+<tr><td>Relecture</td><td>Sous-agent relecteur</td><td>Diff de la PR</td></tr>
+<tr><td>Final</td><td>GitHub Actions (<code>ci.yml</code>), check requis sur <code>main</code></td><td><code>pnpm check</code> + build ; déploiement si <code>main</code></td></tr>
+</tbody>
+</table>
 
 ## Points d’arrêt humains
 

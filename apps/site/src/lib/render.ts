@@ -7,6 +7,7 @@ import type { Element, ElementContent, Nodes, Root } from "hast";
 import { type Schema, sanitize } from "hast-util-sanitize";
 import { toHtml } from "hast-util-to-html";
 import { htmlToHast, markdownToHast } from "satteri";
+import { markEnglish, OFFICIAL_TERMS, termsPattern } from "./lang";
 import { url } from "./url";
 
 // Exactement ce que le référentiel utilise (inventaire des données 4.1.2) : ni image, ni id, ni style, ni événement.
@@ -20,6 +21,9 @@ const schema: Schema = {
 };
 
 type Parent = { children: ElementContent[] };
+
+// Mots anglais du texte officiel balisés `lang="en"` (critère 8.7) : balisage seulement, texte inchangé (ADR-0010).
+const officialEnglish = termsPattern(OFFICIAL_TERMS);
 
 /** Applique `fn` à chaque lien du sous-arbre ; `fn` renvoie les nœuds qui remplacent le lien. */
 function mapLinks(node: Parent, fn: (a: Element) => ElementContent[]): void {
@@ -72,6 +76,7 @@ export function renderMarkdown(markdown: string, { inline = false, stripLinks = 
 		a.properties.href = url(`referentiel/glossaire/#${anchor}`);
 		return [a];
 	});
+	markEnglish(tree, officialEnglish);
 	const [only] = tree.children;
 	if (inline && tree.children.length === 1 && only?.type === "element" && only.tagName === "p")
 		return toHtml(only.children);
@@ -82,5 +87,6 @@ export function renderMarkdown(markdown: string, { inline = false, stripLinks = 
 export function renderGlossaryHtml(html: string): string {
 	const tree = sanitize(htmlToHast(html, { fragment: true }) as Nodes, schema) as Root;
 	mapSafeLinks(tree);
+	markEnglish(tree, officialEnglish);
 	return toHtml(tree);
 }

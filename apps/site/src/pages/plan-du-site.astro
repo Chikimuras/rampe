@@ -1,0 +1,95 @@
+---
+// Plan du site (critère RGAA 12.1), généré au build : aucune liste de pages à tenir à jour à la main.
+// - pages fixes : chaque .astro de src/pages sans paramètre de route, hors 404 (lib/sitemap.ts) ;
+// - pages dynamiques : une fiche par critère, une page par ADR, entrée du journal et document.
+// `pnpm audit:rampe` vérifie que ce plan relie chaque page construite, et que chaque page relie ce plan.
+import { getCollection } from "astro:content";
+import { rgaa } from "@rampe/core";
+import Base from "../layouts/Base.astro";
+import { journalTitle } from "../lib/labels";
+import { renderMarkdown } from "../lib/render";
+import { fixedPages, SECTIONS, type Section } from "../lib/sitemap";
+import { url } from "../lib/url";
+
+const TITLE = "Plan du site";
+// `import.meta.glob` exclut le fichier qui l’appelle : cette page est ajoutée à part.
+const sources = import.meta.glob<string>("./**/*.astro", { query: "?raw", import: "default", eager: true });
+const fixed = [...fixedPages(sources), { path: "plan-du-site/", title: TITLE, section: "" as Section }].sort((a, b) =>
+	a.path.localeCompare(b.path),
+);
+
+const topics = rgaa.topics.map((t) => ({ ...t, criteria: rgaa.criteria.filter((c) => c.topic === t.number) }));
+const adrs = (await getCollection("adr")).sort((a, b) => a.id.localeCompare(b.id));
+const journal = (await getCollection("journal")).sort((a, b) => a.data.date.getTime() - b.data.date.getTime());
+const docs = (await getCollection("docs")).sort((a, b) => a.data.order - b.data.order);
+---
+
+<Base title={TITLE} description="Toutes les pages du site de Rampe, par rubrique.">
+	<h1>{TITLE}</h1>
+	{
+		(Object.keys(SECTIONS) as Section[]).map((section) => (
+			<section aria-labelledby={`rubrique-${section || "rampe"}`}>
+				<h2 id={`rubrique-${section || "rampe"}`}>{SECTIONS[section]}</h2>
+				<ul>
+					{fixed
+						.filter((p) => p.section === section)
+						.map((p) => (
+							<li>
+								<a href={url(p.path)}>{p.title}</a>
+							</li>
+						))}
+				</ul>
+				{section === "referentiel" && (
+					<>
+						<h3>Thématiques et critères</h3>
+						<ol>
+							{topics.map((t) => (
+								<li>
+									<a href={url(`referentiel/#thematique-${t.number}`)}>{t.title}</a>
+									<ul>
+										{t.criteria.map((c) => (
+											<li>
+												<a href={url(`referentiel/${c.id.replace(".", "-")}/`)}>
+													Critère {c.id} :{" "}
+													<span set:html={renderMarkdown(c.title, { inline: true, stripLinks: true })} />
+												</a>
+											</li>
+										))}
+									</ul>
+								</li>
+							))}
+						</ol>
+					</>
+				)}
+				{section === "cockpit" && (
+					<>
+						<h3>Décisions d’architecture (ADR)</h3>
+						<ol>
+							{adrs.map((a) => (
+								<li>
+									<a href={url(`cockpit/adr/${a.id}/`)}>{a.data.title}</a>
+								</li>
+							))}
+						</ol>
+						<h3>Journal de bord</h3>
+						<ul>
+							{journal.map((j) => (
+								<li>
+									<a href={url(`cockpit/journal/${j.id}/`)}>{journalTitle(j)}</a> — {j.data.title}
+								</li>
+							))}
+						</ul>
+						<h3>Documentation</h3>
+						<ul>
+							{docs.map((d) => (
+								<li>
+									<a href={url(`cockpit/docs/${d.id}/`)}>{d.data.title}</a>
+								</li>
+							))}
+						</ul>
+					</>
+				)}
+			</section>
+		))
+	}
+</Base>
