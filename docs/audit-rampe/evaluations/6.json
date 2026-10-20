@@ -36,7 +36,7 @@
 			"criterion": "6.1",
 			"page": "https://chikimuras.github.io/rampe/cockpit/",
 			"status": "C",
-			"note": "Tests 6.1.1 à 6.1.5 sur le cockpit : DOM et arbre d’accessibilité (CDP) examinés ; 41 liens <a href> (aucun role=\"link\", aucune <area>) : la navigation commune (« Aller au contenu », « Rampe », « Référentiel », « Audit guidé », « Cockpit », « ADR », « Journal », « Code » vers le dépôt GitHub du projet, explicites dans la navigation d’un outil open source) et « Plan du site » en pied de page, et « Voir la roadmap détaillée », « ADR-0021 » (référence entre parenthèses dans la phrase sur la publication), « Télécharger l’auto-évaluation (JSON) », « l’audit guidé », les liens du journal (« Journal du 16 octobre 2026 »…), les 23 liens « ADR-00nn — <titre> » et les 3 liens de documentation. Chaque lien texte est explicite seul ou par son contexte (phrase, paragraphe, item de liste, titre) (6.1.1) ; aucun intitulé identique ne mène à deux destinations différentes dans un même état (vérifié par script) ; aucun lien image, composite ou SVG (aucun <img>, <svg>, <canvas>, <object> ni role=\"img\" dans un lien : 6.1.2 à 6.1.4 sans objet) ; aucun aria-label, aria-labelledby ni title sur les liens : le nom accessible est l’intitulé visible (6.1.5). Jugement de pertinence fait par l’IA, sans lecteur d’écran réel. Conforme."
+			"note": "Tests 6.1.1 à 6.1.5 sur le cockpit : DOM et arbre d’accessibilité (CDP) examinés ; 43 liens <a href> (aucun role=\"link\", aucune <area>) : la navigation commune (« Aller au contenu », « Rampe », « Référentiel », « Audit guidé », « Cockpit », « ADR », « Journal », « Code » vers le dépôt GitHub du projet, explicites dans la navigation d’un outil open source) et « Plan du site » en pied de page, et « Voir la feuille de route détaillée », « ADR-0021 » (référence entre parenthèses dans la phrase sur la publication), « Télécharger l’auto-évaluation (JSON) », « l’audit guidé », les liens du journal (« Journal du 16 octobre 2026 »…), les 24 liens « ADR-00nn — <titre> » et les 3 liens de documentation (« Vision produit », « Feuille de route », « Méthode de travail des agents » ; « Feuille de route » et « Voir la feuille de route détaillée » mènent à la même page). Chaque lien texte est explicite seul ou par son contexte (phrase, paragraphe, item de liste, titre) (6.1.1) ; aucun intitulé identique ne mène à deux destinations différentes dans un même état (vérifié par script) ; aucun lien image, composite ou SVG (aucun <img>, <svg>, <canvas>, <object> ni role=\"img\" dans un lien : 6.1.2 à 6.1.4 sans objet) ; aucun aria-label, aria-labelledby ni title sur les liens : le nom accessible est l’intitulé visible (6.1.5). Jugement de pertinence fait par l’IA, sans lecteur d’écran réel. Conforme."
 		},
 		{
 			"criterion": "6.1",
@@ -54,7 +54,7 @@
 			"criterion": "6.1",
 			"page": "https://chikimuras.github.io/rampe/cockpit/docs/roadmap/",
 			"status": "C",
-			"note": "Tests 6.1.1 à 6.1.5 sur la feuille de route (roadmap) : DOM et arbre d’accessibilité (CDP) examinés ; 11 liens <a href> (aucun role=\"link\", aucune <area>) : la navigation commune (« Aller au contenu », « Rampe », « Référentiel », « Audit guidé », « Cockpit », « ADR », « Journal », « Code » vers le dépôt GitHub du projet, explicites dans la navigation d’un outil open source) et « Plan du site » en pied de page, et « ← Cockpit » et « Voir la source sur GitHub ». Chaque lien texte est explicite seul ou par son contexte (phrase, paragraphe, item de liste, titre) (6.1.1) ; aucun intitulé identique ne mène à deux destinations différentes dans un même état (vérifié par script) ; aucun lien image, composite ou SVG (aucun <img>, <svg>, <canvas>, <object> ni role=\"img\" dans un lien : 6.1.2 à 6.1.4 sans objet) ; aucun aria-label, aria-labelledby ni title sur les liens : le nom accessible est l’intitulé visible (6.1.5). Jugement de pertinence fait par l’IA, sans lecteur d’écran réel. Conforme."
+			"note": "Tests 6.1.1 à 6.1.5 sur la feuille de route (/cockpit/docs/roadmap/) : DOM et arbre d’accessibilité (CDP) examinés ; 11 liens <a href> (aucun role=\"link\", aucune <area>) : la navigation commune (« Aller au contenu », « Rampe », « Référentiel », « Audit guidé », « Cockpit », « ADR », « Journal », « Code » vers le dépôt GitHub du projet, explicites dans la navigation d’un outil open source) et « Plan du site » en pied de page, et « ← Cockpit » et « Voir la source sur GitHub ». Chaque lien texte est explicite seul ou par son contexte (phrase, paragraphe, item de liste, titre) (6.1.1) ; aucun intitulé identique ne mène à deux destinations différentes dans un même état (vérifié par script) ; aucun lien image, composite ou SVG (aucun <img>, <svg>, <canvas>, <object> ni role=\"img\" dans un lien : 6.1.2 à 6.1.4 sans objet) ; aucun aria-label, aria-labelledby ni title sur les liens : le nom accessible est l’intitulé visible (6.1.5). Jugement de pertinence fait par l’IA, sans lecteur d’écran réel. Conforme."
 		},
 		{
 			"criterion": "6.1",
@@ -72,7 +72,7 @@
 			"criterion": "6.1",
 			"page": "https://chikimuras.github.io/rampe/plan-du-site/",
 			"status": "C",
-			"note": "Tests 6.1.1 à 6.1.5 sur le plan du site : DOM et arbre d’accessibilité (CDP) examinés ; 162 liens <a href> (aucun role=\"link\", aucune <area>) : la navigation commune (« Aller au contenu », « Rampe », « Référentiel », « Audit guidé », « Cockpit », « ADR », « Journal », « Code » vers le dépôt GitHub du projet, explicites dans la navigation d’un outil open source) et « Plan du site » en pied de page, et « Accueil », « Référentiel RGAA », « Glossaire du RGAA », les 13 thématiques et 106 liens « Critère n.m : <titre> », « Audit guidé », « Cockpit » et ses sous-pages (journal, 23 ADR « ADR-00nn — <titre> », documentation) en listes imbriquées. Chaque lien texte est explicite seul ou par son contexte (phrase, paragraphe, item de liste, titre) (6.1.1) ; aucun intitulé identique ne mène à deux destinations différentes dans un même état (vérifié par script) ; aucun lien image, composite ou SVG (aucun <img>, <svg>, <canvas>, <object> ni role=\"img\" dans un lien : 6.1.2 à 6.1.4 sans objet) ; aucun aria-label, aria-labelledby ni title sur les liens : le nom accessible est l’intitulé visible (6.1.5). Jugement de pertinence fait par l’IA, sans lecteur d’écran réel. Conforme."
+			"note": "Tests 6.1.1 à 6.1.5 sur le plan du site : DOM et arbre d’accessibilité (CDP) examinés ; 164 liens <a href> (aucun role=\"link\", aucune <area>) : la navigation commune (« Aller au contenu », « Rampe », « Référentiel », « Audit guidé », « Cockpit », « ADR », « Journal », « Code » vers le dépôt GitHub du projet, explicites dans la navigation d’un outil open source) et « Plan du site » en pied de page, et « Accueil », « Référentiel RGAA », « Glossaire du RGAA », les 13 thématiques et 106 liens « Critère n.m : <titre> », « Audit guidé », « Cockpit » et ses sous-pages (journal, 24 ADR « ADR-00nn — <titre> », documentation) en listes imbriquées. Chaque lien texte est explicite seul ou par son contexte (phrase, paragraphe, item de liste, titre) (6.1.1) ; aucun intitulé identique ne mène à deux destinations différentes dans un même état (vérifié par script) ; aucun lien image, composite ou SVG (aucun <img>, <svg>, <canvas>, <object> ni role=\"img\" dans un lien : 6.1.2 à 6.1.4 sans objet) ; aucun aria-label, aria-labelledby ni title sur les liens : le nom accessible est l’intitulé visible (6.1.5). Jugement de pertinence fait par l’IA, sans lecteur d’écran réel. Conforme."
 		},
 		{
 			"criterion": "6.2",
@@ -108,7 +108,7 @@
 			"criterion": "6.2",
 			"page": "https://chikimuras.github.io/rampe/cockpit/",
 			"status": "C",
-			"note": "Test 6.2.1 sur le cockpit : 41 liens <a href> (aucun role=\"link\", aucune <area>) relevés dans le DOM servi : aucun lien sans contenu texte entre <a> et </a>, et l’arbre d’accessibilité de Chromium ne contient aucun lien sans nom. Conforme."
+			"note": "Test 6.2.1 sur le cockpit : 43 liens <a href> (aucun role=\"link\", aucune <area>) relevés dans le DOM servi : aucun lien sans contenu texte entre <a> et </a>, et l’arbre d’accessibilité de Chromium ne contient aucun lien sans nom. Conforme."
 		},
 		{
 			"criterion": "6.2",
@@ -126,7 +126,7 @@
 			"criterion": "6.2",
 			"page": "https://chikimuras.github.io/rampe/cockpit/docs/roadmap/",
 			"status": "C",
-			"note": "Test 6.2.1 sur la feuille de route (roadmap) : 11 liens <a href> (aucun role=\"link\", aucune <area>) relevés dans le DOM servi : aucun lien sans contenu texte entre <a> et </a>, et l’arbre d’accessibilité de Chromium ne contient aucun lien sans nom. Conforme."
+			"note": "Test 6.2.1 sur la feuille de route (/cockpit/docs/roadmap/) : 11 liens <a href> (aucun role=\"link\", aucune <area>) relevés dans le DOM servi : aucun lien sans contenu texte entre <a> et </a>, et l’arbre d’accessibilité de Chromium ne contient aucun lien sans nom. Conforme."
 		},
 		{
 			"criterion": "6.2",
@@ -144,7 +144,7 @@
 			"criterion": "6.2",
 			"page": "https://chikimuras.github.io/rampe/plan-du-site/",
 			"status": "C",
-			"note": "Test 6.2.1 sur le plan du site : 162 liens <a href> (aucun role=\"link\", aucune <area>) relevés dans le DOM servi : aucun lien sans contenu texte entre <a> et </a>, et l’arbre d’accessibilité de Chromium ne contient aucun lien sans nom. Conforme."
+			"note": "Test 6.2.1 sur le plan du site : 164 liens <a href> (aucun role=\"link\", aucune <area>) relevés dans le DOM servi : aucun lien sans contenu texte entre <a> et </a>, et l’arbre d’accessibilité de Chromium ne contient aucun lien sans nom. Conforme."
 		}
 	]
 }

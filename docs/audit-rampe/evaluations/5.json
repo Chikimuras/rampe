@@ -54,7 +54,7 @@
 			"criterion": "5.1",
 			"page": "https://chikimuras.github.io/rampe/cockpit/docs/roadmap/",
 			"status": "NA",
-			"note": "Test 5.1.1 sur la feuille de route (roadmap) : DOM rendu dans Chromium (Playwright) parcouru : 0 <table>, 0 role=\"table\", \"grid\" ou \"treegrid\" ; aucun contenu présenté visuellement en tableau. Aucun tableau de données complexe : non applicable."
+			"note": "Test 5.1.1 sur la feuille de route (/cockpit/docs/roadmap/) : DOM rendu dans Chromium (Playwright) parcouru : 0 <table>, 0 role=\"table\", \"grid\" ou \"treegrid\" ; aucun contenu présenté visuellement en tableau. Aucun tableau de données complexe : non applicable."
 		},
 		{
 			"criterion": "5.1",
@@ -126,7 +126,7 @@
 			"criterion": "5.2",
 			"page": "https://chikimuras.github.io/rampe/cockpit/docs/roadmap/",
 			"status": "NA",
-			"note": "Test 5.2.1 sur la feuille de route (roadmap) : DOM rendu dans Chromium (Playwright) parcouru : 0 <table>, 0 role=\"table\", \"grid\" ou \"treegrid\" ; aucun contenu présenté visuellement en tableau. Aucun tableau de données complexe ayant un résumé : non applicable."
+			"note": "Test 5.2.1 sur la feuille de route (/cockpit/docs/roadmap/) : DOM rendu dans Chromium (Playwright) parcouru : 0 <table>, 0 role=\"table\", \"grid\" ou \"treegrid\" ; aucun contenu présenté visuellement en tableau. Aucun tableau de données complexe ayant un résumé : non applicable."
 		},
 		{
 			"criterion": "5.2",
@@ -198,7 +198,7 @@
 			"criterion": "5.3",
 			"page": "https://chikimuras.github.io/rampe/cockpit/docs/roadmap/",
 			"status": "NA",
-			"note": "Test 5.3.1 sur la feuille de route (roadmap) : DOM rendu dans Chromium (Playwright) parcouru : 0 <table>, 0 role=\"table\", \"grid\" ou \"treegrid\" ; aucun contenu présenté visuellement en tableau. Aucun tableau de mise en forme : non applicable."
+			"note": "Test 5.3.1 sur la feuille de route (/cockpit/docs/roadmap/) : DOM rendu dans Chromium (Playwright) parcouru : 0 <table>, 0 role=\"table\", \"grid\" ou \"treegrid\" ; aucun contenu présenté visuellement en tableau. Aucun tableau de mise en forme : non applicable."
 		},
 		{
 			"criterion": "5.3",
@@ -270,7 +270,7 @@
 			"criterion": "5.4",
 			"page": "https://chikimuras.github.io/rampe/cockpit/docs/roadmap/",
 			"status": "NA",
-			"note": "Test 5.4.1 sur la feuille de route (roadmap) : DOM rendu dans Chromium (Playwright) parcouru : 0 <table>, 0 role=\"table\", \"grid\" ou \"treegrid\" ; aucun contenu présenté visuellement en tableau. Aucun tableau de données, donc aucun titre à associer : non applicable."
+			"note": "Test 5.4.1 sur la feuille de route (/cockpit/docs/roadmap/) : DOM rendu dans Chromium (Playwright) parcouru : 0 <table>, 0 role=\"table\", \"grid\" ou \"treegrid\" ; aucun contenu présenté visuellement en tableau. Aucun tableau de données, donc aucun titre à associer : non applicable."
 		},
 		{
 			"criterion": "5.4",
@@ -342,7 +342,7 @@
 			"criterion": "5.5",
 			"page": "https://chikimuras.github.io/rampe/cockpit/docs/roadmap/",
 			"status": "NA",
-			"note": "Test 5.5.1 sur la feuille de route (roadmap) : DOM rendu dans Chromium (Playwright) parcouru : 0 <table>, 0 role=\"table\", \"grid\" ou \"treegrid\" ; aucun contenu présenté visuellement en tableau. Aucun tableau de données ayant un titre : non applicable."
+			"note": "Test 5.5.1 sur la feuille de route (/cockpit/docs/roadmap/) : DOM rendu dans Chromium (Playwright) parcouru : 0 <table>, 0 role=\"table\", \"grid\" ou \"treegrid\" ; aucun contenu présenté visuellement en tableau. Aucun tableau de données ayant un titre : non applicable."
 		},
 		{
 			"criterion": "5.5",
@@ -414,7 +414,7 @@
 			"criterion": "5.6",
 			"page": "https://chikimuras.github.io/rampe/cockpit/docs/roadmap/",
 			"status": "NA",
-			"note": "Tests 5.6.1 à 5.6.4 sur la feuille de route (roadmap) : DOM rendu dans Chromium (Playwright) parcouru : 0 <table>, 0 role=\"table\", \"grid\" ou \"treegrid\" ; aucun contenu présenté visuellement en tableau. Aucun tableau de données, donc aucun en-tête à vérifier : non applicable."
+			"note": "Tests 5.6.1 à 5.6.4 sur la feuille de route (/cockpit/docs/roadmap/) : DOM rendu dans Chromium (Playwright) parcouru : 0 <table>, 0 role=\"table\", \"grid\" ou \"treegrid\" ; aucun contenu présenté visuellement en tableau. Aucun tableau de données, donc aucun en-tête à vérifier : non applicable."
 		},
 		{
 			"criterion": "5.6",
@@ -486,7 +486,7 @@
 			"criterion": "5.7",
 			"page": "https://chikimuras.github.io/rampe/cockpit/docs/roadmap/",
 			"status": "NA",
-			"note": "Tests 5.7.1 à 5.7.5 sur la feuille de route (roadmap) : DOM rendu dans Chromium (Playwright) parcouru : 0 <table>, 0 role=\"table\", \"grid\" ou \"treegrid\" ; aucun contenu présenté visuellement en tableau. Aucun tableau de données, donc aucune association cellules / en-têtes à vérifier : non applicable."
+			"note": "Tests 5.7.1 à 5.7.5 sur la feuille de route (/cockpit/docs/roadmap/) : DOM rendu dans Chromium (Playwright) parcouru : 0 <table>, 0 role=\"table\", \"grid\" ou \"treegrid\" ; aucun contenu présenté visuellement en tableau. Aucun tableau de données, donc aucune association cellules / en-têtes à vérifier : non applicable."
 		},
 		{
 			"criterion": "5.7",
@@ -558,7 +558,7 @@
 			"criterion": "5.8",
 			"page": "https://chikimuras.github.io/rampe/cockpit/docs/roadmap/",
 			"status": "NA",
-			"note": "Test 5.8.1 sur la feuille de route (roadmap) : DOM rendu dans Chromium (Playwright) parcouru : 0 <table>, 0 role=\"table\", \"grid\" ou \"treegrid\" ; aucun contenu présenté visuellement en tableau. Aucun tableau de mise en forme : non applicable."
+			"note": "Test 5.8.1 sur la feuille de route (/cockpit/docs/roadmap/) : DOM rendu dans Chromium (Playwright) parcouru : 0 <table>, 0 role=\"table\", \"grid\" ou \"treegrid\" ; aucun contenu présenté visuellement en tableau. Aucun tableau de mise en forme : non applicable."
 		},
 		{
 			"criterion": "5.8",

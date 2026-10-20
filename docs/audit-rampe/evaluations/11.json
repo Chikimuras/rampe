@@ -54,7 +54,7 @@
 			"criterion": "11.1",
 			"page": "https://chikimuras.github.io/rampe/cockpit/docs/roadmap/",
 			"status": "NA",
-			"note": "Tests 11.1.1 à 11.1.3 : la page Roadmap ne contient aucun champ de formulaire (aucun <input>, <select>, <textarea>, <progress>, <meter>, <output>, ni élément de rôle WAI-ARIA de champ ; aucun <form>), vérifié dans le DOM rendu du build servi. Contenu visé absent : non applicable."
+			"note": "Tests 11.1.1 à 11.1.3 : la page Feuille de route ne contient aucun champ de formulaire (aucun <input>, <select>, <textarea>, <progress>, <meter>, <output>, ni élément de rôle WAI-ARIA de champ ; aucun <form>), vérifié dans le DOM rendu du build servi. Contenu visé absent : non applicable."
 		},
 		{
 			"criterion": "11.1",
@@ -126,7 +126,7 @@
 			"criterion": "11.2",
 			"page": "https://chikimuras.github.io/rampe/cockpit/docs/roadmap/",
 			"status": "NA",
-			"note": "Tests 11.2.1 à 11.2.6 : la page Roadmap ne contient aucun champ de formulaire (aucun <input>, <select>, <textarea>, <progress>, <meter>, <output>, ni élément de rôle WAI-ARIA de champ ; aucun <form>), vérifié dans le DOM rendu du build servi : aucune étiquette à juger. Non applicable."
+			"note": "Tests 11.2.1 à 11.2.6 : la page Feuille de route ne contient aucun champ de formulaire (aucun <input>, <select>, <textarea>, <progress>, <meter>, <output>, ni élément de rôle WAI-ARIA de champ ; aucun <form>), vérifié dans le DOM rendu du build servi : aucune étiquette à juger. Non applicable."
 		},
 		{
 			"criterion": "11.2",
@@ -198,7 +198,7 @@
 			"criterion": "11.3",
 			"page": "https://chikimuras.github.io/rampe/cockpit/docs/roadmap/",
 			"status": "NA",
-			"note": "Tests 11.3.1 et 11.3.2 : la page Roadmap ne contient aucun champ de formulaire (aucun <input>, <select>, <textarea>, <progress>, <meter>, <output>, ni élément de rôle WAI-ARIA de champ ; aucun <form>), vérifié dans le DOM rendu du build servi : aucune étiquette répétée à comparer. Non applicable."
+			"note": "Tests 11.3.1 et 11.3.2 : la page Feuille de route ne contient aucun champ de formulaire (aucun <input>, <select>, <textarea>, <progress>, <meter>, <output>, ni élément de rôle WAI-ARIA de champ ; aucun <form>), vérifié dans le DOM rendu du build servi : aucune étiquette répétée à comparer. Non applicable."
 		},
 		{
 			"criterion": "11.3",
@@ -270,7 +270,7 @@
 			"criterion": "11.4",
 			"page": "https://chikimuras.github.io/rampe/cockpit/docs/roadmap/",
 			"status": "NA",
-			"note": "Tests 11.4.1 à 11.4.3 : la page Roadmap ne contient aucun champ de formulaire (aucun <input>, <select>, <textarea>, <progress>, <meter>, <output>, ni élément de rôle WAI-ARIA de champ ; aucun <form>), vérifié dans le DOM rendu du build servi : aucune étiquette ni champ à accoler. Non applicable."
+			"note": "Tests 11.4.1 à 11.4.3 : la page Feuille de route ne contient aucun champ de formulaire (aucun <input>, <select>, <textarea>, <progress>, <meter>, <output>, ni élément de rôle WAI-ARIA de champ ; aucun <form>), vérifié dans le DOM rendu du build servi : aucune étiquette ni champ à accoler. Non applicable."
 		},
 		{
 			"criterion": "11.4",
@@ -342,7 +342,7 @@
 			"criterion": "11.5",
 			"page": "https://chikimuras.github.io/rampe/cockpit/docs/roadmap/",
 			"status": "NA",
-			"note": "Test 11.5.1 : la page Roadmap ne contient aucun champ de formulaire (aucun <input>, <select>, <textarea>, <progress>, <meter>, <output>, ni élément de rôle WAI-ARIA de champ ; aucun <form>), vérifié dans le DOM rendu du build servi : aucun champ à regrouper. Non applicable."
+			"note": "Test 11.5.1 : la page Feuille de route ne contient aucun champ de formulaire (aucun <input>, <select>, <textarea>, <progress>, <meter>, <output>, ni élément de rôle WAI-ARIA de champ ; aucun <form>), vérifié dans le DOM rendu du build servi : aucun champ à regrouper. Non applicable."
 		},
 		{
 			"criterion": "11.5",
@@ -414,7 +414,7 @@
 			"criterion": "11.6",
 			"page": "https://chikimuras.github.io/rampe/cockpit/docs/roadmap/",
 			"status": "NA",
-			"note": "Test 11.6.1 : la page Roadmap ne contient aucun regroupement de champs (aucun <fieldset>, role=\"group\" ni role=\"radiogroup\" dans le DOM rendu). Contenu visé absent : non applicable."
+			"note": "Test 11.6.1 : la page Feuille de route ne contient aucun regroupement de champs (aucun <fieldset>, role=\"group\" ni role=\"radiogroup\" dans le DOM rendu). Contenu visé absent : non applicable."
 		},
 		{
 			"criterion": "11.6",
@@ -486,7 +486,7 @@
 			"criterion": "11.7",
 			"page": "https://chikimuras.github.io/rampe/cockpit/docs/roadmap/",
 			"status": "NA",
-			"note": "Test 11.7.1 : la page Roadmap ne contient aucun regroupement de champs, donc aucune légende (aucun <fieldset>/<legend> ni role=\"group\" dans le DOM rendu). Contenu visé absent : non applicable."
+			"note": "Test 11.7.1 : la page Feuille de route ne contient aucun regroupement de champs, donc aucune légende (aucun <fieldset>/<legend> ni role=\"group\" dans le DOM rendu). Contenu visé absent : non applicable."
 		},
 		{
 			"criterion": "11.7",
@@ -558,7 +558,7 @@
 			"criterion": "11.8",
 			"page": "https://chikimuras.github.io/rampe/cockpit/docs/roadmap/",
 			"status": "NA",
-			"note": "Tests 11.8.1 à 11.8.3 : la page Roadmap ne contient aucune liste de choix (aucun <select>, <datalist> ni role=\"listbox\" dans le DOM rendu). Contenu visé absent : non applicable."
+			"note": "Tests 11.8.1 à 11.8.3 : la page Feuille de route ne contient aucune liste de choix (aucun <select>, <datalist> ni role=\"listbox\" dans le DOM rendu). Contenu visé absent : non applicable."
 		},
 		{
 			"criterion": "11.8",
@@ -630,7 +630,7 @@
 			"criterion": "11.9",
 			"page": "https://chikimuras.github.io/rampe/cockpit/docs/roadmap/",
 			"status": "NA",
-			"note": "Tests 11.9.1 et 11.9.2 : la page Roadmap ne contient aucun formulaire ni bouton de formulaire (aucun <form>, <button>, <input type=\"submit|reset|button|image\"> dans le DOM rendu). Contenu visé absent : non applicable."
+			"note": "Tests 11.9.1 et 11.9.2 : la page Feuille de route ne contient aucun formulaire ni bouton de formulaire (aucun <form>, <button>, <input type=\"submit|reset|button|image\"> dans le DOM rendu). Contenu visé absent : non applicable."
 		},
 		{
 			"criterion": "11.9",
@@ -702,7 +702,7 @@
 			"criterion": "11.10",
 			"page": "https://chikimuras.github.io/rampe/cockpit/docs/roadmap/",
 			"status": "NA",
-			"note": "Tests 11.10.1 à 11.10.7 : la page Roadmap ne contient aucun formulaire ni champ de saisie (aucun <form>, <input>, <select> ni <textarea>) : aucun contrôle de saisie. Non applicable."
+			"note": "Tests 11.10.1 à 11.10.7 : la page Feuille de route ne contient aucun formulaire ni champ de saisie (aucun <form>, <input>, <select> ni <textarea>) : aucun contrôle de saisie. Non applicable."
 		},
 		{
 			"criterion": "11.10",
@@ -750,7 +750,7 @@
 			"criterion": "11.11",
 			"page": "https://chikimuras.github.io/rampe/audit/",
 			"status": "C",
-			"note": "Tests 11.11.1 et 11.11.2 sur les erreurs provoquées : adresse vide (« par exemple https://exemple.fr/ »), invalide (« Exemple attendu : https://exemple.fr/ »), protocole refusé (« Seules les adresses http:// et https:// sont acceptées (reçu : ftp:) »), autre site (« pas sur le site audité (https://exemple.fr) »), doublon ; adresses de la déclaration (« commencez par https:// ou saisissez une adresse e-mail ») ; date (« années 1900 à 9999 », champ type=date natif) ; année de début (« 1900 à 9999 ») ; action vide (exemples « Former l’équipe éditoriale » reliés par aria-describedby) ; fichiers refusés (« choisissez un fichier audit-….json téléchargé depuis Rampe », taille maximale indiquée). Chaque message suggère le type, le format ou un exemple quand c’est nécessaire. Conforme."
+			"note": "Tests 11.11.1 et 11.11.2 sur les erreurs provoquées (build final servi le 2026-10-20 (branche fix/rgaa-dernieres-nc, 08db16b)) : adresse vide (« par exemple https://exemple.fr/ »), invalide (« Exemple attendu : https://exemple.fr/ »), protocole refusé (« Seules les adresses http:// et https:// sont acceptées (reçu : ftp:) »), autre site (« pas sur le site audité (https://exemple.fr) »), doublon ; adresses de la déclaration (« commencez par https:// ou saisissez une adresse électronique ») ; date (« années 1900 à 9999 », champ type=date natif) ; année de début (« 1900 à 9999 ») ; action vide (exemples « Former l’équipe éditoriale » reliés par aria-describedby) ; fichiers refusés (« choisissez un fichier audit-….json téléchargé depuis Rampe », taille maximale indiquée). Chaque message suggère le type, le format ou un exemple quand c’est nécessaire. Conforme."
 		},
 		{
 			"criterion": "11.11",
@@ -774,7 +774,7 @@
 			"criterion": "11.11",
 			"page": "https://chikimuras.github.io/rampe/cockpit/docs/roadmap/",
 			"status": "NA",
-			"note": "Tests 11.11.1 et 11.11.2 : la page Roadmap ne contient aucun formulaire ni champ de saisie, donc aucun contrôle de saisie ni erreur possible. Contenu visé absent : non applicable."
+			"note": "Tests 11.11.1 et 11.11.2 : la page Feuille de route ne contient aucun formulaire ni champ de saisie, donc aucun contrôle de saisie ni erreur possible. Contenu visé absent : non applicable."
 		},
 		{
 			"criterion": "11.11",
@@ -846,7 +846,7 @@
 			"criterion": "11.12",
 			"page": "https://chikimuras.github.io/rampe/cockpit/docs/roadmap/",
 			"status": "NA",
-			"note": "Tests 11.12.1 et 11.12.2 : la page Roadmap ne contient aucun formulaire modifiant ou supprimant des données, ni à conséquence financière ou juridique (aucun <form> ni champ de saisie dans le DOM rendu). Non applicable."
+			"note": "Tests 11.12.1 et 11.12.2 : la page Feuille de route ne contient aucun formulaire modifiant ou supprimant des données, ni à conséquence financière ou juridique (aucun <form> ni champ de saisie dans le DOM rendu). Non applicable."
 		},
 		{
 			"criterion": "11.12",
@@ -894,7 +894,7 @@
 			"criterion": "11.13",
 			"page": "https://chikimuras.github.io/rampe/audit/",
 			"status": "C",
-			"note": "Test 11.13.1 (DOM de /audit/ après hydratation, avec deux pages ajoutées à l’échantillon, une période de schéma choisie et une action libre ajoutée) : champ se rapportant à une information concernant l’utilisateur : « Nom de l’organisme » (id declaration-organization, l’organisme de la personne qui remplit sa déclaration) porte désormais autocomplete=\"organization\", valeur de la liste et pertinente (défaut de l’évaluation précédente corrigé) ; « Page web de ses coordonnées » porte autocomplete=\"url\", pertinent. « Formulaire de contact ou adresse e-mail » accepte une URL ou une adresse e-mail : aucun jeton unique ne correspond à cette double finalité, il n’en porte pas. Les autres champs (pages auditées, contenus de la déclaration et du schéma, années) ne concernent pas l’utilisateur. Conforme (jugement sur le périmètre « information concernant l’utilisateur », à relire par un humain)."
+			"note": "Test 11.13.1 (DOM de /audit/ après hydratation, build final servi le 2026-10-20 (branche fix/rgaa-dernieres-nc, 08db16b), avec deux pages ajoutées à l’échantillon, une période de schéma choisie et une action libre ajoutée) : champ se rapportant à une information concernant l’utilisateur : « Nom de l’organisme » (id declaration-organization, l’organisme de la personne qui remplit sa déclaration) porte désormais autocomplete=\"organization\", valeur de la liste et pertinente (défaut de l’évaluation précédente corrigé) ; « Page web de ses coordonnées » porte autocomplete=\"url\", pertinent. « Formulaire de contact ou adresse électronique » accepte une URL ou une adresse électronique : aucun jeton unique ne correspond à cette double finalité, il n’en porte pas (autocomplete absent, vérifié). « Adresse de la page » (ajout d’une page à l’échantillon) porte autocomplete=\"url\" : valeur de la liste, mais le champ désigne une page du site audité, pas une information concernant l’utilisateur ; il est hors du périmètre du test et ne le met pas en défaut. Les autres champs (pages auditées, contenus de la déclaration et du schéma, années) ne concernent pas l’utilisateur. Conforme (jugement sur le périmètre « information concernant l’utilisateur », à relire par un humain)."
 		},
 		{
 			"criterion": "11.13",
@@ -918,7 +918,7 @@
 			"criterion": "11.13",
 			"page": "https://chikimuras.github.io/rampe/cockpit/docs/roadmap/",
 			"status": "NA",
-			"note": "Test 11.13.1 : la page Roadmap ne contient aucun champ de saisie se rapportant à une information concernant l’utilisateur (aucun champ de formulaire dans le DOM rendu). Contenu visé absent : non applicable."
+			"note": "Test 11.13.1 : la page Feuille de route ne contient aucun champ de saisie se rapportant à une information concernant l’utilisateur (aucun champ de formulaire dans le DOM rendu). Contenu visé absent : non applicable."
 		},
 		{
 			"criterion": "11.13",

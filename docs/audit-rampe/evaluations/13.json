@@ -6,73 +6,73 @@
 			"criterion": "13.1",
 			"page": "https://chikimuras.github.io/rampe/",
 			"status": "NA",
-			"note": "Tests 13.1.1 à 13.1.4 : la page d’accueil n’a ni <meta http-equiv=\"refresh\">, ni redirection par script, ni rafraîchissement automatique, ni limite de session (pas de compte ni de backend). Aucune limite de temps : non applicable."
+			"note": "Tests 13.1.1 à 13.1.4 : la page d’accueil n’a ni <meta http-equiv=\"refresh\">, ni redirection par script, ni rafraîchissement automatique, ni limite de session (pas de compte ni de serveur applicatif). Aucune limite de temps : non applicable."
 		},
 		{
 			"criterion": "13.1",
 			"page": "https://chikimuras.github.io/rampe/referentiel/",
 			"status": "NA",
-			"note": "Tests 13.1.1 à 13.1.4 : la page Référentiel n’a ni <meta http-equiv=\"refresh\">, ni redirection par script, ni rafraîchissement automatique, ni limite de session (pas de compte ni de backend). Aucune limite de temps : non applicable."
+			"note": "Tests 13.1.1 à 13.1.4 : la page Référentiel n’a ni <meta http-equiv=\"refresh\">, ni redirection par script, ni rafraîchissement automatique, ni limite de session (pas de compte ni de serveur applicatif). Aucune limite de temps : non applicable."
 		},
 		{
 			"criterion": "13.1",
 			"page": "https://chikimuras.github.io/rampe/referentiel/1-1/",
 			"status": "NA",
-			"note": "Tests 13.1.1 à 13.1.4 : la fiche du critère 1.1 n’a ni <meta http-equiv=\"refresh\">, ni redirection par script, ni rafraîchissement automatique, ni limite de session (pas de compte ni de backend). Aucune limite de temps : non applicable."
+			"note": "Tests 13.1.1 à 13.1.4 : la fiche du critère 1.1 n’a ni <meta http-equiv=\"refresh\">, ni redirection par script, ni rafraîchissement automatique, ni limite de session (pas de compte ni de serveur applicatif). Aucune limite de temps : non applicable."
 		},
 		{
 			"criterion": "13.1",
 			"page": "https://chikimuras.github.io/rampe/referentiel/glossaire/",
 			"status": "NA",
-			"note": "Tests 13.1.1 à 13.1.4 : le glossaire n’a ni <meta http-equiv=\"refresh\">, ni redirection par script, ni rafraîchissement automatique, ni limite de session (pas de compte ni de backend). Aucune limite de temps : non applicable."
+			"note": "Tests 13.1.1 à 13.1.4 : le glossaire n’a ni <meta http-equiv=\"refresh\">, ni redirection par script, ni rafraîchissement automatique, ni limite de session (pas de compte ni de serveur applicatif). Aucune limite de temps : non applicable."
 		},
 		{
 			"criterion": "13.1",
 			"page": "https://chikimuras.github.io/rampe/audit/",
 			"status": "NA",
-			"note": "Tests 13.1.1 à 13.1.4 : l’audit guidé n’a ni <meta http-equiv=\"refresh\">, ni redirection par script, ni rafraîchissement automatique, ni limite de session (pas de compte ni de backend). La sauvegarde automatique différée dans le stockage local ne modifie pas le contenu et n’impose aucun délai ; l’adoption de l’état enregistré dans un autre onglet suit une action de l’utilisateur. Aucune limite de temps : non applicable."
+			"note": "Tests 13.1.1 à 13.1.4 : l’audit guidé n’a ni <meta http-equiv=\"refresh\">, ni redirection par script, ni rafraîchissement automatique, ni limite de session (pas de compte ni de serveur applicatif). La sauvegarde automatique différée dans le stockage local ne modifie pas le contenu et n’impose aucun délai ; l’adoption de l’état enregistré dans un autre onglet suit une action de l’utilisateur. Aucune limite de temps : non applicable."
 		},
 		{
 			"criterion": "13.1",
 			"page": "https://chikimuras.github.io/rampe/cockpit/",
 			"status": "NA",
-			"note": "Tests 13.1.1 à 13.1.4 : le cockpit n’a ni <meta http-equiv=\"refresh\">, ni redirection par script, ni rafraîchissement automatique, ni limite de session (pas de compte ni de backend). Aucune limite de temps : non applicable."
+			"note": "Tests 13.1.1 à 13.1.4 : le cockpit n’a ni <meta http-equiv=\"refresh\">, ni redirection par script, ni rafraîchissement automatique, ni limite de session (pas de compte ni de serveur applicatif). Aucune limite de temps : non applicable."
 		},
 		{
 			"criterion": "13.1",
 			"page": "https://chikimuras.github.io/rampe/cockpit/adr/0011-cli-audit-playwright/",
 			"status": "NA",
-			"note": "Tests 13.1.1 à 13.1.4 : la page ADR-0011 n’a ni <meta http-equiv=\"refresh\">, ni redirection par script, ni rafraîchissement automatique, ni limite de session (pas de compte ni de backend). Aucune limite de temps : non applicable."
+			"note": "Tests 13.1.1 à 13.1.4 : la page ADR-0011 n’a ni <meta http-equiv=\"refresh\">, ni redirection par script, ni rafraîchissement automatique, ni limite de session (pas de compte ni de serveur applicatif). Aucune limite de temps : non applicable."
 		},
 		{
 			"criterion": "13.1",
 			"page": "https://chikimuras.github.io/rampe/cockpit/journal/2026-10-15/",
 			"status": "NA",
-			"note": "Tests 13.1.1 à 13.1.4 : la page du journal du 15 octobre 2026 n’a ni <meta http-equiv=\"refresh\">, ni redirection par script, ni rafraîchissement automatique, ni limite de session (pas de compte ni de backend). Aucune limite de temps : non applicable."
+			"note": "Tests 13.1.1 à 13.1.4 : la page du journal du 15 octobre 2026 n’a ni <meta http-equiv=\"refresh\">, ni redirection par script, ni rafraîchissement automatique, ni limite de session (pas de compte ni de serveur applicatif). Aucune limite de temps : non applicable."
 		},
 		{
 			"criterion": "13.1",
 			"page": "https://chikimuras.github.io/rampe/cockpit/docs/roadmap/",
 			"status": "NA",
-			"note": "Tests 13.1.1 à 13.1.4 : la page Roadmap n’a ni <meta http-equiv=\"refresh\">, ni redirection par script, ni rafraîchissement automatique, ni limite de session (pas de compte ni de backend). Aucune limite de temps : non applicable."
+			"note": "Tests 13.1.1 à 13.1.4 : la page Feuille de route n’a ni <meta http-equiv=\"refresh\">, ni redirection par script, ni rafraîchissement automatique, ni limite de session (pas de compte ni de serveur applicatif). Aucune limite de temps : non applicable."
 		},
 		{
 			"criterion": "13.1",
 			"page": "https://chikimuras.github.io/rampe/referentiel/5-1/",
 			"status": "NA",
-			"note": "Tests 13.1.1 à 13.1.4 : la fiche du critère 5.1 n’a ni <meta http-equiv=\"refresh\">, ni redirection par script, ni rafraîchissement automatique, ni limite de session (pas de compte ni de backend). Aucune limite de temps : non applicable."
+			"note": "Tests 13.1.1 à 13.1.4 : la fiche du critère 5.1 n’a ni <meta http-equiv=\"refresh\">, ni redirection par script, ni rafraîchissement automatique, ni limite de session (pas de compte ni de serveur applicatif). Aucune limite de temps : non applicable."
 		},
 		{
 			"criterion": "13.1",
 			"page": "https://chikimuras.github.io/rampe/referentiel/1-9/",
 			"status": "NA",
-			"note": "Tests 13.1.1 à 13.1.4 : la fiche du critère 1.9 n’a ni <meta http-equiv=\"refresh\">, ni redirection par script, ni rafraîchissement automatique, ni limite de session (pas de compte ni de backend). Aucune limite de temps : non applicable."
+			"note": "Tests 13.1.1 à 13.1.4 : la fiche du critère 1.9 n’a ni <meta http-equiv=\"refresh\">, ni redirection par script, ni rafraîchissement automatique, ni limite de session (pas de compte ni de serveur applicatif). Aucune limite de temps : non applicable."
 		},
 		{
 			"criterion": "13.1",
 			"page": "https://chikimuras.github.io/rampe/plan-du-site/",
 			"status": "NA",
-			"note": "Tests 13.1.1 à 13.1.4 : le plan du site n’a ni <meta http-equiv=\"refresh\">, ni redirection par script, ni rafraîchissement automatique, ni limite de session (pas de compte ni de backend). Aucune limite de temps : non applicable."
+			"note": "Tests 13.1.1 à 13.1.4 : le plan du site n’a ni <meta http-equiv=\"refresh\">, ni redirection par script, ni rafraîchissement automatique, ni limite de session (pas de compte ni de serveur applicatif). Aucune limite de temps : non applicable."
 		},
 		{
 			"criterion": "13.2",
@@ -126,7 +126,7 @@
 			"criterion": "13.2",
 			"page": "https://chikimuras.github.io/rampe/cockpit/docs/roadmap/",
 			"status": "C",
-			"note": "Test 13.2.1 : à l’ouverture de la page Roadmap (Playwright, écoute de l’événement popup) aucune nouvelle fenêtre ne s’ouvre ; aucun lien ni formulaire n’a d’attribut target, et le code du site ne contient aucun window.open. Aucune ouverture de fenêtre sans action de l’utilisateur. Conforme."
+			"note": "Test 13.2.1 : à l’ouverture de la page Feuille de route (Playwright, écoute de l’événement popup) aucune nouvelle fenêtre ne s’ouvre ; aucun lien ni formulaire n’a d’attribut target, et le code du site ne contient aucun window.open. Aucune ouverture de fenêtre sans action de l’utilisateur. Conforme."
 		},
 		{
 			"criterion": "13.2",
@@ -198,7 +198,7 @@
 			"criterion": "13.3",
 			"page": "https://chikimuras.github.io/rampe/cockpit/docs/roadmap/",
 			"status": "NA",
-			"note": "Test 13.3.1 : la page Roadmap ne propose aucun document en téléchargement : aucun lien vers un fichier .pdf, .doc(x), .odt, .xls(x), .ods ou .epub, aucun attribut download ni bouton de téléchargement (DOM rendu examiné). Contenu visé absent : non applicable."
+			"note": "Test 13.3.1 : la page Feuille de route ne propose aucun document en téléchargement : aucun lien vers un fichier .pdf, .doc(x), .odt, .xls(x), .ods ou .epub, aucun attribut download ni bouton de téléchargement (DOM rendu examiné). Contenu visé absent : non applicable."
 		},
 		{
 			"criterion": "13.3",
@@ -270,7 +270,7 @@
 			"criterion": "13.4",
 			"page": "https://chikimuras.github.io/rampe/cockpit/docs/roadmap/",
 			"status": "NA",
-			"note": "Test 13.4.1 : la page Roadmap ne propose aucun document bureautique accompagné d’une version accessible distincte. Contenu visé absent : non applicable."
+			"note": "Test 13.4.1 : la page Feuille de route ne propose aucun document bureautique accompagné d’une version accessible distincte. Contenu visé absent : non applicable."
 		},
 		{
 			"criterion": "13.4",
@@ -342,7 +342,7 @@
 			"criterion": "13.5",
 			"page": "https://chikimuras.github.io/rampe/cockpit/docs/roadmap/",
 			"status": "C",
-			"note": "Test 13.5.1 : contenu cryptique trouvé sur la page Roadmap : sept ⛔, définis par la phrase d’introduction « Les ⛔ signalent un besoin d’action humaine. », et chaque tâche ⛔ est suivie de l’action attendue (« compte npm (gratuit) à créer par Alexandre », « 5 $ de frais d’inscription : dépense à valider »…). Une définition est donnée dans le contexte adjacent. Autres caractères relevés : « ← » (lien « ← Cockpit »), « → », « < > » (« rampe audit <url> »), « + », « $ », « © » : signes typographiques ou mathématiques usuels. Conforme."
+			"note": "Test 13.5.1 : contenu cryptique trouvé sur la page Feuille de route : sept ⛔, définis par la phrase d’introduction « Les ⛔ signalent un besoin d’action humaine. », et chaque tâche ⛔ est suivie de l’action attendue (« compte npm (gratuit) à créer par Alexandre », « 5 $ de frais d’inscription : dépense à valider »…). Une définition est donnée dans le contexte adjacent. Autres caractères relevés : « ← » (lien « ← Cockpit »), « → », « < > » (« rampe audit <url> »), « + », « $ », « © » : signes typographiques ou mathématiques usuels. Conforme."
 		},
 		{
 			"criterion": "13.5",
@@ -414,7 +414,7 @@
 			"criterion": "13.6",
 			"page": "https://chikimuras.github.io/rampe/cockpit/docs/roadmap/",
 			"status": "C",
-			"note": "Test 13.6.1 : la définition donnée par le contexte adjacent aux ⛔ de la page Roadmap est pertinente : elle exprime que la tâche ou la publication attend une action humaine (d’Alexandre), ce que le symbole signifie dans tout le projet. Conforme."
+			"note": "Test 13.6.1 : la définition donnée par le contexte adjacent aux ⛔ de la page Feuille de route est pertinente : elle exprime que la tâche ou la publication attend une action humaine (d’Alexandre), ce que le symbole signifie dans tout le projet. Conforme."
 		},
 		{
 			"criterion": "13.6",
@@ -486,7 +486,7 @@
 			"criterion": "13.7",
 			"page": "https://chikimuras.github.io/rampe/cockpit/docs/roadmap/",
 			"status": "NA",
-			"note": "Tests 13.7.1 à 13.7.3 : la page Roadmap ne contient aucun <img>, <svg>, <video>, <audio>, <canvas>, <object>, <embed>, <iframe>, <marquee> ni <blink> ; aucune règle animation, transition ni @keyframes dans les styles ; document.getAnimations() vide ; aucun script ne provoque de clignotement. Aucun changement brusque de luminosité ni effet de flash : non applicable."
+			"note": "Tests 13.7.1 à 13.7.3 : la page Feuille de route ne contient aucun <img>, <svg>, <video>, <audio>, <canvas>, <object>, <embed>, <iframe>, <marquee> ni <blink> ; aucune règle animation, transition ni @keyframes dans les styles ; document.getAnimations() vide ; aucun script ne provoque de clignotement. Aucun changement brusque de luminosité ni effet de flash : non applicable."
 		},
 		{
 			"criterion": "13.7",
@@ -558,7 +558,7 @@
 			"criterion": "13.8",
 			"page": "https://chikimuras.github.io/rampe/cockpit/docs/roadmap/",
 			"status": "NA",
-			"note": "Tests 13.8.1 et 13.8.2 : la page Roadmap n’a aucun contenu en mouvement ou clignotant déclenché automatiquement : aucun <img>, <svg>, <video>, <audio>, <canvas>, <object>, <embed>, <iframe>, <marquee> ni <blink> ; aucune règle animation, transition ni @keyframes dans les styles ; document.getAnimations() vide ; pas de défilement automatique. Contenu visé absent : non applicable."
+			"note": "Tests 13.8.1 et 13.8.2 : la page Feuille de route n’a aucun contenu en mouvement ou clignotant déclenché automatiquement : aucun <img>, <svg>, <video>, <audio>, <canvas>, <object>, <embed>, <iframe>, <marquee> ni <blink> ; aucune règle animation, transition ni @keyframes dans les styles ; document.getAnimations() vide ; pas de défilement automatique. Contenu visé absent : non applicable."
 		},
 		{
 			"criterion": "13.8",
@@ -630,7 +630,7 @@
 			"criterion": "13.9",
 			"page": "https://chikimuras.github.io/rampe/cockpit/docs/roadmap/",
 			"status": "C",
-			"note": "Test 13.9.1 : la page Roadmap consultée en portrait (375×812) puis en paysage (812×375) : aucun verrouillage d’orientation (pas de media query orientation, pas d’API Screen Orientation), pas de défilement horizontal (largeur du document égale à la fenêtre), et le même contenu dans les deux modes (2313 caractères de texte rendu dans chacun). Conforme."
+			"note": "Test 13.9.1 : la page Feuille de route consultée en portrait (375×812) puis en paysage (812×375) : aucun verrouillage d’orientation (pas de media query orientation, pas d’API Screen Orientation), pas de défilement horizontal (largeur du document égale à la fenêtre), et le même contenu dans les deux modes (2313 caractères de texte rendu dans chacun). Conforme."
 		},
 		{
 			"criterion": "13.9",
@@ -702,7 +702,7 @@
 			"criterion": "13.10",
 			"page": "https://chikimuras.github.io/rampe/cockpit/docs/roadmap/",
 			"status": "NA",
-			"note": "Tests 13.10.1 et 13.10.2 : la page Roadmap n’offre aucune fonctionnalité de l’auteur reposant sur un geste multipoint ou sur une trajectoire (aucun gestionnaire touch, pointer, drag ni glisser-déposer dans le code du site). Le défilement et le zoom relèvent du navigateur. Non applicable."
+			"note": "Tests 13.10.1 et 13.10.2 : la page Feuille de route n’offre aucune fonctionnalité de l’auteur reposant sur un geste multipoint ou sur une trajectoire (aucun gestionnaire touch, pointer, drag ni glisser-déposer dans le code du site). Le défilement et le zoom relèvent du navigateur. Non applicable."
 		},
 		{
 			"criterion": "13.10",
@@ -774,7 +774,7 @@
 			"criterion": "13.11",
 			"page": "https://chikimuras.github.io/rampe/cockpit/docs/roadmap/",
 			"status": "C",
-			"note": "Test 13.11.1 : les actions de la page Roadmap déclenchées au pointeur sont des liens natifs, activés au relâchement du pointeur ; aucun gestionnaire mousedown, pointerdown ou touchstart dans le code du site. Conforme."
+			"note": "Test 13.11.1 : les actions de la page Feuille de route déclenchées au pointeur sont des liens natifs, activés au relâchement du pointeur ; aucun gestionnaire mousedown, pointerdown ou touchstart dans le code du site. Conforme."
 		},
 		{
 			"criterion": "13.11",
@@ -846,7 +846,7 @@
 			"criterion": "13.12",
 			"page": "https://chikimuras.github.io/rampe/cockpit/docs/roadmap/",
 			"status": "NA",
-			"note": "Tests 13.12.1 à 13.12.3 : la page Roadmap n’utilise aucune détection de mouvement de l’appareil (aucun devicemotion, deviceorientation ni capteur dans le code du site) ni geste en direction de l’appareil. Contenu visé absent : non applicable."
+			"note": "Tests 13.12.1 à 13.12.3 : la page Feuille de route n’utilise aucune détection de mouvement de l’appareil (aucun devicemotion, deviceorientation ni capteur dans le code du site) ni geste en direction de l’appareil. Contenu visé absent : non applicable."
 		},
 		{
 			"criterion": "13.12",

@@ -54,7 +54,7 @@
 			"criterion": "4.1",
 			"page": "https://chikimuras.github.io/rampe/cockpit/docs/roadmap/",
 			"status": "NA",
-			"note": "Tests 4.1.1 à 4.1.3 sur la feuille de route (roadmap) : DOM rendu dans Chromium (Playwright) parcouru : 0 <video>, 0 <audio>, 0 <object>, 0 <embed>, 0 <canvas>, 0 <svg>, 0 <iframe>, 0 <marquee>, 0 <bgsound>, 0 attribut autoplay, 0 lien vers un fichier audio ou vidéo. Aucun média temporel pré-enregistré, donc aucune transcription ni audiodescription à vérifier. Non applicable."
+			"note": "Tests 4.1.1 à 4.1.3 sur la feuille de route (/cockpit/docs/roadmap/) : DOM rendu dans Chromium (Playwright) parcouru : 0 <video>, 0 <audio>, 0 <object>, 0 <embed>, 0 <canvas>, 0 <svg>, 0 <iframe>, 0 <marquee>, 0 <bgsound>, 0 attribut autoplay, 0 lien vers un fichier audio ou vidéo. Aucun média temporel pré-enregistré, donc aucune transcription ni audiodescription à vérifier. Non applicable."
 		},
 		{
 			"criterion": "4.1",
@@ -126,7 +126,7 @@
 			"criterion": "4.2",
 			"page": "https://chikimuras.github.io/rampe/cockpit/docs/roadmap/",
 			"status": "NA",
-			"note": "Tests 4.2.1 à 4.2.3 sur la feuille de route (roadmap) : DOM rendu dans Chromium (Playwright) parcouru : 0 <video>, 0 <audio>, 0 <object>, 0 <embed>, 0 <canvas>, 0 <svg>, 0 <iframe>, 0 <marquee>, 0 <bgsound>, 0 attribut autoplay, 0 lien vers un fichier audio ou vidéo. Aucun média temporel ayant une transcription ou une audiodescription. Non applicable."
+			"note": "Tests 4.2.1 à 4.2.3 sur la feuille de route (/cockpit/docs/roadmap/) : DOM rendu dans Chromium (Playwright) parcouru : 0 <video>, 0 <audio>, 0 <object>, 0 <embed>, 0 <canvas>, 0 <svg>, 0 <iframe>, 0 <marquee>, 0 <bgsound>, 0 attribut autoplay, 0 lien vers un fichier audio ou vidéo. Aucun média temporel ayant une transcription ou une audiodescription. Non applicable."
 		},
 		{
 			"criterion": "4.2",
@@ -198,7 +198,7 @@
 			"criterion": "4.3",
 			"page": "https://chikimuras.github.io/rampe/cockpit/docs/roadmap/",
 			"status": "NA",
-			"note": "Tests 4.3.1 et 4.3.2 sur la feuille de route (roadmap) : DOM rendu dans Chromium (Playwright) parcouru : 0 <video>, 0 <audio>, 0 <object>, 0 <embed>, 0 <canvas>, 0 <svg>, 0 <iframe>, 0 <marquee>, 0 <bgsound>, 0 attribut autoplay, 0 lien vers un fichier audio ou vidéo. Aucun média temporel synchronisé, donc aucun sous-titre à vérifier. Non applicable."
+			"note": "Tests 4.3.1 et 4.3.2 sur la feuille de route (/cockpit/docs/roadmap/) : DOM rendu dans Chromium (Playwright) parcouru : 0 <video>, 0 <audio>, 0 <object>, 0 <embed>, 0 <canvas>, 0 <svg>, 0 <iframe>, 0 <marquee>, 0 <bgsound>, 0 attribut autoplay, 0 lien vers un fichier audio ou vidéo. Aucun média temporel synchronisé, donc aucun sous-titre à vérifier. Non applicable."
 		},
 		{
 			"criterion": "4.3",
@@ -270,7 +270,7 @@
 			"criterion": "4.4",
 			"page": "https://chikimuras.github.io/rampe/cockpit/docs/roadmap/",
 			"status": "NA",
-			"note": "Test 4.4.1 sur la feuille de route (roadmap) : DOM rendu dans Chromium (Playwright) parcouru : 0 <video>, 0 <audio>, 0 <object>, 0 <embed>, 0 <canvas>, 0 <svg>, 0 <iframe>, 0 <marquee>, 0 <bgsound>, 0 attribut autoplay, 0 lien vers un fichier audio ou vidéo. Aucun média temporel synchronisé ayant des sous-titres. Non applicable."
+			"note": "Test 4.4.1 sur la feuille de route (/cockpit/docs/roadmap/) : DOM rendu dans Chromium (Playwright) parcouru : 0 <video>, 0 <audio>, 0 <object>, 0 <embed>, 0 <canvas>, 0 <svg>, 0 <iframe>, 0 <marquee>, 0 <bgsound>, 0 attribut autoplay, 0 lien vers un fichier audio ou vidéo. Aucun média temporel synchronisé ayant des sous-titres. Non applicable."
 		},
 		{
 			"criterion": "4.4",
@@ -342,7 +342,7 @@
 			"criterion": "4.5",
 			"page": "https://chikimuras.github.io/rampe/cockpit/docs/roadmap/",
 			"status": "NA",
-			"note": "Tests 4.5.1 et 4.5.2 sur la feuille de route (roadmap) : DOM rendu dans Chromium (Playwright) parcouru : 0 <video>, 0 <audio>, 0 <object>, 0 <embed>, 0 <canvas>, 0 <svg>, 0 <iframe>, 0 <marquee>, 0 <bgsound>, 0 attribut autoplay, 0 lien vers un fichier audio ou vidéo. Aucun média temporel pré-enregistré, donc aucune audiodescription synchronisée à vérifier. Non applicable."
+			"note": "Tests 4.5.1 et 4.5.2 sur la feuille de route (/cockpit/docs/roadmap/) : DOM rendu dans Chromium (Playwright) parcouru : 0 <video>, 0 <audio>, 0 <object>, 0 <embed>, 0 <canvas>, 0 <svg>, 0 <iframe>, 0 <marquee>, 0 <bgsound>, 0 attribut autoplay, 0 lien vers un fichier audio ou vidéo. Aucun média temporel pré-enregistré, donc aucune audiodescription synchronisée à vérifier. Non applicable."
 		},
 		{
 			"criterion": "4.5",
@@ -414,7 +414,7 @@
 			"criterion": "4.6",
 			"page": "https://chikimuras.github.io/rampe/cockpit/docs/roadmap/",
 			"status": "NA",
-			"note": "Tests 4.6.1 et 4.6.2 sur la feuille de route (roadmap) : DOM rendu dans Chromium (Playwright) parcouru : 0 <video>, 0 <audio>, 0 <object>, 0 <embed>, 0 <canvas>, 0 <svg>, 0 <iframe>, 0 <marquee>, 0 <bgsound>, 0 attribut autoplay, 0 lien vers un fichier audio ou vidéo. Aucun média temporel ayant une audiodescription. Non applicable."
+			"note": "Tests 4.6.1 et 4.6.2 sur la feuille de route (/cockpit/docs/roadmap/) : DOM rendu dans Chromium (Playwright) parcouru : 0 <video>, 0 <audio>, 0 <object>, 0 <embed>, 0 <canvas>, 0 <svg>, 0 <iframe>, 0 <marquee>, 0 <bgsound>, 0 attribut autoplay, 0 lien vers un fichier audio ou vidéo. Aucun média temporel ayant une audiodescription. Non applicable."
 		},
 		{
 			"criterion": "4.6",
@@ -486,7 +486,7 @@
 			"criterion": "4.7",
 			"page": "https://chikimuras.github.io/rampe/cockpit/docs/roadmap/",
 			"status": "NA",
-			"note": "Test 4.7.1 sur la feuille de route (roadmap) : DOM rendu dans Chromium (Playwright) parcouru : 0 <video>, 0 <audio>, 0 <object>, 0 <embed>, 0 <canvas>, 0 <svg>, 0 <iframe>, 0 <marquee>, 0 <bgsound>, 0 attribut autoplay, 0 lien vers un fichier audio ou vidéo. Aucun média temporel à identifier. Non applicable."
+			"note": "Test 4.7.1 sur la feuille de route (/cockpit/docs/roadmap/) : DOM rendu dans Chromium (Playwright) parcouru : 0 <video>, 0 <audio>, 0 <object>, 0 <embed>, 0 <canvas>, 0 <svg>, 0 <iframe>, 0 <marquee>, 0 <bgsound>, 0 attribut autoplay, 0 lien vers un fichier audio ou vidéo. Aucun média temporel à identifier. Non applicable."
 		},
 		{
 			"criterion": "4.7",
@@ -558,7 +558,7 @@
 			"criterion": "4.8",
 			"page": "https://chikimuras.github.io/rampe/cockpit/docs/roadmap/",
 			"status": "NA",
-			"note": "Tests 4.8.1 et 4.8.2 sur la feuille de route (roadmap) : DOM rendu dans Chromium (Playwright) parcouru : 0 <video>, 0 <audio>, 0 <object>, 0 <embed>, 0 <canvas>, 0 <svg>, 0 <iframe>, 0 <marquee>, 0 <bgsound>, 0 attribut autoplay, 0 lien vers un fichier audio ou vidéo. Aucun média non temporel (ni <object>, ni <embed>, ni <canvas>, ni SVG animé), donc aucune alternative à vérifier. Non applicable."
+			"note": "Tests 4.8.1 et 4.8.2 sur la feuille de route (/cockpit/docs/roadmap/) : DOM rendu dans Chromium (Playwright) parcouru : 0 <video>, 0 <audio>, 0 <object>, 0 <embed>, 0 <canvas>, 0 <svg>, 0 <iframe>, 0 <marquee>, 0 <bgsound>, 0 attribut autoplay, 0 lien vers un fichier audio ou vidéo. Aucun média non temporel (ni <object>, ni <embed>, ni <canvas>, ni SVG animé), donc aucune alternative à vérifier. Non applicable."
 		},
 		{
 			"criterion": "4.8",
@@ -630,7 +630,7 @@
 			"criterion": "4.9",
 			"page": "https://chikimuras.github.io/rampe/cockpit/docs/roadmap/",
 			"status": "NA",
-			"note": "Test 4.9.1 sur la feuille de route (roadmap) : DOM rendu dans Chromium (Playwright) parcouru : 0 <video>, 0 <audio>, 0 <object>, 0 <embed>, 0 <canvas>, 0 <svg>, 0 <iframe>, 0 <marquee>, 0 <bgsound>, 0 attribut autoplay, 0 lien vers un fichier audio ou vidéo. Aucun média non temporel ayant une alternative. Non applicable."
+			"note": "Test 4.9.1 sur la feuille de route (/cockpit/docs/roadmap/) : DOM rendu dans Chromium (Playwright) parcouru : 0 <video>, 0 <audio>, 0 <object>, 0 <embed>, 0 <canvas>, 0 <svg>, 0 <iframe>, 0 <marquee>, 0 <bgsound>, 0 attribut autoplay, 0 lien vers un fichier audio ou vidéo. Aucun média non temporel ayant une alternative. Non applicable."
 		},
 		{
 			"criterion": "4.9",
@@ -702,7 +702,7 @@
 			"criterion": "4.10",
 			"page": "https://chikimuras.github.io/rampe/cockpit/docs/roadmap/",
 			"status": "NA",
-			"note": "Test 4.10.1 sur la feuille de route (roadmap) : DOM rendu dans Chromium (Playwright) parcouru : 0 <video>, 0 <audio>, 0 <object>, 0 <embed>, 0 <canvas>, 0 <svg>, 0 <iframe>, 0 <marquee>, 0 <bgsound>, 0 attribut autoplay, 0 lien vers un fichier audio ou vidéo. Aucun son déclenché automatiquement (aucun <audio>/<video>, aucun attribut autoplay, aucun <bgsound>). Non applicable."
+			"note": "Test 4.10.1 sur la feuille de route (/cockpit/docs/roadmap/) : DOM rendu dans Chromium (Playwright) parcouru : 0 <video>, 0 <audio>, 0 <object>, 0 <embed>, 0 <canvas>, 0 <svg>, 0 <iframe>, 0 <marquee>, 0 <bgsound>, 0 attribut autoplay, 0 lien vers un fichier audio ou vidéo. Aucun son déclenché automatiquement (aucun <audio>/<video>, aucun attribut autoplay, aucun <bgsound>). Non applicable."
 		},
 		{
 			"criterion": "4.10",
@@ -774,7 +774,7 @@
 			"criterion": "4.11",
 			"page": "https://chikimuras.github.io/rampe/cockpit/docs/roadmap/",
 			"status": "NA",
-			"note": "Tests 4.11.1 à 4.11.3 sur la feuille de route (roadmap) : DOM rendu dans Chromium (Playwright) parcouru : 0 <video>, 0 <audio>, 0 <object>, 0 <embed>, 0 <canvas>, 0 <svg>, 0 <iframe>, 0 <marquee>, 0 <bgsound>, 0 attribut autoplay, 0 lien vers un fichier audio ou vidéo. Aucun média temporel, donc aucune fonction de contrôle à vérifier. Non applicable."
+			"note": "Tests 4.11.1 à 4.11.3 sur la feuille de route (/cockpit/docs/roadmap/) : DOM rendu dans Chromium (Playwright) parcouru : 0 <video>, 0 <audio>, 0 <object>, 0 <embed>, 0 <canvas>, 0 <svg>, 0 <iframe>, 0 <marquee>, 0 <bgsound>, 0 attribut autoplay, 0 lien vers un fichier audio ou vidéo. Aucun média temporel, donc aucune fonction de contrôle à vérifier. Non applicable."
 		},
 		{
 			"criterion": "4.11",
@@ -846,7 +846,7 @@
 			"criterion": "4.12",
 			"page": "https://chikimuras.github.io/rampe/cockpit/docs/roadmap/",
 			"status": "NA",
-			"note": "Tests 4.12.1 et 4.12.2 sur la feuille de route (roadmap) : DOM rendu dans Chromium (Playwright) parcouru : 0 <video>, 0 <audio>, 0 <object>, 0 <embed>, 0 <canvas>, 0 <svg>, 0 <iframe>, 0 <marquee>, 0 <bgsound>, 0 attribut autoplay, 0 lien vers un fichier audio ou vidéo. Aucun média non temporel à contrôler. Non applicable."
+			"note": "Tests 4.12.1 et 4.12.2 sur la feuille de route (/cockpit/docs/roadmap/) : DOM rendu dans Chromium (Playwright) parcouru : 0 <video>, 0 <audio>, 0 <object>, 0 <embed>, 0 <canvas>, 0 <svg>, 0 <iframe>, 0 <marquee>, 0 <bgsound>, 0 attribut autoplay, 0 lien vers un fichier audio ou vidéo. Aucun média non temporel à contrôler. Non applicable."
 		},
 		{
 			"criterion": "4.12",
@@ -918,7 +918,7 @@
 			"criterion": "4.13",
 			"page": "https://chikimuras.github.io/rampe/cockpit/docs/roadmap/",
 			"status": "NA",
-			"note": "Tests 4.13.1 et 4.13.2 sur la feuille de route (roadmap) : DOM rendu dans Chromium (Playwright) parcouru : 0 <video>, 0 <audio>, 0 <object>, 0 <embed>, 0 <canvas>, 0 <svg>, 0 <iframe>, 0 <marquee>, 0 <bgsound>, 0 attribut autoplay, 0 lien vers un fichier audio ou vidéo. Aucun média temporel ni non temporel, donc aucune compatibilité avec les technologies d’assistance à vérifier. Non applicable."
+			"note": "Tests 4.13.1 et 4.13.2 sur la feuille de route (/cockpit/docs/roadmap/) : DOM rendu dans Chromium (Playwright) parcouru : 0 <video>, 0 <audio>, 0 <object>, 0 <embed>, 0 <canvas>, 0 <svg>, 0 <iframe>, 0 <marquee>, 0 <bgsound>, 0 attribut autoplay, 0 lien vers un fichier audio ou vidéo. Aucun média temporel ni non temporel, donc aucune compatibilité avec les technologies d’assistance à vérifier. Non applicable."
 		},
 		{
 			"criterion": "4.13",
