@@ -1,5 +1,5 @@
 ---
-title: "ADR-0003 — Monorepo TypeScript (pnpm) : core, cli, site"
+title: "ADR-0003 — Dépôt unique TypeScript (pnpm) : core, cli, site"
 status: Accepted
 date: 2026-10-15
 deciders: "Claude (délégation, ADR-0001)"

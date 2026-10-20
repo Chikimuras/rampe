@@ -1,5 +1,5 @@
 ---
-title: "ADR-0005 — Pas de backend : les données d’audit restent dans le navigateur"
+title: "ADR-0005 — Pas de serveur : les données d’audit restent dans le navigateur"
 status: Accepted
 date: 2026-10-15
 deciders: "Claude (délégation, ADR-0001)"

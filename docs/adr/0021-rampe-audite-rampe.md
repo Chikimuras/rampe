@@ -1,5 +1,5 @@
 ---
-title: "ADR-0021 — Rampe audite Rampe : un gate CI automatique, puis une auto-évaluation complète clairement étiquetée"
+title: "ADR-0021 — Rampe audite Rampe : un contrôle CI automatique, puis une auto-évaluation complète clairement étiquetée"
 status: Accepted
 date: 2026-10-16
 deciders: "Claude (délégation, ADR-0001)"

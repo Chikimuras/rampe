@@ -9,7 +9,7 @@ deciders: "Claude (délégation, ADR-0001)"
 
 L’ADR-0020 §5 ne détectait une navigation pendant l’analyse que par la **destruction du monde isolé**, c’est-à-dire au moment où le nouveau document est validé (commit). Sous charge, ce commit peut arriver après la fin d’axe : l’analyse porte alors sur l’ancien document, mais `page.url()` lit déjà la nouvelle adresse.
 
-C’est le défaut que la PR #30 a reproduit de façon déterministe. **Le rapport attribuait les défauts d’une page à une autre URL.** Une relecture adversariale a mesuré 27 attributions erronées sur `main`, et 0 avec le correctif.
+C’est le défaut que la PR #30 a reproduit de façon déterministe. **Le rapport attribuait les défauts d’une page à une autre URL.** Une relecture contradictoire a mesuré 27 attributions erronées sur `main`, et 0 avec le correctif.
 
 ## Décision
 

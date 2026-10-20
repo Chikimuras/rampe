@@ -2706,18 +2706,16 @@ describe("conformité RGAA des pages statiques (auto-évaluation)", { timeout: 6
 		await page.close();
 	});
 
-	it("8.7 : titres des ADR et documents balisés partout où ils s'affichent ; <title> sans anglais", async () => {
+	it("8.7 : titres des ADR et documents en français ; « open source » balisé sur l'accueil", async () => {
 		const page = await browser.newPage();
 		const english = (selector: string) => page.locator(`${selector} span[lang=en]`).allTextContents();
 		await page.goto(`${base}/`);
 		await expect(english("main")).resolves.toEqual(["open source"]);
 		for (const path of ["cockpit/", "plan-du-site/"]) {
 			await page.goto(`${base}/${path}`);
-			await expect(english('a[href$="/cockpit/adr/0003-monorepo-typescript-pnpm/"]')).resolves.toEqual(["Monorepo"]);
-			await expect(english('a[href$="/cockpit/adr/0006-gates-et-flux-de-merge/"]')).resolves.toEqual([
-				"Gates",
-				"merge",
-			]);
+			await expect(page.locator('a[href$="/cockpit/adr/0003-monorepo-typescript-pnpm/"]').textContent()).resolves.toBe(
+				"ADR-0003 — Dépôt unique TypeScript (pnpm) : core, cli, site",
+			);
 			await expect(page.locator('a[href$="/cockpit/docs/roadmap/"]').first().textContent()).resolves.toMatch(
 				/feuille de route/i,
 			);
@@ -2725,13 +2723,16 @@ describe("conformité RGAA des pages statiques (auto-évaluation)", { timeout: 6
 				"Méthode de travail des agents",
 			);
 		}
-		await page.goto(`${base}/cockpit/adr/0005-pas-de-backend-donnees-locales/`);
-		await expect(english("h1")).resolves.toEqual(["backend"]);
 		for (const [id, title] of [
-			["roadmap", "Feuille de route"],
-			["workflow", "Méthode de travail des agents"],
+			[
+				"adr/0005-pas-de-backend-donnees-locales",
+				"ADR-0005 — Pas de serveur : les données d’audit restent dans le navigateur",
+			],
+			["adr/0006-gates-et-flux-de-merge", "ADR-0006 — Contrôles obligatoires et flux de fusion"],
+			["docs/roadmap", "Feuille de route"],
+			["docs/workflow", "Méthode de travail des agents"],
 		]) {
-			await page.goto(`${base}/cockpit/docs/${id}/`);
+			await page.goto(`${base}/cockpit/${id}/`);
 			await expect(page.title()).resolves.toBe(`${title} · Rampe`);
 		}
 		await page.close();

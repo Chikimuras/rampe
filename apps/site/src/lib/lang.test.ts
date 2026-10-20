@@ -1,6 +1,6 @@
 import { readdirSync, readFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
-import { markEnglishHtml, markEnglishText, OFFICIAL_TERMS, TECH_TERMS } from "./lang";
+import { markEnglishHtml, markEnglishText, OFFICIAL_TERMS, TECH_TERMS, termsPattern } from "./lang";
 
 const en = (w: string) => `<span lang="en">${w}</span>`;
 const mark = (html: string) => markEnglishHtml(html, TECH_TERMS);
@@ -113,13 +113,19 @@ describe("markEnglishText (titres des ADR et documents)", () => {
 	});
 });
 
-describe("docs/ : pas de forme francisée d'un verbe anglais (8.7)", () => {
+describe("docs/ : pas de forme francisée d'un mot anglais, titres sans anglais (8.7)", () => {
 	const root = new URL("../../../../docs/", import.meta.url);
 	const files = readdirSync(root, { recursive: true, encoding: "utf8" }).filter(
 		(f) => f.endsWith(".md") && !f.startsWith("audit-rampe"),
 	);
 	it.each(files)("%s", (f) => {
 		const text = readFileSync(new URL(f, root), "utf8");
-		expect(text.match(/\b(?:commit|merg|push|squash)(?:é|ée|és|ées|er)(?![\p{L}])/giu)).toBeNull();
+		expect(text.match(/\b(?:commit|merg|push|squash)(?:é|ée|és|ées|er)(?![\p{L}])|adversaria/giu)).toBeNull();
+	});
+
+	// Le <title> ne peut pas porter de `lang` (critère 8.7.1) : le titre du frontmatter est écrit en français.
+	it.each(files)("titre de %s", (f) => {
+		const title = /^title:\s*(.*)$/m.exec(readFileSync(new URL(f, root), "utf8"))?.[1] ?? "";
+		expect(title.match(termsPattern(TECH_TERMS))).toBeNull();
 	});
 });

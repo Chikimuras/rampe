@@ -13,7 +13,7 @@ Comment Claude construit Rampe sans intervention humaine, et où l’humain gard
 <tbody>
 <tr><td><strong>Orchestrateur</strong></td><td>Session Claude principale</td><td>Choisit la prochaine tâche de la roadmap, écrit les ADR, découpe, délègue, merge</td><td>N’écrit pas le gros du code</td></tr>
 <tr><td><strong>Implémenteur</strong></td><td>Sous-agent, worktree git isolé</td><td>TDD : test qui échoue → code → <code>pnpm check</code> vert → PR</td><td>Ne merge jamais</td></tr>
-<tr><td><strong>Relecteur</strong></td><td>Sous-agent neuf, sans le contexte de l’implémenteur</td><td>Relecture adversariale du diff : bugs, écarts aux ADR, sécurité. <strong>Doit avoir un shell</strong> pour exécuter tests et scripts : ce qui n’est pas exécuté reste une hypothèse</td><td>Ne corrige pas lui-même</td></tr>
+<tr><td><strong>Relecteur</strong></td><td>Sous-agent neuf, sans le contexte de l’implémenteur</td><td>Relecture contradictoire du diff : bugs, écarts aux ADR, sécurité. <strong>Doit avoir un shell</strong> pour exécuter tests et scripts : ce qui n’est pas exécuté reste une hypothèse</td><td>Ne corrige pas lui-même</td></tr>
 </tbody>
 </table>
 
@@ -26,7 +26,7 @@ Un relecteur qui n’a pas écrit le code n’a pas ses angles morts : c’est l
 3. **Branche** — `feat/…`, `fix/…`, `docs/…` dans un worktree.
 4. **Implémentation** — tests d’abord ; le gate local (hook Stop) bloque tant que `pnpm check` échoue.
 5. **PR** — description : quoi, pourquoi, preuve (sortie des vérifs).
-6. **Relecture** — relecteur adversarial ; chaque remarque est corrigée ou réfutée par écrit dans la PR.
+6. **Relecture** — relecteur contradicteur ; chaque remarque est corrigée ou réfutée par écrit dans la PR.
 7. **CI verte** → merge *squash* → déploiement automatique.
 8. **Trace** — case cochée dans la roadmap, entrée dans le journal.
 

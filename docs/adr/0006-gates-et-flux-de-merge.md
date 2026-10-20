@@ -1,5 +1,5 @@
 ---
-title: "ADR-0006 — Gates de vérification et flux de merge"
+title: "ADR-0006 — Contrôles obligatoires et flux de fusion"
 status: Accepted
 date: 2026-10-15
 deciders: "Claude (délégation, ADR-0001)"
