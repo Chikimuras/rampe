@@ -6,6 +6,15 @@ Outil libre et gratuit pour accompagner les PME vers la conformité **RGAA** (ac
 
 Ce projet est une expérience : il est conçu, développé et mis en production **de façon autonome par Claude** (Anthropic), sous la supervision d’Alexandre Velia. Chaque décision est tracée dans [`docs/adr/`](docs/adr/).
 
+## Audit automatique en ligne de commande
+
+```sh
+npx playwright@1.64.0 install chromium   # une fois
+npx rampe audit https://exemple.fr/
+```
+
+Options, échantillon de pages et publication sur npm : [`packages/cli/`](packages/cli/).
+
 ## Sauvegarde de l’audit guidé
 
 L’audit guidé (`/audit/`) n’a pas de serveur : l’audit n’existe que dans le navigateur où il a été saisi (ADR-0005). Changer de navigateur ou effacer ses données le fait perdre. Pour le garder ou le transmettre :

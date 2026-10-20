@@ -2,6 +2,27 @@
 
 Audit automatique d’une page web ou d’un échantillon de pages, avec les résultats rangés par **critère RGAA** (ADR-0011). Le moteur est axe-core 4.14.0, exécuté dans un vrai Chromium par Playwright : les contrastes, la visibilité et les noms accessibles dépendent du rendu.
 
+## Installation
+
+Node ≥ 22.18. Sans installation, avec `npx` :
+
+```sh
+npx playwright@1.64.0 install chromium   # une fois : le navigateur de l’audit
+npx rampe audit https://exemple.fr/
+```
+
+Ou installé une fois pour toutes :
+
+```sh
+npm i -g rampe
+npx playwright@1.64.0 install chromium   # une fois
+rampe audit https://exemple.fr/ --json rapport.json --html rapport.html
+```
+
+La version de Playwright doit être celle de la CLI (1.64.0 aujourd’hui). Si Chromium manque, `rampe` sort en 2 et affiche la commande exacte à lancer. Sous Linux, `--with-deps` installe aussi les bibliothèques système du navigateur.
+
+Le paquet publié contient un seul fichier, `dist/rampe.mjs`, où `@rampe/core` est intégré ; `playwright` et `axe-core` sont ses seules dépendances (ADR-0025).
+
 ## Utilisation depuis le dépôt
 
 Depuis la racine du dépôt, après `pnpm install` :
@@ -24,7 +45,7 @@ pnpm rampe audit https://exemple.fr/ --json rapport.json --html rapport.html --t
 | `--largeur <px>` | largeur de la fenêtre, de 200 à 3 840 px, hauteur 720 (défaut : 1 280) ; `--largeur 375` audite la mise en page mobile |
 | `--strict` | sort aussi en 1 sur un résultat « rattachement incertain » ou « à vérifier » (les bonnes pratiques hors RGAA ne comptent jamais) ; la console dit alors pourquoi |
 
-Codes de sortie : **0** aucune non-conformité détectée, **1** au moins une non-conformité détectée (pratique en CI ; avec `--strict`, ou un résultat incertain ou à vérifier), **2** erreur d’usage ou page injoignable.
+Codes de sortie : **0** aucune non-conformité détectée, **1** au moins une non-conformité détectée (pratique en CI ; avec `--strict`, ou un résultat incertain ou à vérifier), **2** erreur d’usage, page injoignable ou Chromium absent.
 
 `--strict` ne change pas ce que Rampe présente comme non-conformité (ADR-0011 §3) : il sert à un site qui veut n’avoir **aucun** signalement, comme celui de Rampe lui-même (ADR-0021). Thème et largeur s’appliquent à chaque page, y compris avec `--echantillon`. Pour couvrir plusieurs thèmes ou largeurs, lancez plusieurs audits.
 
@@ -198,3 +219,38 @@ Le titre de page est borné à 300 caractères dans le JSON (« … (tronqué) �
 ## Tests
 
 `pnpm --filter rampe test` lance les tests unitaires et des tests de bout en bout : la vraie CLI audite les pages de `test/fixtures/` servies par un serveur `node:http` local (défauts connus aux critères 1.1, 3.2, 8.3 et 11.1 ; page propre ; `region` seule, aussi en `--strict` ; défauts de contraste propres au thème sombre et à la fenêtre étroite (`--theme`, `--largeur`) ; boucle infinie ; départ vers `about:blank` ; CSP `script-src 'none'` ; page piège qui falsifie `window.axe` et casse des primitives JavaScript, et accueil piège qui fausse la collecte de l’échantillon ; redirection vers une autre origine avec identifiants dans l’URL). Un mini-site local (`test/fixtures/site-accueil.html` et des pages générées) sert à enchaîner `rampe echantillon` puis `rampe audit --echantillon` : pages types et raisons, page manquante signalée, JSON multi-pages, page en erreur et codes de sortie. Il faut Chromium (commande ci-dessus). Les pages de test sont exclues de Biome, puisqu’elles sont fautives exprès.
+
+`test/paquet.e2e.test.ts` teste le paquet réel : `pnpm --filter rampe build`, liste exacte de `npm pack` (`dist/rampe.mjs`, `README.md`, `LICENSE`, `package.json`), puis installation de l’archive dans un dossier vierge et audit de `test/fixtures/defauts.html` par `node_modules/.bin/rampe`, y compris sans Chromium (code 2). Il lui faut npm et l’accès au registre.
+
+## Publier une version
+
+La publication passe par la CI (`.github/workflows/publish.yml`), jamais depuis un poste, sauf la toute première (ci-dessous) :
+
+1. changer `version` dans `packages/cli/package.json` par une PR ;
+2. une fois la PR fusionnée, poser l’étiquette sur `main` : `git tag v<version> && git push origin v<version>`.
+
+Le workflow vérifie que l’étiquette correspond à la version, lance `pnpm check`, construit, puis publie avec le *Trusted Publishing* de npm (jeton OIDC éphémère, aucun jeton npm stocké) et une attestation de provenance.
+
+### Première publication (manuelle, par Alexandre)
+
+npm ne déclare un éditeur de confiance que pour un paquet qui existe déjà. La version 0.1.0 est donc publiée à la main, depuis un clone à jour de `main` :
+
+```sh
+npm login
+pnpm install --frozen-lockfile
+pnpm --filter rampe exec playwright install chromium
+pnpm check
+pnpm --filter rampe build
+cd packages/cli && npm publish --access public
+```
+
+Pas de `--provenance` ici : l’attestation n’est possible que depuis la CI. Ensuite, sur npmjs.com, page du paquet `rampe`, *Settings*, section *Trusted Publisher* :
+
+- fournisseur : GitHub Actions ;
+- *Organization or user* : `Chikimuras` ;
+- *Repository* : `rampe` ;
+- *Workflow filename* : `publish.yml` ;
+- *Environment name* : vide ;
+- autoriser la publication directe (`npm publish`).
+
+Une configuration doit être validée par une publication réussie **dans les 2 jours** (documentation npm), sinon elle expire et il faut la recréer : la déclarer au moment de publier la version suivante par la CI. Une fois validée, npm recommande d’interdire la publication par jeton classique (*Publishing access* : exiger la double authentification et refuser les jetons).
