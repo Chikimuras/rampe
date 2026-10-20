@@ -1,20 +1,40 @@
-# @rampe/cli
+# rampe
 
 Audit automatique d’une page web ou d’un échantillon de pages, avec les résultats rangés par **critère RGAA** (ADR-0011). Le moteur est axe-core 4.14.0, exécuté dans un vrai Chromium par Playwright : les contrastes, la visibilité et les noms accessibles dépendent du rendu.
 
-## Utilisation depuis le dépôt
+## Installation
 
-Le paquet n’est pas encore publié sur npm. Depuis la racine du dépôt, après `pnpm install` :
+Node ≥ 22.18. Sans installation, avec `npx` :
 
 ```sh
-pnpm --filter @rampe/cli exec playwright install chromium   # une fois
-pnpm exec rampe audit https://exemple.fr/
-pnpm exec rampe audit https://exemple.fr/ --json rapport.json --html rapport.html --timeout 60000
+npx playwright@1.64.0 install chromium   # une fois : le navigateur de l’audit
+npx rampe audit https://exemple.fr/
 ```
 
-`pnpm --filter @rampe/cli exec rampe audit https://…` fonctionne aussi, mais un chemin `--json` relatif part alors de `packages/cli`.
+Ou installé une fois pour toutes :
 
-Le binaire est `src/cli.ts`, exécuté tel quel par Node ≥ 22.18 (suppression native des types TypeScript) : pas d’étape de build.
+```sh
+npm i -g rampe
+npx playwright@1.64.0 install chromium   # une fois
+rampe audit https://exemple.fr/ --json rapport.json --html rapport.html
+rampe --version
+```
+
+La version de Playwright doit être celle de la CLI (1.64.0 aujourd’hui). Si Chromium manque, `rampe` sort en 2 et affiche la commande exacte à lancer. Sous Linux, `--with-deps` installe aussi les bibliothèques système du navigateur.
+
+Le paquet publié contient un seul fichier, `dist/rampe.mjs`, où `@rampe/core` est intégré ; `playwright` et `axe-core` sont ses seules dépendances (ADR-0025).
+
+## Utilisation depuis le dépôt
+
+Depuis la racine du dépôt, après `pnpm install` :
+
+```sh
+pnpm --filter rampe exec playwright install chromium   # une fois
+pnpm rampe audit https://exemple.fr/
+pnpm rampe audit https://exemple.fr/ --json rapport.json --html rapport.html --timeout 60000
+```
+
+`pnpm rampe` lance `src/cli.ts`, exécuté tel quel par Node ≥ 22.18 (suppression native des types TypeScript) : pas d’étape de build pour le développement. Un chemin `--json` ou `--html` relatif part de la racine du dépôt.
 
 | Option | Effet |
 |---|---|
@@ -26,7 +46,7 @@ Le binaire est `src/cli.ts`, exécuté tel quel par Node ≥ 22.18 (suppression 
 | `--largeur <px>` | largeur de la fenêtre, de 200 à 3 840 px, hauteur 720 (défaut : 1 280) ; `--largeur 375` audite la mise en page mobile |
 | `--strict` | sort aussi en 1 sur un résultat « rattachement incertain » ou « à vérifier » (les bonnes pratiques hors RGAA ne comptent jamais) ; la console dit alors pourquoi |
 
-Codes de sortie : **0** aucune non-conformité détectée, **1** au moins une non-conformité détectée (pratique en CI ; avec `--strict`, ou un résultat incertain ou à vérifier), **2** erreur d’usage ou page injoignable.
+Codes de sortie : **0** aucune non-conformité détectée, **1** au moins une non-conformité détectée (pratique en CI ; avec `--strict`, ou un résultat incertain ou à vérifier), **2** erreur d’usage, page injoignable ou Chromium absent.
 
 `--strict` ne change pas ce que Rampe présente comme non-conformité (ADR-0011 §3) : il sert à un site qui veut n’avoir **aucun** signalement, comme celui de Rampe lui-même (ADR-0021). Thème et largeur s’appliquent à chaque page, y compris avec `--echantillon`. Pour couvrir plusieurs thèmes ou largeurs, lancez plusieurs audits.
 
@@ -38,10 +58,10 @@ Le flux de travail :
 
 ```sh
 # 1. Rampe propose un échantillon (accueil chargé dans Chromium, liens de même origine)
-pnpm exec rampe echantillon https://exemple.fr/ --sortie echantillon.txt
+rampe echantillon https://exemple.fr/ --sortie echantillon.txt
 # 2. Vous relisez et modifiez echantillon.txt : ajoutez ce que Rampe n’a pas trouvé, retirez ce qui ne convient pas
 # 3. Rampe audite chaque page, une à une, et produit un seul JSON
-pnpm exec rampe audit --echantillon echantillon.txt --json rapport.json
+rampe audit --echantillon echantillon.txt --json rapport.json
 ```
 
 | Option de `rampe echantillon` | Effet |
@@ -181,8 +201,8 @@ Version 2 : ajout de `error` par page, et `finalUrl`/`title` à `null` pour une 
 Le fichier `--json` s’importe dans la page `/audit/` du site Rampe, pour ne pas ressaisir ce que la machine a trouvé :
 
 ```sh
-pnpm exec rampe echantillon https://exemple.fr/ --sortie echantillon.txt   # 1. proposer l’échantillon
-pnpm exec rampe audit --echantillon echantillon.txt --json rapport.json     # 2. audit automatique
+rampe echantillon https://exemple.fr/ --sortie echantillon.txt   # 1. proposer l’échantillon
+rampe audit --echantillon echantillon.txt --json rapport.json     # 2. audit automatique
 # 3. Sur /audit/ : « Importer un rapport automatique (CLI ou extension, JSON) », choisir rapport.json
 ```
 
@@ -193,8 +213,47 @@ pnpm exec rampe audit --echantillon echantillon.txt --json rapport.json     # 2.
 - Une évaluation saisie par une personne n’est jamais modifiée. Réimporter le même fichier ne change rien. « Annuler cet import » restaure l’état précédent tant que rien d’autre n’a été modifié.
 - Le fichier vient de l’extérieur de l’application : il est validé strictement, tout ou rien (`parseAuditReport` de `@rampe/core`). Un fichier refusé ne modifie pas l’audit, et le message nomme le premier défaut trouvé.
 
+`tool.name` reste `@rampe/cli` : c’est l’identifiant du format, que l’audit guidé vérifie à l’import, pas le nom du paquet npm (`rampe`).
+
 Le titre de page est borné à 300 caractères dans le JSON (« … (tronqué) »). Le champ `help` est apparu après la première version du format 2. Il reste facultatif à l’import, donc un fichier plus ancien s’importe aussi, sans les descriptions.
 
 ## Tests
 
-`pnpm --filter @rampe/cli test` lance les tests unitaires et des tests de bout en bout : la vraie CLI audite les pages de `test/fixtures/` servies par un serveur `node:http` local (défauts connus aux critères 1.1, 3.2, 8.3 et 11.1 ; page propre ; `region` seule, aussi en `--strict` ; défauts de contraste propres au thème sombre et à la fenêtre étroite (`--theme`, `--largeur`) ; boucle infinie ; départ vers `about:blank` ; CSP `script-src 'none'` ; page piège qui falsifie `window.axe` et casse des primitives JavaScript, et accueil piège qui fausse la collecte de l’échantillon ; redirection vers une autre origine avec identifiants dans l’URL). Un mini-site local (`test/fixtures/site-accueil.html` et des pages générées) sert à enchaîner `rampe echantillon` puis `rampe audit --echantillon` : pages types et raisons, page manquante signalée, JSON multi-pages, page en erreur et codes de sortie. Il faut Chromium (commande ci-dessus). Les pages de test sont exclues de Biome, puisqu’elles sont fautives exprès.
+`pnpm --filter rampe test` lance les tests unitaires et des tests de bout en bout : la vraie CLI audite les pages de `test/fixtures/` servies par un serveur `node:http` local (défauts connus aux critères 1.1, 3.2, 8.3 et 11.1 ; page propre ; `region` seule, aussi en `--strict` ; défauts de contraste propres au thème sombre et à la fenêtre étroite (`--theme`, `--largeur`) ; boucle infinie ; départ vers `about:blank` ; CSP `script-src 'none'` ; page piège qui falsifie `window.axe` et casse des primitives JavaScript, et accueil piège qui fausse la collecte de l’échantillon ; redirection vers une autre origine avec identifiants dans l’URL). Un mini-site local (`test/fixtures/site-accueil.html` et des pages générées) sert à enchaîner `rampe echantillon` puis `rampe audit --echantillon` : pages types et raisons, page manquante signalée, JSON multi-pages, page en erreur et codes de sortie. Il faut Chromium (commande ci-dessus). Les pages de test sont exclues de Biome, puisqu’elles sont fautives exprès.
+
+`pnpm --filter rampe test:paquet` (hors de `pnpm check`, car il demande npm et l’accès au registre ; lancé par la CI) teste le paquet réel, `test/paquet.e2e.test.ts` : `npm pack` (le build passe par `prepack`), liste exacte de l’archive (`dist/rampe.mjs`, `README.md`, `LICENSE`, `package.json`), puis installation de l’archive dans un dossier vierge et audit de `test/fixtures/defauts.html` par `node_modules/.bin/rampe`, y compris sans Chromium (code 2).
+
+## Publier une version
+
+La publication passe par la CI (`.github/workflows/publish.yml`), jamais depuis un poste, sauf la toute première (ci-dessous) :
+
+1. changer `version` dans `packages/cli/package.json` par une PR ;
+2. une fois la PR fusionnée, poser l’étiquette sur `main` : `git tag v<version> && git push origin v<version>`.
+
+Le workflow a deux jobs. `build`, sans droit d’écriture, vérifie que l’étiquette correspond à la version et que le commit est sur `main`, lance `pnpm check` et le test du paquet, puis produit l’archive (`npm pack`, qui construit par `prepack`). `publish`, dans l’environnement GitHub `npm`, publie cette archive telle quelle avec le *Trusted Publishing* de npm (jeton OIDC éphémère, aucun jeton npm stocké) et une attestation de provenance.
+
+### Première publication (manuelle, par Alexandre)
+
+npm ne déclare un éditeur de confiance que pour un paquet qui existe déjà. La version 0.1.0 est donc publiée à la main, depuis un clone à jour de `main` :
+
+```sh
+npm login
+pnpm install --frozen-lockfile
+pnpm --filter rampe exec playwright install chromium
+pnpm check
+pnpm --filter rampe test:paquet
+cd packages/cli && npm publish --access public   # prepack construit dist/rampe.mjs
+```
+
+Pas de `--provenance` ici : l’attestation n’est possible que depuis la CI.
+
+Ensuite, déclarer l’éditeur de confiance **juste avant de poser l’étiquette de la version suivante** : une configuration doit être validée par une publication réussie **dans les 2 jours** (documentation npm), sinon elle expire et il faut la supprimer puis la recréer. Sur npmjs.com, page du paquet `rampe`, *Settings*, section *Trusted Publisher* :
+
+- fournisseur : GitHub Actions ;
+- *Organization or user* : `Chikimuras` ;
+- *Repository* : `rampe` ;
+- *Workflow filename* : `publish.yml` ;
+- *Environment name* : `npm` (environnement GitHub du job `publish`) ;
+- autoriser la publication directe (`npm publish`).
+
+Puis, dans les 2 jours, publier la version suivante par la CI (PR de version, puis étiquette, voir plus haut). Une fois la configuration validée, npm recommande d’interdire la publication par jeton classique (*Publishing access* : exiger la double authentification et refuser les jetons).

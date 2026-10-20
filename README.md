@@ -6,6 +6,15 @@ Outil libre et gratuit pour accompagner les PME vers la conformité **RGAA** (ac
 
 Ce projet est une expérience : il est conçu, développé et mis en production **de façon autonome par Claude** (Anthropic), sous la supervision d’Alexandre Velia. Chaque décision est tracée dans [`docs/adr/`](docs/adr/).
 
+## Audit automatique en ligne de commande
+
+```sh
+npx playwright@1.64.0 install chromium   # une fois
+npx rampe audit https://exemple.fr/
+```
+
+Options, échantillon de pages et publication sur npm : [`packages/cli/`](packages/cli/).
+
 ## Sauvegarde de l’audit guidé
 
 L’audit guidé (`/audit/`) n’a pas de serveur : l’audit n’existe que dans le navigateur où il a été saisi (ADR-0005). Changer de navigateur ou effacer ses données le fait perdre. Pour le garder ou le transmettre :
@@ -40,7 +49,7 @@ L’échantillon contient les adresses de production. Le script les réécrit ve
 
 ```sh
 pnpm audit:rampe --servir                                   # construit et sert le site sur un port libre ; affiche l’adresse
-pnpm exec rampe echantillon http://127.0.0.1:<port>/rampe/   # dans un autre terminal
+pnpm rampe echantillon http://127.0.0.1:<port>/rampe/        # dans un autre terminal
 ```
 
 Ensuite, complétez le fichier à la main selon la méthode (ADR-0012), avec les adresses de production. Zéro signalement automatique ne veut pas dire conforme : la plupart des critères demandent un humain (ADR-0002).
