@@ -1,25 +1,47 @@
 {
 	"name": "rampe",
-	"version": "0.0.0",
-	"private": true,
+	"version": "0.1.0",
+	"description": "Audit automatique d’accessibilité d’un site web, résultats rangés par critère RGAA (axe-core dans Chromium)",
+	"keywords": [
+		"rgaa",
+		"accessibilite",
+		"accessibility",
+		"a11y",
+		"audit",
+		"axe-core",
+		"playwright",
+		"cli"
+	],
+	"license": "MIT",
+	"homepage": "https://chikimuras.github.io/rampe/",
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/Chikimuras/rampe.git",
+		"directory": "packages/cli"
+	},
 	"type": "module",
 	"bin": {
-		"rampe": "./src/cli.ts"
+		"rampe": "./dist/rampe.mjs"
 	},
+	"files": [
+		"dist"
+	],
 	"engines": {
 		"node": ">=22.18"
 	},
 	"scripts": {
+		"build": "rolldown src/cli.ts --file dist/rampe.mjs --format esm --platform node --external playwright --external axe-core",
 		"test": "vitest run",
 		"typecheck": "tsc --noEmit"
 	},
 	"dependencies": {
-		"@rampe/core": "workspace:*",
 		"axe-core": "4.14.0",
 		"playwright": "1.64.0"
 	},
 	"devDependencies": {
+		"@rampe/core": "workspace:*",
 		"@types/node": "22.20.5",
+		"rolldown": "1.2.14",
 		"vitest": "5.0.4"
 	}
 }

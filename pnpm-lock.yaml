@@ -63,9 +63,6 @@ importers:
 
   packages/cli:
     dependencies:
-      '@rampe/core':
-        specifier: workspace:*
-        version: link:../core
       axe-core:
         specifier: 4.14.0
         version: 4.14.0
@@ -73,9 +70,15 @@ importers:
         specifier: 1.64.0
         version: 1.64.0
     devDependencies:
+      '@rampe/core':
+        specifier: workspace:*
+        version: link:../core
       '@types/node':
         specifier: 22.20.5
         version: 22.20.5
+      rolldown:
+        specifier: 1.2.14
+        version: 1.2.14
       vitest:
         specifier: 5.0.4
         version: 5.0.4(@types/node@22.20.5)(vite@8.3.4(@types/node@22.20.5)(yaml@2.9.1))
