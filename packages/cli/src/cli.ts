@@ -3,6 +3,7 @@
 import { randomInt } from "node:crypto";
 import { existsSync } from "node:fs";
 import { readFile, writeFile } from "node:fs/promises";
+import { createRequire } from "node:module";
 import { dirname, resolve } from "node:path";
 import { parseArgs } from "node:util";
 import { AXE_RUN_OPTIONS } from "@rampe/core";
@@ -137,9 +138,20 @@ interface View {
 
 const isHttp = (href: string) => /^https?:$/.test(new URL(href).protocol);
 
+/**
+ * Chromium absent (ADR-0025 §4) : la commande exacte, à la version de Playwright réellement chargée. Lue dans son
+ * package.json, et non dans celui de Rampe, qui n'est plus à côté une fois le paquet construit.
+ */
+const PLAYWRIGHT_VERSION: string = createRequire(import.meta.url)("playwright/package.json").version;
+const NO_BROWSER = `Chromium n’est pas installé pour Playwright ${PLAYWRIGHT_VERSION}. Installez-le une fois avec :
+  npx playwright@${PLAYWRIGHT_VERSION} install chromium`;
+
 /** Bac à sable de Chromium conservé : Playwright le désactive par défaut, on le réactive (ADR-0011 §6). */
 async function withBrowser<T>(fn: (browser: Browser) => Promise<T>): Promise<T> {
-	const browser = await chromium.launch({ chromiumSandbox: true });
+	const browser = await chromium.launch({ chromiumSandbox: true }).catch((e: Error) => {
+		// ponytail: message de Playwright 1.64 ; s'il change, l'erreur d'origine reste affichée (toujours code 2).
+		throw /Executable doesn't exist/.test(e.message) ? new Error(NO_BROWSER) : e;
+	});
 	try {
 		return await fn(browser);
 	} finally {

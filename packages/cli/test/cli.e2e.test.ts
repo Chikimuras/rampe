@@ -1,6 +1,6 @@
 // Bout en bout : la vraie CLI (processus enfant, vrai Chromium) contre des pages servies en local.
 import { execFile } from "node:child_process";
-import { readFile, rm } from "node:fs/promises";
+import { mkdtemp, readFile, rm } from "node:fs/promises";
 import { createServer, type Server } from "node:http";
 import type { AddressInfo } from "node:net";
 import { tmpdir } from "node:os";
@@ -9,6 +9,7 @@ import { fileURLToPath, pathToFileURL } from "node:url";
 import { parseAuditReport, rgaa } from "@rampe/core";
 import axe from "axe-core";
 import { chromium } from "playwright";
+import playwrightPkg from "playwright/package.json" with { type: "json" };
 import { afterAll, beforeAll, describe, expect, it } from "vitest";
 import type { AuditReport } from "../src/audit.ts";
 
@@ -275,6 +276,23 @@ describe("rampe audit (bout en bout)", { timeout: 60_000 }, () => {
 		const { code, stderr } = await run("audit", `${base}/quitte`);
 		expect(code).toBe(2);
 		expect(stderr).toContain("about:blank");
+	});
+
+	it("Chromium absent : sort en 2 avec la commande d'installation exacte (ADR-0025 §4)", async () => {
+		const empty = await mkdtemp(join(tmpdir(), "rampe-sans-navigateur-"));
+		const { code, stderr } = await new Promise<{ code: number; stderr: string }>((resolve) => {
+			execFile(
+				process.execPath,
+				[cli, "audit", `${base}/propre`],
+				{ env: { ...process.env, PLAYWRIGHT_BROWSERS_PATH: empty } },
+				(error, _stdout, stderr) => resolve({ code: typeof error?.code === "number" ? error.code : 0, stderr }),
+			);
+		});
+		await rm(empty, { recursive: true, force: true });
+		expect(code).toBe(2);
+		expect(stderr).toContain(`npx playwright@${playwrightPkg.version} install chromium`);
+		expect(stderr).toContain("Chromium");
+		expect(stderr).not.toContain("Playwright Team");
 	});
 
 	it("injecte axe malgré une CSP script-src 'none'", async () => {
