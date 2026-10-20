@@ -14,6 +14,11 @@ document.getElementById("lest").innerHTML = '<p class="pale">Texte pâle.</p>'.r
 // La navigation part dès que le fil principal sort d'un blocage de plus de 200 ms : la fin du premier bloc d'axe,
 // donc pendant l'analyse (le chargement ne bloque pas autant). Le serveur ne répond jamais à /lent : le nouveau
 // document n'est jamais validé, le monde isolé n'est jamais détruit.
+// Pas de signal plus propre : axe ne laisse aucune trace observable par la page (ni mutation du DOM, ni défilement,
+// vérifié), et le monde isolé est invisible du monde principal. Un déclenchement trop tôt (avant l'analyse) ne peut
+// pas faire passer les tests à tort : la requête vers /lent, émise avant que la CLI ne guette, ne serait jamais vue et
+// le document jamais remplacé, et un pushState précoce serait l'adresse finale lue des deux côtés : la CLI sortirait
+// en 1 et les tests qui exigent 2 échoueraient.
 addEventListener("load", () => setTimeout(() => {
 	let last = performance.now();
 	const t = setInterval(() => {
@@ -21,7 +26,9 @@ addEventListener("load", () => setTimeout(() => {
 		if (n - last > 200) {
 			clearInterval(t);
 			// ?historique : navigation dans le même document (aucune requête), seule l'URL change.
+			// ?ancre : seul le fragment change, ce n'est pas une navigation (ADR-0023 §4).
 			if (location.search === "?historique") history.pushState(null, "", "/ailleurs");
+			else if (location.search === "?ancre") location.hash = "ailleurs";
 			else location.href = "/lent";
 		}
 		last = n;

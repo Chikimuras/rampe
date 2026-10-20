@@ -173,6 +173,16 @@ describe("rampe audit (bout en bout)", { timeout: 60_000 }, () => {
 		await expect(readFile(json, "utf8")).rejects.toThrow();
 	});
 
+	it("un simple changement d'ancre pendant l'analyse n'interrompt pas l'audit (ADR-0023 §4)", async () => {
+		const { code, stderr } = await run("audit", `${base}/navdrift?ancre`, "--json", json, "--timeout", "50000");
+		expect(code, stderr).toBe(1);
+		const [page] = (await readReport()).pages;
+		expect(page?.error).toBeNull();
+		expect(page?.title).toBe("Piege navigation");
+		expect(page?.finalUrl?.startsWith(`${base}/navdrift?ancre`)).toBe(true);
+		expect(page?.results.some((r) => r.ruleId === "image-alt")).toBe(true);
+	});
+
 	it("titre lu avec l'analyse : une page qui se réécrit pendant l'analyse ne change pas le titre", async () => {
 		const { code, stderr } = await run("audit", `${base}/docwrite`, "--json", json);
 		expect(code, stderr).toBe(1);
@@ -288,6 +298,23 @@ describe("rampe audit (bout en bout)", { timeout: 60_000 }, () => {
 		const [page] = JSON.parse(raw).pages;
 		expect(page.url).toBe(`http://***:***@127.0.0.1:${port}/redirige`);
 		expect(page.warnings).toHaveLength(1);
+		for (const out of [stdout, stderr, raw]) expect(out).not.toContain("secret");
+	});
+
+	it("identifiants dans l'URL, même origine : audit normal, identifiants masqués (ADR-0023 §2)", async () => {
+		const { code, stdout, stderr } = await run(
+			"audit",
+			`http://alice:secret@127.0.0.1:${port}/defauts`,
+			"--json",
+			json,
+		);
+		expect(code, stderr).toBe(1);
+		const raw = await readFile(json, "utf8");
+		const [page] = JSON.parse(raw).pages;
+		expect(page.error).toBeNull();
+		expect(page.url).toBe(`http://***:***@127.0.0.1:${port}/defauts`);
+		expect(page.finalUrl).toBe(`http://***:***@127.0.0.1:${port}/defauts`);
+		expect(page.warnings).toEqual([]);
 		for (const out of [stdout, stderr, raw]) expect(out).not.toContain("secret");
 	});
 
