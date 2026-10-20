@@ -1,5 +1,5 @@
 {
-	"name": "rampe",
+	"name": "rampe-depot",
 	"private": true,
 	"type": "module",
 	"packageManager": "pnpm@9.3.0",
@@ -13,12 +13,12 @@
 		"test": "pnpm -r --if-present test",
 		"build": "pnpm -r build",
 		"check": "pnpm lint && pnpm typecheck && pnpm test",
+		"rampe": "node packages/cli/src/cli.ts",
 		"audit:rampe": "node scripts/audit-rampe.mjs",
 		"auto-evaluation": "node scripts/auto-evaluation.mjs"
 	},
 	"devDependencies": {
 		"@biomejs/biome": "2.5.15",
-		"@rampe/cli": "workspace:*",
 		"typescript": "^6.0.3",
 		"vnu-jar": "26.10.11"
 	},

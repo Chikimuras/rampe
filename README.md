@@ -40,7 +40,7 @@ L’échantillon contient les adresses de production. Le script les réécrit ve
 
 ```sh
 pnpm audit:rampe --servir                                   # construit et sert le site sur un port libre ; affiche l’adresse
-pnpm exec rampe echantillon http://127.0.0.1:<port>/rampe/   # dans un autre terminal
+pnpm rampe echantillon http://127.0.0.1:<port>/rampe/        # dans un autre terminal
 ```
 
 Ensuite, complétez le fichier à la main selon la méthode (ADR-0012), avec les adresses de production. Zéro signalement automatique ne veut pas dire conforme : la plupart des critères demandent un humain (ADR-0002).

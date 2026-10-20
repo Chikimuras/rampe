@@ -1,20 +1,18 @@
-# @rampe/cli
+# rampe
 
 Audit automatique d’une page web ou d’un échantillon de pages, avec les résultats rangés par **critère RGAA** (ADR-0011). Le moteur est axe-core 4.14.0, exécuté dans un vrai Chromium par Playwright : les contrastes, la visibilité et les noms accessibles dépendent du rendu.
 
 ## Utilisation depuis le dépôt
 
-Le paquet n’est pas encore publié sur npm. Depuis la racine du dépôt, après `pnpm install` :
+Depuis la racine du dépôt, après `pnpm install` :
 
 ```sh
-pnpm --filter @rampe/cli exec playwright install chromium   # une fois
-pnpm exec rampe audit https://exemple.fr/
-pnpm exec rampe audit https://exemple.fr/ --json rapport.json --html rapport.html --timeout 60000
+pnpm --filter rampe exec playwright install chromium   # une fois
+pnpm rampe audit https://exemple.fr/
+pnpm rampe audit https://exemple.fr/ --json rapport.json --html rapport.html --timeout 60000
 ```
 
-`pnpm --filter @rampe/cli exec rampe audit https://…` fonctionne aussi, mais un chemin `--json` relatif part alors de `packages/cli`.
-
-Le binaire est `src/cli.ts`, exécuté tel quel par Node ≥ 22.18 (suppression native des types TypeScript) : pas d’étape de build.
+`pnpm rampe` lance `src/cli.ts`, exécuté tel quel par Node ≥ 22.18 (suppression native des types TypeScript) : pas d’étape de build pour le développement. Un chemin `--json` ou `--html` relatif part de la racine du dépôt.
 
 | Option | Effet |
 |---|---|
@@ -38,10 +36,10 @@ Le flux de travail :
 
 ```sh
 # 1. Rampe propose un échantillon (accueil chargé dans Chromium, liens de même origine)
-pnpm exec rampe echantillon https://exemple.fr/ --sortie echantillon.txt
+rampe echantillon https://exemple.fr/ --sortie echantillon.txt
 # 2. Vous relisez et modifiez echantillon.txt : ajoutez ce que Rampe n’a pas trouvé, retirez ce qui ne convient pas
 # 3. Rampe audite chaque page, une à une, et produit un seul JSON
-pnpm exec rampe audit --echantillon echantillon.txt --json rapport.json
+rampe audit --echantillon echantillon.txt --json rapport.json
 ```
 
 | Option de `rampe echantillon` | Effet |
@@ -181,8 +179,8 @@ Version 2 : ajout de `error` par page, et `finalUrl`/`title` à `null` pour une 
 Le fichier `--json` s’importe dans la page `/audit/` du site Rampe, pour ne pas ressaisir ce que la machine a trouvé :
 
 ```sh
-pnpm exec rampe echantillon https://exemple.fr/ --sortie echantillon.txt   # 1. proposer l’échantillon
-pnpm exec rampe audit --echantillon echantillon.txt --json rapport.json     # 2. audit automatique
+rampe echantillon https://exemple.fr/ --sortie echantillon.txt   # 1. proposer l’échantillon
+rampe audit --echantillon echantillon.txt --json rapport.json     # 2. audit automatique
 # 3. Sur /audit/ : « Importer un rapport automatique (CLI ou extension, JSON) », choisir rapport.json
 ```
 
@@ -193,8 +191,10 @@ pnpm exec rampe audit --echantillon echantillon.txt --json rapport.json     # 2.
 - Une évaluation saisie par une personne n’est jamais modifiée. Réimporter le même fichier ne change rien. « Annuler cet import » restaure l’état précédent tant que rien d’autre n’a été modifié.
 - Le fichier vient de l’extérieur de l’application : il est validé strictement, tout ou rien (`parseAuditReport` de `@rampe/core`). Un fichier refusé ne modifie pas l’audit, et le message nomme le premier défaut trouvé.
 
+`tool.name` reste `@rampe/cli` : c’est l’identifiant du format, que l’audit guidé vérifie à l’import, pas le nom du paquet npm (`rampe`).
+
 Le titre de page est borné à 300 caractères dans le JSON (« … (tronqué) »). Le champ `help` est apparu après la première version du format 2. Il reste facultatif à l’import, donc un fichier plus ancien s’importe aussi, sans les descriptions.
 
 ## Tests
 
-`pnpm --filter @rampe/cli test` lance les tests unitaires et des tests de bout en bout : la vraie CLI audite les pages de `test/fixtures/` servies par un serveur `node:http` local (défauts connus aux critères 1.1, 3.2, 8.3 et 11.1 ; page propre ; `region` seule, aussi en `--strict` ; défauts de contraste propres au thème sombre et à la fenêtre étroite (`--theme`, `--largeur`) ; boucle infinie ; départ vers `about:blank` ; CSP `script-src 'none'` ; page piège qui falsifie `window.axe` et casse des primitives JavaScript, et accueil piège qui fausse la collecte de l’échantillon ; redirection vers une autre origine avec identifiants dans l’URL). Un mini-site local (`test/fixtures/site-accueil.html` et des pages générées) sert à enchaîner `rampe echantillon` puis `rampe audit --echantillon` : pages types et raisons, page manquante signalée, JSON multi-pages, page en erreur et codes de sortie. Il faut Chromium (commande ci-dessus). Les pages de test sont exclues de Biome, puisqu’elles sont fautives exprès.
+`pnpm --filter rampe test` lance les tests unitaires et des tests de bout en bout : la vraie CLI audite les pages de `test/fixtures/` servies par un serveur `node:http` local (défauts connus aux critères 1.1, 3.2, 8.3 et 11.1 ; page propre ; `region` seule, aussi en `--strict` ; défauts de contraste propres au thème sombre et à la fenêtre étroite (`--theme`, `--largeur`) ; boucle infinie ; départ vers `about:blank` ; CSP `script-src 'none'` ; page piège qui falsifie `window.axe` et casse des primitives JavaScript, et accueil piège qui fausse la collecte de l’échantillon ; redirection vers une autre origine avec identifiants dans l’URL). Un mini-site local (`test/fixtures/site-accueil.html` et des pages générées) sert à enchaîner `rampe echantillon` puis `rampe audit --echantillon` : pages types et raisons, page manquante signalée, JSON multi-pages, page en erreur et codes de sortie. Il faut Chromium (commande ci-dessus). Les pages de test sont exclues de Biome, puisqu’elles sont fautives exprès.

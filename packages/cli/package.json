@@ -1,5 +1,5 @@
 {
-	"name": "@rampe/cli",
+	"name": "rampe",
 	"version": "0.0.0",
 	"private": true,
 	"type": "module",

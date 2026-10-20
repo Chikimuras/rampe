@@ -11,9 +11,6 @@ importers:
       '@biomejs/biome':
         specifier: 2.5.15
         version: 2.5.15
-      '@rampe/cli':
-        specifier: workspace:*
-        version: link:packages/cli
       typescript:
         specifier: ^6.0.3
         version: 6.0.3

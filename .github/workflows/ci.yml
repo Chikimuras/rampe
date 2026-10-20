@@ -33,7 +33,7 @@ jobs:
       - run: pnpm install --frozen-lockfile
       # Chromium pour les tests de bout en bout de la CLI (ADR-0011 §5), de /audit/ (ADR-0013 §5) et de l'extension
       # (ADR-0019 §7), même version de Playwright.
-      - run: pnpm --filter @rampe/cli exec playwright install --with-deps chromium
+      - run: pnpm --filter rampe exec playwright install --with-deps chromium
       # Ubuntu 24.04 interdit par AppArmor les espaces de noms utilisateur dont le bac à sable de Chromium a besoin.
       # Profil ciblé sur les seuls binaires Playwright plutôt que --no-sandbox ou un sysctl global (ADR-0011 §6) :
       # https://chromium.googlesource.com/chromium/src/+/main/docs/security/apparmor-userns-restrictions.md
