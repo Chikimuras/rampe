@@ -54,7 +54,7 @@
 			"criterion": "2.1",
 			"page": "https://chikimuras.github.io/rampe/cockpit/docs/roadmap/",
 			"status": "NA",
-			"note": "Test 2.1.1 sur la feuille de route (roadmap) : DOM rendu dans Chromium (Playwright) parcouru, 0 <iframe> et 0 <frame>. Aucun cadre, donc aucun titre de cadre à vérifier. Non applicable."
+			"note": "Test 2.1.1 sur la feuille de route (/cockpit/docs/roadmap/) : DOM rendu dans Chromium (Playwright) parcouru, 0 <iframe> et 0 <frame>. Aucun cadre, donc aucun titre de cadre à vérifier. Non applicable."
 		},
 		{
 			"criterion": "2.1",
@@ -126,7 +126,7 @@
 			"criterion": "2.2",
 			"page": "https://chikimuras.github.io/rampe/cockpit/docs/roadmap/",
 			"status": "NA",
-			"note": "Test 2.2.1 sur la feuille de route (roadmap) : DOM rendu dans Chromium (Playwright) parcouru, 0 <iframe> et 0 <frame>. Aucun cadre ayant un titre, donc aucune pertinence de titre à juger. Non applicable."
+			"note": "Test 2.2.1 sur la feuille de route (/cockpit/docs/roadmap/) : DOM rendu dans Chromium (Playwright) parcouru, 0 <iframe> et 0 <frame>. Aucun cadre ayant un titre, donc aucune pertinence de titre à juger. Non applicable."
 		},
 		{
 			"criterion": "2.2",

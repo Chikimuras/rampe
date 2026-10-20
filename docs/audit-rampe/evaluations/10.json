@@ -54,7 +54,7 @@
 			"criterion": "10.1",
 			"page": "https://chikimuras.github.io/rampe/cockpit/docs/roadmap/",
 			"status": "C",
-			"note": "Tests 10.1.1, 10.1.2 et 10.1.3 : Page examinée : page Roadmap (/cockpit/docs/roadmap/). DOM généré : aucun élément basefont, big, blink, center, font, marquee, s, strike, tt, u ; aucun attribut de présentation (align, bgcolor, border, color, valign, width/height hors img/svg/canvas, size hors select, face…). Aucune suite d’espaces ni d’espaces insécables servant à espacer des lettres ou à simuler tableau ou colonnes. Toute la présentation passe par les feuilles de style."
+			"note": "Tests 10.1.1, 10.1.2 et 10.1.3 : Page examinée : page Feuille de route (/cockpit/docs/roadmap/). DOM généré : aucun élément basefont, big, blink, center, font, marquee, s, strike, tt, u ; aucun attribut de présentation (align, bgcolor, border, color, valign, width/height hors img/svg/canvas, size hors select, face…). Aucune suite d’espaces ni d’espaces insécables servant à espacer des lettres ou à simuler tableau ou colonnes. Toute la présentation passe par les feuilles de style."
 		},
 		{
 			"criterion": "10.1",
@@ -126,7 +126,7 @@
 			"criterion": "10.2",
 			"page": "https://chikimuras.github.io/rampe/cockpit/docs/roadmap/",
 			"status": "C",
-			"note": "Test 10.2.1 : Page examinée : page Roadmap (/cockpit/docs/roadmap/). Feuilles de style (<style>, <link>) et attributs style retirés du DOM : texte restitué identique (1944 caractères hors espaces avec et sans styles) ; aucune image de fond, aucun contenu généré ::before/::after. Aucune information portée par la seule CSS."
+			"note": "Test 10.2.1 : Page examinée : page Feuille de route (/cockpit/docs/roadmap/). Feuilles de style (<style>, <link>) et attributs style retirés du DOM : texte restitué identique (1944 caractères hors espaces avec et sans styles) ; aucune image de fond, aucun contenu généré ::before/::after. Aucune information portée par la seule CSS."
 		},
 		{
 			"criterion": "10.2",
@@ -198,7 +198,7 @@
 			"criterion": "10.3",
 			"page": "https://chikimuras.github.io/rampe/cockpit/docs/roadmap/",
 			"status": "C",
-			"note": "Test 10.3.1 : Page examinée : page Roadmap (/cockpit/docs/roadmap/). Sans styles, l’ordre du code suit l’ordre visuel : lien d’évitement, en-tête et navigation, contenu principal dans l’ordre de lecture, pied de page. Aucune propriété order, float, flex-direction inversée ni placement de grille qui réordonne le contenu ; seuls le lien d’évitement sont positionnés. Lecture compréhensible."
+			"note": "Test 10.3.1 : Page examinée : page Feuille de route (/cockpit/docs/roadmap/). Sans styles, l’ordre du code suit l’ordre visuel : lien d’évitement, en-tête et navigation, contenu principal dans l’ordre de lecture, pied de page. Aucune propriété order, float, flex-direction inversée ni placement de grille qui réordonne le contenu ; seuls le lien d’évitement sont positionnés. Lecture compréhensible."
 		},
 		{
 			"criterion": "10.3",
@@ -270,7 +270,7 @@
 			"criterion": "10.4",
 			"page": "https://chikimuras.github.io/rampe/cockpit/docs/roadmap/",
 			"status": "C",
-			"note": "Tests 10.4.1 et 10.4.2 : Page examinée : page Roadmap (/cockpit/docs/roadmap/). Zoom graphique 200 % simulé (fenêtre de 1280 px ramenée à 640 px CSS, deviceScaleFactor 2), thèmes clair et sombre : largeur du document = 640 px (aucun débordement horizontal), aucun élément en overflow hidden dont le contenu dépasse, aucun chevauchement relevé ; tout le texte est agrandi (aucune image texte ni <canvas>)."
+			"note": "Tests 10.4.1 et 10.4.2 : Page examinée : page Feuille de route (/cockpit/docs/roadmap/). Zoom graphique 200 % simulé (fenêtre de 1280 px ramenée à 640 px CSS, deviceScaleFactor 2), thèmes clair et sombre : largeur du document = 640 px (aucun débordement horizontal), aucun élément en overflow hidden dont le contenu dépasse, aucun chevauchement relevé ; tout le texte est agrandi (aucune image texte ni <canvas>)."
 		},
 		{
 			"criterion": "10.4",
@@ -342,7 +342,7 @@
 			"criterion": "10.5",
 			"page": "https://chikimuras.github.io/rampe/cockpit/docs/roadmap/",
 			"status": "C",
-			"note": "Tests 10.5.1, 10.5.2 et 10.5.3 : Page examinée : page Roadmap (/cockpit/docs/roadmap/). body déclare background:var(--bg) et color:var(--text) dans les deux thèmes (prefers-color-scheme) ; chaque élément qui déclare une couleur de texte (liens, lien « Rampe » de la navigation, pied de page, textes en --muted) hérite d’un fond calculé, et chaque fond déclaré (pre, lien d’évitement au focus, pastilles .task.done) s’accompagne d’une couleur de texte héritée ou déclarée. Aucune image de fond (10.5.3 sans objet)."
+			"note": "Tests 10.5.1, 10.5.2 et 10.5.3 : Page examinée : page Feuille de route (/cockpit/docs/roadmap/). body déclare background:var(--bg) et color:var(--text) dans les deux thèmes (prefers-color-scheme) ; chaque élément qui déclare une couleur de texte (liens, lien « Rampe » de la navigation, pied de page, textes en --muted) hérite d’un fond calculé, et chaque fond déclaré (pre, lien d’évitement au focus, pastilles .task.done) s’accompagne d’une couleur de texte héritée ou déclarée. Aucune image de fond (10.5.3 sans objet)."
 		},
 		{
 			"criterion": "10.5",
@@ -414,7 +414,7 @@
 			"criterion": "10.6",
 			"page": "https://chikimuras.github.io/rampe/cockpit/docs/roadmap/",
 			"status": "NA",
-			"note": "Test 10.6.1 : Page examinée : page Roadmap (/cockpit/docs/roadmap/). text-decoration calculé des 11 <a href> : tous soulignés, sauf « Rampe », premier lien de la liste de la navigation principale (en gras, dans la barre de navigation), dont la nature de lien est évidente par son contexte. Aucun lien signalé uniquement par la couleur et dont la nature n’est pas évidente : non applicable."
+			"note": "Test 10.6.1 : Page examinée : page Feuille de route (/cockpit/docs/roadmap/). text-decoration calculé des 11 <a href> : tous soulignés, sauf « Rampe », premier lien de la liste de la navigation principale (en gras, dans la barre de navigation), dont la nature de lien est évidente par son contexte. Aucun lien signalé uniquement par la couleur et dont la nature n’est pas évidente : non applicable."
 		},
 		{
 			"criterion": "10.6",
@@ -468,7 +468,7 @@
 			"criterion": "10.7",
 			"page": "https://chikimuras.github.io/rampe/cockpit/",
 			"status": "C",
-			"note": "Test 10.7.1 : Page examinée : page Cockpit (/cockpit/). Parcours au clavier (Tab) de 41 éléments focalisables, thèmes clair et sombre : style auteur :focus-visible{outline:3px solid var(--accent);outline-offset:2px} présent sur chacun ; aucune règle outline:none ou outline:0 qui le supprime ; le lien d’évitement devient visible au focus."
+			"note": "Test 10.7.1 : Page examinée : page Cockpit (/cockpit/). Parcours au clavier (Tab) de 43 éléments focalisables, thèmes clair et sombre : style auteur :focus-visible{outline:3px solid var(--accent);outline-offset:2px} présent sur chacun ; aucune règle outline:none ou outline:0 qui le supprime ; le lien d’évitement devient visible au focus."
 		},
 		{
 			"criterion": "10.7",
@@ -486,7 +486,7 @@
 			"criterion": "10.7",
 			"page": "https://chikimuras.github.io/rampe/cockpit/docs/roadmap/",
 			"status": "C",
-			"note": "Test 10.7.1 : Page examinée : page Roadmap (/cockpit/docs/roadmap/). Parcours au clavier (Tab) de 11 éléments focalisables, thèmes clair et sombre : style auteur :focus-visible{outline:3px solid var(--accent);outline-offset:2px} présent sur chacun ; aucune règle outline:none ou outline:0 qui le supprime ; le lien d’évitement devient visible au focus."
+			"note": "Test 10.7.1 : Page examinée : page Feuille de route (/cockpit/docs/roadmap/). Parcours au clavier (Tab) de 11 éléments focalisables, thèmes clair et sombre : style auteur :focus-visible{outline:3px solid var(--accent);outline-offset:2px} présent sur chacun ; aucune règle outline:none ou outline:0 qui le supprime ; le lien d’évitement devient visible au focus."
 		},
 		{
 			"criterion": "10.7",
@@ -504,7 +504,7 @@
 			"criterion": "10.7",
 			"page": "https://chikimuras.github.io/rampe/plan-du-site/",
 			"status": "C",
-			"note": "Test 10.7.1 : Page examinée : page Plan du site (/plan-du-site/). Parcours au clavier (Tab) de 162 éléments focalisables, thèmes clair et sombre : style auteur :focus-visible{outline:3px solid var(--accent);outline-offset:2px} présent sur chacun ; aucune règle outline:none ou outline:0 qui le supprime ; le lien d’évitement devient visible au focus."
+			"note": "Test 10.7.1 : Page examinée : page Plan du site (/plan-du-site/). Parcours au clavier (Tab) de 164 éléments focalisables, thèmes clair et sombre : style auteur :focus-visible{outline:3px solid var(--accent);outline-offset:2px} présent sur chacun ; aucune règle outline:none ou outline:0 qui le supprime ; le lien d’évitement devient visible au focus."
 		},
 		{
 			"criterion": "10.8",
@@ -558,7 +558,7 @@
 			"criterion": "10.8",
 			"page": "https://chikimuras.github.io/rampe/cockpit/docs/roadmap/",
 			"status": "C",
-			"note": "Test 10.8.1 : Page examinée : page Roadmap (/cockpit/docs/roadmap/). Contenus cachés recherchés (hidden, aria-hidden, display:none, visibility:hidden, font-size:0, classes de masquage) : un seul, le lien « Aller au contenu » (.skip, hors écran, lu par les technologies d’assistance, affiché au focus) ; aucun hidden, aria-hidden, display:none ni <details>. Chaque contenu caché a vocation à être restitué et l’est, directement ou après une action de l’utilisateur sur l’élément qui le précède."
+			"note": "Test 10.8.1 : Page examinée : page Feuille de route (/cockpit/docs/roadmap/). Contenus cachés recherchés (hidden, aria-hidden, display:none, visibility:hidden, font-size:0, classes de masquage) : un seul, le lien « Aller au contenu » (.skip, hors écran, lu par les technologies d’assistance, affiché au focus) ; aucun hidden, aria-hidden, display:none ni <details>. Chaque contenu caché a vocation à être restitué et l’est, directement ou après une action de l’utilisateur sur l’élément qui le précède."
 		},
 		{
 			"criterion": "10.8",
@@ -630,7 +630,7 @@
 			"criterion": "10.9",
 			"page": "https://chikimuras.github.io/rampe/cockpit/docs/roadmap/",
 			"status": "C",
-			"note": "Tests 10.9.1, 10.9.2, 10.9.3 et 10.9.4 : Page examinée : page Roadmap (/cockpit/docs/roadmap/). Informations données par la forme, la taille ou la position recherchées : l’état des tâches est donné par le texte des pastilles (« Fait » ×20, « À faire » ×7) et non par leur seule forme ; les 7 ⛔ sont expliqués en tête de page (« Les ⛔ signalent un besoin d’action humaine ») et suivis de l’action écrite (« compte npm (gratuit) à créer par Alexandre »…). Chacune a un autre moyen d’être récupérée. Ni image, ni média temporel ou non temporel (10.9.2 à 10.9.4 sans objet)."
+			"note": "Tests 10.9.1, 10.9.2, 10.9.3 et 10.9.4 : Page examinée : page Feuille de route (/cockpit/docs/roadmap/). Informations données par la forme, la taille ou la position recherchées : l’état des tâches est donné par le texte des pastilles (« Fait » ×20, « À faire » ×7) et non par leur seule forme ; les 7 ⛔ sont expliqués en tête de page (« Les ⛔ signalent un besoin d’action humaine ») et suivis de l’action écrite (« compte npm (gratuit) à créer par Alexandre »…). Chacune a un autre moyen d’être récupérée. Ni image, ni média temporel ou non temporel (10.9.2 à 10.9.4 sans objet)."
 		},
 		{
 			"criterion": "10.9",
@@ -702,7 +702,7 @@
 			"criterion": "10.10",
 			"page": "https://chikimuras.github.io/rampe/cockpit/docs/roadmap/",
 			"status": "C",
-			"note": "Tests 10.10.1, 10.10.2, 10.10.3 et 10.10.4 : Page examinée : page Roadmap (/cockpit/docs/roadmap/). Les moyens alternatifs relevés au 10.9 (l’état des tâches est donné par le texte des pastilles (« Fait » ×20, « À faire » ×7) et non par leur seule forme ; les 7 ⛔ sont expliqués en tête de page (« Les ⛔ signalent un besoin d’action humaine ») et suivis de l’action écrite (« compte npm (gratuit) à créer par Alexandre »…)) sont textuels ou programmatiques, et restitués dans tous les contextes (sans CSS, au lecteur d’écran) : implémentation pertinente. Ni image ni média."
+			"note": "Tests 10.10.1, 10.10.2, 10.10.3 et 10.10.4 : Page examinée : page Feuille de route (/cockpit/docs/roadmap/). Les moyens alternatifs relevés au 10.9 (l’état des tâches est donné par le texte des pastilles (« Fait » ×20, « À faire » ×7) et non par leur seule forme ; les 7 ⛔ sont expliqués en tête de page (« Les ⛔ signalent un besoin d’action humaine ») et suivis de l’action écrite (« compte npm (gratuit) à créer par Alexandre »…)) sont textuels ou programmatiques, et restitués dans tous les contextes (sans CSS, au lecteur d’écran) : implémentation pertinente. Ni image ni média."
 		},
 		{
 			"criterion": "10.10",
@@ -774,7 +774,7 @@
 			"criterion": "10.11",
 			"page": "https://chikimuras.github.io/rampe/cockpit/docs/roadmap/",
 			"status": "C",
-			"note": "Tests 10.11.1 et 10.11.2 : Page examinée : page Roadmap (/cockpit/docs/roadmap/). Fenêtre de 320 px de large, thèmes clair et sombre, aussi avec l’espacement du texte du 10.12 : largeur du document = 320 px, aucun élément hors de la fenêtre, navigation principale qui passe à la ligne, informations et fonctionnalités disponibles. 10.11.2 : aucun contenu à sens de lecture vertical (sans objet)."
+			"note": "Tests 10.11.1 et 10.11.2 : Page examinée : page Feuille de route (/cockpit/docs/roadmap/). Fenêtre de 320 px de large, thèmes clair et sombre, aussi avec l’espacement du texte du 10.12 : largeur du document = 320 px, aucun élément hors de la fenêtre, navigation principale qui passe à la ligne, informations et fonctionnalités disponibles. 10.11.2 : aucun contenu à sens de lecture vertical (sans objet)."
 		},
 		{
 			"criterion": "10.11",
@@ -846,7 +846,7 @@
 			"criterion": "10.12",
 			"page": "https://chikimuras.github.io/rampe/cockpit/docs/roadmap/",
 			"status": "C",
-			"note": "Test 10.12.1 : Page examinée : page Roadmap (/cockpit/docs/roadmap/). Styles de la note du critère appliqués à tous les éléments (line-height:1.5, letter-spacing:0.12em, word-spacing:0.16em, margin-bottom:2em sur <p>) à 1280 et 320 px, thèmes clair et sombre : aucun texte rogné (aucun élément en overflow hidden dont le contenu dépasse, aucune ellipse d’auteur), aucun débordement horizontal du document, aucune perte de contenu ni de fonctionnalité."
+			"note": "Test 10.12.1 : Page examinée : page Feuille de route (/cockpit/docs/roadmap/). Styles de la note du critère appliqués à tous les éléments (line-height:1.5, letter-spacing:0.12em, word-spacing:0.16em, margin-bottom:2em sur <p>) à 1280 et 320 px, thèmes clair et sombre : aucun texte rogné (aucun élément en overflow hidden dont le contenu dépasse, aucune ellipse d’auteur), aucun débordement horizontal du document, aucune perte de contenu ni de fonctionnalité."
 		},
 		{
 			"criterion": "10.12",
@@ -918,7 +918,7 @@
 			"criterion": "10.13",
 			"page": "https://chikimuras.github.io/rampe/cockpit/docs/roadmap/",
 			"status": "NA",
-			"note": "Tests 10.13.1, 10.13.2 et 10.13.3 : Page examinée : page Roadmap (/cockpit/docs/roadmap/). Contenus additionnels au survol ou au focus recherchés : aucune règle CSS :hover, aucune infobulle scriptée, aucun attribut title ; les seules règles :focus sont :focus-visible (contour) et .skip:focus (le lien d’évitement lui-même, pas un contenu additionnel). Non applicable."
+			"note": "Tests 10.13.1, 10.13.2 et 10.13.3 : Page examinée : page Feuille de route (/cockpit/docs/roadmap/). Contenus additionnels au survol ou au focus recherchés : aucune règle CSS :hover, aucune infobulle scriptée, aucun attribut title ; les seules règles :focus sont :focus-visible (contour) et .skip:focus (le lien d’évitement lui-même, pas un contenu additionnel). Non applicable."
 		},
 		{
 			"criterion": "10.13",
@@ -990,7 +990,7 @@
 			"criterion": "10.14",
 			"page": "https://chikimuras.github.io/rampe/cockpit/docs/roadmap/",
 			"status": "NA",
-			"note": "Tests 10.14.1 et 10.14.2 : Page examinée : page Roadmap (/cockpit/docs/roadmap/). Règles CSS :hover, :focus et :focus-within des feuilles de la page examinées : aucune ne fait apparaître de contenu additionnel ; la seule, .skip:focus, rend visible le lien d’évitement lui-même au focus clavier (pas un contenu associé à un autre composant). Non applicable."
+			"note": "Tests 10.14.1 et 10.14.2 : Page examinée : page Feuille de route (/cockpit/docs/roadmap/). Règles CSS :hover, :focus et :focus-within des feuilles de la page examinées : aucune ne fait apparaître de contenu additionnel ; la seule, .skip:focus, rend visible le lien d’évitement lui-même au focus clavier (pas un contenu associé à un autre composant). Non applicable."
 		},
 		{
 			"criterion": "10.14",

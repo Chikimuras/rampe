@@ -54,6 +54,10 @@ const source = `${entry.collection === "docs" ? "" : `${entry.collection}/`}${en
 	.meta {
 		color: var(--muted);
 	}
+	/* Citations (critère 9.4) : guillemets français fournis par <q>, jamais saisis en plus. */
+	article :global(q) {
+		quotes: "«\00a0" "\00a0»";
+	}
 	.subtitle {
 		font-size: 1.25rem;
 		margin-top: -0.5rem;

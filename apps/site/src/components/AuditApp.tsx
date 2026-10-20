@@ -106,6 +106,12 @@ type Filter = "all" | "NT" | "NC" | "auto";
  */
 type Announce = (message: string, error?: boolean) => void;
 
+/**
+ * Le focus quitte le champ vers un bouton d'export (`data-export`) : l'export, bloqué par une date ou une année
+ * invalide, remettra le focus sur le champ, relié à son message. Une alerte de sortie ferait lire l'erreur deux fois (RGAA 7.5).
+ */
+const towardsExport = (e: FocusEvent) => (e.relatedTarget as HTMLElement | null)?.closest?.("[data-export]") != null;
+
 const STORAGE_KEY = "rampe.audit.session";
 /** Copies d'une session illisible mises de côté, chacune sous sa clé horodatée : jamais écrasées (ADR-0016). */
 const IGNORED_PREFIX = `${STORAGE_KEY}.ignoree.`;
@@ -340,8 +346,8 @@ export default function AuditApp({
 				saved.current = session;
 				setSaveFailed(false);
 			} else {
+				// Annoncé par le bandeau role="alert" à son apparition ; un nouvel échec, bandeau affiché, n'ajoute rien.
 				setSaveFailed(true);
-				setAnnounce("Échec de l’enregistrement");
 			}
 		}, SAVE_DELAY);
 		return () => clearTimeout(timer);
@@ -680,17 +686,24 @@ export default function AuditApp({
 							))}
 						</details>
 
+						{/* Liste de liens de navigation (critère 9.3). */}
 						<nav aria-label="Critères voisins" class="audit-pager">
-							{prev && (
-								<button type="button" onClick={() => goTo(prev)}>
-									Critère précédent : {prev.id}
-								</button>
-							)}
-							{next && (
-								<button type="button" class="audit-next" onClick={() => goTo(next)}>
-									Critère suivant : {next.id}
-								</button>
-							)}
+							<ul>
+								{prev && (
+									<li>
+										<button type="button" onClick={() => goTo(prev)}>
+											Critère précédent : {prev.id}
+										</button>
+									</li>
+								)}
+								{next && (
+									<li class="audit-pager-next">
+										<button type="button" class="audit-next" onClick={() => goTo(next)}>
+											Critère suivant : {next.id}
+										</button>
+									</li>
+								)}
+							</ul>
 						</nav>
 					</article>
 				) : (
@@ -1763,10 +1776,10 @@ const DECLARATION_GROUPS: { legend: string; fields: DeclarationInput[] }[] = [
 		fields: [
 			{
 				field: "contactFormUrl",
-				label: "Formulaire de contact ou adresse e-mail",
+				label: "Formulaire de contact ou adresse électronique",
 				help: "Pour signaler un défaut d’accessibilité, par exemple https://exemple.fr/contact ou accessibilite@exemple.fr.",
 				kind: "url",
-				// Pas de jeton autocomplete (RGAA 11.13) : le champ accepte une adresse Web OU une adresse e-mail, et aucun
+				// Pas de jeton autocomplete (RGAA 11.13) : le champ accepte une adresse Web OU une adresse électronique, et aucun
 				// jeton de la liste ne couvre les deux (« url » ou « email » ferait proposer la mauvaise nature de donnée).
 			},
 			{ field: "contactEntity", label: "Service à contacter", help: "Par exemple « Service client »." },
@@ -1777,7 +1790,7 @@ const DECLARATION_GROUPS: { legend: string; fields: DeclarationInput[] }[] = [
 const LIMITS = { lines: MAX_NOTE, url: MAX_URL, text: MAX_TITLE } as const;
 const DATE_ERROR = "Date incomplète ou hors limites (années 1900 à 9999) : elle n’est pas enregistrée.";
 const URL_ERROR =
-	"Adresse non reconnue : commencez par https:// ou saisissez une adresse e-mail. En attendant, elle reste « à compléter » dans la déclaration.";
+	"Adresse non reconnue : commencez par https:// ou saisissez une adresse électronique. En attendant, elle reste « à compléter » dans la déclaration.";
 
 /** Aperçu rendu par Preact depuis le modèle : chaque saisie est du texte, échappé par Preact (jamais d'innerHTML). */
 function Inlines({ content }: { content: Inline[] }) {
@@ -1882,8 +1895,8 @@ function Declaration({
 		for (const [field, value] of Object.entries(drafts) as [DeclarationField, string][]) {
 			if (value !== "" && !isDay(value)) {
 				setTouched((t) => new Set(t).add(field));
+				// Focus sur le champ, relié à son message : aucune annonce de plus (RGAA 7.5, pas de doublon).
 				focusAfterRender(() => document.getElementById(`declaration-${field}`));
-				setAnnounce("Export impossible : une date est incomplète ou hors limites (années 1900 à 9999).");
 				return null;
 			}
 			updates.push([field, value]);
@@ -1984,12 +1997,13 @@ function Declaration({
 				if (kind === "date") setDrafts((d) => ({ ...d, [field]: v }));
 				else set(field, v);
 			},
-			onBlur: () => {
+			onBlur: (e: FocusEvent) => {
 				if (kind === "date") commitDate(field);
 				setTouched((t) => new Set(t).add(field));
 				// Erreur affichée alors que le focus est déjà sur le champ suivant : annoncée (RGAA 7.5).
 				// Seulement si la valeur a changé depuis la dernière annonce : traverser le champ ne la répète pas.
-				if (wrong && alerted.current[field] !== value) setAnnounce(`${label} : ${error}`, true);
+				if (wrong && alerted.current[field] !== value && !(kind === "date" && towardsExport(e)))
+					setAnnounce(`${label} : ${error}`, true);
 				alerted.current[field] = wrong ? value : undefined;
 			},
 		};
@@ -2102,13 +2116,13 @@ function Declaration({
 				<Preview blocks={blocks} />
 			</section>
 			<p class="audit-declaration-actions">
-				<button type="button" onClick={copy}>
+				<button type="button" data-export onClick={copy}>
 					Copier le HTML
 				</button>
-				<button type="button" onClick={() => download("html")}>
+				<button type="button" data-export onClick={() => download("html")}>
 					Télécharger (HTML)
 				</button>
-				<button type="button" onClick={() => download("markdown")}>
+				<button type="button" data-export onClick={() => download("markdown")}>
 					Télécharger (Markdown)
 				</button>
 			</p>
@@ -2258,8 +2272,8 @@ function Schema({
 	const download = (doc: "schema" | "plan", format: "html" | "markdown") => {
 		const current = commitStart();
 		if (!current) {
+			// Focus sur le champ, relié à son message : aucune annonce de plus (RGAA 7.5, pas de doublon).
 			focusAfterRender(() => document.getElementById("schema-debut"));
-			setAnnounce("Export impossible : l’année de début est incomplète ou hors limites.");
 			return;
 		}
 		const ext = format === "html" ? "html" : "md";
@@ -2328,12 +2342,13 @@ function Schema({
 						aria-invalid={startInvalid ? "true" : undefined}
 						aria-describedby={startInvalid ? "schema-debut-erreur" : undefined}
 						onInput={(e) => setStartDraft((e.currentTarget as HTMLInputElement).value)}
-						onBlur={() => {
+						onBlur={(e) => {
 							// Erreur affichée alors que le focus est déjà sur le champ suivant : annoncée (RGAA 7.5).
 							const value = startDraft;
 							const ok = commitStart();
 							// Seulement si la valeur a changé depuis la dernière annonce.
-							if (!ok && alertedStart.current !== value) setAnnounce(`Année de début : ${YEAR_ERROR}`, true);
+							if (!ok && alertedStart.current !== value && !towardsExport(e))
+								setAnnounce(`Année de début : ${YEAR_ERROR}`, true);
 							alertedStart.current = ok ? undefined : value;
 						}}
 					/>
@@ -2539,18 +2554,18 @@ function Schema({
 				</section>
 			)}
 			<p class="audit-declaration-actions">
-				<button type="button" onClick={() => download("schema", "html")}>
+				<button type="button" data-export onClick={() => download("schema", "html")}>
 					Télécharger le schéma (HTML)
 				</button>
-				<button type="button" onClick={() => download("schema", "markdown")}>
+				<button type="button" data-export onClick={() => download("schema", "markdown")}>
 					Télécharger le schéma (Markdown)
 				</button>
 				{year !== undefined && (
 					<>
-						<button type="button" onClick={() => download("plan", "html")}>
+						<button type="button" data-export onClick={() => download("plan", "html")}>
 							Télécharger le plan d’action {year} (HTML)
 						</button>
-						<button type="button" onClick={() => download("plan", "markdown")}>
+						<button type="button" data-export onClick={() => download("plan", "markdown")}>
 							Télécharger le plan d’action {year} (Markdown)
 						</button>
 					</>

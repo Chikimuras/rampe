@@ -16,9 +16,11 @@ Rampe est construit en autonomie par Claude. Le principe global d’Alexandre ve
 - Statuts : `Proposed`, `Accepted`, `Superseded`, `Deprecated`, `Rejected`. Claude passe directement en `Accepted` et signe « Claude (délégation, ADR-0001) ».
 - **Veto** : Alexandre peut rejeter tout ADR à tout moment. Il est alors `Rejected` ou `Superseded` par un nouvel ADR qui en tire les conséquences.
 - Un ADR accepté n’est jamais réécrit. On le remplace par un nouveau.
+- Seule exception : les corrections purement éditoriales d’accessibilité ou de langue, qui ne changent jamais la décision (ADR-0024).
 - Toute décision de **sécurité** cite une source précise (item d’un OWASP Cheat Sheet ou du Top 10 CI/CD, section CIS).
 
 ## Conséquences
 
 - Le cockpit affiche les ADR dans l’ordre : on peut relire tout le raisonnement du projet.
 - La délégation ne vaut **que pour ce dépôt**.
+- Depuis l’ADR-0024, un ADR accepté peut recevoir une correction éditoriale d’accessibilité ou de langue, tracée par le commit de fusion de sa PR et par le journal ; jamais un changement de décision.

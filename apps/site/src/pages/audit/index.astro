@@ -478,13 +478,15 @@ const criteria: AuditCriterion[] = rgaa.criteria.map((c) => ({
 	.audit-status input:focus-visible {
 		outline: none;
 	}
-	.audit-pager {
+	.audit-pager ul {
 		display: flex;
 		flex-wrap: wrap;
 		gap: 1rem;
-		margin-top: 2rem;
+		margin: 2rem 0 0;
+		padding: 0;
+		list-style: none;
 	}
-	.audit-pager .audit-next {
+	.audit-pager-next {
 		margin-left: auto;
 	}
 	.audit-help {

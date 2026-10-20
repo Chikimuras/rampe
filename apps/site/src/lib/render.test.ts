@@ -84,6 +84,17 @@ describe("renderGlossaryHtml", () => {
 		);
 	});
 
+	it("balise les mots anglais des méthodologies et notes officielles (8.7)", () => {
+		const tests = rgaa.criteria.flatMap((c) => c.tests);
+		const methodology = (id: string) => renderMarkdown(tests.find((t) => t.id === id)?.methodology ?? "");
+		expect(methodology("13.2.1")).toContain('(pop-up ou <span lang="en">pop-under</span>, par exemple)');
+		expect(methodology("8.2.1")).toContain('(<span lang="en">all frames</span>)');
+		const notes = (rgaa.criteria.find((c) => c.id === "11.13")?.technicalNote ?? []).filter(
+			(n) => typeof n === "string",
+		);
+		expect(notes.map((n) => renderMarkdown(n)).join("")).toContain('“<span lang="en">field name</span>”');
+	});
+
 	it("laisse les ancres internes à la page du glossaire", () => {
 		expect(renderGlossaryHtml('<p>Voir <a href="#lien">lien</a>.</p>')).toBe('<p>Voir <a href="#lien">lien</a>.</p>');
 	});

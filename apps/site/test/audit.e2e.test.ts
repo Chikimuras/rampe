@@ -399,9 +399,11 @@ describe("audit guidé (bout en bout)", { timeout: 60_000 }, () => {
 		const alert = page.locator(".audit-banner[role=alert]");
 		await alert.waitFor();
 		await expect(alert.textContent()).resolves.toContain("Échec de l’enregistrement.");
-		await page.waitForFunction(
-			() => document.querySelector(".audit-live[role=status]")?.textContent === "Échec de l’enregistrement",
-		);
+		// Erreur : région d'alerte, jamais la région d'état (critère 7.5).
+		// Le bandeau role=alert est la seule annonce de l'échec : rien de plus dans les régions (7.5, pas de doublon).
+		await page.waitForTimeout(200);
+		await expect(alertText(page)).resolves.toBe("");
+		await expect(statusText(page)).resolves.not.toContain("Échec");
 		await page.getByLabel("Conforme", { exact: true }).check(); // nouvel essai : toujours plein
 		await page.waitForTimeout(600);
 		await expect.poll(() => alert.count()).toBe(1);
@@ -1470,7 +1472,7 @@ describe("audit guidé (bout en bout)", { timeout: 60_000 }, () => {
 			"Nom de l’organisme": '<script>alert("org")</script><img src=x onerror=alert(1)>',
 			"Nom du site": "[clic](javascript:alert(2)) \u202egnp.live",
 			"Adresse du schéma pluriannuel de mise en accessibilité": "javascript:alert(3)",
-			"Formulaire de contact ou adresse e-mail": 'https://exemple.fr/"><svg onload=alert(4)>',
+			"Formulaire de contact ou adresse électronique": 'https://exemple.fr/"><svg onload=alert(4)>',
 			"Service à contacter": `<iframe src=javascript:alert(5)></iframe>${LINKS}`,
 		};
 
@@ -1630,7 +1632,7 @@ describe("audit guidé (bout en bout)", { timeout: 60_000 }, () => {
 			await a.getByLabel("Par un prestataire").check();
 			await a.getByLabel("Nom du prestataire").fill("Accès Conseil");
 			await a.getByLabel("Dérogations pour charge disproportionnée, une par ligne").fill("Archives PDF\nVidéos 2015");
-			await a.getByLabel("Formulaire de contact ou adresse e-mail").fill("accessibilite@exemple.fr");
+			await a.getByLabel("Formulaire de contact ou adresse électronique").fill("accessibilite@exemple.fr");
 			await a.getByLabel("Date de mise à jour (facultatif)").fill("2026-10-14");
 			await a.getByLabel("Date de mise à jour (facultatif)").blur(); // une date s'enregistre à la sortie du champ
 			await a.waitForFunction(() => localStorage.getItem("rampe.audit.session")?.includes("2026-10-14"));
@@ -1811,9 +1813,11 @@ describe("audit guidé (bout en bout)", { timeout: 60_000 }, () => {
 			await expect(page.locator("#declaration-updatedOn-erreur").textContent()).resolves.toMatch(
 				/^Date incomplète ou hors limites/,
 			);
-			await expect
-				.poll(() => statusText(page))
-				.toBe("Export impossible : une date est incomplète ou hors limites (années 1900 à 9999).");
+			// Le focus est sur le champ, relié à son message : aucune annonce de plus pour l'export bloqué (7.5).
+			await expect(field.getAttribute("aria-describedby")).resolves.toContain("declaration-updatedOn-erreur");
+			// Le clic sur l'export ne déclenche pas l'alerte de sortie du champ : l'erreur n'est lue qu'une fois (7.5).
+			await expect(alertText(page)).resolves.toBe("");
+			await expect(statusText(page)).resolves.not.toContain("Export impossible");
 			await page.getByRole("button", { name: "Télécharger (Markdown)" }).click();
 			await page.waitForTimeout(800);
 			expect(downloads).toEqual([]);
@@ -2142,9 +2146,13 @@ describe("audit guidé (bout en bout)", { timeout: 60_000 }, () => {
 			await page.getByLabel("Année de début").fill("0010");
 			await page.getByRole("button", { name: "Télécharger le schéma (HTML)" }).click();
 			await expect.poll(() => page.evaluate(() => document.activeElement?.id)).toBe("schema-debut");
+			// Le focus est sur le champ, relié à son message : aucune annonce de plus pour l'export bloqué (7.5).
 			await expect
-				.poll(() => statusText(page))
-				.toBe("Export impossible : l’année de début est incomplète ou hors limites.");
+				.poll(() => page.getByLabel("Année de début").getAttribute("aria-describedby"))
+				.toBe("schema-debut-erreur");
+			// Le clic sur l'export ne déclenche pas l'alerte de sortie du champ : l'erreur n'est lue qu'une fois (7.5).
+			await expect(alertText(page)).resolves.toBe("");
+			await expect(statusText(page)).resolves.not.toContain("Export impossible");
 			await page.waitForTimeout(600);
 			expect(downloads).toEqual([]);
 			expect((await stored(page)).schema.startYear).toBe(2026);
@@ -2450,7 +2458,7 @@ describe("audit guidé (bout en bout)", { timeout: 60_000 }, () => {
 			await expect(page.getByLabel("Adresse de la page").getAttribute("autocomplete")).resolves.toBe("url");
 			await expect(page.getByLabel("Page web de ses coordonnées").getAttribute("autocomplete")).resolves.toBe("url");
 			await expect(
-				page.getByLabel("Formulaire de contact ou adresse e-mail").getAttribute("autocomplete"),
+				page.getByLabel("Formulaire de contact ou adresse électronique").getAttribute("autocomplete"),
 			).resolves.toBeNull();
 			await page.close();
 		});
@@ -2680,5 +2688,71 @@ describe("audit guidé (bout en bout)", { timeout: 60_000 }, () => {
 			).resolves.toEqual(['"« " " »"', "open-quote"]);
 			await page.close();
 		});
+
+		it("9.3 : critères précédent et suivant dans une liste", async () => {
+			const page = await browser.newPage();
+			await openWith(page, sessionJson());
+			await page.getByRole("button", { name: "Critère suivant : 1.2" }).click();
+			await expect
+				.poll(() => page.locator("nav.audit-pager > ul > li > button").allTextContents())
+				.toEqual(["Critère précédent : 1.1", "Critère suivant : 1.3"]);
+			await expect(page.locator("nav.audit-pager button").count()).resolves.toBe(2);
+			await page.close();
+		});
+	});
+});
+
+describe("conformité RGAA des pages statiques (auto-évaluation)", { timeout: 60_000 }, () => {
+	it("9.3 : fiche critère : précédent et suivant dans une liste", async () => {
+		const page = await browser.newPage();
+		await page.goto(`${base}/referentiel/1-2/`);
+		await expect(page.title()).resolves.toBe("Critère RGAA 1.2 · Rampe");
+		await expect(page.locator("nav.pager > ul > li > a").allTextContents()).resolves.toEqual([
+			"Critère précédent : 1.1",
+			"Critère suivant : 1.3",
+		]);
+		await page.close();
+	});
+
+	it("8.7 : titres des ADR et documents en français, <title> compris", async () => {
+		const page = await browser.newPage();
+		for (const path of ["cockpit/", "plan-du-site/"]) {
+			await page.goto(`${base}/${path}`);
+			await expect(page.locator('a[href$="/cockpit/adr/0003-monorepo-typescript-pnpm/"]').textContent()).resolves.toBe(
+				"ADR-0003 — Dépôt unique TypeScript (pnpm) : core, cli, site",
+			);
+			await expect(page.locator('a[href$="/cockpit/docs/roadmap/"]').first().textContent()).resolves.toMatch(
+				/feuille de route/i,
+			);
+			await expect(page.locator('a[href$="/cockpit/docs/workflow/"]').textContent()).resolves.toBe(
+				"Méthode de travail des agents",
+			);
+		}
+		for (const [id, title] of [
+			[
+				"adr/0005-pas-de-backend-donnees-locales",
+				"ADR-0005 — Aucun serveur applicatif : les données d’audit restent dans le navigateur",
+			],
+			["adr/0006-gates-et-flux-de-merge", "ADR-0006 — Contrôles obligatoires et flux de fusion"],
+			["docs/roadmap", "Feuille de route"],
+			["docs/workflow", "Méthode de travail des agents"],
+		]) {
+			await page.goto(`${base}/cockpit/${id}/`);
+			await expect(page.title()).resolves.toBe(`${title} · Rampe`);
+		}
+		await page.close();
+	});
+
+	it("9.4 : journal : citation de la méthode officielle en <q cite>, sans guillemets doublés", async () => {
+		const page = await browser.newPage();
+		await page.goto(`${base}/cockpit/journal/2026-10-15/`);
+		const quote = page.locator(
+			'article q[cite="https://accessibilite.numerique.gouv.fr/obligations/evaluation-conformite/"]',
+		);
+		await expect(quote.allTextContents()).resolves.toEqual(["invalidé sur une seule page"]);
+		await expect(
+			quote.evaluate((q) => [getComputedStyle(q).quotes, q.parentElement?.textContent?.includes("« invalidé")]),
+		).resolves.toEqual(['"« " " »"', false]);
+		await page.close();
 	});
 });

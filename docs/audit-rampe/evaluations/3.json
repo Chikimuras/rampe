@@ -54,7 +54,7 @@
 			"criterion": "3.1",
 			"page": "https://chikimuras.github.io/rampe/cockpit/docs/roadmap/",
 			"status": "C",
-			"note": "Tests 3.1.1 à 3.1.6 sur la feuille de route (roadmap), thèmes clair et sombre (rendu et DOM examinés par l’IA). Informations liées à la couleur relevées : statuts des tâches (pastilles portant le texte « Fait » ou « À faire » ; le fond coloré de « Fait » double le texte), symbole ⛔ accompagné du texte « … à créer par Alexandre » et expliqué en tête de page. Les liens dans le texte gardent leur soulignement (mesuré) en plus de la couleur ; le focus est un contour de 3 px (forme). 3.1.2 et 3.1.5/3.1.6 : aucune indication de couleur donnée par un texte, aucun média ; 3.1.3 : aucune image. Chaque information a un autre moyen de perception (texte, soulignement, forme, graisse) : conforme."
+			"note": "Tests 3.1.1 à 3.1.6 sur la feuille de route (/cockpit/docs/roadmap/), thèmes clair et sombre (rendu et DOM examinés par l’IA). Informations liées à la couleur relevées : statuts des tâches (pastilles portant le texte « Fait » ou « À faire » ; le fond coloré de « Fait » double le texte), symbole ⛔ accompagné du texte « … à créer par Alexandre » et expliqué en tête de page. Les liens dans le texte gardent leur soulignement (mesuré) en plus de la couleur ; le focus est un contour de 3 px (forme). 3.1.2 et 3.1.5/3.1.6 : aucune indication de couleur donnée par un texte, aucun média ; 3.1.3 : aucune image. Chaque information a un autre moyen de perception (texte, soulignement, forme, graisse) : conforme."
 		},
 		{
 			"criterion": "3.1",
@@ -126,7 +126,7 @@
 			"criterion": "3.2",
 			"page": "https://chikimuras.github.io/rampe/cockpit/docs/roadmap/",
 			"status": "C",
-			"note": "Tests 3.2.1 à 3.2.5 sur la feuille de route (roadmap) : chaque nœud texte visible mesuré (getComputedStyle : couleur, fond composé avec les ancêtres, opacité cumulée, taille et graisse), rapport WCAG calculé par script, en thème clair puis sombre (colorScheme Playwright), <details> ouverts. Aucune image de fond sous du texte, aucun placeholder. Plus faible rapport : 6,59:1 (#5d5a53 sur #fbfaf7, 14 px, <p> « Projet construit de façon autonome par C… ») en clair, 7,51:1 (#a9a69d sur #151513, 14 px, <p> « Projet construit de façon autonome par C… ») en sombre ; lien d’évitement au focus #0b5d4b sur #fff 7,83:1 / #6fd3b5 sur #1e1e1b 9,28:1. Aucun texte sous 4,5:1 (3.2.1, 3.2.2), aucun grand texte sous 3:1 (3.2.3, 3.2.4) ; 3.2.5 : aucun mécanisme de remplacement, non nécessaire. Conforme."
+			"note": "Tests 3.2.1 à 3.2.5 sur la feuille de route (/cockpit/docs/roadmap/) : chaque nœud texte visible mesuré (getComputedStyle : couleur, fond composé avec les ancêtres, opacité cumulée, taille et graisse), rapport WCAG calculé par script, en thème clair puis sombre (colorScheme Playwright), <details> ouverts. Aucune image de fond sous du texte, aucun placeholder. Plus faible rapport : 6,59:1 (#5d5a53 sur #fbfaf7, 14 px, <p> « Projet construit de façon autonome par C… ») en clair, 7,51:1 (#a9a69d sur #151513, 14 px, <p> « Projet construit de façon autonome par C… ») en sombre ; lien d’évitement au focus #0b5d4b sur #fff 7,83:1 / #6fd3b5 sur #1e1e1b 9,28:1. Aucun texte sous 4,5:1 (3.2.1, 3.2.2), aucun grand texte sous 3:1 (3.2.3, 3.2.4) ; 3.2.5 : aucun mécanisme de remplacement, non nécessaire. Conforme."
 		},
 		{
 			"criterion": "3.2",
@@ -198,7 +198,7 @@
 			"criterion": "3.3",
 			"page": "https://chikimuras.github.io/rampe/cockpit/docs/roadmap/",
 			"status": "C",
-			"note": "Tests 3.3.1 à 3.3.4 sur la feuille de route (roadmap), couleurs mesurées (getComputedStyle sur bordures et fonds contre l’arrière-plan contigu, captures pour les éléments natifs), thèmes clair et sombre. Composants : liens identifiés par leur soulignement (text-decoration-line « underline » mesuré sur tous les <a>, sauf le nom « Rampe » de l’en-tête, distingué par sa position et sa graisse), contour de focus 3 px var(--accent) décalé de 2 px : #0b5d4b sur #fbfaf7 7,50:1 (clair), #6fd3b5 sur #151513 10,15:1 (sombre). Aucun composant ni élément graphique porteur d’information sous 3:1 (3.3.1 à 3.3.3) ; 3.3.4 : aucun mécanisme de remplacement, non nécessaire. Conforme."
+			"note": "Tests 3.3.1 à 3.3.4 sur la feuille de route (/cockpit/docs/roadmap/), couleurs mesurées (getComputedStyle sur bordures et fonds contre l’arrière-plan contigu, captures pour les éléments natifs), thèmes clair et sombre. Composants : liens identifiés par leur soulignement (text-decoration-line « underline » mesuré sur tous les <a>, sauf le nom « Rampe » de l’en-tête, distingué par sa position et sa graisse), contour de focus 3 px var(--accent) décalé de 2 px : #0b5d4b sur #fbfaf7 7,50:1 (clair), #6fd3b5 sur #151513 10,15:1 (sombre). Aucun composant ni élément graphique porteur d’information sous 3:1 (3.3.1 à 3.3.3) ; 3.3.4 : aucun mécanisme de remplacement, non nécessaire. Conforme."
 		},
 		{
 			"criterion": "3.3",

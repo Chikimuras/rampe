@@ -54,7 +54,7 @@
 			"criterion": "12.1",
 			"page": "https://chikimuras.github.io/rampe/cockpit/docs/roadmap/",
 			"status": "C",
-			"note": "Test 12.1.1, évalué sur l’ensemble du site (140 pages trouvées en suivant les liens depuis l’accueil, donc pas un « nombre très limité de pages » ; pas de processus) : la page Roadmap propose le menu de navigation <nav aria-label=\"Navigation principale\"> (liste <ul> : Rampe, Référentiel, Audit guidé, Cockpit, ADR, Journal, Code) dans le <header>, et le lien « Plan du site » (href=\"/rampe/plan-du-site/\") dans le <footer>, qui mène à une page « plan du site » listant toutes les pages. Un menu de navigation et un plan du site sont présents : première combinaison du test validée. Conforme (non-conformité de l’évaluation précédente corrigée par l’ajout du plan du site)."
+			"note": "Test 12.1.1, évalué sur l’ensemble du site (140 pages trouvées en suivant les liens depuis l’accueil, donc pas un « nombre très limité de pages » ; pas de processus) : la page Feuille de route propose le menu de navigation <nav aria-label=\"Navigation principale\"> (liste <ul> : Rampe, Référentiel, Audit guidé, Cockpit, ADR, Journal, Code) dans le <header>, et le lien « Plan du site » (href=\"/rampe/plan-du-site/\") dans le <footer>, qui mène à une page « plan du site » listant toutes les pages. Un menu de navigation et un plan du site sont présents : première combinaison du test validée. Conforme (non-conformité de l’évaluation précédente corrigée par l’ajout du plan du site)."
 		},
 		{
 			"criterion": "12.1",
@@ -126,7 +126,7 @@
 			"criterion": "12.2",
 			"page": "https://chikimuras.github.io/rampe/cockpit/docs/roadmap/",
 			"status": "C",
-			"note": "Test 12.2.1 : comparé à l’accueil et aux autres pages de l’échantillon (gabarit commun Base.astro), le menu <nav aria-label=\"Navigation principale\"> (liste <ul> : Rampe, Référentiel, Audit guidé, Cockpit, ADR, Journal, Code) de la page Roadmap est toujours dans le <header>, en haut de page, au même emplacement (mesuré à 1280 px : x=240, y=0, largeur 800 px), avec les mêmes liens dans le même ordre, et il précède <main> dans le code source. Conforme."
+			"note": "Test 12.2.1 : comparé à l’accueil et aux autres pages de l’échantillon (gabarit commun Base.astro), le menu <nav aria-label=\"Navigation principale\"> (liste <ul> : Rampe, Référentiel, Audit guidé, Cockpit, ADR, Journal, Code) de la page Feuille de route est toujours dans le <header>, en haut de page, au même emplacement (mesuré à 1280 px : x=240, y=0, largeur 800 px), avec les mêmes liens dans le même ordre, et il précède <main> dans le code source. Conforme."
 		},
 		{
 			"criterion": "12.2",
@@ -198,7 +198,7 @@
 			"criterion": "12.3",
 			"page": "https://chikimuras.github.io/rampe/cockpit/docs/roadmap/",
 			"status": "NA",
-			"note": "Tests 12.3.1 à 12.3.3 : la page Roadmap n’est pas la page « plan du site » et n’en contient pas (seulement le lien « Plan du site » du pied de page, évalué au critère 12.4) ; la pertinence du plan est évaluée sur la page /plan-du-site/. Non applicable."
+			"note": "Tests 12.3.1 à 12.3.3 : la page Feuille de route n’est pas la page « plan du site » et n’en contient pas (seulement le lien « Plan du site » du pied de page, évalué au critère 12.4) ; la pertinence du plan est évaluée sur la page /plan-du-site/. Non applicable."
 		},
 		{
 			"criterion": "12.3",
@@ -270,7 +270,7 @@
 			"criterion": "12.4",
 			"page": "https://chikimuras.github.io/rampe/cockpit/docs/roadmap/",
 			"status": "C",
-			"note": "Tests 12.4.1 à 12.4.3 : sur la page Roadmap, comme sur les 12 pages de l’échantillon, l’accès au plan du site est le même lien <a href=\"/rampe/plan-du-site/\">Plan du site</a> (test 12.4.1), premier et seul lien du <footer> enfant de <body>, placé après <main> dans le code source (test 12.4.3), et affiché au même endroit dans la présentation : en tête du pied de page, à gauche (x=240 à 1280 px), sous le contenu (test 12.4.2). Conforme."
+			"note": "Tests 12.4.1 à 12.4.3 : sur la page Feuille de route, comme sur les 12 pages de l’échantillon, l’accès au plan du site est le même lien <a href=\"/rampe/plan-du-site/\">Plan du site</a> (test 12.4.1), premier et seul lien du <footer> enfant de <body>, placé après <main> dans le code source (test 12.4.3), et affiché au même endroit dans la présentation : en tête du pied de page, à gauche (x=240 à 1280 px), sous le contenu (test 12.4.2). Conforme."
 		},
 		{
 			"criterion": "12.4",
@@ -342,7 +342,7 @@
 			"criterion": "12.5",
 			"page": "https://chikimuras.github.io/rampe/cockpit/docs/roadmap/",
 			"status": "NA",
-			"note": "Tests 12.5.1 à 12.5.3 : le site n’a pas de moteur de recherche ; la page Roadmap ne contient aucun champ de recherche, aucun role=\"search\" ni élément <search> (DOM rendu examiné). Contenu visé absent : non applicable."
+			"note": "Tests 12.5.1 à 12.5.3 : le site n’a pas de moteur de recherche ; la page Feuille de route ne contient aucun champ de recherche, aucun role=\"search\" ni élément <search> (DOM rendu examiné). Contenu visé absent : non applicable."
 		},
 		{
 			"criterion": "12.5",
@@ -414,7 +414,7 @@
 			"criterion": "12.6",
 			"page": "https://chikimuras.github.io/rampe/cockpit/docs/roadmap/",
 			"status": "C",
-			"note": "Test 12.6.1 : sur la page Roadmap, l’en-tête est un <header> enfant de <body> (landmark banner), la navigation principale un <nav aria-label=\"Navigation principale\"> (navigation), le contenu principal un <main id=\"contenu\"> (main) et le pied de page un <footer> enfant de <body> (contentinfo), qui ne contient que le lien « Plan du site » et la mention de l’auteur. Chaque zone a un landmark correspondant à sa nature ; il n’y a pas de zone de moteur de recherche. Conforme."
+			"note": "Test 12.6.1 : sur la page Feuille de route, l’en-tête est un <header> enfant de <body> (landmark banner), la navigation principale un <nav aria-label=\"Navigation principale\"> (navigation), le contenu principal un <main id=\"contenu\"> (main) et le pied de page un <footer> enfant de <body> (contentinfo), qui ne contient que le lien « Plan du site » et la mention de l’auteur. Chaque zone a un landmark correspondant à sa nature ; il n’y a pas de zone de moteur de recherche. Conforme."
 		},
 		{
 			"criterion": "12.6",
@@ -468,7 +468,7 @@
 			"criterion": "12.7",
 			"page": "https://chikimuras.github.io/rampe/cockpit/",
 			"status": "C",
-			"note": "Tests 12.7.1 et 12.7.2, au clavier dans Chromium : la première tabulation sur le cockpit atteint le lien « Aller au contenu » (href=\"#contenu\"), premier enfant du <body>, masqué hors écran et visible à la prise de focus en haut à gauche (x=16, y=16), au même endroit et dans le même ordre sur les 12 pages de l’échantillon. Activé (Entrée), il amène sur <main id=\"contenu\"> : la tabulation suivante atteint « Voir la roadmap détaillée », premier élément focalisable du contenu principal. Lien fonctionnel. Conforme."
+			"note": "Tests 12.7.1 et 12.7.2, au clavier dans Chromium : la première tabulation sur le cockpit atteint le lien « Aller au contenu » (href=\"#contenu\"), premier enfant du <body>, masqué hors écran et visible à la prise de focus en haut à gauche (x=16, y=16), au même endroit et dans le même ordre sur les 12 pages de l’échantillon. Activé (Entrée), il amène sur <main id=\"contenu\"> : la tabulation suivante atteint « Voir la feuille de route détaillée », premier élément focalisable du contenu principal. Lien fonctionnel. Conforme."
 		},
 		{
 			"criterion": "12.7",
@@ -486,7 +486,7 @@
 			"criterion": "12.7",
 			"page": "https://chikimuras.github.io/rampe/cockpit/docs/roadmap/",
 			"status": "C",
-			"note": "Tests 12.7.1 et 12.7.2, au clavier dans Chromium : la première tabulation sur la page Roadmap atteint le lien « Aller au contenu » (href=\"#contenu\"), premier enfant du <body>, masqué hors écran et visible à la prise de focus en haut à gauche (x=16, y=16), au même endroit et dans le même ordre sur les 12 pages de l’échantillon. Activé (Entrée), il amène sur <main id=\"contenu\"> : la tabulation suivante atteint « ← Cockpit », premier élément focalisable du contenu principal. Lien fonctionnel. Conforme."
+			"note": "Tests 12.7.1 et 12.7.2, au clavier dans Chromium : la première tabulation sur la page Feuille de route atteint le lien « Aller au contenu » (href=\"#contenu\"), premier enfant du <body>, masqué hors écran et visible à la prise de focus en haut à gauche (x=16, y=16), au même endroit et dans le même ordre sur les 12 pages de l’échantillon. Activé (Entrée), il amène sur <main id=\"contenu\"> : la tabulation suivante atteint « ← Cockpit », premier élément focalisable du contenu principal. Lien fonctionnel. Conforme."
 		},
 		{
 			"criterion": "12.7",
@@ -558,7 +558,7 @@
 			"criterion": "12.8",
 			"page": "https://chikimuras.github.io/rampe/cockpit/docs/roadmap/",
 			"status": "C",
-			"note": "Tests 12.8.1 et 12.8.2 : parcours Tab puis Maj+Tab de la page Roadmap (11 arrêts) : le focus suit l’ordre du code source (lien d’évitement, menu principal, puis liens du contenu et lien « Plan du site » du pied de page), aucun retour en arrière dans le DOM, sans tabindex positif ni réordonnancement CSS (order, grid). Test 12.8.2 : aucun script n’insère ou ne met à jour de contenu sur cette page (aucun <script>). Conforme."
+			"note": "Tests 12.8.1 et 12.8.2 : parcours Tab puis Maj+Tab de la page Feuille de route (11 arrêts) : le focus suit l’ordre du code source (lien d’évitement, menu principal, puis liens du contenu et lien « Plan du site » du pied de page), aucun retour en arrière dans le DOM, sans tabindex positif ni réordonnancement CSS (order, grid). Test 12.8.2 : aucun script n’insère ou ne met à jour de contenu sur cette page (aucun <script>). Conforme."
 		},
 		{
 			"criterion": "12.8",
@@ -612,7 +612,7 @@
 			"criterion": "12.9",
 			"page": "https://chikimuras.github.io/rampe/cockpit/",
 			"status": "C",
-			"note": "Test 12.9.1 : tabulation de bout en bout de le cockpit (Playwright, Chromium, 41 éléments focalisables) : chaque élément est atteint puis quitté, le focus sort de la page après le dernier (« Plan du site ») sans revenir sur un élément déjà visité, et Maj+Tab revient en arrière. Aucun piège. Conforme."
+			"note": "Test 12.9.1 : tabulation de bout en bout de le cockpit (Playwright, Chromium, 43 éléments focalisables) : chaque élément est atteint puis quitté, le focus sort de la page après le dernier (« Plan du site ») sans revenir sur un élément déjà visité, et Maj+Tab revient en arrière. Aucun piège. Conforme."
 		},
 		{
 			"criterion": "12.9",
@@ -630,7 +630,7 @@
 			"criterion": "12.9",
 			"page": "https://chikimuras.github.io/rampe/cockpit/docs/roadmap/",
 			"status": "C",
-			"note": "Test 12.9.1 : tabulation de bout en bout de la page Roadmap (Playwright, Chromium, 11 éléments focalisables) : chaque élément est atteint puis quitté, le focus sort de la page après le dernier (« Plan du site ») sans revenir sur un élément déjà visité, et Maj+Tab revient en arrière. Aucun piège. Conforme."
+			"note": "Test 12.9.1 : tabulation de bout en bout de la page Feuille de route (Playwright, Chromium, 11 éléments focalisables) : chaque élément est atteint puis quitté, le focus sort de la page après le dernier (« Plan du site ») sans revenir sur un élément déjà visité, et Maj+Tab revient en arrière. Aucun piège. Conforme."
 		},
 		{
 			"criterion": "12.9",
@@ -648,7 +648,7 @@
 			"criterion": "12.9",
 			"page": "https://chikimuras.github.io/rampe/plan-du-site/",
 			"status": "C",
-			"note": "Test 12.9.1 : tabulation de bout en bout de le plan du site (Playwright, Chromium, 162 éléments focalisables) : chaque élément est atteint puis quitté, le focus sort de la page après le dernier (« Plan du site ») sans revenir sur un élément déjà visité, et Maj+Tab revient en arrière. Aucun piège. Conforme."
+			"note": "Test 12.9.1 : tabulation de bout en bout de le plan du site (Playwright, Chromium, 164 éléments focalisables) : chaque élément est atteint puis quitté, le focus sort de la page après le dernier (« Plan du site ») sans revenir sur un élément déjà visité, et Maj+Tab revient en arrière. Aucun piège. Conforme."
 		},
 		{
 			"criterion": "12.10",
@@ -702,7 +702,7 @@
 			"criterion": "12.10",
 			"page": "https://chikimuras.github.io/rampe/cockpit/docs/roadmap/",
 			"status": "NA",
-			"note": "Test 12.10.1 : la page Roadmap ne propose aucun raccourci clavier : aucun attribut accesskey dans le DOM rendu, et aucun gestionnaire keydown, keyup ou keypress dans le code du site (gabarit Base.astro examiné ; la page n’a aucun <script>). Contenu visé absent : non applicable."
+			"note": "Test 12.10.1 : la page Feuille de route ne propose aucun raccourci clavier : aucun attribut accesskey dans le DOM rendu, et aucun gestionnaire keydown, keyup ou keypress dans le code du site (gabarit Base.astro examiné ; la page n’a aucun <script>). Contenu visé absent : non applicable."
 		},
 		{
 			"criterion": "12.10",
@@ -774,7 +774,7 @@
 			"criterion": "12.11",
 			"page": "https://chikimuras.github.io/rampe/cockpit/docs/roadmap/",
 			"status": "NA",
-			"note": "Test 12.11.1 : la page Roadmap n’a aucun contenu additionnel apparaissant au survol, à la prise de focus ou à l’activation d’un composant : pas de <details>, de <dialog>, d’infobulle ni de règle CSS :hover révélant du contenu (le lien d’évitement visible au focus est l’élément focalisé lui-même). Contenu visé absent : non applicable."
+			"note": "Test 12.11.1 : la page Feuille de route n’a aucun contenu additionnel apparaissant au survol, à la prise de focus ou à l’activation d’un composant : pas de <details>, de <dialog>, d’infobulle ni de règle CSS :hover révélant du contenu (le lien d’évitement visible au focus est l’élément focalisé lui-même). Contenu visé absent : non applicable."
 		},
 		{
 			"criterion": "12.11",
