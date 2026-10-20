@@ -1,3 +1,4 @@
+import { readdirSync, readFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
 import { markEnglishHtml, markEnglishText, OFFICIAL_TERMS, TECH_TERMS } from "./lang";
 
@@ -15,7 +16,27 @@ describe("markEnglishHtml", () => {
 		expect(mark("<p>des commits et des forks</p>")).toBe(`<p>des ${en("commits")} et des ${en("forks")}</p>`);
 	});
 
-	it.each(["backend", "fixtures", "headless"])("balise %s", (w) => {
+	it.each([
+		"backend",
+		"fixtures",
+		"headless",
+		"monorepo",
+		"squash",
+		"runner",
+		"jobs",
+		"cheat sheet",
+		"open source",
+		"focus",
+		"bugs",
+		"cookies",
+		"e-commerce",
+		"emoji",
+		"proxy",
+		"dogfooding",
+		"admins",
+		"popup",
+		"bidi",
+	])("balise %s", (w) => {
 		expect(mark(`<p>un ${w} ici</p>`)).toBe(`<p>un ${en(w)} ici</p>`);
 	});
 
@@ -54,11 +75,51 @@ describe("markEnglishText (intitulés officiels)", () => {
 		["Landmarks", en("Landmarks")],
 		["sur le principe du style switcher.", `sur le principe du ${en("style switcher")}.`],
 		["de type landmark correspondant", `de type ${en("landmark")} correspondant`],
+		["(pop-up ou pop-under, par exemple)", `(${en("pop-up")} ou ${en("pop-under")}, par exemple)`],
+		["Code de sécurité anti-spam", `Code de sécurité ${en("anti-spam")}`],
+		["une adresse e-mail valide", `une adresse ${en("e-mail")} valide`],
+		["le style au focus natif", `le style au ${en("focus")} natif`],
+		["voix off…", `voix ${en("off")}…`],
+		["nuage de tags", `nuage de ${en("tags")}`],
+		["sites, blogs", `sites, ${en("blogs")}`],
+		["image bitmap (balise", `image ${en("bitmap")} (balise`],
+		["composant JavaScript (widget).", `composant JavaScript (${en("widget")}).`],
+		["le plugin Word Accessibility Plug-in", `le ${en("plugin")} Word Accessibility ${en("Plug-in")}`],
+		["un podcast, une playlist, une newsletter", `un ${en("podcast")}, une ${en("playlist")}, une ${en("newsletter")}`],
+		["checker (all frames) ».", `checker (${en("all frames")}) ».`],
+		["de type “field name” de", `de type “${en("field name")}” de`],
 	])("balise %s", (input, expected) => {
 		expect(markEnglishText(input, OFFICIAL_TERMS)).toBe(expected);
 	});
 
 	it("échappe le texte", () => {
 		expect(markEnglishText("a < b & Landmarks", OFFICIAL_TERMS)).toBe(`a &#x3C; b &#x26; ${en("Landmarks")}`);
+	});
+});
+
+describe("markEnglishText (titres des ADR et documents)", () => {
+	it.each([
+		[
+			"ADR-0003 — Monorepo TypeScript (pnpm) : core, cli, site",
+			`ADR-0003 — ${en("Monorepo")} TypeScript (pnpm) : core, cli, site`,
+		],
+		["ADR-0005 — Pas de backend : les données", `ADR-0005 — Pas de ${en("backend")} : les données`],
+		[
+			"ADR-0006 — Gates de vérification et flux de merge",
+			`ADR-0006 — ${en("Gates")} de vérification et flux de ${en("merge")}`,
+		],
+	])("balise %s", (input, expected) => {
+		expect(markEnglishText(input, TECH_TERMS)).toBe(expected);
+	});
+});
+
+describe("docs/ : pas de forme francisée d'un verbe anglais (8.7)", () => {
+	const root = new URL("../../../../docs/", import.meta.url);
+	const files = readdirSync(root, { recursive: true, encoding: "utf8" }).filter(
+		(f) => f.endsWith(".md") && !f.startsWith("audit-rampe"),
+	);
+	it.each(files)("%s", (f) => {
+		const text = readFileSync(new URL(f, root), "utf8");
+		expect(text.match(/\b(?:commit|merg|push|squash)(?:é|ée|és|ées|er)(?![\p{L}])/giu)).toBeNull();
 	});
 });

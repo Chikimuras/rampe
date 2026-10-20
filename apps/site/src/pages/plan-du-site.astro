@@ -7,6 +7,7 @@ import { getCollection } from "astro:content";
 import { rgaa } from "@rampe/core";
 import Base from "../layouts/Base.astro";
 import { journalTitle } from "../lib/labels";
+import { markEnglishText, TECH_TERMS } from "../lib/lang";
 import { renderMarkdown } from "../lib/render";
 import { fixedPages, SECTIONS, type Section } from "../lib/sitemap";
 import { url } from "../lib/url";
@@ -67,7 +68,7 @@ const docs = (await getCollection("docs")).sort((a, b) => a.data.order - b.data.
 						<ol>
 							{adrs.map((a) => (
 								<li>
-									<a href={url(`cockpit/adr/${a.id}/`)}>{a.data.title}</a>
+									<a href={url(`cockpit/adr/${a.id}/`)} set:html={markEnglishText(a.data.title, TECH_TERMS)} />
 								</li>
 							))}
 						</ol>
@@ -75,7 +76,8 @@ const docs = (await getCollection("docs")).sort((a, b) => a.data.order - b.data.
 						<ul>
 							{journal.map((j) => (
 								<li>
-									<a href={url(`cockpit/journal/${j.id}/`)}>{journalTitle(j)}</a> — {j.data.title}
+									<a href={url(`cockpit/journal/${j.id}/`)}>{journalTitle(j)}</a> —{" "}
+									<Fragment set:html={markEnglishText(j.data.title, TECH_TERMS)} />
 								</li>
 							))}
 						</ul>
@@ -83,7 +85,7 @@ const docs = (await getCollection("docs")).sort((a, b) => a.data.order - b.data.
 						<ul>
 							{docs.map((d) => (
 								<li>
-									<a href={url(`cockpit/docs/${d.id}/`)}>{d.data.title}</a>
+									<a href={url(`cockpit/docs/${d.id}/`)} set:html={markEnglishText(d.data.title, TECH_TERMS)} />
 								</li>
 							))}
 						</ul>

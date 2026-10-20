@@ -341,7 +341,7 @@ export default function AuditApp({
 				setSaveFailed(false);
 			} else {
 				setSaveFailed(true);
-				setAnnounce("Échec de l’enregistrement");
+				setAnnounce("Échec de l’enregistrement", true);
 			}
 		}, SAVE_DELAY);
 		return () => clearTimeout(timer);
@@ -680,17 +680,24 @@ export default function AuditApp({
 							))}
 						</details>
 
+						{/* Liste de liens de navigation (critère 9.3). */}
 						<nav aria-label="Critères voisins" class="audit-pager">
-							{prev && (
-								<button type="button" onClick={() => goTo(prev)}>
-									Critère précédent : {prev.id}
-								</button>
-							)}
-							{next && (
-								<button type="button" class="audit-next" onClick={() => goTo(next)}>
-									Critère suivant : {next.id}
-								</button>
-							)}
+							<ul>
+								{prev && (
+									<li>
+										<button type="button" onClick={() => goTo(prev)}>
+											Critère précédent : {prev.id}
+										</button>
+									</li>
+								)}
+								{next && (
+									<li class="audit-pager-next">
+										<button type="button" class="audit-next" onClick={() => goTo(next)}>
+											Critère suivant : {next.id}
+										</button>
+									</li>
+								)}
+							</ul>
 						</nav>
 					</article>
 				) : (
@@ -1763,10 +1770,10 @@ const DECLARATION_GROUPS: { legend: string; fields: DeclarationInput[] }[] = [
 		fields: [
 			{
 				field: "contactFormUrl",
-				label: "Formulaire de contact ou adresse e-mail",
+				label: "Formulaire de contact ou adresse électronique",
 				help: "Pour signaler un défaut d’accessibilité, par exemple https://exemple.fr/contact ou accessibilite@exemple.fr.",
 				kind: "url",
-				// Pas de jeton autocomplete (RGAA 11.13) : le champ accepte une adresse Web OU une adresse e-mail, et aucun
+				// Pas de jeton autocomplete (RGAA 11.13) : le champ accepte une adresse Web OU une adresse électronique, et aucun
 				// jeton de la liste ne couvre les deux (« url » ou « email » ferait proposer la mauvaise nature de donnée).
 			},
 			{ field: "contactEntity", label: "Service à contacter", help: "Par exemple « Service client »." },
@@ -1777,7 +1784,7 @@ const DECLARATION_GROUPS: { legend: string; fields: DeclarationInput[] }[] = [
 const LIMITS = { lines: MAX_NOTE, url: MAX_URL, text: MAX_TITLE } as const;
 const DATE_ERROR = "Date incomplète ou hors limites (années 1900 à 9999) : elle n’est pas enregistrée.";
 const URL_ERROR =
-	"Adresse non reconnue : commencez par https:// ou saisissez une adresse e-mail. En attendant, elle reste « à compléter » dans la déclaration.";
+	"Adresse non reconnue : commencez par https:// ou saisissez une adresse électronique. En attendant, elle reste « à compléter » dans la déclaration.";
 
 /** Aperçu rendu par Preact depuis le modèle : chaque saisie est du texte, échappé par Preact (jamais d'innerHTML). */
 function Inlines({ content }: { content: Inline[] }) {
@@ -1883,7 +1890,7 @@ function Declaration({
 			if (value !== "" && !isDay(value)) {
 				setTouched((t) => new Set(t).add(field));
 				focusAfterRender(() => document.getElementById(`declaration-${field}`));
-				setAnnounce("Export impossible : une date est incomplète ou hors limites (années 1900 à 9999).");
+				setAnnounce("Export impossible : une date est incomplète ou hors limites (années 1900 à 9999).", true);
 				return null;
 			}
 			updates.push([field, value]);
@@ -2259,7 +2266,7 @@ function Schema({
 		const current = commitStart();
 		if (!current) {
 			focusAfterRender(() => document.getElementById("schema-debut"));
-			setAnnounce("Export impossible : l’année de début est incomplète ou hors limites.");
+			setAnnounce("Export impossible : l’année de début est incomplète ou hors limites.", true);
 			return;
 		}
 		const ext = format === "html" ? "html" : "md";

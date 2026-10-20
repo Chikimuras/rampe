@@ -8,17 +8,31 @@ import type { Element, ElementContent, Root } from "hast";
 import { toHtml } from "hast-util-to-html";
 import { htmlToHast } from "satteri";
 
-/** Jargon technique anglais des pages du cockpit (ADR, journal, documentation). Pluriel en -s reconnu. */
+/**
+ * Jargon technique anglais des pages du cockpit (ADR, journal, documentation). Pluriel en -s reconnu.
+ * Dictionnaire de référence (note 1 du critère 8.7) : celui de l'Académie française, 9e édition ; un mot anglais
+ * qui n'y figure pas exige `lang`, même courant.
+ */
 export const TECH_TERMS = [
+	"admin",
 	"backend",
+	"bidi",
+	"bug",
 	"build",
+	"cheat sheet",
 	"check",
 	"checkout",
 	"commit",
+	"cookie",
 	"cron",
 	"diff",
-	"force-push",
+	"dogfooding",
+	"e-commerce",
+	"e-mail",
+	"emoji",
 	"fixture",
+	"focus",
+	"force-push",
 	"fork",
 	"fuzzer",
 	"fuzzing",
@@ -27,15 +41,25 @@ export const TECH_TERMS = [
 	"headless",
 	"hook",
 	"incomplete",
+	"job",
 	"lint",
 	"merge",
+	"monorepo",
+	"open source",
 	"overlay",
+	"plugin",
+	"popup",
+	"proxy",
 	"push",
 	"roadmap",
 	"run",
+	"runner",
 	"shell",
+	"spam",
+	"squash",
 	"token",
 	"typecheck",
+	"widget",
 	"workflow",
 	"workspace",
 	"worktree",
@@ -45,7 +69,30 @@ export const TECH_TERMS = [
  * Mots anglais des intitulés et définitions officiels du RGAA. Le texte officiel n'est pas modifié (ADR-0010) :
  * `lang` est un balisage, ajouté autour des mots tels quels.
  */
-export const OFFICIAL_TERMS = ["landmark", "style switcher"];
+// Hors liste, par décision : noms propres (Ace by DAISY, PAC, W3C Nu markup checker), identifiants (`submit`, événements
+// `click`, `blur`…), titres d'œuvres (notes et techniques du W3C, vidéo citée), et mots présents dans le dictionnaire de
+// l'Académie française, 9e édition (flash, script, zoom, logo, design, quiz, item…).
+export const OFFICIAL_TERMS = [
+	"all frames",
+	"anti-spam",
+	"bitmap",
+	"blog",
+	"e-mail",
+	"field name",
+	"focus",
+	"landmark",
+	"newsletter",
+	"off",
+	"playlist",
+	"plug-in",
+	"plugin",
+	"podcast",
+	"pop-under",
+	"pop-up",
+	"style switcher",
+	"tag",
+	"widget",
+];
 
 const SKIP = new Set(["code", "kbd", "pre", "samp", "script", "style", "var"]);
 
