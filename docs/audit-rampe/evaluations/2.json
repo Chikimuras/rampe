@@ -1,138 +1,150 @@
 {
 	"evaluator": "Claude (IA)",
-	"date": "2026-10-16",
+	"date": "2026-10-20",
 	"entries": [
 		{
 			"criterion": "2.1",
 			"page": "https://chikimuras.github.io/rampe/",
 			"status": "NA",
-			"note": "Test 2.1.1 : Inventaire du DOM rendu dans Chromium (Playwright) : 0 <iframe>, 0 <frame> sur l’accueil (titre, trois paragraphes, navigation principale, pied de page). Aucun cadre : non applicable."
+			"note": "Test 2.1.1 sur l’accueil : DOM rendu dans Chromium (Playwright) parcouru, 0 <iframe> et 0 <frame>. Aucun cadre, donc aucun titre de cadre à vérifier. Non applicable."
 		},
 		{
 			"criterion": "2.1",
 			"page": "https://chikimuras.github.io/rampe/referentiel/",
 			"status": "NA",
-			"note": "Test 2.1.1 : Inventaire du DOM rendu dans Chromium (Playwright) : 0 <iframe>, 0 <frame> sur la page Référentiel (13 thématiques, 106 liens de critères, encadrés « Explication Rampe »). Aucun cadre : non applicable."
+			"note": "Test 2.1.1 sur la page Référentiel (liste des 106 critères) : DOM rendu dans Chromium (Playwright) parcouru, 0 <iframe> et 0 <frame>. Aucun cadre, donc aucun titre de cadre à vérifier. Non applicable."
 		},
 		{
 			"criterion": "2.1",
 			"page": "https://chikimuras.github.io/rampe/referentiel/1-1/",
 			"status": "NA",
-			"note": "Test 2.1.1 : Inventaire du DOM rendu dans Chromium (Playwright) : 0 <iframe>, 0 <frame> sur la fiche du critère 1.1 (texte officiel, 8 tests, blocs <details> de méthodologie, liens vers le glossaire). Aucun cadre : non applicable."
+			"note": "Test 2.1.1 sur la fiche du critère 1.1 : DOM rendu dans Chromium (Playwright) parcouru, 0 <iframe> et 0 <frame>. Aucun cadre, donc aucun titre de cadre à vérifier. Non applicable."
 		},
 		{
 			"criterion": "2.1",
 			"page": "https://chikimuras.github.io/rampe/referentiel/glossaire/",
 			"status": "NA",
-			"note": "Test 2.1.1 : Inventaire du DOM rendu dans Chromium (Playwright) : 0 <iframe>, 0 <frame> sur le glossaire (liste de définitions <dl>, ancres). Aucun cadre : non applicable."
+			"note": "Test 2.1.1 sur le glossaire : DOM rendu dans Chromium (Playwright) parcouru, 0 <iframe> et 0 <frame>. Aucun cadre, donc aucun titre de cadre à vérifier. Non applicable."
 		},
 		{
 			"criterion": "2.1",
 			"page": "https://chikimuras.github.io/rampe/audit/",
 			"status": "NA",
-			"note": "Test 2.1.1 : Inventaire du DOM rendu dans Chromium (Playwright) : 0 <iframe>, 0 <frame> sur l’audit guidé (îlot Preact) (états de l’îlot examinés : état initial, erreur d’adresse (champ aria-invalid + message), 2 pages ajoutées, import d’un rapport automatique (statut « à confirmer », conflit, indices), critère 3.2 affiché, tous les <details> ouverts, boîte de dialogue « Remplacer l’audit en cours ? » ouverte, puis audit complet importé (tableau « Résultat par page », déclaration, schéma pluriannuel)). Aucun cadre : non applicable."
+			"note": "Test 2.1.1 sur l’audit guidé (îlot Preact ; états de l’îlot examinés : état initial, adresse invalide soumise (message d’erreur), deux pages ajoutées, rapport automatique importé (statuts « à confirmer » sur 1.1 et 3.2, indice 9.2), critère 3.2 affiché, boîte de dialogue « Remplacer l’audit en cours ? » ouverte, puis audit complet de 11 pages importé (résultat, tableau « Résultat par page », déclaration, schéma pluriannuel avec période choisie, actions mises à jour depuis l’audit et action libre ajoutée : tableau des actions), tous les <details> ouverts) : DOM rendu dans Chromium (Playwright) parcouru, 0 <iframe> et 0 <frame>. Aucun cadre, donc aucun titre de cadre à vérifier. Non applicable."
 		},
 		{
 			"criterion": "2.1",
 			"page": "https://chikimuras.github.io/rampe/cockpit/",
 			"status": "NA",
-			"note": "Test 2.1.1 : Inventaire du DOM rendu dans Chromium (Playwright) : 0 <iframe>, 0 <frame> sur le cockpit (encadré « En attente d’Alexandre », 7 barres <progress>, liste des ADR avec pastilles de statut « Accepted », liste des pages du journal). Aucun cadre : non applicable."
+			"note": "Test 2.1.1 sur le cockpit : DOM rendu dans Chromium (Playwright) parcouru, 0 <iframe> et 0 <frame>. Aucun cadre, donc aucun titre de cadre à vérifier. Non applicable."
 		},
 		{
 			"criterion": "2.1",
 			"page": "https://chikimuras.github.io/rampe/cockpit/adr/0011-cli-audit-playwright/",
 			"status": "NA",
-			"note": "Test 2.1.1 : Inventaire du DOM rendu dans Chromium (Playwright) : 0 <iframe>, 0 <frame> sur la page ADR-0011 (Markdown rendu, tableau, blocs de code). Aucun cadre : non applicable."
+			"note": "Test 2.1.1 sur la page de l’ADR-0011 : DOM rendu dans Chromium (Playwright) parcouru, 0 <iframe> et 0 <frame>. Aucun cadre, donc aucun titre de cadre à vérifier. Non applicable."
 		},
 		{
 			"criterion": "2.1",
 			"page": "https://chikimuras.github.io/rampe/cockpit/journal/2026-10-15/",
 			"status": "NA",
-			"note": "Test 2.1.1 : Inventaire du DOM rendu dans Chromium (Playwright) : 0 <iframe>, 0 <frame> sur la page de journal du 15/10/2026 (Markdown rendu, titres, listes, code). Aucun cadre : non applicable."
+			"note": "Test 2.1.1 sur la page du journal du 15 octobre 2026 : DOM rendu dans Chromium (Playwright) parcouru, 0 <iframe> et 0 <frame>. Aucun cadre, donc aucun titre de cadre à vérifier. Non applicable."
 		},
 		{
 			"criterion": "2.1",
 			"page": "https://chikimuras.github.io/rampe/cockpit/docs/roadmap/",
 			"status": "NA",
-			"note": "Test 2.1.1 : Inventaire du DOM rendu dans Chromium (Playwright) : 0 <iframe>, 0 <frame> sur la feuille de route (listes de tâches avec pastilles « Fait » / « À faire »). Aucun cadre : non applicable."
+			"note": "Test 2.1.1 sur la feuille de route (roadmap) : DOM rendu dans Chromium (Playwright) parcouru, 0 <iframe> et 0 <frame>. Aucun cadre, donc aucun titre de cadre à vérifier. Non applicable."
 		},
 		{
 			"criterion": "2.1",
 			"page": "https://chikimuras.github.io/rampe/referentiel/5-1/",
 			"status": "NA",
-			"note": "Test 2.1.1 : Inventaire du DOM rendu dans Chromium (Playwright) : 0 <iframe>, 0 <frame> sur la fiche du critère 5.1 (texte officiel, test, méthodologie, encadré de vérification humaine). Aucun cadre : non applicable."
+			"note": "Test 2.1.1 sur la fiche du critère 5.1 : DOM rendu dans Chromium (Playwright) parcouru, 0 <iframe> et 0 <frame>. Aucun cadre, donc aucun titre de cadre à vérifier. Non applicable."
 		},
 		{
 			"criterion": "2.1",
 			"page": "https://chikimuras.github.io/rampe/referentiel/1-9/",
 			"status": "NA",
-			"note": "Test 2.1.1 : Inventaire du DOM rendu dans Chromium (Playwright) : 0 <iframe>, 0 <frame> sur la fiche du critère 1.9 (texte officiel, tests, méthodologie, encadré de vérification humaine). Aucun cadre : non applicable."
+			"note": "Test 2.1.1 sur la fiche du critère 1.9 : DOM rendu dans Chromium (Playwright) parcouru, 0 <iframe> et 0 <frame>. Aucun cadre, donc aucun titre de cadre à vérifier. Non applicable."
+		},
+		{
+			"criterion": "2.1",
+			"page": "https://chikimuras.github.io/rampe/plan-du-site/",
+			"status": "NA",
+			"note": "Test 2.1.1 sur le plan du site : DOM rendu dans Chromium (Playwright) parcouru, 0 <iframe> et 0 <frame>. Aucun cadre, donc aucun titre de cadre à vérifier. Non applicable."
 		},
 		{
 			"criterion": "2.2",
 			"page": "https://chikimuras.github.io/rampe/",
 			"status": "NA",
-			"note": "Test 2.2.1 : Inventaire du DOM rendu dans Chromium (Playwright) : 0 <iframe>, 0 <frame> sur l’accueil (titre, trois paragraphes, navigation principale, pied de page), donc aucun attribut title de cadre dont juger la pertinence. Non applicable."
+			"note": "Test 2.2.1 sur l’accueil : DOM rendu dans Chromium (Playwright) parcouru, 0 <iframe> et 0 <frame>. Aucun cadre ayant un titre, donc aucune pertinence de titre à juger. Non applicable."
 		},
 		{
 			"criterion": "2.2",
 			"page": "https://chikimuras.github.io/rampe/referentiel/",
 			"status": "NA",
-			"note": "Test 2.2.1 : Inventaire du DOM rendu dans Chromium (Playwright) : 0 <iframe>, 0 <frame> sur la page Référentiel (13 thématiques, 106 liens de critères, encadrés « Explication Rampe »), donc aucun attribut title de cadre dont juger la pertinence. Non applicable."
+			"note": "Test 2.2.1 sur la page Référentiel (liste des 106 critères) : DOM rendu dans Chromium (Playwright) parcouru, 0 <iframe> et 0 <frame>. Aucun cadre ayant un titre, donc aucune pertinence de titre à juger. Non applicable."
 		},
 		{
 			"criterion": "2.2",
 			"page": "https://chikimuras.github.io/rampe/referentiel/1-1/",
 			"status": "NA",
-			"note": "Test 2.2.1 : Inventaire du DOM rendu dans Chromium (Playwright) : 0 <iframe>, 0 <frame> sur la fiche du critère 1.1 (texte officiel, 8 tests, blocs <details> de méthodologie, liens vers le glossaire), donc aucun attribut title de cadre dont juger la pertinence. Non applicable."
+			"note": "Test 2.2.1 sur la fiche du critère 1.1 : DOM rendu dans Chromium (Playwright) parcouru, 0 <iframe> et 0 <frame>. Aucun cadre ayant un titre, donc aucune pertinence de titre à juger. Non applicable."
 		},
 		{
 			"criterion": "2.2",
 			"page": "https://chikimuras.github.io/rampe/referentiel/glossaire/",
 			"status": "NA",
-			"note": "Test 2.2.1 : Inventaire du DOM rendu dans Chromium (Playwright) : 0 <iframe>, 0 <frame> sur le glossaire (liste de définitions <dl>, ancres), donc aucun attribut title de cadre dont juger la pertinence. Non applicable."
+			"note": "Test 2.2.1 sur le glossaire : DOM rendu dans Chromium (Playwright) parcouru, 0 <iframe> et 0 <frame>. Aucun cadre ayant un titre, donc aucune pertinence de titre à juger. Non applicable."
 		},
 		{
 			"criterion": "2.2",
 			"page": "https://chikimuras.github.io/rampe/audit/",
 			"status": "NA",
-			"note": "Test 2.2.1 : Inventaire du DOM rendu dans Chromium (Playwright) : 0 <iframe>, 0 <frame> sur l’audit guidé (îlot Preact) (états de l’îlot examinés : état initial, erreur d’adresse (champ aria-invalid + message), 2 pages ajoutées, import d’un rapport automatique (statut « à confirmer », conflit, indices), critère 3.2 affiché, tous les <details> ouverts, boîte de dialogue « Remplacer l’audit en cours ? » ouverte, puis audit complet importé (tableau « Résultat par page », déclaration, schéma pluriannuel)), donc aucun attribut title de cadre dont juger la pertinence. Non applicable."
+			"note": "Test 2.2.1 sur l’audit guidé (îlot Preact ; états de l’îlot examinés : état initial, adresse invalide soumise (message d’erreur), deux pages ajoutées, rapport automatique importé (statuts « à confirmer » sur 1.1 et 3.2, indice 9.2), critère 3.2 affiché, boîte de dialogue « Remplacer l’audit en cours ? » ouverte, puis audit complet de 11 pages importé (résultat, tableau « Résultat par page », déclaration, schéma pluriannuel avec période choisie, actions mises à jour depuis l’audit et action libre ajoutée : tableau des actions), tous les <details> ouverts) : DOM rendu dans Chromium (Playwright) parcouru, 0 <iframe> et 0 <frame>. Aucun cadre ayant un titre, donc aucune pertinence de titre à juger. Non applicable."
 		},
 		{
 			"criterion": "2.2",
 			"page": "https://chikimuras.github.io/rampe/cockpit/",
 			"status": "NA",
-			"note": "Test 2.2.1 : Inventaire du DOM rendu dans Chromium (Playwright) : 0 <iframe>, 0 <frame> sur le cockpit (encadré « En attente d’Alexandre », 7 barres <progress>, liste des ADR avec pastilles de statut « Accepted », liste des pages du journal), donc aucun attribut title de cadre dont juger la pertinence. Non applicable."
+			"note": "Test 2.2.1 sur le cockpit : DOM rendu dans Chromium (Playwright) parcouru, 0 <iframe> et 0 <frame>. Aucun cadre ayant un titre, donc aucune pertinence de titre à juger. Non applicable."
 		},
 		{
 			"criterion": "2.2",
 			"page": "https://chikimuras.github.io/rampe/cockpit/adr/0011-cli-audit-playwright/",
 			"status": "NA",
-			"note": "Test 2.2.1 : Inventaire du DOM rendu dans Chromium (Playwright) : 0 <iframe>, 0 <frame> sur la page ADR-0011 (Markdown rendu, tableau, blocs de code), donc aucun attribut title de cadre dont juger la pertinence. Non applicable."
+			"note": "Test 2.2.1 sur la page de l’ADR-0011 : DOM rendu dans Chromium (Playwright) parcouru, 0 <iframe> et 0 <frame>. Aucun cadre ayant un titre, donc aucune pertinence de titre à juger. Non applicable."
 		},
 		{
 			"criterion": "2.2",
 			"page": "https://chikimuras.github.io/rampe/cockpit/journal/2026-10-15/",
 			"status": "NA",
-			"note": "Test 2.2.1 : Inventaire du DOM rendu dans Chromium (Playwright) : 0 <iframe>, 0 <frame> sur la page de journal du 15/10/2026 (Markdown rendu, titres, listes, code), donc aucun attribut title de cadre dont juger la pertinence. Non applicable."
+			"note": "Test 2.2.1 sur la page du journal du 15 octobre 2026 : DOM rendu dans Chromium (Playwright) parcouru, 0 <iframe> et 0 <frame>. Aucun cadre ayant un titre, donc aucune pertinence de titre à juger. Non applicable."
 		},
 		{
 			"criterion": "2.2",
 			"page": "https://chikimuras.github.io/rampe/cockpit/docs/roadmap/",
 			"status": "NA",
-			"note": "Test 2.2.1 : Inventaire du DOM rendu dans Chromium (Playwright) : 0 <iframe>, 0 <frame> sur la feuille de route (listes de tâches avec pastilles « Fait » / « À faire »), donc aucun attribut title de cadre dont juger la pertinence. Non applicable."
+			"note": "Test 2.2.1 sur la feuille de route (roadmap) : DOM rendu dans Chromium (Playwright) parcouru, 0 <iframe> et 0 <frame>. Aucun cadre ayant un titre, donc aucune pertinence de titre à juger. Non applicable."
 		},
 		{
 			"criterion": "2.2",
 			"page": "https://chikimuras.github.io/rampe/referentiel/5-1/",
 			"status": "NA",
-			"note": "Test 2.2.1 : Inventaire du DOM rendu dans Chromium (Playwright) : 0 <iframe>, 0 <frame> sur la fiche du critère 5.1 (texte officiel, test, méthodologie, encadré de vérification humaine), donc aucun attribut title de cadre dont juger la pertinence. Non applicable."
+			"note": "Test 2.2.1 sur la fiche du critère 5.1 : DOM rendu dans Chromium (Playwright) parcouru, 0 <iframe> et 0 <frame>. Aucun cadre ayant un titre, donc aucune pertinence de titre à juger. Non applicable."
 		},
 		{
 			"criterion": "2.2",
 			"page": "https://chikimuras.github.io/rampe/referentiel/1-9/",
 			"status": "NA",
-			"note": "Test 2.2.1 : Inventaire du DOM rendu dans Chromium (Playwright) : 0 <iframe>, 0 <frame> sur la fiche du critère 1.9 (texte officiel, tests, méthodologie, encadré de vérification humaine), donc aucun attribut title de cadre dont juger la pertinence. Non applicable."
+			"note": "Test 2.2.1 sur la fiche du critère 1.9 : DOM rendu dans Chromium (Playwright) parcouru, 0 <iframe> et 0 <frame>. Aucun cadre ayant un titre, donc aucune pertinence de titre à juger. Non applicable."
+		},
+		{
+			"criterion": "2.2",
+			"page": "https://chikimuras.github.io/rampe/plan-du-site/",
+			"status": "NA",
+			"note": "Test 2.2.1 sur le plan du site : DOM rendu dans Chromium (Playwright) parcouru, 0 <iframe> et 0 <frame>. Aucun cadre ayant un titre, donc aucune pertinence de titre à juger. Non applicable."
 		}
 	]
 }

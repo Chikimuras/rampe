@@ -1,168 +1,180 @@
 {
 	"evaluator": "Claude (IA)",
-	"date": "2026-10-16",
+	"date": "2026-10-20",
 	"entries": [
 		{
 			"criterion": "13.1",
 			"page": "https://chikimuras.github.io/rampe/",
 			"status": "NA",
-			"note": "Tests 13.1.1 à 13.1.4 : la page d’accueil n’a ni <meta http-equiv=\"refresh\">, ni redirection par script, ni rafraîchissement automatique, ni limite de session (pas de compte). Aucune limite de temps : non applicable."
+			"note": "Tests 13.1.1 à 13.1.4 : la page d’accueil n’a ni <meta http-equiv=\"refresh\">, ni redirection par script, ni rafraîchissement automatique, ni limite de session (pas de compte ni de backend). Aucune limite de temps : non applicable."
 		},
 		{
 			"criterion": "13.1",
 			"page": "https://chikimuras.github.io/rampe/referentiel/",
 			"status": "NA",
-			"note": "Tests 13.1.1 à 13.1.4 : la page Référentiel n’a ni <meta http-equiv=\"refresh\">, ni redirection par script, ni rafraîchissement automatique, ni limite de session (pas de compte). Aucune limite de temps : non applicable."
+			"note": "Tests 13.1.1 à 13.1.4 : la page Référentiel n’a ni <meta http-equiv=\"refresh\">, ni redirection par script, ni rafraîchissement automatique, ni limite de session (pas de compte ni de backend). Aucune limite de temps : non applicable."
 		},
 		{
 			"criterion": "13.1",
 			"page": "https://chikimuras.github.io/rampe/referentiel/1-1/",
 			"status": "NA",
-			"note": "Tests 13.1.1 à 13.1.4 : la fiche du critère 1.1 n’a ni <meta http-equiv=\"refresh\">, ni redirection par script, ni rafraîchissement automatique, ni limite de session (pas de compte). Aucune limite de temps : non applicable."
+			"note": "Tests 13.1.1 à 13.1.4 : la fiche du critère 1.1 n’a ni <meta http-equiv=\"refresh\">, ni redirection par script, ni rafraîchissement automatique, ni limite de session (pas de compte ni de backend). Aucune limite de temps : non applicable."
 		},
 		{
 			"criterion": "13.1",
 			"page": "https://chikimuras.github.io/rampe/referentiel/glossaire/",
 			"status": "NA",
-			"note": "Tests 13.1.1 à 13.1.4 : le glossaire n’a ni <meta http-equiv=\"refresh\">, ni redirection par script, ni rafraîchissement automatique, ni limite de session (pas de compte). Aucune limite de temps : non applicable."
+			"note": "Tests 13.1.1 à 13.1.4 : le glossaire n’a ni <meta http-equiv=\"refresh\">, ni redirection par script, ni rafraîchissement automatique, ni limite de session (pas de compte ni de backend). Aucune limite de temps : non applicable."
 		},
 		{
 			"criterion": "13.1",
 			"page": "https://chikimuras.github.io/rampe/audit/",
 			"status": "NA",
-			"note": "Tests 13.1.1 à 13.1.4 : l’audit guidé n’a ni <meta http-equiv=\"refresh\">, ni redirection par script, ni rafraîchissement automatique, ni limite de session (pas de compte). La sauvegarde automatique différée dans le stockage local ne modifie pas le contenu et n’impose aucun délai ; la mise à jour depuis un autre onglet suit une action de l’utilisateur. Aucune limite de temps : non applicable."
+			"note": "Tests 13.1.1 à 13.1.4 : l’audit guidé n’a ni <meta http-equiv=\"refresh\">, ni redirection par script, ni rafraîchissement automatique, ni limite de session (pas de compte ni de backend). La sauvegarde automatique différée dans le stockage local ne modifie pas le contenu et n’impose aucun délai ; l’adoption de l’état enregistré dans un autre onglet suit une action de l’utilisateur. Aucune limite de temps : non applicable."
 		},
 		{
 			"criterion": "13.1",
 			"page": "https://chikimuras.github.io/rampe/cockpit/",
 			"status": "NA",
-			"note": "Tests 13.1.1 à 13.1.4 : le cockpit n’a ni <meta http-equiv=\"refresh\">, ni redirection par script, ni rafraîchissement automatique, ni limite de session (pas de compte). Aucune limite de temps : non applicable."
+			"note": "Tests 13.1.1 à 13.1.4 : le cockpit n’a ni <meta http-equiv=\"refresh\">, ni redirection par script, ni rafraîchissement automatique, ni limite de session (pas de compte ni de backend). Aucune limite de temps : non applicable."
 		},
 		{
 			"criterion": "13.1",
 			"page": "https://chikimuras.github.io/rampe/cockpit/adr/0011-cli-audit-playwright/",
 			"status": "NA",
-			"note": "Tests 13.1.1 à 13.1.4 : la page ADR-0011 n’a ni <meta http-equiv=\"refresh\">, ni redirection par script, ni rafraîchissement automatique, ni limite de session (pas de compte). Aucune limite de temps : non applicable."
+			"note": "Tests 13.1.1 à 13.1.4 : la page ADR-0011 n’a ni <meta http-equiv=\"refresh\">, ni redirection par script, ni rafraîchissement automatique, ni limite de session (pas de compte ni de backend). Aucune limite de temps : non applicable."
 		},
 		{
 			"criterion": "13.1",
 			"page": "https://chikimuras.github.io/rampe/cockpit/journal/2026-10-15/",
 			"status": "NA",
-			"note": "Tests 13.1.1 à 13.1.4 : la page du journal du 2026-10-15 n’a ni <meta http-equiv=\"refresh\">, ni redirection par script, ni rafraîchissement automatique, ni limite de session (pas de compte). Aucune limite de temps : non applicable."
+			"note": "Tests 13.1.1 à 13.1.4 : la page du journal du 15 octobre 2026 n’a ni <meta http-equiv=\"refresh\">, ni redirection par script, ni rafraîchissement automatique, ni limite de session (pas de compte ni de backend). Aucune limite de temps : non applicable."
 		},
 		{
 			"criterion": "13.1",
 			"page": "https://chikimuras.github.io/rampe/cockpit/docs/roadmap/",
 			"status": "NA",
-			"note": "Tests 13.1.1 à 13.1.4 : la page Roadmap n’a ni <meta http-equiv=\"refresh\">, ni redirection par script, ni rafraîchissement automatique, ni limite de session (pas de compte). Aucune limite de temps : non applicable."
+			"note": "Tests 13.1.1 à 13.1.4 : la page Roadmap n’a ni <meta http-equiv=\"refresh\">, ni redirection par script, ni rafraîchissement automatique, ni limite de session (pas de compte ni de backend). Aucune limite de temps : non applicable."
 		},
 		{
 			"criterion": "13.1",
 			"page": "https://chikimuras.github.io/rampe/referentiel/5-1/",
 			"status": "NA",
-			"note": "Tests 13.1.1 à 13.1.4 : la fiche du critère 5.1 n’a ni <meta http-equiv=\"refresh\">, ni redirection par script, ni rafraîchissement automatique, ni limite de session (pas de compte). Aucune limite de temps : non applicable."
+			"note": "Tests 13.1.1 à 13.1.4 : la fiche du critère 5.1 n’a ni <meta http-equiv=\"refresh\">, ni redirection par script, ni rafraîchissement automatique, ni limite de session (pas de compte ni de backend). Aucune limite de temps : non applicable."
 		},
 		{
 			"criterion": "13.1",
 			"page": "https://chikimuras.github.io/rampe/referentiel/1-9/",
 			"status": "NA",
-			"note": "Tests 13.1.1 à 13.1.4 : la fiche du critère 1.9 n’a ni <meta http-equiv=\"refresh\">, ni redirection par script, ni rafraîchissement automatique, ni limite de session (pas de compte). Aucune limite de temps : non applicable."
+			"note": "Tests 13.1.1 à 13.1.4 : la fiche du critère 1.9 n’a ni <meta http-equiv=\"refresh\">, ni redirection par script, ni rafraîchissement automatique, ni limite de session (pas de compte ni de backend). Aucune limite de temps : non applicable."
+		},
+		{
+			"criterion": "13.1",
+			"page": "https://chikimuras.github.io/rampe/plan-du-site/",
+			"status": "NA",
+			"note": "Tests 13.1.1 à 13.1.4 : le plan du site n’a ni <meta http-equiv=\"refresh\">, ni redirection par script, ni rafraîchissement automatique, ni limite de session (pas de compte ni de backend). Aucune limite de temps : non applicable."
 		},
 		{
 			"criterion": "13.2",
 			"page": "https://chikimuras.github.io/rampe/",
 			"status": "C",
-			"note": "Test 13.2.1 : à l’ouverture de la page d’accueil (Playwright, écoute de l’événement popup), aucune nouvelle fenêtre ne s’ouvre ; aucun lien target, aucun window.open dans le code du site."
+			"note": "Test 13.2.1 : à l’ouverture de la page d’accueil (Playwright, écoute de l’événement popup) aucune nouvelle fenêtre ne s’ouvre ; aucun lien ni formulaire n’a d’attribut target, et le code du site ne contient aucun window.open. Aucune ouverture de fenêtre sans action de l’utilisateur. Conforme."
 		},
 		{
 			"criterion": "13.2",
 			"page": "https://chikimuras.github.io/rampe/referentiel/",
 			"status": "C",
-			"note": "Test 13.2.1 : à l’ouverture de la page Référentiel (Playwright, écoute de l’événement popup), aucune nouvelle fenêtre ne s’ouvre ; aucun lien target, aucun window.open dans le code du site."
+			"note": "Test 13.2.1 : à l’ouverture de la page Référentiel (Playwright, écoute de l’événement popup) aucune nouvelle fenêtre ne s’ouvre ; aucun lien ni formulaire n’a d’attribut target, et le code du site ne contient aucun window.open. Aucune ouverture de fenêtre sans action de l’utilisateur. Conforme."
 		},
 		{
 			"criterion": "13.2",
 			"page": "https://chikimuras.github.io/rampe/referentiel/1-1/",
 			"status": "C",
-			"note": "Test 13.2.1 : à l’ouverture de la fiche du critère 1.1 (Playwright, écoute de l’événement popup), aucune nouvelle fenêtre ne s’ouvre ; aucun lien target, aucun window.open dans le code du site."
+			"note": "Test 13.2.1 : à l’ouverture de la fiche du critère 1.1 (Playwright, écoute de l’événement popup) aucune nouvelle fenêtre ne s’ouvre ; aucun lien ni formulaire n’a d’attribut target, et le code du site ne contient aucun window.open. Aucune ouverture de fenêtre sans action de l’utilisateur. Conforme."
 		},
 		{
 			"criterion": "13.2",
 			"page": "https://chikimuras.github.io/rampe/referentiel/glossaire/",
 			"status": "C",
-			"note": "Test 13.2.1 : à l’ouverture du glossaire (Playwright, écoute de l’événement popup), aucune nouvelle fenêtre ne s’ouvre ; aucun lien target, aucun window.open dans le code du site."
+			"note": "Test 13.2.1 : à l’ouverture de le glossaire (Playwright, écoute de l’événement popup) aucune nouvelle fenêtre ne s’ouvre ; aucun lien ni formulaire n’a d’attribut target, et le code du site ne contient aucun window.open. Aucune ouverture de fenêtre sans action de l’utilisateur. Conforme."
 		},
 		{
 			"criterion": "13.2",
 			"page": "https://chikimuras.github.io/rampe/audit/",
 			"status": "C",
-			"note": "Test 13.2.1 : à l’ouverture de l’audit guidé (Playwright, écoute de l’événement popup), aucune nouvelle fenêtre ne s’ouvre ; aucun lien target, aucun window.open dans le code du site."
+			"note": "Test 13.2.1 : à l’ouverture de l’audit guidé (Playwright, écoute de l’événement popup) aucune nouvelle fenêtre ne s’ouvre ; aucun lien ni formulaire n’a d’attribut target, et le code du site ne contient aucun window.open. Aucune ouverture de fenêtre sans action de l’utilisateur. Conforme."
 		},
 		{
 			"criterion": "13.2",
 			"page": "https://chikimuras.github.io/rampe/cockpit/",
 			"status": "C",
-			"note": "Test 13.2.1 : à l’ouverture du cockpit (Playwright, écoute de l’événement popup), aucune nouvelle fenêtre ne s’ouvre ; aucun lien target, aucun window.open dans le code du site."
+			"note": "Test 13.2.1 : à l’ouverture de le cockpit (Playwright, écoute de l’événement popup) aucune nouvelle fenêtre ne s’ouvre ; aucun lien ni formulaire n’a d’attribut target, et le code du site ne contient aucun window.open. Aucune ouverture de fenêtre sans action de l’utilisateur. Conforme."
 		},
 		{
 			"criterion": "13.2",
 			"page": "https://chikimuras.github.io/rampe/cockpit/adr/0011-cli-audit-playwright/",
 			"status": "C",
-			"note": "Test 13.2.1 : à l’ouverture de la page ADR-0011 (Playwright, écoute de l’événement popup), aucune nouvelle fenêtre ne s’ouvre ; aucun lien target, aucun window.open dans le code du site."
+			"note": "Test 13.2.1 : à l’ouverture de la page ADR-0011 (Playwright, écoute de l’événement popup) aucune nouvelle fenêtre ne s’ouvre ; aucun lien ni formulaire n’a d’attribut target, et le code du site ne contient aucun window.open. Aucune ouverture de fenêtre sans action de l’utilisateur. Conforme."
 		},
 		{
 			"criterion": "13.2",
 			"page": "https://chikimuras.github.io/rampe/cockpit/journal/2026-10-15/",
 			"status": "C",
-			"note": "Test 13.2.1 : à l’ouverture de la page du journal du 2026-10-15 (Playwright, écoute de l’événement popup), aucune nouvelle fenêtre ne s’ouvre ; aucun lien target, aucun window.open dans le code du site."
+			"note": "Test 13.2.1 : à l’ouverture de la page du journal du 15 octobre 2026 (Playwright, écoute de l’événement popup) aucune nouvelle fenêtre ne s’ouvre ; aucun lien ni formulaire n’a d’attribut target, et le code du site ne contient aucun window.open. Aucune ouverture de fenêtre sans action de l’utilisateur. Conforme."
 		},
 		{
 			"criterion": "13.2",
 			"page": "https://chikimuras.github.io/rampe/cockpit/docs/roadmap/",
 			"status": "C",
-			"note": "Test 13.2.1 : à l’ouverture de la page Roadmap (Playwright, écoute de l’événement popup), aucune nouvelle fenêtre ne s’ouvre ; aucun lien target, aucun window.open dans le code du site."
+			"note": "Test 13.2.1 : à l’ouverture de la page Roadmap (Playwright, écoute de l’événement popup) aucune nouvelle fenêtre ne s’ouvre ; aucun lien ni formulaire n’a d’attribut target, et le code du site ne contient aucun window.open. Aucune ouverture de fenêtre sans action de l’utilisateur. Conforme."
 		},
 		{
 			"criterion": "13.2",
 			"page": "https://chikimuras.github.io/rampe/referentiel/5-1/",
 			"status": "C",
-			"note": "Test 13.2.1 : à l’ouverture de la fiche du critère 5.1 (Playwright, écoute de l’événement popup), aucune nouvelle fenêtre ne s’ouvre ; aucun lien target, aucun window.open dans le code du site."
+			"note": "Test 13.2.1 : à l’ouverture de la fiche du critère 5.1 (Playwright, écoute de l’événement popup) aucune nouvelle fenêtre ne s’ouvre ; aucun lien ni formulaire n’a d’attribut target, et le code du site ne contient aucun window.open. Aucune ouverture de fenêtre sans action de l’utilisateur. Conforme."
 		},
 		{
 			"criterion": "13.2",
 			"page": "https://chikimuras.github.io/rampe/referentiel/1-9/",
 			"status": "C",
-			"note": "Test 13.2.1 : à l’ouverture de la fiche du critère 1.9 (Playwright, écoute de l’événement popup), aucune nouvelle fenêtre ne s’ouvre ; aucun lien target, aucun window.open dans le code du site."
+			"note": "Test 13.2.1 : à l’ouverture de la fiche du critère 1.9 (Playwright, écoute de l’événement popup) aucune nouvelle fenêtre ne s’ouvre ; aucun lien ni formulaire n’a d’attribut target, et le code du site ne contient aucun window.open. Aucune ouverture de fenêtre sans action de l’utilisateur. Conforme."
+		},
+		{
+			"criterion": "13.2",
+			"page": "https://chikimuras.github.io/rampe/plan-du-site/",
+			"status": "C",
+			"note": "Test 13.2.1 : à l’ouverture de le plan du site (Playwright, écoute de l’événement popup) aucune nouvelle fenêtre ne s’ouvre ; aucun lien ni formulaire n’a d’attribut target, et le code du site ne contient aucun window.open. Aucune ouverture de fenêtre sans action de l’utilisateur. Conforme."
 		},
 		{
 			"criterion": "13.3",
 			"page": "https://chikimuras.github.io/rampe/",
 			"status": "NA",
-			"note": "Test 13.3.1 : la page d’accueil ne propose aucun document bureautique en téléchargement (aucun lien ou bouton vers un .pdf, .doc(x), .odt, .epub ni fichier à télécharger). Contenu visé absent : non applicable."
+			"note": "Test 13.3.1 : la page d’accueil ne propose aucun document en téléchargement : aucun lien vers un fichier .pdf, .doc(x), .odt, .xls(x), .ods ou .epub, aucun attribut download ni bouton de téléchargement (DOM rendu examiné). Contenu visé absent : non applicable."
 		},
 		{
 			"criterion": "13.3",
 			"page": "https://chikimuras.github.io/rampe/referentiel/",
 			"status": "NA",
-			"note": "Test 13.3.1 : la page Référentiel ne propose aucun document bureautique en téléchargement (aucun lien ou bouton vers un .pdf, .doc(x), .odt, .epub ni fichier à télécharger). Contenu visé absent : non applicable."
+			"note": "Test 13.3.1 : la page Référentiel ne propose aucun document en téléchargement : aucun lien vers un fichier .pdf, .doc(x), .odt, .xls(x), .ods ou .epub, aucun attribut download ni bouton de téléchargement (DOM rendu examiné). Contenu visé absent : non applicable."
 		},
 		{
 			"criterion": "13.3",
 			"page": "https://chikimuras.github.io/rampe/referentiel/1-1/",
 			"status": "NA",
-			"note": "Test 13.3.1 : la fiche du critère 1.1 ne propose aucun document bureautique en téléchargement (aucun lien ou bouton vers un .pdf, .doc(x), .odt, .epub ni fichier à télécharger). Contenu visé absent : non applicable."
+			"note": "Test 13.3.1 : la fiche du critère 1.1 ne propose aucun document en téléchargement : aucun lien vers un fichier .pdf, .doc(x), .odt, .xls(x), .ods ou .epub, aucun attribut download ni bouton de téléchargement (DOM rendu examiné). Contenu visé absent : non applicable."
 		},
 		{
 			"criterion": "13.3",
 			"page": "https://chikimuras.github.io/rampe/referentiel/glossaire/",
 			"status": "NA",
-			"note": "Test 13.3.1 : le glossaire ne propose aucun document bureautique en téléchargement (aucun lien ou bouton vers un .pdf, .doc(x), .odt, .epub ni fichier à télécharger). Contenu visé absent : non applicable."
+			"note": "Test 13.3.1 : le glossaire ne propose aucun document en téléchargement : aucun lien vers un fichier .pdf, .doc(x), .odt, .xls(x), .ods ou .epub, aucun attribut download ni bouton de téléchargement (DOM rendu examiné). Contenu visé absent : non applicable."
 		},
 		{
 			"criterion": "13.3",
 			"page": "https://chikimuras.github.io/rampe/audit/",
 			"status": "C",
-			"note": "Test 13.3.1 : documents produits par les boutons de /audit/ et téléchargés pour l’évaluation : déclaration d’accessibilité, schéma pluriannuel et plan d’action en HTML (plus leurs versions Markdown et l’audit en JSON, formats qui ne sont pas des formats bureautiques au sens du glossaire). Analyse des fichiers .html, comme le demande la méthodologie : <html lang=\"fr\">, <title> pertinent (« Déclaration d’accessibilité », « Schéma pluriannuel de mise en accessibilité numérique », « Plan d’action 2026 »), <main>, hiérarchie h1 > h2 > h3 sans saut, listes <ul>/<li>, liens à intitulé explicite, aucune image ni tableau. Documents compatibles avec l’accessibilité."
+			"note": "Test 13.3.1 : documents produits par les boutons de /audit/ et téléchargés pour l’évaluation : déclaration d’accessibilité, schéma pluriannuel et plan d’action en HTML (plus leurs versions Markdown et l’audit en JSON, formats qui ne sont pas bureautiques au sens du glossaire). Analyse des fichiers .html, comme le prévoit la méthodologie pour les documents au format HTML : <html lang=\"fr\">, <title> pertinent (« Déclaration d’accessibilité », « Schéma pluriannuel de mise en accessibilité numérique », « Plan d’action 2026 »), <main>, hiérarchie h1 > h2 > h3 sans saut, listes <ul>/<li>, liens dont l’intitulé est l’adresse, aucune image ni tableau. Documents compatibles avec l’accessibilité. Conforme."
 		},
 		{
 			"criterion": "13.3",
@@ -174,625 +186,685 @@
 			"criterion": "13.3",
 			"page": "https://chikimuras.github.io/rampe/cockpit/adr/0011-cli-audit-playwright/",
 			"status": "NA",
-			"note": "Test 13.3.1 : la page ADR-0011 ne propose aucun document bureautique en téléchargement (aucun lien ou bouton vers un .pdf, .doc(x), .odt, .epub ni fichier à télécharger) ; « Voir la source sur GitHub » mène à une page web. Contenu visé absent : non applicable."
+			"note": "Test 13.3.1 : la page ADR-0011 ne propose aucun document en téléchargement : aucun lien vers un fichier .pdf, .doc(x), .odt, .xls(x), .ods ou .epub, aucun attribut download ni bouton de téléchargement (DOM rendu examiné). Contenu visé absent : non applicable."
 		},
 		{
 			"criterion": "13.3",
 			"page": "https://chikimuras.github.io/rampe/cockpit/journal/2026-10-15/",
 			"status": "NA",
-			"note": "Test 13.3.1 : la page du journal du 2026-10-15 ne propose aucun document bureautique en téléchargement (aucun lien ou bouton vers un .pdf, .doc(x), .odt, .epub ni fichier à télécharger) ; « Voir la source sur GitHub » mène à une page web. Contenu visé absent : non applicable."
+			"note": "Test 13.3.1 : la page du journal du 15 octobre 2026 ne propose aucun document en téléchargement : aucun lien vers un fichier .pdf, .doc(x), .odt, .xls(x), .ods ou .epub, aucun attribut download ni bouton de téléchargement (DOM rendu examiné). Contenu visé absent : non applicable."
 		},
 		{
 			"criterion": "13.3",
 			"page": "https://chikimuras.github.io/rampe/cockpit/docs/roadmap/",
 			"status": "NA",
-			"note": "Test 13.3.1 : la page Roadmap ne propose aucun document bureautique en téléchargement (aucun lien ou bouton vers un .pdf, .doc(x), .odt, .epub ni fichier à télécharger) ; « Voir la source sur GitHub » mène à une page web. Contenu visé absent : non applicable."
+			"note": "Test 13.3.1 : la page Roadmap ne propose aucun document en téléchargement : aucun lien vers un fichier .pdf, .doc(x), .odt, .xls(x), .ods ou .epub, aucun attribut download ni bouton de téléchargement (DOM rendu examiné). Contenu visé absent : non applicable."
 		},
 		{
 			"criterion": "13.3",
 			"page": "https://chikimuras.github.io/rampe/referentiel/5-1/",
 			"status": "NA",
-			"note": "Test 13.3.1 : la fiche du critère 5.1 ne propose aucun document bureautique en téléchargement (aucun lien ou bouton vers un .pdf, .doc(x), .odt, .epub ni fichier à télécharger). Contenu visé absent : non applicable."
+			"note": "Test 13.3.1 : la fiche du critère 5.1 ne propose aucun document en téléchargement : aucun lien vers un fichier .pdf, .doc(x), .odt, .xls(x), .ods ou .epub, aucun attribut download ni bouton de téléchargement (DOM rendu examiné). Contenu visé absent : non applicable."
 		},
 		{
 			"criterion": "13.3",
 			"page": "https://chikimuras.github.io/rampe/referentiel/1-9/",
 			"status": "NA",
-			"note": "Test 13.3.1 : la fiche du critère 1.9 ne propose aucun document bureautique en téléchargement (aucun lien ou bouton vers un .pdf, .doc(x), .odt, .epub ni fichier à télécharger). Contenu visé absent : non applicable."
+			"note": "Test 13.3.1 : la fiche du critère 1.9 ne propose aucun document en téléchargement : aucun lien vers un fichier .pdf, .doc(x), .odt, .xls(x), .ods ou .epub, aucun attribut download ni bouton de téléchargement (DOM rendu examiné). Contenu visé absent : non applicable."
+		},
+		{
+			"criterion": "13.3",
+			"page": "https://chikimuras.github.io/rampe/plan-du-site/",
+			"status": "NA",
+			"note": "Test 13.3.1 : le plan du site ne propose aucun document en téléchargement : aucun lien vers un fichier .pdf, .doc(x), .odt, .xls(x), .ods ou .epub, aucun attribut download ni bouton de téléchargement (DOM rendu examiné). Contenu visé absent : non applicable."
 		},
 		{
 			"criterion": "13.4",
 			"page": "https://chikimuras.github.io/rampe/",
 			"status": "NA",
-			"note": "Test 13.4.1 : aucune version accessible distincte d’un document bureautique n’est proposée sur la page d’accueil. Contenu visé absent : non applicable."
+			"note": "Test 13.4.1 : la page d’accueil ne propose aucun document bureautique accompagné d’une version accessible distincte. Contenu visé absent : non applicable."
 		},
 		{
 			"criterion": "13.4",
 			"page": "https://chikimuras.github.io/rampe/referentiel/",
 			"status": "NA",
-			"note": "Test 13.4.1 : aucune version accessible distincte d’un document bureautique n’est proposée sur la page Référentiel. Contenu visé absent : non applicable."
+			"note": "Test 13.4.1 : la page Référentiel ne propose aucun document bureautique accompagné d’une version accessible distincte. Contenu visé absent : non applicable."
 		},
 		{
 			"criterion": "13.4",
 			"page": "https://chikimuras.github.io/rampe/referentiel/1-1/",
 			"status": "NA",
-			"note": "Test 13.4.1 : aucune version accessible distincte d’un document bureautique n’est proposée sur la fiche du critère 1.1. Contenu visé absent : non applicable."
+			"note": "Test 13.4.1 : la fiche du critère 1.1 ne propose aucun document bureautique accompagné d’une version accessible distincte. Contenu visé absent : non applicable."
 		},
 		{
 			"criterion": "13.4",
 			"page": "https://chikimuras.github.io/rampe/referentiel/glossaire/",
 			"status": "NA",
-			"note": "Test 13.4.1 : aucune version accessible distincte d’un document bureautique n’est proposée sur le glossaire. Contenu visé absent : non applicable."
+			"note": "Test 13.4.1 : le glossaire ne propose aucun document bureautique accompagné d’une version accessible distincte. Contenu visé absent : non applicable."
 		},
 		{
 			"criterion": "13.4",
 			"page": "https://chikimuras.github.io/rampe/audit/",
 			"status": "NA",
-			"note": "Test 13.4.1 : aucune version accessible distincte d’un document bureautique n’est proposée sur l’audit guidé : les documents HTML téléchargés sont eux-mêmes accessibles (critère 13.3) ; leurs équivalents Markdown ne sont pas des documents bureautiques. Contenu visé absent : non applicable."
+			"note": "Test 13.4.1 : l’audit guidé ne propose aucun document bureautique accompagné d’une version accessible distincte : les documents HTML téléchargés sont eux-mêmes accessibles (critère 13.3) et leurs équivalents Markdown ne sont pas des documents bureautiques. Contenu visé absent : non applicable."
 		},
 		{
 			"criterion": "13.4",
 			"page": "https://chikimuras.github.io/rampe/cockpit/",
 			"status": "NA",
-			"note": "Test 13.4.1 : aucune version accessible distincte d’un document bureautique n’est proposée sur le cockpit. Contenu visé absent : non applicable."
+			"note": "Test 13.4.1 : le cockpit ne propose aucun document bureautique accompagné d’une version accessible distincte. Contenu visé absent : non applicable."
 		},
 		{
 			"criterion": "13.4",
 			"page": "https://chikimuras.github.io/rampe/cockpit/adr/0011-cli-audit-playwright/",
 			"status": "NA",
-			"note": "Test 13.4.1 : aucune version accessible distincte d’un document bureautique n’est proposée sur la page ADR-0011. Contenu visé absent : non applicable."
+			"note": "Test 13.4.1 : la page ADR-0011 ne propose aucun document bureautique accompagné d’une version accessible distincte. Contenu visé absent : non applicable."
 		},
 		{
 			"criterion": "13.4",
 			"page": "https://chikimuras.github.io/rampe/cockpit/journal/2026-10-15/",
 			"status": "NA",
-			"note": "Test 13.4.1 : aucune version accessible distincte d’un document bureautique n’est proposée sur la page du journal du 2026-10-15. Contenu visé absent : non applicable."
+			"note": "Test 13.4.1 : la page du journal du 15 octobre 2026 ne propose aucun document bureautique accompagné d’une version accessible distincte. Contenu visé absent : non applicable."
 		},
 		{
 			"criterion": "13.4",
 			"page": "https://chikimuras.github.io/rampe/cockpit/docs/roadmap/",
 			"status": "NA",
-			"note": "Test 13.4.1 : aucune version accessible distincte d’un document bureautique n’est proposée sur la page Roadmap. Contenu visé absent : non applicable."
+			"note": "Test 13.4.1 : la page Roadmap ne propose aucun document bureautique accompagné d’une version accessible distincte. Contenu visé absent : non applicable."
 		},
 		{
 			"criterion": "13.4",
 			"page": "https://chikimuras.github.io/rampe/referentiel/5-1/",
 			"status": "NA",
-			"note": "Test 13.4.1 : aucune version accessible distincte d’un document bureautique n’est proposée sur la fiche du critère 5.1. Contenu visé absent : non applicable."
+			"note": "Test 13.4.1 : la fiche du critère 5.1 ne propose aucun document bureautique accompagné d’une version accessible distincte. Contenu visé absent : non applicable."
 		},
 		{
 			"criterion": "13.4",
 			"page": "https://chikimuras.github.io/rampe/referentiel/1-9/",
 			"status": "NA",
-			"note": "Test 13.4.1 : aucune version accessible distincte d’un document bureautique n’est proposée sur la fiche du critère 1.9. Contenu visé absent : non applicable."
+			"note": "Test 13.4.1 : la fiche du critère 1.9 ne propose aucun document bureautique accompagné d’une version accessible distincte. Contenu visé absent : non applicable."
+		},
+		{
+			"criterion": "13.4",
+			"page": "https://chikimuras.github.io/rampe/plan-du-site/",
+			"status": "NA",
+			"note": "Test 13.4.1 : le plan du site ne propose aucun document bureautique accompagné d’une version accessible distincte. Contenu visé absent : non applicable."
 		},
 		{
 			"criterion": "13.5",
 			"page": "https://chikimuras.github.io/rampe/",
 			"status": "NA",
-			"note": "Test 13.5.1 : Page examinée : page d’accueil (/). Caractères non alphanumériques relevés dans tout le texte : « © » (mention de la licence) seulement. Ce sont des signes typographiques ou mathématiques usuels et du code cité : ni art ASCII, ni émoticône, ni émoji, ni syntaxe cryptique. Contenu visé absent : non applicable."
+			"note": "Test 13.5.1 : caractères non alphanumériques relevés dans tout le texte de la page d’accueil : « © » (mention de la licence). Ce sont des signes typographiques ou mathématiques usuels et du code cité : ni art ASCII, ni émoticône, ni émoji, ni syntaxe cryptique. Contenu visé absent : non applicable."
 		},
 		{
 			"criterion": "13.5",
 			"page": "https://chikimuras.github.io/rampe/referentiel/",
 			"status": "NA",
-			"note": "Test 13.5.1 : Page examinée : page Référentiel (/referentiel/). Caractères non alphanumériques relevés dans tout le texte : « © » (2, mentions de licence) ; le texte contient aussi des accents combinants (texte non normalisé NFC), invisibles à l’écran. Ce sont des signes typographiques ou mathématiques usuels et du code cité : ni art ASCII, ni émoticône, ni émoji, ni syntaxe cryptique. Contenu visé absent : non applicable."
+			"note": "Test 13.5.1 : caractères non alphanumériques relevés dans tout le texte de la page Référentiel : « © » et des accents combinants dans le texte officiel. Ce sont des signes typographiques ou mathématiques usuels et du code cité : ni art ASCII, ni émoticône, ni émoji, ni syntaxe cryptique. Contenu visé absent : non applicable."
 		},
 		{
 			"criterion": "13.5",
 			"page": "https://chikimuras.github.io/rampe/referentiel/1-1/",
 			"status": "NA",
-			"note": "Test 13.5.1 : Page examinée : fiche du critère 1.1 (/referentiel/1-1/). Caractères non alphanumériques relevés dans tout le texte : « › » (fil d’Ariane), « © », et les signes < > = des balises citées en <code> (<img>, role=\"img\"…) dans le texte officiel. Ce sont des signes typographiques ou mathématiques usuels et du code cité : ni art ASCII, ni émoticône, ni émoji, ni syntaxe cryptique. Contenu visé absent : non applicable."
+			"note": "Test 13.5.1 : caractères non alphanumériques relevés dans tout le texte de la fiche du critère 1.1 : les signes < > = des balises citées (« <img> », « type=\"image\" »), « © ». Ce sont des signes typographiques ou mathématiques usuels et du code cité : ni art ASCII, ni émoticône, ni émoji, ni syntaxe cryptique. Contenu visé absent : non applicable."
 		},
 		{
 			"criterion": "13.5",
 			"page": "https://chikimuras.github.io/rampe/referentiel/glossaire/",
 			"status": "NA",
-			"note": "Test 13.5.1 : Page examinée : page Glossaire (/referentiel/glossaire/). Caractères non alphanumériques relevés dans tout le texte : « © », les signes < > = des balises citées, « + », « ≤ » et « ^ » de la formule officielle de luminance, « • » et « \\* » cités comme marqueurs de liste, des accents graves ` autour de « autocomplete » et « ‘ » cité comme guillemet manquant. Ce sont des signes typographiques ou mathématiques usuels et du code cité : ni art ASCII, ni émoticône, ni émoji, ni syntaxe cryptique. Contenu visé absent : non applicable."
+			"note": "Test 13.5.1 : caractères non alphanumériques relevés dans tout le texte de le glossaire : les signes < > = des balises citées, « + », « ≤ » et « ^ » de la formule officielle de luminance (avec la phrase « Le caractère « ^ » est l’opérateur de puissance. »), « • » et « \\* » dans <code>, accents graves autour de « autocomplete », « © ». Ce sont des signes typographiques ou mathématiques usuels et du code cité : ni art ASCII, ni émoticône, ni émoji, ni syntaxe cryptique. Contenu visé absent : non applicable."
 		},
 		{
 			"criterion": "13.5",
 			"page": "https://chikimuras.github.io/rampe/audit/",
 			"status": "NA",
-			"note": "Test 13.5.1 : Page examinée : audit guidé (/audit/). Caractères non alphanumériques relevés dans tout le texte : « © » et « ° » (« loi n° 2005-102 »), dans l’état vierge et après import d’un audit, et, dans les tests dépliés, les signes < > = des balises citées en <code> par le texte officiel. Ce sont des signes typographiques ou mathématiques usuels et du code cité : ni art ASCII, ni émoticône, ni émoji, ni syntaxe cryptique. Contenu visé absent : non applicable."
+			"note": "Test 13.5.1 : caractères non alphanumériques relevés dans tout le texte de l’audit guidé : « ° » (« 2° à 4° du I de l’article 47 »), « © ». Ce sont des signes typographiques ou mathématiques usuels et du code cité : ni art ASCII, ni émoticône, ni émoji, ni syntaxe cryptique. Contenu visé absent : non applicable."
 		},
 		{
 			"criterion": "13.5",
 			"page": "https://chikimuras.github.io/rampe/cockpit/",
 			"status": "NA",
-			"note": "Test 13.5.1 : Page examinée : page Cockpit (/cockpit/). Caractères non alphanumériques relevés dans tout le texte : « © », « $ » (« 5 $ de frais »), « × » et « ÷ » de la formule affichée (« 11 pages × 106 critères », « critères respectés ÷ critères applicables ») et « + » (« Playwright + axe-core »). Ce sont des signes typographiques ou mathématiques usuels et du code cité : ni art ASCII, ni émoticône, ni émoji, ni syntaxe cryptique. Contenu visé absent : non applicable."
+			"note": "Test 13.5.1 : caractères non alphanumériques relevés dans tout le texte de le cockpit : « $ » (« 5 $ de frais »), « × » (« 12 pages de l’échantillon × 106 critères »), « + » (« Playwright + axe-core »), « © ». Ce sont des signes typographiques ou mathématiques usuels et du code cité : ni art ASCII, ni émoticône, ni émoji, ni syntaxe cryptique. Contenu visé absent : non applicable."
 		},
 		{
 			"criterion": "13.5",
 			"page": "https://chikimuras.github.io/rampe/cockpit/adr/0011-cli-audit-playwright/",
 			"status": "C",
-			"note": "Test 13.5.1 : Page examinée : page ADR-0011 (/cockpit/adr/0011-cli-audit-playwright/). Contenu cryptique trouvé : un émoji ⛔ dans « La publication npm est bloquée tant qu’il n’existe pas de compte npm (⛔ Alexandre). » ; le contexte adjacent (« bloquée tant que… ») dit que la tâche attend une action d’Alexandre : une définition est donnée dans le contexte. Autres caractères : « ← » (lien « ← Cockpit »), « + » (« Playwright + axe-core »), « · » (séparateurs de la ligne de métadonnées), « © » : signes typographiques usuels."
+			"note": "Test 13.5.1 : contenu cryptique trouvé sur la page ADR-0011 : un émoji ⛔ dans « La publication npm est bloquée tant qu’il n’existe pas de compte npm (⛔ Alexandre). » : le contexte adjacent (« bloquée tant que… ») dit que la publication attend une action d’Alexandre. Une définition est donnée dans le contexte adjacent. Autres caractères relevés : « ← » (lien « ← Cockpit »), « + » (« Playwright + axe-core »), « · » (séparateurs de la ligne de métadonnées), « © » : signes typographiques ou mathématiques usuels. Conforme."
 		},
 		{
 			"criterion": "13.5",
 			"page": "https://chikimuras.github.io/rampe/cockpit/journal/2026-10-15/",
 			"status": "C",
-			"note": "Test 13.5.1 : Page examinée : page du journal du 15/10/2026 (/cockpit/journal/2026-10-15/). Contenu cryptique trouvé : quatre ⛔ (« les tâches ⛔ non faites de la roadmap », dans la section « Cockpit — Section « En attente d’Alexandre » » dont le titre dit qu’elles attendent Alexandre ; « un ⛔ tapé avec un sélecteur d’emoji (⛔️) », où le symbole est cité comme caractère). Une définition est donnée dans le contexte adjacent. Autres caractères : « → » (« axe → WCAG → RGAA »), « ← », « ≈ » (« ≈ 15 Ko »), « ≥ » (« HTTP ≥ 400 »), « × » (« « Conforme » ×N »), « ÷ », « = », « < > » (« rampe audit <url> »), « + », « $ », « © » : signes typographiques ou mathématiques usuels."
+			"note": "Test 13.5.1 : contenu cryptique trouvé sur la page du journal du 15 octobre 2026 : trois ⛔ dans la section titrée « Cockpit — Section « En attente d’Alexandre » (PR #13) » : « La section est calculée à partir des tâches ⛔ non faites de la roadmap » (le titre qui précède immédiatement dit que ces tâches attendent Alexandre), puis « un ⛔ tapé avec un sélecteur d’emoji (⛔️) » et « toute tâche ⛔ non reconnue », où le symbole est cité comme caractère dans le même paragraphe. Une définition est donnée dans le contexte adjacent. Autres caractères relevés : « → », « ← », « ≈ », « ≥ » (« HTTP ≥ 400 »), « × », « ÷ », « $ », « + », « {} » dans <code>, « © » : signes typographiques ou mathématiques usuels. Conforme."
 		},
 		{
 			"criterion": "13.5",
 			"page": "https://chikimuras.github.io/rampe/cockpit/docs/roadmap/",
 			"status": "C",
-			"note": "Test 13.5.1 : Page examinée : page Roadmap (/cockpit/docs/roadmap/). Contenu cryptique trouvé : sept ⛔, définis par la phrase d’introduction « Les ⛔ signalent un besoin d’action humaine. », et chaque tâche ⛔ est suivie de l’action attendue (« compte npm (gratuit) à créer par Alexandre »…). Une définition est donnée dans le contexte adjacent. Autres caractères : « → » (« règles axe-core → critères RGAA »), « ← » (lien « ← Cockpit »), « < > » (« rampe audit <url> »), « + », « $ », « © » : signes typographiques usuels."
+			"note": "Test 13.5.1 : contenu cryptique trouvé sur la page Roadmap : sept ⛔, définis par la phrase d’introduction « Les ⛔ signalent un besoin d’action humaine. », et chaque tâche ⛔ est suivie de l’action attendue (« compte npm (gratuit) à créer par Alexandre », « 5 $ de frais d’inscription : dépense à valider »…). Une définition est donnée dans le contexte adjacent. Autres caractères relevés : « ← » (lien « ← Cockpit »), « → », « < > » (« rampe audit <url> »), « + », « $ », « © » : signes typographiques ou mathématiques usuels. Conforme."
 		},
 		{
 			"criterion": "13.5",
 			"page": "https://chikimuras.github.io/rampe/referentiel/5-1/",
 			"status": "NA",
-			"note": "Test 13.5.1 : Page examinée : fiche du critère 5.1 (/referentiel/5-1/). Caractères non alphanumériques relevés dans tout le texte : « › » (fil d’Ariane) et « © » seulement. Ce sont des signes typographiques ou mathématiques usuels et du code cité : ni art ASCII, ni émoticône, ni émoji, ni syntaxe cryptique. Contenu visé absent : non applicable."
+			"note": "Test 13.5.1 : caractères non alphanumériques relevés dans tout le texte de la fiche du critère 5.1 : « © ». Ce sont des signes typographiques ou mathématiques usuels et du code cité : ni art ASCII, ni émoticône, ni émoji, ni syntaxe cryptique. Contenu visé absent : non applicable."
 		},
 		{
 			"criterion": "13.5",
 			"page": "https://chikimuras.github.io/rampe/referentiel/1-9/",
 			"status": "NA",
-			"note": "Test 13.5.1 : Page examinée : fiche du critère 1.9 (/referentiel/1-9/). Caractères non alphanumériques relevés dans tout le texte : « › » (fil d’Ariane), « © », et les signes < > = des balises citées en <code> dans le texte officiel. Ce sont des signes typographiques ou mathématiques usuels et du code cité : ni art ASCII, ni émoticône, ni émoji, ni syntaxe cryptique. Contenu visé absent : non applicable."
+			"note": "Test 13.5.1 : caractères non alphanumériques relevés dans tout le texte de la fiche du critère 1.9 : les signes < > = des balises citées, « © ». Ce sont des signes typographiques ou mathématiques usuels et du code cité : ni art ASCII, ni émoticône, ni émoji, ni syntaxe cryptique. Contenu visé absent : non applicable."
+		},
+		{
+			"criterion": "13.5",
+			"page": "https://chikimuras.github.io/rampe/plan-du-site/",
+			"status": "NA",
+			"note": "Test 13.5.1 : caractères non alphanumériques relevés dans tout le texte de le plan du site : « + » (« Playwright + axe-core »), accents combinants, « © ». Ce sont des signes typographiques ou mathématiques usuels et du code cité : ni art ASCII, ni émoticône, ni émoji, ni syntaxe cryptique. Contenu visé absent : non applicable."
 		},
 		{
 			"criterion": "13.6",
 			"page": "https://chikimuras.github.io/rampe/",
 			"status": "NA",
-			"note": "Test 13.6.1 : la page d’accueil ne contient aucun contenu cryptique (voir le critère 13.5). Contenu visé absent : non applicable."
+			"note": "Test 13.6.1 : la page d’accueil ne contient aucun contenu cryptique (voir le critère 13.5 : seulement « © » (mention de la licence)). Contenu visé absent : non applicable."
 		},
 		{
 			"criterion": "13.6",
 			"page": "https://chikimuras.github.io/rampe/referentiel/",
 			"status": "NA",
-			"note": "Test 13.6.1 : la page Référentiel ne contient aucun contenu cryptique (voir le critère 13.5). Contenu visé absent : non applicable."
+			"note": "Test 13.6.1 : la page Référentiel ne contient aucun contenu cryptique (voir le critère 13.5 : seulement « © » et des accents combinants dans le texte officiel). Contenu visé absent : non applicable."
 		},
 		{
 			"criterion": "13.6",
 			"page": "https://chikimuras.github.io/rampe/referentiel/1-1/",
 			"status": "NA",
-			"note": "Test 13.6.1 : la fiche du critère 1.1 ne contient aucun contenu cryptique (voir le critère 13.5). Contenu visé absent : non applicable."
+			"note": "Test 13.6.1 : la fiche du critère 1.1 ne contient aucun contenu cryptique (voir le critère 13.5 : seulement les signes < > = des balises citées (« <img> », « type=\"image\" »), « © »). Contenu visé absent : non applicable."
 		},
 		{
 			"criterion": "13.6",
 			"page": "https://chikimuras.github.io/rampe/referentiel/glossaire/",
 			"status": "NA",
-			"note": "Test 13.6.1 : le glossaire ne contient aucun contenu cryptique (voir le critère 13.5). Contenu visé absent : non applicable."
+			"note": "Test 13.6.1 : le glossaire ne contient aucun contenu cryptique (voir le critère 13.5 : seulement les signes < > = des balises citées, « + », « ≤ » et « ^ » de la formule officielle de luminance (avec la phrase « Le caractère « ^ » est l’opérateur de puissance. »), « • » et « \\* » dans <code>, accents graves autour de « autocomplete », « © »). Contenu visé absent : non applicable."
 		},
 		{
 			"criterion": "13.6",
 			"page": "https://chikimuras.github.io/rampe/audit/",
 			"status": "NA",
-			"note": "Test 13.6.1 : l’audit guidé ne contient aucun contenu cryptique (voir le critère 13.5). Contenu visé absent : non applicable."
+			"note": "Test 13.6.1 : l’audit guidé ne contient aucun contenu cryptique (voir le critère 13.5 : seulement « ° » (« 2° à 4° du I de l’article 47 »), « © »). Contenu visé absent : non applicable."
 		},
 		{
 			"criterion": "13.6",
 			"page": "https://chikimuras.github.io/rampe/cockpit/",
 			"status": "NA",
-			"note": "Test 13.6.1 : le cockpit ne contient aucun contenu cryptique (voir le critère 13.5). Contenu visé absent : non applicable."
+			"note": "Test 13.6.1 : le cockpit ne contient aucun contenu cryptique (voir le critère 13.5 : seulement « $ » (« 5 $ de frais »), « × » (« 12 pages de l’échantillon × 106 critères »), « + » (« Playwright + axe-core »), « © »). Contenu visé absent : non applicable."
 		},
 		{
 			"criterion": "13.6",
 			"page": "https://chikimuras.github.io/rampe/cockpit/adr/0011-cli-audit-playwright/",
 			"status": "C",
-			"note": "Test 13.6.1 : la définition donnée par le contexte adjacent aux ⛔ de la page ADR-0011 est pertinente : elle exprime que la tâche ou la publication attend une action humaine (d’Alexandre), ce que signifie le symbole dans tout le projet."
+			"note": "Test 13.6.1 : la définition donnée par le contexte adjacent aux ⛔ de la page ADR-0011 est pertinente : elle exprime que la tâche ou la publication attend une action humaine (d’Alexandre), ce que le symbole signifie dans tout le projet. Conforme."
 		},
 		{
 			"criterion": "13.6",
 			"page": "https://chikimuras.github.io/rampe/cockpit/journal/2026-10-15/",
 			"status": "C",
-			"note": "Test 13.6.1 : la définition donnée par le contexte adjacent aux ⛔ de la page du journal du 2026-10-15 est pertinente : elle exprime que la tâche ou la publication attend une action humaine (d’Alexandre), ce que signifie le symbole dans tout le projet."
+			"note": "Test 13.6.1 : la définition donnée par le contexte adjacent aux ⛔ de la page du journal du 15 octobre 2026 est pertinente : elle exprime que la tâche ou la publication attend une action humaine (d’Alexandre), ce que le symbole signifie dans tout le projet. Conforme."
 		},
 		{
 			"criterion": "13.6",
 			"page": "https://chikimuras.github.io/rampe/cockpit/docs/roadmap/",
 			"status": "C",
-			"note": "Test 13.6.1 : la définition donnée par le contexte adjacent aux ⛔ de la page Roadmap est pertinente : elle exprime que la tâche ou la publication attend une action humaine (d’Alexandre), ce que signifie le symbole dans tout le projet."
+			"note": "Test 13.6.1 : la définition donnée par le contexte adjacent aux ⛔ de la page Roadmap est pertinente : elle exprime que la tâche ou la publication attend une action humaine (d’Alexandre), ce que le symbole signifie dans tout le projet. Conforme."
 		},
 		{
 			"criterion": "13.6",
 			"page": "https://chikimuras.github.io/rampe/referentiel/5-1/",
 			"status": "NA",
-			"note": "Test 13.6.1 : la fiche du critère 5.1 ne contient aucun contenu cryptique (voir le critère 13.5). Contenu visé absent : non applicable."
+			"note": "Test 13.6.1 : la fiche du critère 5.1 ne contient aucun contenu cryptique (voir le critère 13.5 : seulement « © »). Contenu visé absent : non applicable."
 		},
 		{
 			"criterion": "13.6",
 			"page": "https://chikimuras.github.io/rampe/referentiel/1-9/",
 			"status": "NA",
-			"note": "Test 13.6.1 : la fiche du critère 1.9 ne contient aucun contenu cryptique (voir le critère 13.5). Contenu visé absent : non applicable."
+			"note": "Test 13.6.1 : la fiche du critère 1.9 ne contient aucun contenu cryptique (voir le critère 13.5 : seulement les signes < > = des balises citées, « © »). Contenu visé absent : non applicable."
+		},
+		{
+			"criterion": "13.6",
+			"page": "https://chikimuras.github.io/rampe/plan-du-site/",
+			"status": "NA",
+			"note": "Test 13.6.1 : le plan du site ne contient aucun contenu cryptique (voir le critère 13.5 : seulement « + » (« Playwright + axe-core »), accents combinants, « © »). Contenu visé absent : non applicable."
 		},
 		{
 			"criterion": "13.7",
 			"page": "https://chikimuras.github.io/rampe/",
 			"status": "NA",
-			"note": "Tests 13.7.1 à 13.7.3 : la page d’accueil ne contient ni <video>, <img>, <svg>, <canvas>, <embed> ou <object>, ni animation CSS (@keyframes, animation, transition absents des styles), ni script provoquant un clignotement ; document.getAnimations() est vide au chargement. Aucun flash : non applicable."
+			"note": "Tests 13.7.1 à 13.7.3 : la page d’accueil ne contient aucun <img>, <svg>, <video>, <audio>, <canvas>, <object>, <embed>, <iframe>, <marquee> ni <blink> ; aucune règle animation, transition ni @keyframes dans les styles ; document.getAnimations() vide ; aucun script ne provoque de clignotement. Aucun changement brusque de luminosité ni effet de flash : non applicable."
 		},
 		{
 			"criterion": "13.7",
 			"page": "https://chikimuras.github.io/rampe/referentiel/",
 			"status": "NA",
-			"note": "Tests 13.7.1 à 13.7.3 : la page Référentiel ne contient ni <video>, <img>, <svg>, <canvas>, <embed> ou <object>, ni animation CSS (@keyframes, animation, transition absents des styles), ni script provoquant un clignotement ; document.getAnimations() est vide au chargement. Aucun flash : non applicable."
+			"note": "Tests 13.7.1 à 13.7.3 : la page Référentiel ne contient aucun <img>, <svg>, <video>, <audio>, <canvas>, <object>, <embed>, <iframe>, <marquee> ni <blink> ; aucune règle animation, transition ni @keyframes dans les styles ; document.getAnimations() vide ; aucun script ne provoque de clignotement. Aucun changement brusque de luminosité ni effet de flash : non applicable."
 		},
 		{
 			"criterion": "13.7",
 			"page": "https://chikimuras.github.io/rampe/referentiel/1-1/",
 			"status": "NA",
-			"note": "Tests 13.7.1 à 13.7.3 : la fiche du critère 1.1 ne contient ni <video>, <img>, <svg>, <canvas>, <embed> ou <object>, ni animation CSS (@keyframes, animation, transition absents des styles), ni script provoquant un clignotement ; document.getAnimations() est vide au chargement. Aucun flash : non applicable."
+			"note": "Tests 13.7.1 à 13.7.3 : la fiche du critère 1.1 ne contient aucun <img>, <svg>, <video>, <audio>, <canvas>, <object>, <embed>, <iframe>, <marquee> ni <blink> ; aucune règle animation, transition ni @keyframes dans les styles ; document.getAnimations() vide ; aucun script ne provoque de clignotement. Aucun changement brusque de luminosité ni effet de flash : non applicable."
 		},
 		{
 			"criterion": "13.7",
 			"page": "https://chikimuras.github.io/rampe/referentiel/glossaire/",
 			"status": "NA",
-			"note": "Tests 13.7.1 à 13.7.3 : le glossaire ne contient ni <video>, <img>, <svg>, <canvas>, <embed> ou <object>, ni animation CSS (@keyframes, animation, transition absents des styles), ni script provoquant un clignotement ; document.getAnimations() est vide au chargement. Aucun flash : non applicable."
+			"note": "Tests 13.7.1 à 13.7.3 : le glossaire ne contient aucun <img>, <svg>, <video>, <audio>, <canvas>, <object>, <embed>, <iframe>, <marquee> ni <blink> ; aucune règle animation, transition ni @keyframes dans les styles ; document.getAnimations() vide ; aucun script ne provoque de clignotement. Aucun changement brusque de luminosité ni effet de flash : non applicable."
 		},
 		{
 			"criterion": "13.7",
 			"page": "https://chikimuras.github.io/rampe/audit/",
 			"status": "NA",
-			"note": "Tests 13.7.1 à 13.7.3 : l’audit guidé ne contient ni <video>, <img>, <svg>, <canvas>, <embed> ou <object>, ni animation CSS (@keyframes, animation, transition absents des styles), ni script provoquant un clignotement ; document.getAnimations() est vide au chargement. Aucun flash : non applicable."
+			"note": "Tests 13.7.1 à 13.7.3 : l’audit guidé ne contient aucun <img>, <svg>, <video>, <audio>, <canvas>, <object>, <embed>, <iframe>, <marquee> ni <blink> ; aucune règle animation, transition ni @keyframes dans les styles ; document.getAnimations() vide ; aucun script ne provoque de clignotement. Aucun changement brusque de luminosité ni effet de flash : non applicable."
 		},
 		{
 			"criterion": "13.7",
 			"page": "https://chikimuras.github.io/rampe/cockpit/",
 			"status": "NA",
-			"note": "Tests 13.7.1 à 13.7.3 : le cockpit ne contient ni <video>, <img>, <svg>, <canvas>, <embed> ou <object>, ni animation CSS (@keyframes, animation, transition absents des styles), ni script provoquant un clignotement ; document.getAnimations() est vide au chargement. Aucun flash : non applicable."
+			"note": "Tests 13.7.1 à 13.7.3 : le cockpit ne contient aucun <img>, <svg>, <video>, <audio>, <canvas>, <object>, <embed>, <iframe>, <marquee> ni <blink> ; aucune règle animation, transition ni @keyframes dans les styles ; document.getAnimations() vide ; aucun script ne provoque de clignotement. Aucun changement brusque de luminosité ni effet de flash : non applicable."
 		},
 		{
 			"criterion": "13.7",
 			"page": "https://chikimuras.github.io/rampe/cockpit/adr/0011-cli-audit-playwright/",
 			"status": "NA",
-			"note": "Tests 13.7.1 à 13.7.3 : la page ADR-0011 ne contient ni <video>, <img>, <svg>, <canvas>, <embed> ou <object>, ni animation CSS (@keyframes, animation, transition absents des styles), ni script provoquant un clignotement ; document.getAnimations() est vide au chargement. Aucun flash : non applicable."
+			"note": "Tests 13.7.1 à 13.7.3 : la page ADR-0011 ne contient aucun <img>, <svg>, <video>, <audio>, <canvas>, <object>, <embed>, <iframe>, <marquee> ni <blink> ; aucune règle animation, transition ni @keyframes dans les styles ; document.getAnimations() vide ; aucun script ne provoque de clignotement. Aucun changement brusque de luminosité ni effet de flash : non applicable."
 		},
 		{
 			"criterion": "13.7",
 			"page": "https://chikimuras.github.io/rampe/cockpit/journal/2026-10-15/",
 			"status": "NA",
-			"note": "Tests 13.7.1 à 13.7.3 : la page du journal du 2026-10-15 ne contient ni <video>, <img>, <svg>, <canvas>, <embed> ou <object>, ni animation CSS (@keyframes, animation, transition absents des styles), ni script provoquant un clignotement ; document.getAnimations() est vide au chargement. Aucun flash : non applicable."
+			"note": "Tests 13.7.1 à 13.7.3 : la page du journal du 15 octobre 2026 ne contient aucun <img>, <svg>, <video>, <audio>, <canvas>, <object>, <embed>, <iframe>, <marquee> ni <blink> ; aucune règle animation, transition ni @keyframes dans les styles ; document.getAnimations() vide ; aucun script ne provoque de clignotement. Aucun changement brusque de luminosité ni effet de flash : non applicable."
 		},
 		{
 			"criterion": "13.7",
 			"page": "https://chikimuras.github.io/rampe/cockpit/docs/roadmap/",
 			"status": "NA",
-			"note": "Tests 13.7.1 à 13.7.3 : la page Roadmap ne contient ni <video>, <img>, <svg>, <canvas>, <embed> ou <object>, ni animation CSS (@keyframes, animation, transition absents des styles), ni script provoquant un clignotement ; document.getAnimations() est vide au chargement. Aucun flash : non applicable."
+			"note": "Tests 13.7.1 à 13.7.3 : la page Roadmap ne contient aucun <img>, <svg>, <video>, <audio>, <canvas>, <object>, <embed>, <iframe>, <marquee> ni <blink> ; aucune règle animation, transition ni @keyframes dans les styles ; document.getAnimations() vide ; aucun script ne provoque de clignotement. Aucun changement brusque de luminosité ni effet de flash : non applicable."
 		},
 		{
 			"criterion": "13.7",
 			"page": "https://chikimuras.github.io/rampe/referentiel/5-1/",
 			"status": "NA",
-			"note": "Tests 13.7.1 à 13.7.3 : la fiche du critère 5.1 ne contient ni <video>, <img>, <svg>, <canvas>, <embed> ou <object>, ni animation CSS (@keyframes, animation, transition absents des styles), ni script provoquant un clignotement ; document.getAnimations() est vide au chargement. Aucun flash : non applicable."
+			"note": "Tests 13.7.1 à 13.7.3 : la fiche du critère 5.1 ne contient aucun <img>, <svg>, <video>, <audio>, <canvas>, <object>, <embed>, <iframe>, <marquee> ni <blink> ; aucune règle animation, transition ni @keyframes dans les styles ; document.getAnimations() vide ; aucun script ne provoque de clignotement. Aucun changement brusque de luminosité ni effet de flash : non applicable."
 		},
 		{
 			"criterion": "13.7",
 			"page": "https://chikimuras.github.io/rampe/referentiel/1-9/",
 			"status": "NA",
-			"note": "Tests 13.7.1 à 13.7.3 : la fiche du critère 1.9 ne contient ni <video>, <img>, <svg>, <canvas>, <embed> ou <object>, ni animation CSS (@keyframes, animation, transition absents des styles), ni script provoquant un clignotement ; document.getAnimations() est vide au chargement. Aucun flash : non applicable."
+			"note": "Tests 13.7.1 à 13.7.3 : la fiche du critère 1.9 ne contient aucun <img>, <svg>, <video>, <audio>, <canvas>, <object>, <embed>, <iframe>, <marquee> ni <blink> ; aucune règle animation, transition ni @keyframes dans les styles ; document.getAnimations() vide ; aucun script ne provoque de clignotement. Aucun changement brusque de luminosité ni effet de flash : non applicable."
+		},
+		{
+			"criterion": "13.7",
+			"page": "https://chikimuras.github.io/rampe/plan-du-site/",
+			"status": "NA",
+			"note": "Tests 13.7.1 à 13.7.3 : le plan du site ne contient aucun <img>, <svg>, <video>, <audio>, <canvas>, <object>, <embed>, <iframe>, <marquee> ni <blink> ; aucune règle animation, transition ni @keyframes dans les styles ; document.getAnimations() vide ; aucun script ne provoque de clignotement. Aucun changement brusque de luminosité ni effet de flash : non applicable."
 		},
 		{
 			"criterion": "13.8",
 			"page": "https://chikimuras.github.io/rampe/",
 			"status": "NA",
-			"note": "Tests 13.8.1 et 13.8.2 : la page d’accueil n’a aucun contenu en mouvement ou clignotant déclenché automatiquement (pas d’image animée, de média, d’animation ou transition CSS, de défilement automatique ; document.getAnimations() vide). Contenu visé absent : non applicable."
+			"note": "Tests 13.8.1 et 13.8.2 : la page d’accueil n’a aucun contenu en mouvement ou clignotant déclenché automatiquement : aucun <img>, <svg>, <video>, <audio>, <canvas>, <object>, <embed>, <iframe>, <marquee> ni <blink> ; aucune règle animation, transition ni @keyframes dans les styles ; document.getAnimations() vide ; pas de défilement automatique. Contenu visé absent : non applicable."
 		},
 		{
 			"criterion": "13.8",
 			"page": "https://chikimuras.github.io/rampe/referentiel/",
 			"status": "NA",
-			"note": "Tests 13.8.1 et 13.8.2 : la page Référentiel n’a aucun contenu en mouvement ou clignotant déclenché automatiquement (pas d’image animée, de média, d’animation ou transition CSS, de défilement automatique ; document.getAnimations() vide). Contenu visé absent : non applicable."
+			"note": "Tests 13.8.1 et 13.8.2 : la page Référentiel n’a aucun contenu en mouvement ou clignotant déclenché automatiquement : aucun <img>, <svg>, <video>, <audio>, <canvas>, <object>, <embed>, <iframe>, <marquee> ni <blink> ; aucune règle animation, transition ni @keyframes dans les styles ; document.getAnimations() vide ; pas de défilement automatique. Contenu visé absent : non applicable."
 		},
 		{
 			"criterion": "13.8",
 			"page": "https://chikimuras.github.io/rampe/referentiel/1-1/",
 			"status": "NA",
-			"note": "Tests 13.8.1 et 13.8.2 : la fiche du critère 1.1 n’a aucun contenu en mouvement ou clignotant déclenché automatiquement (pas d’image animée, de média, d’animation ou transition CSS, de défilement automatique ; document.getAnimations() vide). Contenu visé absent : non applicable."
+			"note": "Tests 13.8.1 et 13.8.2 : la fiche du critère 1.1 n’a aucun contenu en mouvement ou clignotant déclenché automatiquement : aucun <img>, <svg>, <video>, <audio>, <canvas>, <object>, <embed>, <iframe>, <marquee> ni <blink> ; aucune règle animation, transition ni @keyframes dans les styles ; document.getAnimations() vide ; pas de défilement automatique. Contenu visé absent : non applicable."
 		},
 		{
 			"criterion": "13.8",
 			"page": "https://chikimuras.github.io/rampe/referentiel/glossaire/",
 			"status": "NA",
-			"note": "Tests 13.8.1 et 13.8.2 : le glossaire n’a aucun contenu en mouvement ou clignotant déclenché automatiquement (pas d’image animée, de média, d’animation ou transition CSS, de défilement automatique ; document.getAnimations() vide). Contenu visé absent : non applicable."
+			"note": "Tests 13.8.1 et 13.8.2 : le glossaire n’a aucun contenu en mouvement ou clignotant déclenché automatiquement : aucun <img>, <svg>, <video>, <audio>, <canvas>, <object>, <embed>, <iframe>, <marquee> ni <blink> ; aucune règle animation, transition ni @keyframes dans les styles ; document.getAnimations() vide ; pas de défilement automatique. Contenu visé absent : non applicable."
 		},
 		{
 			"criterion": "13.8",
 			"page": "https://chikimuras.github.io/rampe/audit/",
 			"status": "NA",
-			"note": "Tests 13.8.1 et 13.8.2 : l’audit guidé n’a aucun contenu en mouvement ou clignotant déclenché automatiquement (pas d’image animée, de média, d’animation ou transition CSS, de défilement automatique ; document.getAnimations() vide). Contenu visé absent : non applicable."
+			"note": "Tests 13.8.1 et 13.8.2 : l’audit guidé n’a aucun contenu en mouvement ou clignotant déclenché automatiquement : aucun <img>, <svg>, <video>, <audio>, <canvas>, <object>, <embed>, <iframe>, <marquee> ni <blink> ; aucune règle animation, transition ni @keyframes dans les styles ; document.getAnimations() vide ; pas de défilement automatique. Contenu visé absent : non applicable."
 		},
 		{
 			"criterion": "13.8",
 			"page": "https://chikimuras.github.io/rampe/cockpit/",
 			"status": "NA",
-			"note": "Tests 13.8.1 et 13.8.2 : le cockpit n’a aucun contenu en mouvement ou clignotant déclenché automatiquement (pas d’image animée, de média, d’animation ou transition CSS, de défilement automatique ; document.getAnimations() vide). Contenu visé absent : non applicable."
+			"note": "Tests 13.8.1 et 13.8.2 : le cockpit n’a aucun contenu en mouvement ou clignotant déclenché automatiquement : aucun <img>, <svg>, <video>, <audio>, <canvas>, <object>, <embed>, <iframe>, <marquee> ni <blink> ; aucune règle animation, transition ni @keyframes dans les styles ; document.getAnimations() vide ; pas de défilement automatique. Contenu visé absent : non applicable."
 		},
 		{
 			"criterion": "13.8",
 			"page": "https://chikimuras.github.io/rampe/cockpit/adr/0011-cli-audit-playwright/",
 			"status": "NA",
-			"note": "Tests 13.8.1 et 13.8.2 : la page ADR-0011 n’a aucun contenu en mouvement ou clignotant déclenché automatiquement (pas d’image animée, de média, d’animation ou transition CSS, de défilement automatique ; document.getAnimations() vide). Contenu visé absent : non applicable."
+			"note": "Tests 13.8.1 et 13.8.2 : la page ADR-0011 n’a aucun contenu en mouvement ou clignotant déclenché automatiquement : aucun <img>, <svg>, <video>, <audio>, <canvas>, <object>, <embed>, <iframe>, <marquee> ni <blink> ; aucune règle animation, transition ni @keyframes dans les styles ; document.getAnimations() vide ; pas de défilement automatique. Contenu visé absent : non applicable."
 		},
 		{
 			"criterion": "13.8",
 			"page": "https://chikimuras.github.io/rampe/cockpit/journal/2026-10-15/",
 			"status": "NA",
-			"note": "Tests 13.8.1 et 13.8.2 : la page du journal du 2026-10-15 n’a aucun contenu en mouvement ou clignotant déclenché automatiquement (pas d’image animée, de média, d’animation ou transition CSS, de défilement automatique ; document.getAnimations() vide). Contenu visé absent : non applicable."
+			"note": "Tests 13.8.1 et 13.8.2 : la page du journal du 15 octobre 2026 n’a aucun contenu en mouvement ou clignotant déclenché automatiquement : aucun <img>, <svg>, <video>, <audio>, <canvas>, <object>, <embed>, <iframe>, <marquee> ni <blink> ; aucune règle animation, transition ni @keyframes dans les styles ; document.getAnimations() vide ; pas de défilement automatique. Contenu visé absent : non applicable."
 		},
 		{
 			"criterion": "13.8",
 			"page": "https://chikimuras.github.io/rampe/cockpit/docs/roadmap/",
 			"status": "NA",
-			"note": "Tests 13.8.1 et 13.8.2 : la page Roadmap n’a aucun contenu en mouvement ou clignotant déclenché automatiquement (pas d’image animée, de média, d’animation ou transition CSS, de défilement automatique ; document.getAnimations() vide). Contenu visé absent : non applicable."
+			"note": "Tests 13.8.1 et 13.8.2 : la page Roadmap n’a aucun contenu en mouvement ou clignotant déclenché automatiquement : aucun <img>, <svg>, <video>, <audio>, <canvas>, <object>, <embed>, <iframe>, <marquee> ni <blink> ; aucune règle animation, transition ni @keyframes dans les styles ; document.getAnimations() vide ; pas de défilement automatique. Contenu visé absent : non applicable."
 		},
 		{
 			"criterion": "13.8",
 			"page": "https://chikimuras.github.io/rampe/referentiel/5-1/",
 			"status": "NA",
-			"note": "Tests 13.8.1 et 13.8.2 : la fiche du critère 5.1 n’a aucun contenu en mouvement ou clignotant déclenché automatiquement (pas d’image animée, de média, d’animation ou transition CSS, de défilement automatique ; document.getAnimations() vide). Contenu visé absent : non applicable."
+			"note": "Tests 13.8.1 et 13.8.2 : la fiche du critère 5.1 n’a aucun contenu en mouvement ou clignotant déclenché automatiquement : aucun <img>, <svg>, <video>, <audio>, <canvas>, <object>, <embed>, <iframe>, <marquee> ni <blink> ; aucune règle animation, transition ni @keyframes dans les styles ; document.getAnimations() vide ; pas de défilement automatique. Contenu visé absent : non applicable."
 		},
 		{
 			"criterion": "13.8",
 			"page": "https://chikimuras.github.io/rampe/referentiel/1-9/",
 			"status": "NA",
-			"note": "Tests 13.8.1 et 13.8.2 : la fiche du critère 1.9 n’a aucun contenu en mouvement ou clignotant déclenché automatiquement (pas d’image animée, de média, d’animation ou transition CSS, de défilement automatique ; document.getAnimations() vide). Contenu visé absent : non applicable."
+			"note": "Tests 13.8.1 et 13.8.2 : la fiche du critère 1.9 n’a aucun contenu en mouvement ou clignotant déclenché automatiquement : aucun <img>, <svg>, <video>, <audio>, <canvas>, <object>, <embed>, <iframe>, <marquee> ni <blink> ; aucune règle animation, transition ni @keyframes dans les styles ; document.getAnimations() vide ; pas de défilement automatique. Contenu visé absent : non applicable."
+		},
+		{
+			"criterion": "13.8",
+			"page": "https://chikimuras.github.io/rampe/plan-du-site/",
+			"status": "NA",
+			"note": "Tests 13.8.1 et 13.8.2 : le plan du site n’a aucun contenu en mouvement ou clignotant déclenché automatiquement : aucun <img>, <svg>, <video>, <audio>, <canvas>, <object>, <embed>, <iframe>, <marquee> ni <blink> ; aucune règle animation, transition ni @keyframes dans les styles ; document.getAnimations() vide ; pas de défilement automatique. Contenu visé absent : non applicable."
 		},
 		{
 			"criterion": "13.9",
 			"page": "https://chikimuras.github.io/rampe/",
 			"status": "C",
-			"note": "Test 13.9.1 : la page d’accueil consultée en portrait (375×812) puis en paysage (812×375) : aucun verrouillage d’orientation (pas de media query orientation, pas de Screen Orientation API), pas de défilement horizontal, et le même contenu dans les deux modes (même longueur de texte rendu)."
+			"note": "Test 13.9.1 : la page d’accueil consultée en portrait (375×812) puis en paysage (812×375) : aucun verrouillage d’orientation (pas de media query orientation, pas d’API Screen Orientation), pas de défilement horizontal (largeur du document égale à la fenêtre), et le même contenu dans les deux modes (689 caractères de texte rendu dans chacun). Conforme."
 		},
 		{
 			"criterion": "13.9",
 			"page": "https://chikimuras.github.io/rampe/referentiel/",
 			"status": "C",
-			"note": "Test 13.9.1 : la page Référentiel consultée en portrait (375×812) puis en paysage (812×375) : aucun verrouillage d’orientation (pas de media query orientation, pas de Screen Orientation API), pas de défilement horizontal, et le même contenu dans les deux modes (même longueur de texte rendu)."
+			"note": "Test 13.9.1 : la page Référentiel consultée en portrait (375×812) puis en paysage (812×375) : aucun verrouillage d’orientation (pas de media query orientation, pas d’API Screen Orientation), pas de défilement horizontal (largeur du document égale à la fenêtre), et le même contenu dans les deux modes (27973 caractères de texte rendu dans chacun). Conforme."
 		},
 		{
 			"criterion": "13.9",
 			"page": "https://chikimuras.github.io/rampe/referentiel/1-1/",
 			"status": "C",
-			"note": "Test 13.9.1 : la fiche du critère 1.1 consultée en portrait (375×812) puis en paysage (812×375) : aucun verrouillage d’orientation (pas de media query orientation, pas de Screen Orientation API), pas de défilement horizontal, et le même contenu dans les deux modes (même longueur de texte rendu)."
+			"note": "Test 13.9.1 : la fiche du critère 1.1 consultée en portrait (375×812) puis en paysage (812×375) : aucun verrouillage d’orientation (pas de media query orientation, pas d’API Screen Orientation), pas de défilement horizontal (largeur du document égale à la fenêtre), et le même contenu dans les deux modes (4250 caractères de texte rendu dans chacun). Conforme."
 		},
 		{
 			"criterion": "13.9",
 			"page": "https://chikimuras.github.io/rampe/referentiel/glossaire/",
 			"status": "C",
-			"note": "Test 13.9.1 : le glossaire consultée en portrait (375×812) puis en paysage (812×375) : aucun verrouillage d’orientation (pas de media query orientation, pas de Screen Orientation API), pas de défilement horizontal, et le même contenu dans les deux modes (même longueur de texte rendu)."
+			"note": "Test 13.9.1 : le glossaire consultée en portrait (375×812) puis en paysage (812×375) : aucun verrouillage d’orientation (pas de media query orientation, pas d’API Screen Orientation), pas de défilement horizontal (largeur du document égale à la fenêtre), et le même contenu dans les deux modes (93918 caractères de texte rendu dans chacun). Conforme."
 		},
 		{
 			"criterion": "13.9",
 			"page": "https://chikimuras.github.io/rampe/audit/",
 			"status": "C",
-			"note": "Test 13.9.1 : l’audit guidé consulté en portrait (375×812) puis en paysage (812×375) : aucun verrouillage d’orientation (pas de media query orientation, pas de Screen Orientation API), pas de défilement horizontal, et le même contenu dans les deux modes (sous 700 px de large, la liste des critères est repliée dans un <details> « Critères de la thématique », sans perte de contenu)."
+			"note": "Test 13.9.1 : l’audit guidé consultée en portrait (375×812) puis en paysage (812×375) : aucun verrouillage d’orientation (pas de media query orientation, pas d’API Screen Orientation), pas de défilement horizontal (largeur du document égale à la fenêtre), et le même contenu dans les deux modes (19794 caractères de texte rendu dans chacun) ; sous 700 px de large, la liste des critères est repliée dans un <details>, sans perte de contenu. Conforme."
 		},
 		{
 			"criterion": "13.9",
 			"page": "https://chikimuras.github.io/rampe/cockpit/",
 			"status": "C",
-			"note": "Test 13.9.1 : le cockpit consultée en portrait (375×812) puis en paysage (812×375) : aucun verrouillage d’orientation (pas de media query orientation, pas de Screen Orientation API), pas de défilement horizontal, et le même contenu dans les deux modes (même longueur de texte rendu)."
+			"note": "Test 13.9.1 : le cockpit consultée en portrait (375×812) puis en paysage (812×375) : aucun verrouillage d’orientation (pas de media query orientation, pas d’API Screen Orientation), pas de défilement horizontal (largeur du document égale à la fenêtre), et le même contenu dans les deux modes (4631 caractères de texte rendu dans chacun). Conforme."
 		},
 		{
 			"criterion": "13.9",
 			"page": "https://chikimuras.github.io/rampe/cockpit/adr/0011-cli-audit-playwright/",
 			"status": "C",
-			"note": "Test 13.9.1 : la page ADR-0011 consultée en portrait (375×812) puis en paysage (812×375) : aucun verrouillage d’orientation (pas de media query orientation, pas de Screen Orientation API), pas de défilement horizontal, et le même contenu dans les deux modes (même longueur de texte rendu)."
+			"note": "Test 13.9.1 : la page ADR-0011 consultée en portrait (375×812) puis en paysage (812×375) : aucun verrouillage d’orientation (pas de media query orientation, pas d’API Screen Orientation), pas de défilement horizontal (largeur du document égale à la fenêtre), et le même contenu dans les deux modes (3893 caractères de texte rendu dans chacun). Conforme."
 		},
 		{
 			"criterion": "13.9",
 			"page": "https://chikimuras.github.io/rampe/cockpit/journal/2026-10-15/",
 			"status": "C",
-			"note": "Test 13.9.1 : la page du journal du 2026-10-15 consultée en portrait (375×812) puis en paysage (812×375) : aucun verrouillage d’orientation (pas de media query orientation, pas de Screen Orientation API), pas de défilement horizontal, et le même contenu dans les deux modes (même longueur de texte rendu)."
+			"note": "Test 13.9.1 : la page du journal du 15 octobre 2026 consultée en portrait (375×812) puis en paysage (812×375) : aucun verrouillage d’orientation (pas de media query orientation, pas d’API Screen Orientation), pas de défilement horizontal (largeur du document égale à la fenêtre), et le même contenu dans les deux modes (24585 caractères de texte rendu dans chacun). Conforme."
 		},
 		{
 			"criterion": "13.9",
 			"page": "https://chikimuras.github.io/rampe/cockpit/docs/roadmap/",
 			"status": "C",
-			"note": "Test 13.9.1 : la page Roadmap consultée en portrait (375×812) puis en paysage (812×375) : aucun verrouillage d’orientation (pas de media query orientation, pas de Screen Orientation API), pas de défilement horizontal, et le même contenu dans les deux modes (même longueur de texte rendu)."
+			"note": "Test 13.9.1 : la page Roadmap consultée en portrait (375×812) puis en paysage (812×375) : aucun verrouillage d’orientation (pas de media query orientation, pas d’API Screen Orientation), pas de défilement horizontal (largeur du document égale à la fenêtre), et le même contenu dans les deux modes (2313 caractères de texte rendu dans chacun). Conforme."
 		},
 		{
 			"criterion": "13.9",
 			"page": "https://chikimuras.github.io/rampe/referentiel/5-1/",
 			"status": "C",
-			"note": "Test 13.9.1 : la fiche du critère 5.1 consultée en portrait (375×812) puis en paysage (812×375) : aucun verrouillage d’orientation (pas de media query orientation, pas de Screen Orientation API), pas de défilement horizontal, et le même contenu dans les deux modes (même longueur de texte rendu)."
+			"note": "Test 13.9.1 : la fiche du critère 5.1 consultée en portrait (375×812) puis en paysage (812×375) : aucun verrouillage d’orientation (pas de media query orientation, pas d’API Screen Orientation), pas de défilement horizontal (largeur du document égale à la fenêtre), et le même contenu dans les deux modes (1677 caractères de texte rendu dans chacun). Conforme."
 		},
 		{
 			"criterion": "13.9",
 			"page": "https://chikimuras.github.io/rampe/referentiel/1-9/",
 			"status": "C",
-			"note": "Test 13.9.1 : la fiche du critère 1.9 consultée en portrait (375×812) puis en paysage (812×375) : aucun verrouillage d’orientation (pas de media query orientation, pas de Screen Orientation API), pas de défilement horizontal, et le même contenu dans les deux modes (même longueur de texte rendu)."
+			"note": "Test 13.9.1 : la fiche du critère 1.9 consultée en portrait (375×812) puis en paysage (812×375) : aucun verrouillage d’orientation (pas de media query orientation, pas d’API Screen Orientation), pas de défilement horizontal (largeur du document égale à la fenêtre), et le même contenu dans les deux modes (5688 caractères de texte rendu dans chacun). Conforme."
+		},
+		{
+			"criterion": "13.9",
+			"page": "https://chikimuras.github.io/rampe/plan-du-site/",
+			"status": "C",
+			"note": "Test 13.9.1 : le plan du site consultée en portrait (375×812) puis en paysage (812×375) : aucun verrouillage d’orientation (pas de media query orientation, pas d’API Screen Orientation), pas de défilement horizontal (largeur du document égale à la fenêtre), et le même contenu dans les deux modes (17334 caractères de texte rendu dans chacun). Conforme."
 		},
 		{
 			"criterion": "13.10",
 			"page": "https://chikimuras.github.io/rampe/",
 			"status": "NA",
-			"note": "Tests 13.10.1 et 13.10.2 : la page d’accueil n’offre aucune fonctionnalité de l’auteur reposant sur un geste multipoint ou sur une trajectoire (pas de gestionnaire touch, pointer ou de glisser-déposer). Le défilement et le zoom relèvent du navigateur. Non applicable."
+			"note": "Tests 13.10.1 et 13.10.2 : la page d’accueil n’offre aucune fonctionnalité de l’auteur reposant sur un geste multipoint ou sur une trajectoire (aucun gestionnaire touch, pointer, drag ni glisser-déposer dans le code du site). Le défilement et le zoom relèvent du navigateur. Non applicable."
 		},
 		{
 			"criterion": "13.10",
 			"page": "https://chikimuras.github.io/rampe/referentiel/",
 			"status": "NA",
-			"note": "Tests 13.10.1 et 13.10.2 : la page Référentiel n’offre aucune fonctionnalité de l’auteur reposant sur un geste multipoint ou sur une trajectoire (pas de gestionnaire touch, pointer ou de glisser-déposer). Le défilement et le zoom relèvent du navigateur. Non applicable."
+			"note": "Tests 13.10.1 et 13.10.2 : la page Référentiel n’offre aucune fonctionnalité de l’auteur reposant sur un geste multipoint ou sur une trajectoire (aucun gestionnaire touch, pointer, drag ni glisser-déposer dans le code du site). Le défilement et le zoom relèvent du navigateur. Non applicable."
 		},
 		{
 			"criterion": "13.10",
 			"page": "https://chikimuras.github.io/rampe/referentiel/1-1/",
 			"status": "NA",
-			"note": "Tests 13.10.1 et 13.10.2 : la fiche du critère 1.1 n’offre aucune fonctionnalité de l’auteur reposant sur un geste multipoint ou sur une trajectoire (pas de gestionnaire touch, pointer ou de glisser-déposer). Le défilement et le zoom relèvent du navigateur. Non applicable."
+			"note": "Tests 13.10.1 et 13.10.2 : la fiche du critère 1.1 n’offre aucune fonctionnalité de l’auteur reposant sur un geste multipoint ou sur une trajectoire (aucun gestionnaire touch, pointer, drag ni glisser-déposer dans le code du site). Le défilement et le zoom relèvent du navigateur. Non applicable."
 		},
 		{
 			"criterion": "13.10",
 			"page": "https://chikimuras.github.io/rampe/referentiel/glossaire/",
 			"status": "NA",
-			"note": "Tests 13.10.1 et 13.10.2 : le glossaire n’offre aucune fonctionnalité de l’auteur reposant sur un geste multipoint ou sur une trajectoire (pas de gestionnaire touch, pointer ou de glisser-déposer). Le défilement et le zoom relèvent du navigateur. Non applicable."
+			"note": "Tests 13.10.1 et 13.10.2 : le glossaire n’offre aucune fonctionnalité de l’auteur reposant sur un geste multipoint ou sur une trajectoire (aucun gestionnaire touch, pointer, drag ni glisser-déposer dans le code du site). Le défilement et le zoom relèvent du navigateur. Non applicable."
 		},
 		{
 			"criterion": "13.10",
 			"page": "https://chikimuras.github.io/rampe/audit/",
 			"status": "NA",
-			"note": "Tests 13.10.1 et 13.10.2 : l’audit guidé n’offre aucune fonctionnalité de l’auteur reposant sur un geste multipoint ou sur une trajectoire (pas de gestionnaire touch, pointer ou de glisser-déposer : les champs fichier s’utilisent par le sélecteur natif). Le défilement et le zoom relèvent du navigateur. Non applicable."
+			"note": "Tests 13.10.1 et 13.10.2 : l’audit guidé n’offre aucune fonctionnalité de l’auteur reposant sur un geste multipoint ou sur une trajectoire (aucun gestionnaire touch, pointer, drag ni glisser-déposer dans le code du site ; les champs fichier s’utilisent par le sélecteur natif). Le défilement et le zoom relèvent du navigateur. Non applicable."
 		},
 		{
 			"criterion": "13.10",
 			"page": "https://chikimuras.github.io/rampe/cockpit/",
 			"status": "NA",
-			"note": "Tests 13.10.1 et 13.10.2 : le cockpit n’offre aucune fonctionnalité de l’auteur reposant sur un geste multipoint ou sur une trajectoire (pas de gestionnaire touch, pointer ou de glisser-déposer). Le défilement et le zoom relèvent du navigateur. Non applicable."
+			"note": "Tests 13.10.1 et 13.10.2 : le cockpit n’offre aucune fonctionnalité de l’auteur reposant sur un geste multipoint ou sur une trajectoire (aucun gestionnaire touch, pointer, drag ni glisser-déposer dans le code du site). Le défilement et le zoom relèvent du navigateur. Non applicable."
 		},
 		{
 			"criterion": "13.10",
 			"page": "https://chikimuras.github.io/rampe/cockpit/adr/0011-cli-audit-playwright/",
 			"status": "NA",
-			"note": "Tests 13.10.1 et 13.10.2 : la page ADR-0011 n’offre aucune fonctionnalité de l’auteur reposant sur un geste multipoint ou sur une trajectoire (pas de gestionnaire touch, pointer ou de glisser-déposer). Le défilement et le zoom relèvent du navigateur. Non applicable."
+			"note": "Tests 13.10.1 et 13.10.2 : la page ADR-0011 n’offre aucune fonctionnalité de l’auteur reposant sur un geste multipoint ou sur une trajectoire (aucun gestionnaire touch, pointer, drag ni glisser-déposer dans le code du site). Le défilement et le zoom relèvent du navigateur. Non applicable."
 		},
 		{
 			"criterion": "13.10",
 			"page": "https://chikimuras.github.io/rampe/cockpit/journal/2026-10-15/",
 			"status": "NA",
-			"note": "Tests 13.10.1 et 13.10.2 : la page du journal du 2026-10-15 n’offre aucune fonctionnalité de l’auteur reposant sur un geste multipoint ou sur une trajectoire (pas de gestionnaire touch, pointer ou de glisser-déposer). Le défilement et le zoom relèvent du navigateur. Non applicable."
+			"note": "Tests 13.10.1 et 13.10.2 : la page du journal du 15 octobre 2026 n’offre aucune fonctionnalité de l’auteur reposant sur un geste multipoint ou sur une trajectoire (aucun gestionnaire touch, pointer, drag ni glisser-déposer dans le code du site). Le défilement et le zoom relèvent du navigateur. Non applicable."
 		},
 		{
 			"criterion": "13.10",
 			"page": "https://chikimuras.github.io/rampe/cockpit/docs/roadmap/",
 			"status": "NA",
-			"note": "Tests 13.10.1 et 13.10.2 : la page Roadmap n’offre aucune fonctionnalité de l’auteur reposant sur un geste multipoint ou sur une trajectoire (pas de gestionnaire touch, pointer ou de glisser-déposer). Le défilement et le zoom relèvent du navigateur. Non applicable."
+			"note": "Tests 13.10.1 et 13.10.2 : la page Roadmap n’offre aucune fonctionnalité de l’auteur reposant sur un geste multipoint ou sur une trajectoire (aucun gestionnaire touch, pointer, drag ni glisser-déposer dans le code du site). Le défilement et le zoom relèvent du navigateur. Non applicable."
 		},
 		{
 			"criterion": "13.10",
 			"page": "https://chikimuras.github.io/rampe/referentiel/5-1/",
 			"status": "NA",
-			"note": "Tests 13.10.1 et 13.10.2 : la fiche du critère 5.1 n’offre aucune fonctionnalité de l’auteur reposant sur un geste multipoint ou sur une trajectoire (pas de gestionnaire touch, pointer ou de glisser-déposer). Le défilement et le zoom relèvent du navigateur. Non applicable."
+			"note": "Tests 13.10.1 et 13.10.2 : la fiche du critère 5.1 n’offre aucune fonctionnalité de l’auteur reposant sur un geste multipoint ou sur une trajectoire (aucun gestionnaire touch, pointer, drag ni glisser-déposer dans le code du site). Le défilement et le zoom relèvent du navigateur. Non applicable."
 		},
 		{
 			"criterion": "13.10",
 			"page": "https://chikimuras.github.io/rampe/referentiel/1-9/",
 			"status": "NA",
-			"note": "Tests 13.10.1 et 13.10.2 : la fiche du critère 1.9 n’offre aucune fonctionnalité de l’auteur reposant sur un geste multipoint ou sur une trajectoire (pas de gestionnaire touch, pointer ou de glisser-déposer). Le défilement et le zoom relèvent du navigateur. Non applicable."
+			"note": "Tests 13.10.1 et 13.10.2 : la fiche du critère 1.9 n’offre aucune fonctionnalité de l’auteur reposant sur un geste multipoint ou sur une trajectoire (aucun gestionnaire touch, pointer, drag ni glisser-déposer dans le code du site). Le défilement et le zoom relèvent du navigateur. Non applicable."
+		},
+		{
+			"criterion": "13.10",
+			"page": "https://chikimuras.github.io/rampe/plan-du-site/",
+			"status": "NA",
+			"note": "Tests 13.10.1 et 13.10.2 : le plan du site n’offre aucune fonctionnalité de l’auteur reposant sur un geste multipoint ou sur une trajectoire (aucun gestionnaire touch, pointer, drag ni glisser-déposer dans le code du site). Le défilement et le zoom relèvent du navigateur. Non applicable."
 		},
 		{
 			"criterion": "13.11",
 			"page": "https://chikimuras.github.io/rampe/",
 			"status": "C",
-			"note": "Test 13.11.1 : les actions de la page d’accueil déclenchées au pointeur sont des liens natifs (et des <summary> le cas échéant), activés au relâchement du pointeur ; aucun gestionnaire mousedown, pointerdown ou touchstart dans le code du site."
+			"note": "Test 13.11.1 : les actions de la page d’accueil déclenchées au pointeur sont des liens natifs, activés au relâchement du pointeur ; aucun gestionnaire mousedown, pointerdown ou touchstart dans le code du site. Conforme."
 		},
 		{
 			"criterion": "13.11",
 			"page": "https://chikimuras.github.io/rampe/referentiel/",
 			"status": "C",
-			"note": "Test 13.11.1 : les actions de la page Référentiel déclenchées au pointeur sont des liens natifs (et des <summary> le cas échéant), activés au relâchement du pointeur ; aucun gestionnaire mousedown, pointerdown ou touchstart dans le code du site."
+			"note": "Test 13.11.1 : les actions de la page Référentiel déclenchées au pointeur sont des liens natifs, activés au relâchement du pointeur ; aucun gestionnaire mousedown, pointerdown ou touchstart dans le code du site. Conforme."
 		},
 		{
 			"criterion": "13.11",
 			"page": "https://chikimuras.github.io/rampe/referentiel/1-1/",
 			"status": "C",
-			"note": "Test 13.11.1 : les actions de la fiche du critère 1.1 déclenchées au pointeur sont des liens natifs (et des <summary> le cas échéant), activés au relâchement du pointeur ; aucun gestionnaire mousedown, pointerdown ou touchstart dans le code du site."
+			"note": "Test 13.11.1 : les actions de la fiche du critère 1.1 déclenchées au pointeur sont des liens natifs et des <summary>, activés au relâchement du pointeur ; aucun gestionnaire mousedown, pointerdown ou touchstart dans le code du site. Conforme."
 		},
 		{
 			"criterion": "13.11",
 			"page": "https://chikimuras.github.io/rampe/referentiel/glossaire/",
 			"status": "C",
-			"note": "Test 13.11.1 : les actions du glossaire déclenchées au pointeur sont des liens natifs (et des <summary> le cas échéant), activés au relâchement du pointeur ; aucun gestionnaire mousedown, pointerdown ou touchstart dans le code du site."
+			"note": "Test 13.11.1 : les actions de le glossaire déclenchées au pointeur sont des liens natifs, activés au relâchement du pointeur ; aucun gestionnaire mousedown, pointerdown ou touchstart dans le code du site. Conforme."
 		},
 		{
 			"criterion": "13.11",
 			"page": "https://chikimuras.github.io/rampe/audit/",
 			"status": "C",
-			"note": "Test 13.11.1 : les actions de l’audit guidé déclenchées au pointeur sont des liens, des boutons, des <summary> et des champs natifs, avec des gestionnaires click/change, activés au relâchement du pointeur ; aucun gestionnaire mousedown, pointerdown ou touchstart dans le code du site."
+			"note": "Test 13.11.1 : les actions de l’audit guidé déclenchées au pointeur sont des liens, des boutons, des <summary> et des champs natifs, avec des gestionnaires click/change/input, activés au relâchement du pointeur ; aucun gestionnaire mousedown, pointerdown ou touchstart dans le code du site. Conforme."
 		},
 		{
 			"criterion": "13.11",
 			"page": "https://chikimuras.github.io/rampe/cockpit/",
 			"status": "C",
-			"note": "Test 13.11.1 : les actions du cockpit déclenchées au pointeur sont des liens natifs (et des <summary> le cas échéant), activés au relâchement du pointeur ; aucun gestionnaire mousedown, pointerdown ou touchstart dans le code du site."
+			"note": "Test 13.11.1 : les actions de le cockpit déclenchées au pointeur sont des liens natifs, activés au relâchement du pointeur ; aucun gestionnaire mousedown, pointerdown ou touchstart dans le code du site. Conforme."
 		},
 		{
 			"criterion": "13.11",
 			"page": "https://chikimuras.github.io/rampe/cockpit/adr/0011-cli-audit-playwright/",
 			"status": "C",
-			"note": "Test 13.11.1 : les actions de la page ADR-0011 déclenchées au pointeur sont des liens natifs (et des <summary> le cas échéant), activés au relâchement du pointeur ; aucun gestionnaire mousedown, pointerdown ou touchstart dans le code du site."
+			"note": "Test 13.11.1 : les actions de la page ADR-0011 déclenchées au pointeur sont des liens natifs, activés au relâchement du pointeur ; aucun gestionnaire mousedown, pointerdown ou touchstart dans le code du site. Conforme."
 		},
 		{
 			"criterion": "13.11",
 			"page": "https://chikimuras.github.io/rampe/cockpit/journal/2026-10-15/",
 			"status": "C",
-			"note": "Test 13.11.1 : les actions de la page du journal du 2026-10-15 déclenchées au pointeur sont des liens natifs (et des <summary> le cas échéant), activés au relâchement du pointeur ; aucun gestionnaire mousedown, pointerdown ou touchstart dans le code du site."
+			"note": "Test 13.11.1 : les actions de la page du journal du 15 octobre 2026 déclenchées au pointeur sont des liens natifs, activés au relâchement du pointeur ; aucun gestionnaire mousedown, pointerdown ou touchstart dans le code du site. Conforme."
 		},
 		{
 			"criterion": "13.11",
 			"page": "https://chikimuras.github.io/rampe/cockpit/docs/roadmap/",
 			"status": "C",
-			"note": "Test 13.11.1 : les actions de la page Roadmap déclenchées au pointeur sont des liens natifs (et des <summary> le cas échéant), activés au relâchement du pointeur ; aucun gestionnaire mousedown, pointerdown ou touchstart dans le code du site."
+			"note": "Test 13.11.1 : les actions de la page Roadmap déclenchées au pointeur sont des liens natifs, activés au relâchement du pointeur ; aucun gestionnaire mousedown, pointerdown ou touchstart dans le code du site. Conforme."
 		},
 		{
 			"criterion": "13.11",
 			"page": "https://chikimuras.github.io/rampe/referentiel/5-1/",
 			"status": "C",
-			"note": "Test 13.11.1 : les actions de la fiche du critère 5.1 déclenchées au pointeur sont des liens natifs (et des <summary> le cas échéant), activés au relâchement du pointeur ; aucun gestionnaire mousedown, pointerdown ou touchstart dans le code du site."
+			"note": "Test 13.11.1 : les actions de la fiche du critère 5.1 déclenchées au pointeur sont des liens natifs et des <summary>, activés au relâchement du pointeur ; aucun gestionnaire mousedown, pointerdown ou touchstart dans le code du site. Conforme."
 		},
 		{
 			"criterion": "13.11",
 			"page": "https://chikimuras.github.io/rampe/referentiel/1-9/",
 			"status": "C",
-			"note": "Test 13.11.1 : les actions de la fiche du critère 1.9 déclenchées au pointeur sont des liens natifs (et des <summary> le cas échéant), activés au relâchement du pointeur ; aucun gestionnaire mousedown, pointerdown ou touchstart dans le code du site."
+			"note": "Test 13.11.1 : les actions de la fiche du critère 1.9 déclenchées au pointeur sont des liens natifs et des <summary>, activés au relâchement du pointeur ; aucun gestionnaire mousedown, pointerdown ou touchstart dans le code du site. Conforme."
+		},
+		{
+			"criterion": "13.11",
+			"page": "https://chikimuras.github.io/rampe/plan-du-site/",
+			"status": "C",
+			"note": "Test 13.11.1 : les actions de le plan du site déclenchées au pointeur sont des liens natifs, activés au relâchement du pointeur ; aucun gestionnaire mousedown, pointerdown ou touchstart dans le code du site. Conforme."
 		},
 		{
 			"criterion": "13.12",
 			"page": "https://chikimuras.github.io/rampe/",
 			"status": "NA",
-			"note": "Tests 13.12.1 à 13.12.3 : la page d’accueil n’utilise aucune détection de mouvement de l’appareil (pas de devicemotion, deviceorientation ni capteur) ni geste en direction de l’appareil. Contenu visé absent : non applicable."
+			"note": "Tests 13.12.1 à 13.12.3 : la page d’accueil n’utilise aucune détection de mouvement de l’appareil (aucun devicemotion, deviceorientation ni capteur dans le code du site) ni geste en direction de l’appareil. Contenu visé absent : non applicable."
 		},
 		{
 			"criterion": "13.12",
 			"page": "https://chikimuras.github.io/rampe/referentiel/",
 			"status": "NA",
-			"note": "Tests 13.12.1 à 13.12.3 : la page Référentiel n’utilise aucune détection de mouvement de l’appareil (pas de devicemotion, deviceorientation ni capteur) ni geste en direction de l’appareil. Contenu visé absent : non applicable."
+			"note": "Tests 13.12.1 à 13.12.3 : la page Référentiel n’utilise aucune détection de mouvement de l’appareil (aucun devicemotion, deviceorientation ni capteur dans le code du site) ni geste en direction de l’appareil. Contenu visé absent : non applicable."
 		},
 		{
 			"criterion": "13.12",
 			"page": "https://chikimuras.github.io/rampe/referentiel/1-1/",
 			"status": "NA",
-			"note": "Tests 13.12.1 à 13.12.3 : la fiche du critère 1.1 n’utilise aucune détection de mouvement de l’appareil (pas de devicemotion, deviceorientation ni capteur) ni geste en direction de l’appareil. Contenu visé absent : non applicable."
+			"note": "Tests 13.12.1 à 13.12.3 : la fiche du critère 1.1 n’utilise aucune détection de mouvement de l’appareil (aucun devicemotion, deviceorientation ni capteur dans le code du site) ni geste en direction de l’appareil. Contenu visé absent : non applicable."
 		},
 		{
 			"criterion": "13.12",
 			"page": "https://chikimuras.github.io/rampe/referentiel/glossaire/",
 			"status": "NA",
-			"note": "Tests 13.12.1 à 13.12.3 : le glossaire n’utilise aucune détection de mouvement de l’appareil (pas de devicemotion, deviceorientation ni capteur) ni geste en direction de l’appareil. Contenu visé absent : non applicable."
+			"note": "Tests 13.12.1 à 13.12.3 : le glossaire n’utilise aucune détection de mouvement de l’appareil (aucun devicemotion, deviceorientation ni capteur dans le code du site) ni geste en direction de l’appareil. Contenu visé absent : non applicable."
 		},
 		{
 			"criterion": "13.12",
 			"page": "https://chikimuras.github.io/rampe/audit/",
 			"status": "NA",
-			"note": "Tests 13.12.1 à 13.12.3 : l’audit guidé n’utilise aucune détection de mouvement de l’appareil (pas de devicemotion, deviceorientation ni capteur) ni geste en direction de l’appareil. Contenu visé absent : non applicable."
+			"note": "Tests 13.12.1 à 13.12.3 : l’audit guidé n’utilise aucune détection de mouvement de l’appareil (aucun devicemotion, deviceorientation ni capteur dans le code du site) ni geste en direction de l’appareil. Contenu visé absent : non applicable."
 		},
 		{
 			"criterion": "13.12",
 			"page": "https://chikimuras.github.io/rampe/cockpit/",
 			"status": "NA",
-			"note": "Tests 13.12.1 à 13.12.3 : le cockpit n’utilise aucune détection de mouvement de l’appareil (pas de devicemotion, deviceorientation ni capteur) ni geste en direction de l’appareil. Contenu visé absent : non applicable."
+			"note": "Tests 13.12.1 à 13.12.3 : le cockpit n’utilise aucune détection de mouvement de l’appareil (aucun devicemotion, deviceorientation ni capteur dans le code du site) ni geste en direction de l’appareil. Contenu visé absent : non applicable."
 		},
 		{
 			"criterion": "13.12",
 			"page": "https://chikimuras.github.io/rampe/cockpit/adr/0011-cli-audit-playwright/",
 			"status": "NA",
-			"note": "Tests 13.12.1 à 13.12.3 : la page ADR-0011 n’utilise aucune détection de mouvement de l’appareil (pas de devicemotion, deviceorientation ni capteur) ni geste en direction de l’appareil. Contenu visé absent : non applicable."
+			"note": "Tests 13.12.1 à 13.12.3 : la page ADR-0011 n’utilise aucune détection de mouvement de l’appareil (aucun devicemotion, deviceorientation ni capteur dans le code du site) ni geste en direction de l’appareil. Contenu visé absent : non applicable."
 		},
 		{
 			"criterion": "13.12",
 			"page": "https://chikimuras.github.io/rampe/cockpit/journal/2026-10-15/",
 			"status": "NA",
-			"note": "Tests 13.12.1 à 13.12.3 : la page du journal du 2026-10-15 n’utilise aucune détection de mouvement de l’appareil (pas de devicemotion, deviceorientation ni capteur) ni geste en direction de l’appareil. Contenu visé absent : non applicable."
+			"note": "Tests 13.12.1 à 13.12.3 : la page du journal du 15 octobre 2026 n’utilise aucune détection de mouvement de l’appareil (aucun devicemotion, deviceorientation ni capteur dans le code du site) ni geste en direction de l’appareil. Contenu visé absent : non applicable."
 		},
 		{
 			"criterion": "13.12",
 			"page": "https://chikimuras.github.io/rampe/cockpit/docs/roadmap/",
 			"status": "NA",
-			"note": "Tests 13.12.1 à 13.12.3 : la page Roadmap n’utilise aucune détection de mouvement de l’appareil (pas de devicemotion, deviceorientation ni capteur) ni geste en direction de l’appareil. Contenu visé absent : non applicable."
+			"note": "Tests 13.12.1 à 13.12.3 : la page Roadmap n’utilise aucune détection de mouvement de l’appareil (aucun devicemotion, deviceorientation ni capteur dans le code du site) ni geste en direction de l’appareil. Contenu visé absent : non applicable."
 		},
 		{
 			"criterion": "13.12",
 			"page": "https://chikimuras.github.io/rampe/referentiel/5-1/",
 			"status": "NA",
-			"note": "Tests 13.12.1 à 13.12.3 : la fiche du critère 5.1 n’utilise aucune détection de mouvement de l’appareil (pas de devicemotion, deviceorientation ni capteur) ni geste en direction de l’appareil. Contenu visé absent : non applicable."
+			"note": "Tests 13.12.1 à 13.12.3 : la fiche du critère 5.1 n’utilise aucune détection de mouvement de l’appareil (aucun devicemotion, deviceorientation ni capteur dans le code du site) ni geste en direction de l’appareil. Contenu visé absent : non applicable."
 		},
 		{
 			"criterion": "13.12",
 			"page": "https://chikimuras.github.io/rampe/referentiel/1-9/",
 			"status": "NA",
-			"note": "Tests 13.12.1 à 13.12.3 : la fiche du critère 1.9 n’utilise aucune détection de mouvement de l’appareil (pas de devicemotion, deviceorientation ni capteur) ni geste en direction de l’appareil. Contenu visé absent : non applicable."
+			"note": "Tests 13.12.1 à 13.12.3 : la fiche du critère 1.9 n’utilise aucune détection de mouvement de l’appareil (aucun devicemotion, deviceorientation ni capteur dans le code du site) ni geste en direction de l’appareil. Contenu visé absent : non applicable."
+		},
+		{
+			"criterion": "13.12",
+			"page": "https://chikimuras.github.io/rampe/plan-du-site/",
+			"status": "NA",
+			"note": "Tests 13.12.1 à 13.12.3 : le plan du site n’utilise aucune détection de mouvement de l’appareil (aucun devicemotion, deviceorientation ni capteur dans le code du site) ni geste en direction de l’appareil. Contenu visé absent : non applicable."
 		}
 	]
 }
