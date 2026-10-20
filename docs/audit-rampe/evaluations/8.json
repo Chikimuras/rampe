@@ -1,138 +1,150 @@
 {
 	"evaluator": "Claude (IA)",
-	"date": "2026-10-16",
+	"date": "2026-10-20",
 	"entries": [
 		{
 			"criterion": "8.1",
 			"page": "https://chikimuras.github.io/rampe/",
 			"status": "C",
-			"note": "Tests 8.1.1, 8.1.2 et 8.1.3 : Page examinée : page d’accueil (/). Le HTML servi commence par <!DOCTYPE html> (premier nœud du document, avant <html> ; document.doctype.name = « html », sans identifiant public ni système). Doctype HTML5 présent, valide et bien placé."
+			"note": "Tests 8.1.1, 8.1.2 et 8.1.3 : Page examinée : page d’accueil (/). Le HTML servi commence par <!DOCTYPE html> (document.doctype.name = « html », sans identifiant public ni système, premier nœud du document, avant la balise <html>). Doctype HTML5 présent, valide et bien placé."
 		},
 		{
 			"criterion": "8.1",
 			"page": "https://chikimuras.github.io/rampe/referentiel/",
 			"status": "C",
-			"note": "Tests 8.1.1, 8.1.2 et 8.1.3 : Page examinée : page Référentiel (/referentiel/). Le HTML servi commence par <!DOCTYPE html> (premier nœud du document, avant <html> ; document.doctype.name = « html », sans identifiant public ni système). Doctype HTML5 présent, valide et bien placé."
+			"note": "Tests 8.1.1, 8.1.2 et 8.1.3 : Page examinée : page Référentiel (/referentiel/). Le HTML servi commence par <!DOCTYPE html> (document.doctype.name = « html », sans identifiant public ni système, premier nœud du document, avant la balise <html>). Doctype HTML5 présent, valide et bien placé."
 		},
 		{
 			"criterion": "8.1",
 			"page": "https://chikimuras.github.io/rampe/referentiel/1-1/",
 			"status": "C",
-			"note": "Tests 8.1.1, 8.1.2 et 8.1.3 : Page examinée : fiche du critère 1.1 (/referentiel/1-1/). Le HTML servi commence par <!DOCTYPE html> (premier nœud du document, avant <html> ; document.doctype.name = « html », sans identifiant public ni système). Doctype HTML5 présent, valide et bien placé."
+			"note": "Tests 8.1.1, 8.1.2 et 8.1.3 : Page examinée : fiche du critère 1.1 (/referentiel/1-1/). Le HTML servi commence par <!DOCTYPE html> (document.doctype.name = « html », sans identifiant public ni système, premier nœud du document, avant la balise <html>). Doctype HTML5 présent, valide et bien placé."
 		},
 		{
 			"criterion": "8.1",
 			"page": "https://chikimuras.github.io/rampe/referentiel/glossaire/",
 			"status": "C",
-			"note": "Tests 8.1.1, 8.1.2 et 8.1.3 : Page examinée : page Glossaire (/referentiel/glossaire/). Le HTML servi commence par <!DOCTYPE html> (premier nœud du document, avant <html> ; document.doctype.name = « html », sans identifiant public ni système). Doctype HTML5 présent, valide et bien placé."
+			"note": "Tests 8.1.1, 8.1.2 et 8.1.3 : Page examinée : page Glossaire (/referentiel/glossaire/). Le HTML servi commence par <!DOCTYPE html> (document.doctype.name = « html », sans identifiant public ni système, premier nœud du document, avant la balise <html>). Doctype HTML5 présent, valide et bien placé."
 		},
 		{
 			"criterion": "8.1",
 			"page": "https://chikimuras.github.io/rampe/audit/",
 			"status": "C",
-			"note": "Tests 8.1.1, 8.1.2 et 8.1.3 : le HTML servi commence par <!DOCTYPE html> (document.doctype.name = « html », sans identifiant public ni système, premier nœud du document, avant la balise <html>). Doctype HTML5 présent, valide et bien placé."
+			"note": "Tests 8.1.1, 8.1.2 et 8.1.3 : Page examinée : audit guidé (/audit/). Le HTML servi commence par <!DOCTYPE html> (document.doctype.name = « html », sans identifiant public ni système, premier nœud du document, avant la balise <html>). Doctype HTML5 présent, valide et bien placé."
 		},
 		{
 			"criterion": "8.1",
 			"page": "https://chikimuras.github.io/rampe/cockpit/",
 			"status": "C",
-			"note": "Tests 8.1.1, 8.1.2 et 8.1.3 : Page examinée : page Cockpit (/cockpit/). Le HTML servi commence par <!DOCTYPE html> (premier nœud du document, avant <html> ; document.doctype.name = « html », sans identifiant public ni système). Doctype HTML5 présent, valide et bien placé."
+			"note": "Tests 8.1.1, 8.1.2 et 8.1.3 : Page examinée : page Cockpit (/cockpit/). Le HTML servi commence par <!DOCTYPE html> (document.doctype.name = « html », sans identifiant public ni système, premier nœud du document, avant la balise <html>). Doctype HTML5 présent, valide et bien placé."
 		},
 		{
 			"criterion": "8.1",
 			"page": "https://chikimuras.github.io/rampe/cockpit/adr/0011-cli-audit-playwright/",
 			"status": "C",
-			"note": "Tests 8.1.1, 8.1.2 et 8.1.3 : Page examinée : page ADR-0011 (/cockpit/adr/0011-cli-audit-playwright/). Le HTML servi commence par <!DOCTYPE html> (premier nœud du document, avant <html> ; document.doctype.name = « html », sans identifiant public ni système). Doctype HTML5 présent, valide et bien placé."
+			"note": "Tests 8.1.1, 8.1.2 et 8.1.3 : Page examinée : page ADR-0011 (/cockpit/adr/0011-cli-audit-playwright/). Le HTML servi commence par <!DOCTYPE html> (document.doctype.name = « html », sans identifiant public ni système, premier nœud du document, avant la balise <html>). Doctype HTML5 présent, valide et bien placé."
 		},
 		{
 			"criterion": "8.1",
 			"page": "https://chikimuras.github.io/rampe/cockpit/journal/2026-10-15/",
 			"status": "C",
-			"note": "Tests 8.1.1, 8.1.2 et 8.1.3 : Page examinée : page du journal du 15/10/2026 (/cockpit/journal/2026-10-15/). Le HTML servi commence par <!DOCTYPE html> (premier nœud du document, avant <html> ; document.doctype.name = « html », sans identifiant public ni système). Doctype HTML5 présent, valide et bien placé."
+			"note": "Tests 8.1.1, 8.1.2 et 8.1.3 : Page examinée : page du journal du 15/10/2026 (/cockpit/journal/2026-10-15/). Le HTML servi commence par <!DOCTYPE html> (document.doctype.name = « html », sans identifiant public ni système, premier nœud du document, avant la balise <html>). Doctype HTML5 présent, valide et bien placé."
 		},
 		{
 			"criterion": "8.1",
 			"page": "https://chikimuras.github.io/rampe/cockpit/docs/roadmap/",
 			"status": "C",
-			"note": "Tests 8.1.1, 8.1.2 et 8.1.3 : Page examinée : page Roadmap (/cockpit/docs/roadmap/). Le HTML servi commence par <!DOCTYPE html> (premier nœud du document, avant <html> ; document.doctype.name = « html », sans identifiant public ni système). Doctype HTML5 présent, valide et bien placé."
+			"note": "Tests 8.1.1, 8.1.2 et 8.1.3 : Page examinée : page Roadmap (/cockpit/docs/roadmap/). Le HTML servi commence par <!DOCTYPE html> (document.doctype.name = « html », sans identifiant public ni système, premier nœud du document, avant la balise <html>). Doctype HTML5 présent, valide et bien placé."
 		},
 		{
 			"criterion": "8.1",
 			"page": "https://chikimuras.github.io/rampe/referentiel/5-1/",
 			"status": "C",
-			"note": "Tests 8.1.1, 8.1.2 et 8.1.3 : Page examinée : fiche du critère 5.1 (/referentiel/5-1/). Le HTML servi commence par <!DOCTYPE html> (premier nœud du document, avant <html> ; document.doctype.name = « html », sans identifiant public ni système). Doctype HTML5 présent, valide et bien placé."
+			"note": "Tests 8.1.1, 8.1.2 et 8.1.3 : Page examinée : fiche du critère 5.1 (/referentiel/5-1/). Le HTML servi commence par <!DOCTYPE html> (document.doctype.name = « html », sans identifiant public ni système, premier nœud du document, avant la balise <html>). Doctype HTML5 présent, valide et bien placé."
 		},
 		{
 			"criterion": "8.1",
 			"page": "https://chikimuras.github.io/rampe/referentiel/1-9/",
 			"status": "C",
-			"note": "Tests 8.1.1, 8.1.2 et 8.1.3 : Page examinée : fiche du critère 1.9 (/referentiel/1-9/). Le HTML servi commence par <!DOCTYPE html> (premier nœud du document, avant <html> ; document.doctype.name = « html », sans identifiant public ni système). Doctype HTML5 présent, valide et bien placé."
+			"note": "Tests 8.1.1, 8.1.2 et 8.1.3 : Page examinée : fiche du critère 1.9 (/referentiel/1-9/). Le HTML servi commence par <!DOCTYPE html> (document.doctype.name = « html », sans identifiant public ni système, premier nœud du document, avant la balise <html>). Doctype HTML5 présent, valide et bien placé."
+		},
+		{
+			"criterion": "8.1",
+			"page": "https://chikimuras.github.io/rampe/plan-du-site/",
+			"status": "C",
+			"note": "Tests 8.1.1, 8.1.2 et 8.1.3 : Page examinée : page Plan du site (/plan-du-site/). Le HTML servi commence par <!DOCTYPE html> (document.doctype.name = « html », sans identifiant public ni système, premier nœud du document, avant la balise <html>). Doctype HTML5 présent, valide et bien placé."
 		},
 		{
 			"criterion": "8.2",
 			"page": "https://chikimuras.github.io/rampe/",
 			"status": "C",
-			"note": "Test 8.2.1 : Page examinée : page d’accueil (/). Validateur W3C Nu (vnu-jar 26.10.12, hors ligne) sur le HTML servi : 0 erreur. La page n’a pas de JavaScript : le code généré est le code servi. Vérifié lors de la révision dans Chromium : 0 id en double. Le contrôle vnu a été fait avec vnu-jar 26.10.12 hors dépôt ; il n’a pas été rejoué lors de la révision et sera rendu reproductible par la CI dans la PR de corrections."
+			"note": "Test 8.2.1 : Page examinée : page d’accueil (/). Validateur W3C Nu (vnu-jar 26.10.11 du dépôt, --errors-only) sur le HTML servi par le build du 2026-10-20 : 0 erreur (règles d’écriture, imbrication, ouverture et fermeture des balises, ids uniques, attributs non doublés). La page n’exécute aucun JavaScript : le code généré est le code servi ; 0 id en double vérifié dans le DOM Chromium."
 		},
 		{
 			"criterion": "8.2",
 			"page": "https://chikimuras.github.io/rampe/referentiel/",
 			"status": "C",
-			"note": "Test 8.2.1 : Page examinée : page Référentiel (/referentiel/). Validateur W3C Nu (vnu-jar 26.10.12, hors ligne) sur le HTML servi : 0 erreur (avertissement seulement : texte non normalisé NFC, sans portée sur la conformité). La page n’a pas de JavaScript : le code généré est le code servi. Vérifié lors de la révision dans Chromium : 0 id en double. Le contrôle vnu a été fait avec vnu-jar 26.10.12 hors dépôt ; il n’a pas été rejoué lors de la révision et sera rendu reproductible par la CI dans la PR de corrections."
+			"note": "Test 8.2.1 : Page examinée : page Référentiel (/referentiel/). Validateur W3C Nu (vnu-jar 26.10.11 du dépôt, --errors-only) sur le HTML servi par le build du 2026-10-20 : 0 erreur (règles d’écriture, imbrication, ouverture et fermeture des balises, ids uniques, attributs non doublés). La page n’exécute aucun JavaScript : le code généré est le code servi ; 0 id en double vérifié dans le DOM Chromium."
 		},
 		{
 			"criterion": "8.2",
 			"page": "https://chikimuras.github.io/rampe/referentiel/1-1/",
 			"status": "C",
-			"note": "Test 8.2.1 : Page examinée : fiche du critère 1.1 (/referentiel/1-1/). Validateur W3C Nu (vnu-jar 26.10.12, hors ligne) sur le HTML servi : 0 erreur. La page n’a pas de JavaScript : le code généré est le code servi. Vérifié lors de la révision dans Chromium : 0 id en double. Le contrôle vnu a été fait avec vnu-jar 26.10.12 hors dépôt ; il n’a pas été rejoué lors de la révision et sera rendu reproductible par la CI dans la PR de corrections."
+			"note": "Test 8.2.1 : Page examinée : fiche du critère 1.1 (/referentiel/1-1/). Validateur W3C Nu (vnu-jar 26.10.11 du dépôt, --errors-only) sur le HTML servi par le build du 2026-10-20 : 0 erreur (règles d’écriture, imbrication, ouverture et fermeture des balises, ids uniques, attributs non doublés). La page n’exécute aucun JavaScript : le code généré est le code servi ; 0 id en double vérifié dans le DOM Chromium."
 		},
 		{
 			"criterion": "8.2",
 			"page": "https://chikimuras.github.io/rampe/referentiel/glossaire/",
 			"status": "C",
-			"note": "Test 8.2.1 : Page examinée : page Glossaire (/referentiel/glossaire/). Validateur W3C Nu (vnu-jar 26.10.12, hors ligne) sur le HTML servi : 0 erreur. La page n’a pas de JavaScript : le code généré est le code servi. Vérifié lors de la révision dans Chromium : 0 id en double. Le contrôle vnu a été fait avec vnu-jar 26.10.12 hors dépôt ; il n’a pas été rejoué lors de la révision et sera rendu reproductible par la CI dans la PR de corrections."
+			"note": "Test 8.2.1 : Page examinée : page Glossaire (/referentiel/glossaire/). Validateur W3C Nu (vnu-jar 26.10.11 du dépôt, --errors-only) sur le HTML servi par le build du 2026-10-20 : 0 erreur (règles d’écriture, imbrication, ouverture et fermeture des balises, ids uniques, attributs non doublés). La page n’exécute aucun JavaScript : le code généré est le code servi ; 0 id en double vérifié dans le DOM Chromium."
 		},
 		{
 			"criterion": "8.2",
 			"page": "https://chikimuras.github.io/rampe/audit/",
-			"status": "NC",
-			"note": "Test 8.2.1 : validateur W3C Nu (vnu-jar 26.10.12, hors ligne, --errors-only) sur le HTML servi et sur le DOM généré après hydratation (états interactifs examinés : vierge, audit complet importé (2 pages, 106 critères, taux et tableau d’actions affichés), audit effacé puis rapport automatique importé (statuts « à confirmer », indices dépliés), boîte de dialogue « Remplacer l’audit en cours ? » ouverte) : 2 erreurs à chaque fois. L’îlot Astro injecte dans <main>, juste après le <noscript>, l’élément <style>astro-island,astro-slot,astro-static-slot{display:contents}</style> : « A style element in body must be the first child of its parent » (un <style> n’est autorisé que là où du contenu de métadonnées est attendu, donc dans <head>) — imbrication non conforme. Ids uniques (0 doublon dans tous les états), aucun attribut doublé. Correction : sortir cette règle du corps (la déclarer dans la feuille de style globale du <head> et empêcher l’injection inline d’Astro, ou déplacer le <style> dans <head> au post-traitement du build). Le contrôle vnu a été fait avec vnu-jar 26.10.12 hors dépôt ; il n’a pas été rejoué lors de la révision et sera rendu reproductible par la CI dans la PR de corrections."
+			"status": "C",
+			"note": "Test 8.2.1 : Page examinée : audit guidé (/audit/). Validateur W3C Nu (vnu-jar 26.10.11 du dépôt, --errors-only) sur le HTML servi et sur le DOM généré après hydratation dans les états : vierge, audit complet importé (détails fermés puis tous ouverts), rapport automatique importé (critères 1.1, 3.2 et 8.3 affichés, indices dépliés), premier critère de chacune des 13 thématiques, tableau d’actions rempli, bandeau de session illisible, boîte « Remplacer l’audit en cours ? » ouverte : 0 erreur partout. Le <style> qu’Astro injectait dans <main> (ancien défaut) n’est plus dans le corps. Ids uniques, aucun attribut doublé, imbrication et fermeture conformes."
 		},
 		{
 			"criterion": "8.2",
 			"page": "https://chikimuras.github.io/rampe/cockpit/",
 			"status": "C",
-			"note": "Test 8.2.1 : Page examinée : page Cockpit (/cockpit/). Validateur W3C Nu (vnu-jar 26.10.12, hors ligne) sur le HTML servi : 0 erreur. La page n’a pas de JavaScript : le code généré est le code servi. Vérifié lors de la révision dans Chromium : 0 id en double. Le contrôle vnu a été fait avec vnu-jar 26.10.12 hors dépôt ; il n’a pas été rejoué lors de la révision et sera rendu reproductible par la CI dans la PR de corrections."
+			"note": "Test 8.2.1 : Page examinée : page Cockpit (/cockpit/). Validateur W3C Nu (vnu-jar 26.10.11 du dépôt, --errors-only) sur le HTML servi par le build du 2026-10-20 : 0 erreur (règles d’écriture, imbrication, ouverture et fermeture des balises, ids uniques, attributs non doublés). La page n’exécute aucun JavaScript : le code généré est le code servi ; 0 id en double vérifié dans le DOM Chromium."
 		},
 		{
 			"criterion": "8.2",
 			"page": "https://chikimuras.github.io/rampe/cockpit/adr/0011-cli-audit-playwright/",
 			"status": "C",
-			"note": "Test 8.2.1 : Page examinée : page ADR-0011 (/cockpit/adr/0011-cli-audit-playwright/). Validateur W3C Nu (vnu-jar 26.10.12, hors ligne) sur le HTML servi : 0 erreur. La page n’a pas de JavaScript : le code généré est le code servi. Vérifié lors de la révision dans Chromium : 0 id en double. Le contrôle vnu a été fait avec vnu-jar 26.10.12 hors dépôt ; il n’a pas été rejoué lors de la révision et sera rendu reproductible par la CI dans la PR de corrections."
+			"note": "Test 8.2.1 : Page examinée : page ADR-0011 (/cockpit/adr/0011-cli-audit-playwright/). Validateur W3C Nu (vnu-jar 26.10.11 du dépôt, --errors-only) sur le HTML servi par le build du 2026-10-20 : 0 erreur (règles d’écriture, imbrication, ouverture et fermeture des balises, ids uniques, attributs non doublés). La page n’exécute aucun JavaScript : le code généré est le code servi ; 0 id en double vérifié dans le DOM Chromium."
 		},
 		{
 			"criterion": "8.2",
 			"page": "https://chikimuras.github.io/rampe/cockpit/journal/2026-10-15/",
 			"status": "C",
-			"note": "Test 8.2.1 : Page examinée : page du journal du 15/10/2026 (/cockpit/journal/2026-10-15/). Validateur W3C Nu (vnu-jar 26.10.12, hors ligne) sur le HTML servi : 0 erreur. La page n’a pas de JavaScript : le code généré est le code servi. Vérifié lors de la révision dans Chromium : 0 id en double. Le contrôle vnu a été fait avec vnu-jar 26.10.12 hors dépôt ; il n’a pas été rejoué lors de la révision et sera rendu reproductible par la CI dans la PR de corrections."
+			"note": "Test 8.2.1 : Page examinée : page du journal du 15/10/2026 (/cockpit/journal/2026-10-15/). Validateur W3C Nu (vnu-jar 26.10.11 du dépôt, --errors-only) sur le HTML servi par le build du 2026-10-20 : 0 erreur (règles d’écriture, imbrication, ouverture et fermeture des balises, ids uniques, attributs non doublés). La page n’exécute aucun JavaScript : le code généré est le code servi ; 0 id en double vérifié dans le DOM Chromium."
 		},
 		{
 			"criterion": "8.2",
 			"page": "https://chikimuras.github.io/rampe/cockpit/docs/roadmap/",
 			"status": "C",
-			"note": "Test 8.2.1 : Page examinée : page Roadmap (/cockpit/docs/roadmap/). Validateur W3C Nu (vnu-jar 26.10.12, hors ligne) sur le HTML servi : 0 erreur. La page n’a pas de JavaScript : le code généré est le code servi. Vérifié lors de la révision dans Chromium : 0 id en double. Le contrôle vnu a été fait avec vnu-jar 26.10.12 hors dépôt ; il n’a pas été rejoué lors de la révision et sera rendu reproductible par la CI dans la PR de corrections."
+			"note": "Test 8.2.1 : Page examinée : page Roadmap (/cockpit/docs/roadmap/). Validateur W3C Nu (vnu-jar 26.10.11 du dépôt, --errors-only) sur le HTML servi par le build du 2026-10-20 : 0 erreur (règles d’écriture, imbrication, ouverture et fermeture des balises, ids uniques, attributs non doublés). La page n’exécute aucun JavaScript : le code généré est le code servi ; 0 id en double vérifié dans le DOM Chromium."
 		},
 		{
 			"criterion": "8.2",
 			"page": "https://chikimuras.github.io/rampe/referentiel/5-1/",
 			"status": "C",
-			"note": "Test 8.2.1 : Page examinée : fiche du critère 5.1 (/referentiel/5-1/). Validateur W3C Nu (vnu-jar 26.10.12, hors ligne) sur le HTML servi : 0 erreur. La page n’a pas de JavaScript : le code généré est le code servi. Vérifié lors de la révision dans Chromium : 0 id en double. Le contrôle vnu a été fait avec vnu-jar 26.10.12 hors dépôt ; il n’a pas été rejoué lors de la révision et sera rendu reproductible par la CI dans la PR de corrections."
+			"note": "Test 8.2.1 : Page examinée : fiche du critère 5.1 (/referentiel/5-1/). Validateur W3C Nu (vnu-jar 26.10.11 du dépôt, --errors-only) sur le HTML servi par le build du 2026-10-20 : 0 erreur (règles d’écriture, imbrication, ouverture et fermeture des balises, ids uniques, attributs non doublés). La page n’exécute aucun JavaScript : le code généré est le code servi ; 0 id en double vérifié dans le DOM Chromium."
 		},
 		{
 			"criterion": "8.2",
 			"page": "https://chikimuras.github.io/rampe/referentiel/1-9/",
 			"status": "C",
-			"note": "Test 8.2.1 : Page examinée : fiche du critère 1.9 (/referentiel/1-9/). Validateur W3C Nu (vnu-jar 26.10.12, hors ligne) sur le HTML servi : 0 erreur. La page n’a pas de JavaScript : le code généré est le code servi. Vérifié lors de la révision dans Chromium : 0 id en double. Le contrôle vnu a été fait avec vnu-jar 26.10.12 hors dépôt ; il n’a pas été rejoué lors de la révision et sera rendu reproductible par la CI dans la PR de corrections."
+			"note": "Test 8.2.1 : Page examinée : fiche du critère 1.9 (/referentiel/1-9/). Validateur W3C Nu (vnu-jar 26.10.11 du dépôt, --errors-only) sur le HTML servi par le build du 2026-10-20 : 0 erreur (règles d’écriture, imbrication, ouverture et fermeture des balises, ids uniques, attributs non doublés). La page n’exécute aucun JavaScript : le code généré est le code servi ; 0 id en double vérifié dans le DOM Chromium."
+		},
+		{
+			"criterion": "8.2",
+			"page": "https://chikimuras.github.io/rampe/plan-du-site/",
+			"status": "C",
+			"note": "Test 8.2.1 : Page examinée : page Plan du site (/plan-du-site/). Validateur W3C Nu (vnu-jar 26.10.11 du dépôt, --errors-only) sur le HTML servi par le build du 2026-10-20 : 0 erreur (règles d’écriture, imbrication, ouverture et fermeture des balises, ids uniques, attributs non doublés). La page n’exécute aucun JavaScript : le code généré est le code servi ; 0 id en double vérifié dans le DOM Chromium."
 		},
 		{
 			"criterion": "8.3",
@@ -162,7 +174,7 @@
 			"criterion": "8.3",
 			"page": "https://chikimuras.github.io/rampe/audit/",
 			"status": "C",
-			"note": "Test 8.3.1 : l’élément <html> porte lang=\"fr\" (HTML5) ; la langue par défaut est donc indiquée pour tout le texte de la page."
+			"note": "Test 8.3.1 : Page examinée : audit guidé (/audit/). L’élément <html> porte lang=\"fr\" (HTML5) : la langue par défaut est indiquée pour tout le texte de la page."
 		},
 		{
 			"criterion": "8.3",
@@ -201,466 +213,514 @@
 			"note": "Test 8.3.1 : Page examinée : fiche du critère 1.9 (/referentiel/1-9/). L’élément <html> porte lang=\"fr\" (HTML5) : la langue par défaut est indiquée pour tout le texte de la page."
 		},
 		{
+			"criterion": "8.3",
+			"page": "https://chikimuras.github.io/rampe/plan-du-site/",
+			"status": "C",
+			"note": "Test 8.3.1 : Page examinée : page Plan du site (/plan-du-site/). L’élément <html> porte lang=\"fr\" (HTML5) : la langue par défaut est indiquée pour tout le texte de la page."
+		},
+		{
 			"criterion": "8.4",
 			"page": "https://chikimuras.github.io/rampe/",
 			"status": "C",
-			"note": "Test 8.4.1 : Page examinée : page d’accueil (/). Code de langue « fr », valide (ISO 639-1) et pertinent : le titre « Rampe » et le contenu principal sont rédigés en français."
+			"note": "Test 8.4.1 : Page examinée : page d’accueil (/). Code de langue « fr » valide (ISO 639-1) et pertinent : le titre « Accueil · Rampe » et le contenu principal (h1 « Rampe ») sont rédigés en français."
 		},
 		{
 			"criterion": "8.4",
 			"page": "https://chikimuras.github.io/rampe/referentiel/",
 			"status": "C",
-			"note": "Test 8.4.1 : Page examinée : page Référentiel (/referentiel/). Code de langue « fr », valide (ISO 639-1) et pertinent : le titre « Référentiel RGAA 4.1.2 » et le contenu principal sont rédigés en français."
+			"note": "Test 8.4.1 : Page examinée : page Référentiel (/referentiel/). Code de langue « fr » valide (ISO 639-1) et pertinent : le titre « Référentiel RGAA · Rampe » et le contenu principal (h1 « Référentiel RGAA 4.1.2 ») sont rédigés en français."
 		},
 		{
 			"criterion": "8.4",
 			"page": "https://chikimuras.github.io/rampe/referentiel/1-1/",
 			"status": "C",
-			"note": "Test 8.4.1 : Page examinée : fiche du critère 1.1 (/referentiel/1-1/). Code de langue « fr », valide (ISO 639-1) et pertinent : le titre « Critère 1.1 Chaque image porteuse d’information a-t-elle une alternative textuelle ? » et le contenu principal sont rédigés en français."
+			"note": "Test 8.4.1 : Page examinée : fiche du critère 1.1 (/referentiel/1-1/). Code de langue « fr » valide (ISO 639-1) et pertinent : le titre « Critère RGAA 1.1 · Rampe » et le contenu principal (h1 « Critère 1.1 Chaque image porteuse d’information a-t-elle une alternative textuel ») sont rédigés en français."
 		},
 		{
 			"criterion": "8.4",
 			"page": "https://chikimuras.github.io/rampe/referentiel/glossaire/",
 			"status": "C",
-			"note": "Test 8.4.1 : Page examinée : page Glossaire (/referentiel/glossaire/). Code de langue « fr », valide (ISO 639-1) et pertinent : le titre « Glossaire du RGAA 4.1.2 » et le contenu principal sont rédigés en français."
+			"note": "Test 8.4.1 : Page examinée : page Glossaire (/referentiel/glossaire/). Code de langue « fr » valide (ISO 639-1) et pertinent : le titre « Glossaire du RGAA · Rampe » et le contenu principal (h1 « Glossaire du RGAA 4.1.2 ») sont rédigés en français."
 		},
 		{
 			"criterion": "8.4",
 			"page": "https://chikimuras.github.io/rampe/audit/",
 			"status": "C",
-			"note": "Test 8.4.1 : code de langue « fr », valide (ISO 639-1) et pertinent : le contenu principal de la page est rédigé en français."
+			"note": "Test 8.4.1 : Page examinée : audit guidé (/audit/). Code de langue « fr » valide (ISO 639-1) et pertinent : le titre « Audit guidé · Rampe » et le contenu principal (h1 « Audit guidé ») sont rédigés en français."
 		},
 		{
 			"criterion": "8.4",
 			"page": "https://chikimuras.github.io/rampe/cockpit/",
 			"status": "C",
-			"note": "Test 8.4.1 : Page examinée : page Cockpit (/cockpit/). Code de langue « fr », valide (ISO 639-1) et pertinent : le titre « Cockpit » et le contenu principal sont rédigés en français."
+			"note": "Test 8.4.1 : Page examinée : page Cockpit (/cockpit/). Code de langue « fr » valide (ISO 639-1) et pertinent : le titre « Cockpit · Rampe » et le contenu principal (h1 « Cockpit ») sont rédigés en français."
 		},
 		{
 			"criterion": "8.4",
 			"page": "https://chikimuras.github.io/rampe/cockpit/adr/0011-cli-audit-playwright/",
 			"status": "C",
-			"note": "Test 8.4.1 : Page examinée : page ADR-0011 (/cockpit/adr/0011-cli-audit-playwright/). Code de langue « fr », valide (ISO 639-1) et pertinent : le titre « ADR-0011 — CLI d’audit : Playwright + axe-core, résultats rangés par critère RGAA, sans aucun score » et le contenu principal sont rédigés en français."
+			"note": "Test 8.4.1 : Page examinée : page ADR-0011 (/cockpit/adr/0011-cli-audit-playwright/). Code de langue « fr » valide (ISO 639-1) et pertinent : le titre « ADR-0011 — CLI d’audit : Playwright + axe-core, résultats rangés par critère RGAA, sans aucun score · Rampe » et le contenu principal (h1 « ADR-0011 — CLI d’audit : Playwright + axe-core, résultats rangés par critère RGA ») sont rédigés en français."
 		},
 		{
 			"criterion": "8.4",
 			"page": "https://chikimuras.github.io/rampe/cockpit/journal/2026-10-15/",
 			"status": "C",
-			"note": "Test 8.4.1 : Page examinée : page du journal du 15/10/2026 (/cockpit/journal/2026-10-15/). Code de langue « fr », valide (ISO 639-1) et pertinent : le titre « Démarrage — choix du sujet et socle » et le contenu principal sont rédigés en français."
+			"note": "Test 8.4.1 : Page examinée : page du journal du 15/10/2026 (/cockpit/journal/2026-10-15/). Code de langue « fr » valide (ISO 639-1) et pertinent : le titre « Journal du 15 octobre 2026 · Rampe » et le contenu principal (h1 « Journal du 15 octobre 2026 ») sont rédigés en français."
 		},
 		{
 			"criterion": "8.4",
 			"page": "https://chikimuras.github.io/rampe/cockpit/docs/roadmap/",
 			"status": "C",
-			"note": "Test 8.4.1 : Page examinée : page Roadmap (/cockpit/docs/roadmap/). Code de langue « fr », valide (ISO 639-1) et pertinent : le titre « Roadmap » et le contenu principal sont rédigés en français."
+			"note": "Test 8.4.1 : Page examinée : page Roadmap (/cockpit/docs/roadmap/). Code de langue « fr » valide (ISO 639-1) et pertinent : le titre « Roadmap · Rampe » et le contenu principal (h1 « Roadmap ») sont rédigés en français."
 		},
 		{
 			"criterion": "8.4",
 			"page": "https://chikimuras.github.io/rampe/referentiel/5-1/",
 			"status": "C",
-			"note": "Test 8.4.1 : Page examinée : fiche du critère 5.1 (/referentiel/5-1/). Code de langue « fr », valide (ISO 639-1) et pertinent : le titre « Critère 5.1 Chaque tableau de données complexe a-t-il un résumé ? » et le contenu principal sont rédigés en français."
+			"note": "Test 8.4.1 : Page examinée : fiche du critère 5.1 (/referentiel/5-1/). Code de langue « fr » valide (ISO 639-1) et pertinent : le titre « Critère RGAA 5.1 · Rampe » et le contenu principal (h1 « Critère 5.1 Chaque tableau de données complexe a-t-il un résumé ? ») sont rédigés en français."
 		},
 		{
 			"criterion": "8.4",
 			"page": "https://chikimuras.github.io/rampe/referentiel/1-9/",
 			"status": "C",
-			"note": "Test 8.4.1 : Page examinée : fiche du critère 1.9 (/referentiel/1-9/). Code de langue « fr », valide (ISO 639-1) et pertinent : le titre « Critère 1.9 Chaque légende d’image est-elle, si nécessaire, correctement reliée à l’image correspondante ? » et le contenu principal sont rédigés en français."
+			"note": "Test 8.4.1 : Page examinée : fiche du critère 1.9 (/referentiel/1-9/). Code de langue « fr » valide (ISO 639-1) et pertinent : le titre « Critère RGAA 1.9 · Rampe » et le contenu principal (h1 « Critère 1.9 Chaque légende d’image est-elle, si nécessaire, correctement reliée  ») sont rédigés en français."
+		},
+		{
+			"criterion": "8.4",
+			"page": "https://chikimuras.github.io/rampe/plan-du-site/",
+			"status": "C",
+			"note": "Test 8.4.1 : Page examinée : page Plan du site (/plan-du-site/). Code de langue « fr » valide (ISO 639-1) et pertinent : le titre « Plan du site · Rampe » et le contenu principal (h1 « Plan du site ») sont rédigés en français."
 		},
 		{
 			"criterion": "8.5",
 			"page": "https://chikimuras.github.io/rampe/",
 			"status": "C",
-			"note": "Test 8.5.1 : la page a un élément <title> dans <head> (« Accueil · Rampe »)."
+			"note": "Test 8.5.1 : Page examinée : page d’accueil (/). La page a un élément <title> dans <head> : « Accueil · Rampe »."
 		},
 		{
 			"criterion": "8.5",
 			"page": "https://chikimuras.github.io/rampe/referentiel/",
 			"status": "C",
-			"note": "Test 8.5.1 : la page a un élément <title> dans <head> (« Référentiel RGAA · Rampe »)."
+			"note": "Test 8.5.1 : Page examinée : page Référentiel (/referentiel/). La page a un élément <title> dans <head> : « Référentiel RGAA · Rampe »."
 		},
 		{
 			"criterion": "8.5",
 			"page": "https://chikimuras.github.io/rampe/referentiel/1-1/",
 			"status": "C",
-			"note": "Test 8.5.1 : la page a un élément <title> dans <head> (« Critère RGAA 1.1 · Rampe »)."
+			"note": "Test 8.5.1 : Page examinée : fiche du critère 1.1 (/referentiel/1-1/). La page a un élément <title> dans <head> : « Critère RGAA 1.1 · Rampe »."
 		},
 		{
 			"criterion": "8.5",
 			"page": "https://chikimuras.github.io/rampe/referentiel/glossaire/",
 			"status": "C",
-			"note": "Test 8.5.1 : la page a un élément <title> dans <head> (« Glossaire du RGAA · Rampe »)."
+			"note": "Test 8.5.1 : Page examinée : page Glossaire (/referentiel/glossaire/). La page a un élément <title> dans <head> : « Glossaire du RGAA · Rampe »."
 		},
 		{
 			"criterion": "8.5",
 			"page": "https://chikimuras.github.io/rampe/audit/",
 			"status": "C",
-			"note": "Test 8.5.1 : la page a un élément <title> dans <head> (« Audit guidé · Rampe »)."
+			"note": "Test 8.5.1 : Page examinée : audit guidé (/audit/). La page a un élément <title> dans <head> : « Audit guidé · Rampe »."
 		},
 		{
 			"criterion": "8.5",
 			"page": "https://chikimuras.github.io/rampe/cockpit/",
 			"status": "C",
-			"note": "Test 8.5.1 : la page a un élément <title> dans <head> (« Cockpit · Rampe »)."
+			"note": "Test 8.5.1 : Page examinée : page Cockpit (/cockpit/). La page a un élément <title> dans <head> : « Cockpit · Rampe »."
 		},
 		{
 			"criterion": "8.5",
 			"page": "https://chikimuras.github.io/rampe/cockpit/adr/0011-cli-audit-playwright/",
 			"status": "C",
-			"note": "Test 8.5.1 : la page a un élément <title> dans <head> (« ADR-0011 — CLI d’audit : Playwright + axe-core, résultats rangés par critère RGAA, sans aucun score · Rampe »)."
+			"note": "Test 8.5.1 : Page examinée : page ADR-0011 (/cockpit/adr/0011-cli-audit-playwright/). La page a un élément <title> dans <head> : « ADR-0011 — CLI d’audit : Playwright + axe-core, résultats rangés par critère RGAA, sans aucun score · Rampe »."
 		},
 		{
 			"criterion": "8.5",
 			"page": "https://chikimuras.github.io/rampe/cockpit/journal/2026-10-15/",
 			"status": "C",
-			"note": "Test 8.5.1 : la page a un élément <title> dans <head> (« Démarrage — choix du sujet et socle · Rampe »)."
+			"note": "Test 8.5.1 : Page examinée : page du journal du 15/10/2026 (/cockpit/journal/2026-10-15/). La page a un élément <title> dans <head> : « Journal du 15 octobre 2026 · Rampe »."
 		},
 		{
 			"criterion": "8.5",
 			"page": "https://chikimuras.github.io/rampe/cockpit/docs/roadmap/",
 			"status": "C",
-			"note": "Test 8.5.1 : la page a un élément <title> dans <head> (« Roadmap · Rampe »)."
+			"note": "Test 8.5.1 : Page examinée : page Roadmap (/cockpit/docs/roadmap/). La page a un élément <title> dans <head> : « Roadmap · Rampe »."
 		},
 		{
 			"criterion": "8.5",
 			"page": "https://chikimuras.github.io/rampe/referentiel/5-1/",
 			"status": "C",
-			"note": "Test 8.5.1 : la page a un élément <title> dans <head> (« Critère RGAA 5.1 · Rampe »)."
+			"note": "Test 8.5.1 : Page examinée : fiche du critère 5.1 (/referentiel/5-1/). La page a un élément <title> dans <head> : « Critère RGAA 5.1 · Rampe »."
 		},
 		{
 			"criterion": "8.5",
 			"page": "https://chikimuras.github.io/rampe/referentiel/1-9/",
 			"status": "C",
-			"note": "Test 8.5.1 : la page a un élément <title> dans <head> (« Critère RGAA 1.9 · Rampe »)."
+			"note": "Test 8.5.1 : Page examinée : fiche du critère 1.9 (/referentiel/1-9/). La page a un élément <title> dans <head> : « Critère RGAA 1.9 · Rampe »."
+		},
+		{
+			"criterion": "8.5",
+			"page": "https://chikimuras.github.io/rampe/plan-du-site/",
+			"status": "C",
+			"note": "Test 8.5.1 : Page examinée : page Plan du site (/plan-du-site/). La page a un élément <title> dans <head> : « Plan du site · Rampe »."
 		},
 		{
 			"criterion": "8.6",
 			"page": "https://chikimuras.github.io/rampe/",
 			"status": "C",
-			"note": "Test 8.6.1 : Page examinée : page d’accueil (/). Contenu du titre jugé au regard du contenu de la page : « Accueil · Rampe » : « Accueil » désigne la page d’entrée du site et « Rampe » le site ; la page (h1 « Rampe », présentation de l’outil) est bien la page d’accueil. Titre pertinent."
+			"note": "Test 8.6.1 : Page examinée : page d’accueil (/). Contenu du titre « Accueil · Rampe » jugé au regard du contenu : « Accueil » désigne la page d’entrée et « Rampe » le site ; h1 « Rampe », présentation de l’outil. Il permet de retrouver la page dans l’historique ou les onglets : pertinent."
 		},
 		{
 			"criterion": "8.6",
 			"page": "https://chikimuras.github.io/rampe/referentiel/",
 			"status": "C",
-			"note": "Test 8.6.1 : Page examinée : page Référentiel (/referentiel/). Contenu du titre jugé au regard du contenu de la page : « Référentiel RGAA · Rampe » : la page liste les 13 thématiques et les 106 critères du RGAA 4.1.2 (h1 « Référentiel RGAA 4.1.2 »). Le titre en décrit exactement le contenu. Pertinent."
+			"note": "Test 8.6.1 : Page examinée : page Référentiel (/referentiel/). Contenu du titre « Référentiel RGAA · Rampe » jugé au regard du contenu : la page liste les 13 thématiques et les 106 critères du RGAA 4.1.2 (h1 « Référentiel RGAA 4.1.2 »). Il permet de retrouver la page dans l’historique ou les onglets : pertinent."
 		},
 		{
 			"criterion": "8.6",
 			"page": "https://chikimuras.github.io/rampe/referentiel/1-1/",
 			"status": "C",
-			"note": "Test 8.6.1 : Page examinée : fiche du critère 1.1 (/referentiel/1-1/). Contenu du titre jugé au regard du contenu de la page : « Critère RGAA 1.1 · Rampe » : la page est la fiche du critère 1.1 (h1 « Critère 1.1 Chaque image porteuse d’information… », tests et méthodologie) ; le numéro rend le titre unique parmi les 106 fiches. Pertinent."
+			"note": "Test 8.6.1 : Page examinée : fiche du critère 1.1 (/referentiel/1-1/). Contenu du titre « Critère RGAA 1.1 · Rampe » jugé au regard du contenu : fiche du critère 1.1 (h1 « Critère 1.1 Chaque image porteuse d’information… », tests et méthodologie) ; le numéro distingue le titre des 105 autres fiches. Il permet de retrouver la page dans l’historique ou les onglets : pertinent."
 		},
 		{
 			"criterion": "8.6",
 			"page": "https://chikimuras.github.io/rampe/referentiel/glossaire/",
 			"status": "C",
-			"note": "Test 8.6.1 : Page examinée : page Glossaire (/referentiel/glossaire/). Contenu du titre jugé au regard du contenu de la page : « Glossaire du RGAA · Rampe » : la page présente les 119 définitions du glossaire officiel (h1 « Glossaire du RGAA 4.1.2 »). Pertinent."
+			"note": "Test 8.6.1 : Page examinée : page Glossaire (/referentiel/glossaire/). Contenu du titre « Glossaire du RGAA · Rampe » jugé au regard du contenu : la page présente les définitions du glossaire officiel (h1 « Glossaire du RGAA 4.1.2 »). Il permet de retrouver la page dans l’historique ou les onglets : pertinent."
 		},
 		{
 			"criterion": "8.6",
 			"page": "https://chikimuras.github.io/rampe/audit/",
 			"status": "C",
-			"note": "Test 8.6.1 : Page examinée : audit guidé (/audit/). Contenu du titre jugé au regard du contenu de la page : « Audit guidé · Rampe » : la page est l’outil d’audit guidé (h1 « Audit guidé », échantillon, évaluation des critères, résultat, déclaration, schéma) ; le titre reste juste dans tous les états de l’îlot. Pertinent."
+			"note": "Test 8.6.1 : Page examinée : audit guidé (/audit/). Contenu du titre « Audit guidé · Rampe » jugé au regard du contenu : la page est l’outil d’audit guidé (h1 « Audit guidé » : échantillon, critères, résultat, déclaration, schéma) ; le titre reste juste dans tous les états de l’îlot. Il permet de retrouver la page dans l’historique ou les onglets : pertinent."
 		},
 		{
 			"criterion": "8.6",
 			"page": "https://chikimuras.github.io/rampe/cockpit/",
 			"status": "C",
-			"note": "Test 8.6.1 : Page examinée : page Cockpit (/cockpit/). Contenu du titre jugé au regard du contenu de la page : « Cockpit · Rampe » : la page est le tableau de bord du projet (h1 « Cockpit » : en attente, avancement, journal, ADR, documentation), nommée « Cockpit » dans la navigation principale. Pertinent."
+			"note": "Test 8.6.1 : Page examinée : page Cockpit (/cockpit/). Contenu du titre « Cockpit · Rampe » jugé au regard du contenu : tableau de bord du projet (h1 « Cockpit » : en attente, avancement, auto-évaluation, journal, ADR, documentation), nommé ainsi dans la navigation principale. Il permet de retrouver la page dans l’historique ou les onglets : pertinent."
 		},
 		{
 			"criterion": "8.6",
 			"page": "https://chikimuras.github.io/rampe/cockpit/adr/0011-cli-audit-playwright/",
 			"status": "C",
-			"note": "Test 8.6.1 : Page examinée : page ADR-0011 (/cockpit/adr/0011-cli-audit-playwright/). Contenu du titre jugé au regard du contenu de la page : « ADR-0011 — CLI d’audit : Playwright + axe-core, résultats rangés par critère RGAA, sans aucun score · Rampe » : numéro et intitulé de la décision, identiques au h1, uniques. Pertinent."
+			"note": "Test 8.6.1 : Page examinée : page ADR-0011 (/cockpit/adr/0011-cli-audit-playwright/). Contenu du titre « ADR-0011 — CLI d’audit : Playwright + axe-core, résultats rangés par critère RGAA, sans aucun score · Rampe » jugé au regard du contenu : numéro et intitulé de la décision, identiques au h1, uniques. Il permet de retrouver la page dans l’historique ou les onglets : pertinent."
 		},
 		{
 			"criterion": "8.6",
 			"page": "https://chikimuras.github.io/rampe/cockpit/journal/2026-10-15/",
-			"status": "NC",
-			"note": "Test 8.6.1 en échec : Page examinée : page du journal du 15/10/2026 (/cockpit/journal/2026-10-15/). Le titre « Démarrage — choix du sujet et socle · Rampe » ne reflète que la première des 22 sections de la page, qui couvre toute la journée du 15/10/2026 : démarrage, puis phases 1 à 4 (PR #2 à #19, « Phase 3 — Taux de conformité… », « Phase 4 — Générateur de déclaration d’accessibilité… ») ; il ne dit pas non plus qu’il s’agit d’une page du journal ni de quelle date. Il ne permet pas d’identifier le contenu de la page. Jugement (décision consignée, orchestrateur, délégation ADR-0001). Correction : par exemple « Journal du 15/10/2026 — démarrage et phases 1 à 4 · Rampe »."
+			"status": "C",
+			"note": "Test 8.6.1 : Page examinée : page du journal du 15/10/2026 (/cockpit/journal/2026-10-15/). Contenu du titre « Journal du 15 octobre 2026 · Rampe » jugé au regard du contenu : la page est l’entrée du journal de bord du 15 octobre 2026 (h1 identique « Journal du 15 octobre 2026 », sections de la journée) ; la date distingue la page de l’autre entrée du journal (16 octobre) — l’ancien titre « Démarrage — choix du sujet et socle », jugé non pertinent, a été remplacé. Il permet de retrouver la page dans l’historique ou les onglets : pertinent."
 		},
 		{
 			"criterion": "8.6",
 			"page": "https://chikimuras.github.io/rampe/cockpit/docs/roadmap/",
 			"status": "C",
-			"note": "Test 8.6.1 : Page examinée : page Roadmap (/cockpit/docs/roadmap/). Contenu du titre jugé au regard du contenu de la page : « Roadmap · Rampe » : la page est la feuille de route du projet (h1 « Roadmap », phases 0 à 6 et leurs tâches). Pertinent."
+			"note": "Test 8.6.1 : Page examinée : page Roadmap (/cockpit/docs/roadmap/). Contenu du titre « Roadmap · Rampe » jugé au regard du contenu : la page est la feuille de route du projet, document nommé « Roadmap » (h1 identique, phases 0 à 6 et leurs tâches). Il permet de retrouver la page dans l’historique ou les onglets : pertinent."
 		},
 		{
 			"criterion": "8.6",
 			"page": "https://chikimuras.github.io/rampe/referentiel/5-1/",
 			"status": "C",
-			"note": "Test 8.6.1 : Page examinée : fiche du critère 5.1 (/referentiel/5-1/). Contenu du titre jugé au regard du contenu de la page : « Critère RGAA 5.1 · Rampe » : la page est la fiche du critère 5.1 (h1 « Critère 5.1 Chaque tableau de données complexe a-t-il un résumé ? ») ; titre unique parmi les fiches. Pertinent."
+			"note": "Test 8.6.1 : Page examinée : fiche du critère 5.1 (/referentiel/5-1/). Contenu du titre « Critère RGAA 5.1 · Rampe » jugé au regard du contenu : fiche du critère 5.1 (h1 « Critère 5.1 Chaque tableau de données complexe a-t-il un résumé ? ») ; titre unique parmi les fiches. Il permet de retrouver la page dans l’historique ou les onglets : pertinent."
 		},
 		{
 			"criterion": "8.6",
 			"page": "https://chikimuras.github.io/rampe/referentiel/1-9/",
 			"status": "C",
-			"note": "Test 8.6.1 : Page examinée : fiche du critère 1.9 (/referentiel/1-9/). Contenu du titre jugé au regard du contenu de la page : « Critère RGAA 1.9 · Rampe » : la page est la fiche du critère 1.9 (h1 « Critère 1.9 Chaque légende d’image… ») ; titre unique parmi les fiches. Pertinent."
+			"note": "Test 8.6.1 : Page examinée : fiche du critère 1.9 (/referentiel/1-9/). Contenu du titre « Critère RGAA 1.9 · Rampe » jugé au regard du contenu : fiche du critère 1.9 (h1 « Critère 1.9 Chaque légende d’image… ») ; titre unique parmi les fiches. Il permet de retrouver la page dans l’historique ou les onglets : pertinent."
+		},
+		{
+			"criterion": "8.6",
+			"page": "https://chikimuras.github.io/rampe/plan-du-site/",
+			"status": "C",
+			"note": "Test 8.6.1 : Page examinée : page Plan du site (/plan-du-site/). Contenu du titre « Plan du site · Rampe » jugé au regard du contenu : la page est le plan du site (h1 « Plan du site » : sections Rampe, Référentiel, Cockpit et leurs pages). Il permet de retrouver la page dans l’historique ou les onglets : pertinent."
 		},
 		{
 			"criterion": "8.7",
 			"page": "https://chikimuras.github.io/rampe/",
 			"status": "NA",
-			"note": "Test 8.7.1 : Page examinée : page d’accueil (/). Passages en langue étrangère recherchés (texte, title, aria-label, alt) : « European Accessibility Act » (<em>), titre d’un acte législatif, donc nom propre ; « open source », expression passée dans le langage commun et présente dans les dictionnaires usuels, sans incompréhension à la restitution (cas particuliers, note 2) ; « Cockpit », mot du dictionnaire français. Règle appliquée partout (décision consignée, délégation ADR-0001) : les titres d’œuvres ou de documents en langue étrangère (cheat sheets OWASP et leurs sections, titres d’ADR, noms de normes) et les noms propres ou sigles (WCAG, JSON, CAPTCHA, axe-core, GitHub…) n’exigent pas de lang ; les mots courants anglais absents du dictionnaire français, jargon technique compris (« Accepted », « incomplete », « Landmarks », « commit », « merge », « build »…), exigent lang. Aucun passage soumis au critère : non applicable."
+			"note": "Test 8.7.1 : Page examinée : page d’accueil (/). Méthode : texte rendu hors <code> et hors éléments lang≠fr, plus alt, title, aria-label et placeholder, extrait du DOM (build du 2026-10-20) ; chaque mot étranger candidat cherché le 2026-10-20 dans le Dictionnaire de l’Académie française (dictionnaire-academie.fr), puis, s’il y manque, dans le Larousse (larousse.fr) et le Robert (dictionnaire.lerobert.com). Passages étrangers trouvés : « open source » (« un outil gratuit et open source ») — cas (b) : absent de l’Académie, entrée « open source » du Larousse ; Aucun risque d’incompréhension pour ces mots du cas (b) : courants, ils sont restitués par la synthèse vocale française avec la prononciation d’usage. « European Accessibility Act » (<em>, titre d’un acte), Claude, Anthropic — cas (d) ; « Cockpit » — cas (a). Aucun passage soumis au critère : non applicable. Règle appliquée (cas particuliers et notes 1 et 2 du critère 8.7) : (a) mot présent dans le dictionnaire de l’Académie : non applicable ; (b) mot absent de l’Académie mais passé dans le langage commun, preuve à l’appui (entrée du Larousse ou du Robert) : défaut seulement si l’absence de lang peut provoquer une incompréhension à la restitution ; (c) jargon technique ou mot anglais absent des dictionnaires d’usage (y compris le sens employé, et les formes francisées comme « commité », « mergé ») : lang exigé ; (d) nom propre, nom d’outil ou de produit (et intitulé de leurs options), sigle, titre d’œuvre, code ou identifiant technique (nom d’attribut, d’élément, d’événement) : exempté."
 		},
 		{
 			"criterion": "8.7",
 			"page": "https://chikimuras.github.io/rampe/referentiel/",
-			"status": "NC",
-			"note": "Test 8.7.1 en échec : Page examinée : page Référentiel (/referentiel/). La mention de source « … publié dans le dépôt DISIC/accessibilite.numerique.gouv.fr (commit ca4019f) » contient le mot anglais « commit » sans attribut lang (seul l’identifiant ca4019f est en <code>). Le reste : noms propres et sigles (axe-core, DINUM, WCAG, CAPTCHA), « focus » (employé par le texte officiel). Règle appliquée partout (décision consignée, délégation ADR-0001) : les titres d’œuvres ou de documents en langue étrangère (cheat sheets OWASP et leurs sections, titres d’ADR, noms de normes) et les noms propres ou sigles (WCAG, JSON, CAPTCHA, axe-core, GitHub…) n’exigent pas de lang ; les mots courants anglais absents du dictionnaire français, jargon technique compris (« Accepted », « incomplete », « Landmarks », « commit », « merge », « build »…), exigent lang. Correction : <span lang=\"en\">commit</span> ou « version ca4019f »."
+			"status": "NA",
+			"note": "Test 8.7.1 : Page examinée : page Référentiel (/referentiel/). Méthode : texte rendu hors <code> et hors éléments lang≠fr, plus alt, title, aria-label et placeholder, extrait du DOM (build du 2026-10-20) ; chaque mot étranger candidat cherché le 2026-10-20 dans le Dictionnaire de l’Académie française (dictionnaire-academie.fr), puis, s’il y manque, dans le Larousse (larousse.fr) et le Robert (dictionnaire.lerobert.com). Passages étrangers trouvés : « web » (50, « page web » dans les intitulés officiels) — cas (b), Larousse « Web, web » ; « focus » (5, « la prise de focus ») — cas (b), Robert « focus » ; Aucun risque d’incompréhension pour ces mots du cas (b) : courants, ils sont restitués par la synthèse vocale française avec la prononciation d’usage. « items », « zoom », « carrousel » — cas (a) ; RGAA, WCAG, CAPTCHA, axe-core, DINUM, « iframe » (nom d’élément) — cas (d). La mention de source ne contient plus « commit ». Aucun passage soumis au critère : non applicable. Règle appliquée (cas particuliers et notes 1 et 2 du critère 8.7) : (a) mot présent dans le dictionnaire de l’Académie : non applicable ; (b) mot absent de l’Académie mais passé dans le langage commun, preuve à l’appui (entrée du Larousse ou du Robert) : défaut seulement si l’absence de lang peut provoquer une incompréhension à la restitution ; (c) jargon technique ou mot anglais absent des dictionnaires d’usage (y compris le sens employé, et les formes francisées comme « commité », « mergé ») : lang exigé ; (d) nom propre, nom d’outil ou de produit (et intitulé de leurs options), sigle, titre d’œuvre, code ou identifiant technique (nom d’attribut, d’élément, d’événement) : exempté."
 		},
 		{
 			"criterion": "8.7",
 			"page": "https://chikimuras.github.io/rampe/referentiel/1-1/",
-			"status": "NC",
-			"note": "Test 8.7.1 en échec : Page examinée : fiche du critère 1.1 (/referentiel/1-1/). Les passages anglais du contenu sont balisés (<span lang=\"en\"> : « 1.1.1 Non-text Content », « H36, H37, H53, F65, H24 » et les 7 descriptions de règles axe-core), mais la mention de source « (commit ca4019f) » contient le mot anglais « commit » sans lang. Règle appliquée partout (décision consignée, délégation ADR-0001) : les titres d’œuvres ou de documents en langue étrangère (cheat sheets OWASP et leurs sections, titres d’ADR, noms de normes) et les noms propres ou sigles (WCAG, JSON, CAPTCHA, axe-core, GitHub…) n’exigent pas de lang ; les mots courants anglais absents du dictionnaire français, jargon technique compris (« Accepted », « incomplete », « Landmarks », « commit », « merge », « build »…), exigent lang. Correction : <span lang=\"en\">commit</span> ou « version ca4019f »."
+			"status": "C",
+			"note": "Test 8.7.1 : Page examinée : fiche du critère 1.1 (/referentiel/1-1/). Méthode : texte rendu hors <code> et hors éléments lang≠fr, plus alt, title, aria-label et placeholder, extrait du DOM (build du 2026-10-20) ; chaque mot étranger candidat cherché le 2026-10-20 dans le Dictionnaire de l’Académie française (dictionnaire-academie.fr), puis, s’il y manque, dans le Larousse (larousse.fr) et le Robert (dictionnaire.lerobert.com). 9 <span lang=\"en\"> (« 1.1.1 Non-text Content », « H36, H37, H53, F65, H24 », 7 descriptions de règles axe-core). Hors balisage : « bitmap » (test 1.1.8) — cas (b), Robert « bitmap » (informatique), aucun risque d’incompréhension pour ces mots du cas (b) : courants, ils sont restitués par la synthèse vocale française avec la prononciation d’usage ; WCAG, WAI-ARIA, axe-core — cas (d). Tous les passages soumis sont balisés : conforme. Règle appliquée (cas particuliers et notes 1 et 2 du critère 8.7) : (a) mot présent dans le dictionnaire de l’Académie : non applicable ; (b) mot absent de l’Académie mais passé dans le langage commun, preuve à l’appui (entrée du Larousse ou du Robert) : défaut seulement si l’absence de lang peut provoquer une incompréhension à la restitution ; (c) jargon technique ou mot anglais absent des dictionnaires d’usage (y compris le sens employé, et les formes francisées comme « commité », « mergé ») : lang exigé ; (d) nom propre, nom d’outil ou de produit (et intitulé de leurs options), sigle, titre d’œuvre, code ou identifiant technique (nom d’attribut, d’élément, d’événement) : exempté."
 		},
 		{
 			"criterion": "8.7",
 			"page": "https://chikimuras.github.io/rampe/referentiel/glossaire/",
-			"status": "NC",
-			"note": "Test 8.7.1 en échec : Page examinée : page Glossaire (/referentiel/glossaire/). 26 passages anglais sont balisés lang=\"en\" (« WAI-ARIA 1.1 Authoring Practices », « Accessible name and description calculation », « sliders », « landmarks » dans le corps d’une définition…), mais trois mots courants anglais ne le sont pas : le terme défini <dt id=\"landmarks\">Landmarks</dt>, « style switcher » (définition « Mécanisme de remplacement ») et « commit » dans la mention de source « (commit ca4019f) ». Règle appliquée partout (décision consignée, délégation ADR-0001) : les titres d’œuvres ou de documents en langue étrangère (cheat sheets OWASP et leurs sections, titres d’ADR, noms de normes) et les noms propres ou sigles (WCAG, JSON, CAPTCHA, axe-core, GitHub…) n’exigent pas de lang ; les mots courants anglais absents du dictionnaire français, jargon technique compris (« Accepted », « incomplete », « Landmarks », « commit », « merge », « build »…), exigent lang. Correction : lang=\"en\" sur ces passages."
+			"status": "C",
+			"note": "Test 8.7.1 : Page examinée : page Glossaire (/referentiel/glossaire/). Méthode : texte rendu hors <code> et hors éléments lang≠fr, plus alt, title, aria-label et placeholder, extrait du DOM (build du 2026-10-20) ; chaque mot étranger candidat cherché le 2026-10-20 dans le Dictionnaire de l’Académie française (dictionnaire-academie.fr), puis, s’il y manque, dans le Larousse (larousse.fr) et le Robert (dictionnaire.lerobert.com). 28 éléments lang=\"en\" (« Landmarks », « sliders », « style switcher », « WAI-ARIA 1.1 Authoring Practices », « Accessible name and description calculation »…). Hors balisage, cas (b), chacun avec son entrée de dictionnaire d’usage : web (Larousse), focus (Robert), audio (Larousse), bitmap (Robert), blog (Larousse), plugin (Robert « plug-in »), podcast (Larousse), widget (Larousse), anti-spam (Robert « antispam »), e-mail et design (Académie, 10e édition en cours, sinon Larousse) ; Aucun risque d’incompréhension pour ces mots du cas (b) : courants, ils sont restitués par la synthèse vocale française avec la prononciation d’usage. Cas (a) : tag(s), label(s), item(s), quiz, carrousel. Cas (d) : Flash, Silverlight, Java, Open Office Org, Microsoft Office, Adobe PDF, EPUB/Daisy, Wav, Mp3, aria-labelledby, aria-describedby, autocomplete, DOCTYPE, id, adresses. Tous les passages soumis sont balisés : conforme. Règle appliquée (cas particuliers et notes 1 et 2 du critère 8.7) : (a) mot présent dans le dictionnaire de l’Académie : non applicable ; (b) mot absent de l’Académie mais passé dans le langage commun, preuve à l’appui (entrée du Larousse ou du Robert) : défaut seulement si l’absence de lang peut provoquer une incompréhension à la restitution ; (c) jargon technique ou mot anglais absent des dictionnaires d’usage (y compris le sens employé, et les formes francisées comme « commité », « mergé ») : lang exigé ; (d) nom propre, nom d’outil ou de produit (et intitulé de leurs options), sigle, titre d’œuvre, code ou identifiant technique (nom d’attribut, d’élément, d’événement) : exempté."
 		},
 		{
 			"criterion": "8.7",
 			"page": "https://chikimuras.github.io/rampe/audit/",
-			"status": "C",
-			"note": "Test 8.7.1 : Page examinée : audit guidé (/audit/). État vierge et audit complet importé examinés. Passages anglais des indices de l’audit automatique (descriptions de règles axe-core, « Images must have alternative text »…) dans des <span lang=\"en\"> ; « Colour Contrast Analyser », NVDA, Markdown, JSON, CAPTCHA sont des noms propres ou sigles ; aucun mot courant anglais non balisé relevé dans le texte de l’îlot. Règle appliquée partout (décision consignée, délégation ADR-0001) : les titres d’œuvres ou de documents en langue étrangère (cheat sheets OWASP et leurs sections, titres d’ADR, noms de normes) et les noms propres ou sigles (WCAG, JSON, CAPTCHA, axe-core, GitHub…) n’exigent pas de lang ; les mots courants anglais absents du dictionnaire français, jargon technique compris (« Accepted », « incomplete », « Landmarks », « commit », « merge », « build »…), exigent lang. Conforme."
+			"status": "NC",
+			"note": "Test 8.7.1 en échec : Page examinée : audit guidé (/audit/). Méthode : texte rendu hors <code> et hors éléments lang≠fr, plus alt, title, aria-label et placeholder, extrait du DOM (build du 2026-10-20) ; chaque mot étranger candidat cherché le 2026-10-20 dans le Dictionnaire de l’Académie française (dictionnaire-academie.fr), puis, s’il y manque, dans le Larousse (larousse.fr) et le Robert (dictionnaire.lerobert.com). États examinés : vierge, audit complet importé, rapport automatique importé, tableau d’actions, et chacun des 106 critères affiché avec ses méthodologies dépliées. Balisés lang=\"en\" : descriptions de règles axe-core des indices et « landmark ». En défaut, cas (c) : « pop-under » (méthodologie du test 13.2.1 : « aucune nouvelle fenêtre (pop-up ou pop-under, par exemple) »), absent de l’Académie, du Larousse et du Robert, sans lang. Cas (b), sans défaut (aucun risque d’incompréhension pour ces mots du cas (b) : courants, ils sont restitués par la synthèse vocale française avec la prononciation d’usage) : web, focus, audio(s), bitmap, import (Larousse), extranet, newsletter, playlist, pop-up, plugin, plug-in. Cas (a) : intranet, e-mail, zoom, items, carrousel. Cas (d) : « W3C Nu markup checker (all frames) » et le menu « Check » (intitulés d’un outil), noms d’attributs, d’éléments et d’événements du texte officiel (title, scope, hidden, submit, click, keydown…), touches (Tab, Alt), produits (Colour Contrast Analyser, NVDA, Markdown, JSON), titre de vidéo « London 2012 Olympics Seizure ». Correction : <span lang=\"en\">pop-under</span>. Règle appliquée (cas particuliers et notes 1 et 2 du critère 8.7) : (a) mot présent dans le dictionnaire de l’Académie : non applicable ; (b) mot absent de l’Académie mais passé dans le langage commun, preuve à l’appui (entrée du Larousse ou du Robert) : défaut seulement si l’absence de lang peut provoquer une incompréhension à la restitution ; (c) jargon technique ou mot anglais absent des dictionnaires d’usage (y compris le sens employé, et les formes francisées comme « commité », « mergé ») : lang exigé ; (d) nom propre, nom d’outil ou de produit (et intitulé de leurs options), sigle, titre d’œuvre, code ou identifiant technique (nom d’attribut, d’élément, d’événement) : exempté."
 		},
 		{
 			"criterion": "8.7",
 			"page": "https://chikimuras.github.io/rampe/cockpit/",
 			"status": "NC",
-			"note": "Test 8.7.1 en échec : Page examinée : page Cockpit (/cockpit/). Mots courants anglais sans lang : le statut « Accepted » des 22 décisions (<span class=\"status Accepted\">Accepted</span>), le titre « Gate automatique » et « la roadmap détaillée » (lien « Voir la roadmap détaillée »). Ne sont pas soumis : les titres d’ADR (« Monorepo TypeScript (pnpm)… », « Pas de backend… », « Gates de vérification et flux de merge »), titres de documents, et le titre de document « Workflow des agents ». Règle appliquée partout (décision consignée, délégation ADR-0001) : les titres d’œuvres ou de documents en langue étrangère (cheat sheets OWASP et leurs sections, titres d’ADR, noms de normes) et les noms propres ou sigles (WCAG, JSON, CAPTCHA, axe-core, GitHub…) n’exigent pas de lang ; les mots courants anglais absents du dictionnaire français, jargon technique compris (« Accepted », « incomplete », « Landmarks », « commit », « merge », « build »…), exigent lang. Correction : traduire (« Acceptée », « Contrôle automatique », « feuille de route ») ou ajouter lang=\"en\"."
+			"note": "Test 8.7.1 en échec : Page examinée : page Cockpit (/cockpit/). Méthode : texte rendu hors <code> et hors éléments lang≠fr, plus alt, title, aria-label et placeholder, extrait du DOM (build du 2026-10-20) ; chaque mot étranger candidat cherché le 2026-10-20 dans le Dictionnaire de l’Académie française (dictionnaire-academie.fr), puis, s’il y manque, dans le Larousse (larousse.fr) et le Robert (dictionnaire.lerobert.com). Balisés : « roadmap », « Gate ». En défaut, cas (c), sans lang : dans les titres d’ADR, « Monorepo » (ADR-0003), « backend » (ADR-0005), « Gates » et « merge » (ADR-0006 « Gates de vérification et flux de merge »), « gate » (ADR-0021 « un gate CI automatique ») — « gate » n’est au Larousse qu’au sens d’électronique (grille), pas en ce sens — ; dans la Documentation, « Roadmap » et « Workflow » (« Workflow des agents »). Aucun de ces mots n’est dans l’Académie, le Larousse ou le Robert au sens employé. Cas (b), sans défaut : « web » (« Audit guidé (web) »), « Import », « Export et import » (Larousse « import », Robert « export »). Cas (a) : Cockpit, score, Scanner. Cas (d) : TypeScript, pnpm, Astro, GitHub Pages, Playwright, Preact, Dependabot, npm, Cloudflare. Les intitulés d’ADR étant rédigés en français, ils ne sont pas des titres d’œuvres étrangères. Correction : lang=\"en\" ou équivalents français. Règle appliquée (cas particuliers et notes 1 et 2 du critère 8.7) : (a) mot présent dans le dictionnaire de l’Académie : non applicable ; (b) mot absent de l’Académie mais passé dans le langage commun, preuve à l’appui (entrée du Larousse ou du Robert) : défaut seulement si l’absence de lang peut provoquer une incompréhension à la restitution ; (c) jargon technique ou mot anglais absent des dictionnaires d’usage (y compris le sens employé, et les formes francisées comme « commité », « mergé ») : lang exigé ; (d) nom propre, nom d’outil ou de produit (et intitulé de leurs options), sigle, titre d’œuvre, code ou identifiant technique (nom d’attribut, d’élément, d’événement) : exempté."
 		},
 		{
 			"criterion": "8.7",
 			"page": "https://chikimuras.github.io/rampe/cockpit/adr/0011-cli-audit-playwright/",
-			"status": "NC",
-			"note": "Test 8.7.1 en échec : Page examinée : page ADR-0011 (/cockpit/adr/0011-cli-audit-playwright/). Mots courants anglais sans lang : « Accepted » dans <p class=\"meta\">Accepted · 15/10/2026 · …</p> et « incomplete » (type de résultat axe dans le tableau). Ne sont pas soumis : « OWASP Cross Site Scripting Prevention Cheat Sheet » et sa règle « Output Encoding », titres de document et de section, traités comme noms propres. Règle appliquée partout (décision consignée, délégation ADR-0001) : les titres d’œuvres ou de documents en langue étrangère (cheat sheets OWASP et leurs sections, titres d’ADR, noms de normes) et les noms propres ou sigles (WCAG, JSON, CAPTCHA, axe-core, GitHub…) n’exigent pas de lang ; les mots courants anglais absents du dictionnaire français, jargon technique compris (« Accepted », « incomplete », « Landmarks », « commit », « merge », « build »…), exigent lang. Correction : <span lang=\"en\">Accepted</span> (ou « Acceptée »), <code>incomplete</code> ou lang=\"en\"."
+			"status": "C",
+			"note": "Test 8.7.1 : Page examinée : page ADR-0011 (/cockpit/adr/0011-cli-audit-playwright/). Méthode : texte rendu hors <code> et hors éléments lang≠fr, plus alt, title, aria-label et placeholder, extrait du DOM (build du 2026-10-20) ; chaque mot étranger candidat cherché le 2026-10-20 dans le Dictionnaire de l’Académie française (dictionnaire-academie.fr), puis, s’il y manque, dans le Larousse (larousse.fr) et le Robert (dictionnaire.lerobert.com). « incomplete » est dans un <span lang=\"en\"> ; « Accepted » est devenu « Acceptée ». Hors balisage : « import » (« servira à l’import dans l’audit guidé ») — cas (b), Larousse « import », aucun risque d’incompréhension pour ces mots du cas (b) : courants, ils sont restitués par la synthèse vocale française avec la prononciation d’usage ; « score » — cas (a) ; « OWASP Cross Site Scripting Prevention Cheat Sheet » et « Output Encoding » (titre de document publié et de section), Playwright, Chromium, axe-core, Node, Dependabot, JavaScript, npm — cas (d). Tous les passages soumis sont balisés : conforme. Règle appliquée (cas particuliers et notes 1 et 2 du critère 8.7) : (a) mot présent dans le dictionnaire de l’Académie : non applicable ; (b) mot absent de l’Académie mais passé dans le langage commun, preuve à l’appui (entrée du Larousse ou du Robert) : défaut seulement si l’absence de lang peut provoquer une incompréhension à la restitution ; (c) jargon technique ou mot anglais absent des dictionnaires d’usage (y compris le sens employé, et les formes francisées comme « commité », « mergé ») : lang exigé ; (d) nom propre, nom d’outil ou de produit (et intitulé de leurs options), sigle, titre d’œuvre, code ou identifiant technique (nom d’attribut, d’élément, d’événement) : exempté."
 		},
 		{
 			"criterion": "8.7",
 			"page": "https://chikimuras.github.io/rampe/cockpit/journal/2026-10-15/",
 			"status": "NC",
-			"note": "Test 8.7.1 en échec : Page examinée : page du journal du 15/10/2026 (/cockpit/journal/2026-10-15/). Mots courants anglais sans lang dans le texte : « commit » (8 fois, ex. « Premier commit poussé directement sur main »), « merge » (5), « build » (2), « check » (« PR obligatoire, check … »), « force-push », « workflow », « fork »/« forks », « cron »/« crons », « fuzzer », « test golden ». Ne sont pas soumis : les titres de documents OWASP en <em> (« XSS Prevention Cheat Sheet », « Input Validation », « Deserialization Cheat Sheets »), « European Accessibility Act », les noms de produits (GitHub Pages, Playwright, Dependabot…), et les mots du dictionnaire (« proxy », « job », « squash », « bug », « émoji »). Règle appliquée partout (décision consignée, délégation ADR-0001) : les titres d’œuvres ou de documents en langue étrangère (cheat sheets OWASP et leurs sections, titres d’ADR, noms de normes) et les noms propres ou sigles (WCAG, JSON, CAPTCHA, axe-core, GitHub…) n’exigent pas de lang ; les mots courants anglais absents du dictionnaire français, jargon technique compris (« Accepted », « incomplete », « Landmarks », « commit », « merge », « build »…), exigent lang. Correction : lang=\"en\" sur ces mots ou équivalents français (« fusion », « construction », « vérification »…)."
+			"note": "Test 8.7.1 en échec : Page examinée : page du journal du 15/10/2026 (/cockpit/journal/2026-10-15/). Méthode : texte rendu hors <code> et hors éléments lang≠fr, plus alt, title, aria-label et placeholder, extrait du DOM (build du 2026-10-20) ; chaque mot étranger candidat cherché le 2026-10-20 dans le Dictionnaire de l’Académie française (dictionnaire-academie.fr), puis, s’il y manque, dans le Larousse (larousse.fr) et le Robert (dictionnaire.lerobert.com). 42 <span lang=\"en\"> (commit(s), merge, build, run, check, force-push, workflow, worktree, shell, fork(s), cron(s), roadmap, fuzzer, golden, workspace, Gate). En défaut, cas (c) : « commité » (« un fichier de résultats de test […] avait été commité ») : verbe anglais to commit francisé, absent de l’Académie, du Larousse (« commit » y renvoie à « commettre ») et du Robert, sans lang. Cas (b), sans défaut (aucun risque d’incompréhension pour ces mots du cas (b) : courants, ils sont restitués par la synthèse vocale française avec la prononciation d’usage) : bug(s) (Larousse, à « bogue »), proxy, émoji, focus, import, export. Cas (a) : job, squash. « admins » : apocope française d’« administrateurs », pas un mot étranger. Cas (d) : GitHub Pages, Playwright, Dependabot, AppArmor, Biome, rtk, titres OWASP en <em>, « European Accessibility Act », sigles (e2e, CI, PR). Correction : « enregistré dans le dépôt » ou <span lang=\"en\">commité</span>. Règle appliquée (cas particuliers et notes 1 et 2 du critère 8.7) : (a) mot présent dans le dictionnaire de l’Académie : non applicable ; (b) mot absent de l’Académie mais passé dans le langage commun, preuve à l’appui (entrée du Larousse ou du Robert) : défaut seulement si l’absence de lang peut provoquer une incompréhension à la restitution ; (c) jargon technique ou mot anglais absent des dictionnaires d’usage (y compris le sens employé, et les formes francisées comme « commité », « mergé ») : lang exigé ; (d) nom propre, nom d’outil ou de produit (et intitulé de leurs options), sigle, titre d’œuvre, code ou identifiant technique (nom d’attribut, d’élément, d’événement) : exempté."
 		},
 		{
 			"criterion": "8.7",
 			"page": "https://chikimuras.github.io/rampe/cockpit/docs/roadmap/",
 			"status": "NC",
-			"note": "Test 8.7.1 en échec : Page examinée : page Roadmap (/cockpit/docs/roadmap/). Mots courants anglais sans lang dans les tâches : « workspace » (« Dépôt, workspace pnpm… »), « hook », « lint », « typecheck », « build » (« Gate local (hook Stop) et CI (lint, typecheck, tests, build) »), « Gate » (2 fois), « merge » (« merge uniquement par PR »), « cron ». Ne sont pas soumis : le titre de document « Roadmap » (h1), les noms de produits (GitHub Pages, Biome, TypeScript, Playwright, Cloudflare, Mozilla…), « Scanner » (mot du dictionnaire). Règle appliquée partout (décision consignée, délégation ADR-0001) : les titres d’œuvres ou de documents en langue étrangère (cheat sheets OWASP et leurs sections, titres d’ADR, noms de normes) et les noms propres ou sigles (WCAG, JSON, CAPTCHA, axe-core, GitHub…) n’exigent pas de lang ; les mots courants anglais absents du dictionnaire français, jargon technique compris (« Accepted », « incomplete », « Landmarks », « commit », « merge », « build »…), exigent lang. Correction : lang=\"en\" ou équivalents français."
+			"note": "Test 8.7.1 en échec : Page examinée : page Roadmap (/cockpit/docs/roadmap/). Méthode : texte rendu hors <code> et hors éléments lang≠fr, plus alt, title, aria-label et placeholder, extrait du DOM (build du 2026-10-20) ; chaque mot étranger candidat cherché le 2026-10-20 dans le Dictionnaire de l’Académie française (dictionnaire-academie.fr), puis, s’il y manque, dans le Larousse (larousse.fr) et le Robert (dictionnaire.lerobert.com). Balisés : workspace, Gate (2), hook, lint, typecheck, build, merge, cron. En défaut, cas (c), sans lang : « Roadmap » (h1, et le titre « Roadmap · Rampe ») — absent de l’Académie, du Larousse et du Robert, et balisé par le site lui-même sur /cockpit/ — et « mergé » (« du code mergé sur main », verbe to merge francisé, absent des dictionnaires). Cas (b), sans défaut : « web », « export », « Import ». Cas (a) : Stop, Scanner. Cas (d) : GitHub Pages, Biome, TypeScript, Playwright, Cloudflare, Mozilla, Firefox, Chrome, npm, pnpm. Correction : « Feuille de route », « fusionné », ou lang=\"en\". Règle appliquée (cas particuliers et notes 1 et 2 du critère 8.7) : (a) mot présent dans le dictionnaire de l’Académie : non applicable ; (b) mot absent de l’Académie mais passé dans le langage commun, preuve à l’appui (entrée du Larousse ou du Robert) : défaut seulement si l’absence de lang peut provoquer une incompréhension à la restitution ; (c) jargon technique ou mot anglais absent des dictionnaires d’usage (y compris le sens employé, et les formes francisées comme « commité », « mergé ») : lang exigé ; (d) nom propre, nom d’outil ou de produit (et intitulé de leurs options), sigle, titre d’œuvre, code ou identifiant technique (nom d’attribut, d’élément, d’événement) : exempté."
 		},
 		{
 			"criterion": "8.7",
 			"page": "https://chikimuras.github.io/rampe/referentiel/5-1/",
-			"status": "NC",
-			"note": "Test 8.7.1 en échec : Page examinée : fiche du critère 5.1 (/referentiel/5-1/). « 1.3.1 Info and Relationships » et « H73 » sont dans des <span lang=\"en\">, mais la mention de source « (commit ca4019f) » contient « commit » sans lang. Règle appliquée partout (décision consignée, délégation ADR-0001) : les titres d’œuvres ou de documents en langue étrangère (cheat sheets OWASP et leurs sections, titres d’ADR, noms de normes) et les noms propres ou sigles (WCAG, JSON, CAPTCHA, axe-core, GitHub…) n’exigent pas de lang ; les mots courants anglais absents du dictionnaire français, jargon technique compris (« Accepted », « incomplete », « Landmarks », « commit », « merge », « build »…), exigent lang. Correction : <span lang=\"en\">commit</span> ou « version ca4019f »."
+			"status": "C",
+			"note": "Test 8.7.1 : Page examinée : fiche du critère 5.1 (/referentiel/5-1/). Méthode : texte rendu hors <code> et hors éléments lang≠fr, plus alt, title, aria-label et placeholder, extrait du DOM (build du 2026-10-20) ; chaque mot étranger candidat cherché le 2026-10-20 dans le Dictionnaire de l’Académie française (dictionnaire-academie.fr), puis, s’il y manque, dans le Larousse (larousse.fr) et le Robert (dictionnaire.lerobert.com). « 1.3.1 Info and Relationships » et « H73 » sont dans des <span lang=\"en\"> ; aucun autre mot étranger hors cas (d) (WCAG, DINUM, DISIC, axe). Tous les passages soumis sont balisés : conforme. Règle appliquée (cas particuliers et notes 1 et 2 du critère 8.7) : (a) mot présent dans le dictionnaire de l’Académie : non applicable ; (b) mot absent de l’Académie mais passé dans le langage commun, preuve à l’appui (entrée du Larousse ou du Robert) : défaut seulement si l’absence de lang peut provoquer une incompréhension à la restitution ; (c) jargon technique ou mot anglais absent des dictionnaires d’usage (y compris le sens employé, et les formes francisées comme « commité », « mergé ») : lang exigé ; (d) nom propre, nom d’outil ou de produit (et intitulé de leurs options), sigle, titre d’œuvre, code ou identifiant technique (nom d’attribut, d’élément, d’événement) : exempté."
 		},
 		{
 			"criterion": "8.7",
 			"page": "https://chikimuras.github.io/rampe/referentiel/1-9/",
+			"status": "C",
+			"note": "Test 8.7.1 : Page examinée : fiche du critère 1.9 (/referentiel/1-9/). Méthode : texte rendu hors <code> et hors éléments lang≠fr, plus alt, title, aria-label et placeholder, extrait du DOM (build du 2026-10-20) ; chaque mot étranger candidat cherché le 2026-10-20 dans le Dictionnaire de l’Académie française (dictionnaire-academie.fr), puis, s’il y manque, dans le Larousse (larousse.fr) et le Robert (dictionnaire.lerobert.com). « 1.1.1 Non-text Content », « 4.1.2 Name, Role, Value », « G140, ARIA4, ARIA6 » et 3 descriptions axe-core sont dans des <span lang=\"en\">. Hors balisage : « bitmap » (3, ex. test 1.9.5) — cas (b), Robert « bitmap », aucun risque d’incompréhension pour ces mots du cas (b) : courants, ils sont restitués par la synthèse vocale française avec la prononciation d’usage ; WCAG, WAI-ARIA, axe-core — cas (d). Tous les passages soumis sont balisés : conforme. Règle appliquée (cas particuliers et notes 1 et 2 du critère 8.7) : (a) mot présent dans le dictionnaire de l’Académie : non applicable ; (b) mot absent de l’Académie mais passé dans le langage commun, preuve à l’appui (entrée du Larousse ou du Robert) : défaut seulement si l’absence de lang peut provoquer une incompréhension à la restitution ; (c) jargon technique ou mot anglais absent des dictionnaires d’usage (y compris le sens employé, et les formes francisées comme « commité », « mergé ») : lang exigé ; (d) nom propre, nom d’outil ou de produit (et intitulé de leurs options), sigle, titre d’œuvre, code ou identifiant technique (nom d’attribut, d’élément, d’événement) : exempté."
+		},
+		{
+			"criterion": "8.7",
+			"page": "https://chikimuras.github.io/rampe/plan-du-site/",
 			"status": "NC",
-			"note": "Test 8.7.1 en échec : Page examinée : fiche du critère 1.9 (/referentiel/1-9/). « 1.1.1 Non-text Content », « 4.1.2 Name, Role, Value », « G140, ARIA4, ARIA6 » et les 3 descriptions de règles axe-core sont dans des <span lang=\"en\">, mais la mention de source « (commit ca4019f) » contient « commit » sans lang. Règle appliquée partout (décision consignée, délégation ADR-0001) : les titres d’œuvres ou de documents en langue étrangère (cheat sheets OWASP et leurs sections, titres d’ADR, noms de normes) et les noms propres ou sigles (WCAG, JSON, CAPTCHA, axe-core, GitHub…) n’exigent pas de lang ; les mots courants anglais absents du dictionnaire français, jargon technique compris (« Accepted », « incomplete », « Landmarks », « commit », « merge », « build »…), exigent lang. Correction : <span lang=\"en\">commit</span> ou « version ca4019f »."
+			"note": "Test 8.7.1 en échec : Page examinée : page Plan du site (/plan-du-site/). Méthode : texte rendu hors <code> et hors éléments lang≠fr, plus alt, title, aria-label et placeholder, extrait du DOM (build du 2026-10-20) ; chaque mot étranger candidat cherché le 2026-10-20 dans le Dictionnaire de l’Académie française (dictionnaire-academie.fr), puis, s’il y manque, dans le Larousse (larousse.fr) et le Robert (dictionnaire.lerobert.com). 0 attribut lang dans le corps. En défaut, cas (c), sans lang, dans les intitulés d’ADR et de documents de la section Cockpit : « Monorepo », « backend », « Gates », « merge », « gate », « Roadmap », « Workflow » (mêmes vérifications que sur /cockpit/). Cas (b), sans défaut : web (« page web » ×50), focus, Import, Export. Cas (a) : items. Cas (d) : TypeScript, pnpm, Astro, GitHub Pages, Playwright, Preact, Dependabot, sigles. Correction : lang=\"en\" ou équivalents français. Règle appliquée (cas particuliers et notes 1 et 2 du critère 8.7) : (a) mot présent dans le dictionnaire de l’Académie : non applicable ; (b) mot absent de l’Académie mais passé dans le langage commun, preuve à l’appui (entrée du Larousse ou du Robert) : défaut seulement si l’absence de lang peut provoquer une incompréhension à la restitution ; (c) jargon technique ou mot anglais absent des dictionnaires d’usage (y compris le sens employé, et les formes francisées comme « commité », « mergé ») : lang exigé ; (d) nom propre, nom d’outil ou de produit (et intitulé de leurs options), sigle, titre d’œuvre, code ou identifiant technique (nom d’attribut, d’élément, d’événement) : exempté."
 		},
 		{
 			"criterion": "8.8",
 			"page": "https://chikimuras.github.io/rampe/",
 			"status": "NA",
-			"note": "Test 8.8.1 : Page examinée : page d’accueil (/). Recherche des attributs lang et xml:lang dans le corps (body [lang]) : 0 élément. Aucun changement de langue indiqué dont le code serait à vérifier : non applicable."
+			"note": "Test 8.8.1 : Page examinée : page d’accueil (/). Recherche des attributs lang et xml:lang dans le corps (body [lang], body [xml:lang]) : 0 élément. Aucun changement de langue indiqué dont le code serait à vérifier : non applicable."
 		},
 		{
 			"criterion": "8.8",
 			"page": "https://chikimuras.github.io/rampe/referentiel/",
 			"status": "NA",
-			"note": "Test 8.8.1 : Page examinée : page Référentiel (/referentiel/). Recherche des attributs lang et xml:lang dans le corps (body [lang]) : 0 élément. Aucun changement de langue indiqué dont le code serait à vérifier : non applicable."
+			"note": "Test 8.8.1 : Page examinée : page Référentiel (/referentiel/). Recherche des attributs lang et xml:lang dans le corps (body [lang], body [xml:lang]) : 0 élément. Aucun changement de langue indiqué dont le code serait à vérifier : non applicable."
 		},
 		{
 			"criterion": "8.8",
 			"page": "https://chikimuras.github.io/rampe/referentiel/1-1/",
 			"status": "C",
-			"note": "Test 8.8.1 : 9 éléments <span lang=\"en\"> : code « en » valide (ISO 639-1) et pertinent, chaque passage balisé étant effectivement en anglais (références et techniques WCAG, descriptions axe-core, titres de documents W3C)."
+			"note": "Test 8.8.1 : Page examinée : fiche du critère 1.1 (/referentiel/1-1/). 9 éléments <span lang=\"en\"> (références WCAG, techniques, descriptions de règles axe-core) : code « en » valide (ISO 639-1) et pertinent, chaque passage balisé étant effectivement en anglais."
 		},
 		{
 			"criterion": "8.8",
 			"page": "https://chikimuras.github.io/rampe/referentiel/glossaire/",
 			"status": "C",
-			"note": "Test 8.8.1 : 26 éléments lang=\"en\" (<span>, <abbr>) : code « en » valide (ISO 639-1) et pertinent, chaque passage balisé étant effectivement en anglais (références et techniques WCAG, descriptions axe-core, titres de documents W3C)."
+			"note": "Test 8.8.1 : Page examinée : page Glossaire (/referentiel/glossaire/). 28 éléments lang=\"en\" (24 span, 4 abbr WCAG) : « Landmarks », « sliders », « style switcher », « WAI-ARIA 1.1 Authoring Practices », « Accessible name and description calculation », « left to right », « (also known as the card security code…) »… : code « en » valide (ISO 639-1) et pertinent, chaque passage étant en anglais."
 		},
 		{
 			"criterion": "8.8",
 			"page": "https://chikimuras.github.io/rampe/audit/",
 			"status": "C",
-			"note": "Test 8.8.1 : les <span lang=\"en\"> des descriptions de règles axe-core (état rapport importé) : code « en » valide (ISO 639-1) et pertinent, chaque passage balisé étant effectivement en anglais (références et techniques WCAG, descriptions axe-core, titres de documents W3C)."
+			"note": "Test 8.8.1 : Page examinée : audit guidé (/audit/). États examinés : vierge (0 élément lang dans le corps), rapport automatique importé et 106 critères affichés : <span lang=\"en\"> des descriptions de règles axe-core (« Images must have alternative text », « Elements must meet minimum color contrast ratio thresholds », « <html> element must have a lang attribute », « Form elements must have labels ») et « landmark » dans le texte officiel : code « en » valide (ISO 639-1) et pertinent, chaque passage étant en anglais."
 		},
 		{
 			"criterion": "8.8",
 			"page": "https://chikimuras.github.io/rampe/cockpit/",
-			"status": "NA",
-			"note": "Test 8.8.1 : Page examinée : page Cockpit (/cockpit/). Recherche des attributs lang et xml:lang dans le corps (body [lang]) : 0 élément. Aucun changement de langue indiqué dont le code serait à vérifier : non applicable."
+			"status": "C",
+			"note": "Test 8.8.1 : Page examinée : page Cockpit (/cockpit/). 2 éléments <span lang=\"en\"> : « roadmap » et « Gate » : code « en » valide (ISO 639-1) et pertinent, les deux mots étant anglais."
 		},
 		{
 			"criterion": "8.8",
 			"page": "https://chikimuras.github.io/rampe/cockpit/adr/0011-cli-audit-playwright/",
-			"status": "NA",
-			"note": "Test 8.8.1 : Page examinée : page ADR-0011 (/cockpit/adr/0011-cli-audit-playwright/). Recherche des attributs lang et xml:lang dans le corps (body [lang]) : 0 élément. Aucun changement de langue indiqué dont le code serait à vérifier : non applicable."
+			"status": "C",
+			"note": "Test 8.8.1 : Page examinée : page ADR-0011 (/cockpit/adr/0011-cli-audit-playwright/). 1 élément <span lang=\"en\"> : « incomplete » (type de résultat axe) : code « en » valide (ISO 639-1) et pertinent."
 		},
 		{
 			"criterion": "8.8",
 			"page": "https://chikimuras.github.io/rampe/cockpit/journal/2026-10-15/",
-			"status": "NA",
-			"note": "Test 8.8.1 : Page examinée : page du journal du 15/10/2026 (/cockpit/journal/2026-10-15/). Recherche des attributs lang et xml:lang dans le corps (body [lang]) : 0 élément. Aucun changement de langue indiqué dont le code serait à vérifier : non applicable."
+			"status": "C",
+			"note": "Test 8.8.1 : Page examinée : page du journal du 15/10/2026 (/cockpit/journal/2026-10-15/). 42 éléments <span lang=\"en\"> : workspace, Gate, commit(s), run, check, force-push, merge, worktree, workflow, shell, fork(s), cron(s), roadmap, build, fuzzer, golden : code « en » valide (ISO 639-1) et pertinent, chaque mot étant anglais."
 		},
 		{
 			"criterion": "8.8",
 			"page": "https://chikimuras.github.io/rampe/cockpit/docs/roadmap/",
-			"status": "NA",
-			"note": "Test 8.8.1 : Page examinée : page Roadmap (/cockpit/docs/roadmap/). Recherche des attributs lang et xml:lang dans le corps (body [lang]) : 0 élément. Aucun changement de langue indiqué dont le code serait à vérifier : non applicable."
+			"status": "C",
+			"note": "Test 8.8.1 : Page examinée : page Roadmap (/cockpit/docs/roadmap/). 9 éléments <span lang=\"en\"> : workspace, Gate (2), hook, lint, typecheck, build, merge, cron : code « en » valide (ISO 639-1) et pertinent, chaque mot étant anglais."
 		},
 		{
 			"criterion": "8.8",
 			"page": "https://chikimuras.github.io/rampe/referentiel/5-1/",
 			"status": "C",
-			"note": "Test 8.8.1 : 2 éléments <span lang=\"en\"> : code « en » valide (ISO 639-1) et pertinent, chaque passage balisé étant effectivement en anglais (références et techniques WCAG, descriptions axe-core, titres de documents W3C)."
+			"note": "Test 8.8.1 : Page examinée : fiche du critère 5.1 (/referentiel/5-1/). 2 éléments <span lang=\"en\"> : « 1.3.1 Info and Relationships » et « H73 » : code « en » valide (ISO 639-1) et pertinent (référence et technique WCAG)."
 		},
 		{
 			"criterion": "8.8",
 			"page": "https://chikimuras.github.io/rampe/referentiel/1-9/",
 			"status": "C",
-			"note": "Test 8.8.1 : 6 éléments <span lang=\"en\"> : code « en » valide (ISO 639-1) et pertinent, chaque passage balisé étant effectivement en anglais (références et techniques WCAG, descriptions axe-core, titres de documents W3C)."
+			"note": "Test 8.8.1 : Page examinée : fiche du critère 1.9 (/referentiel/1-9/). 6 éléments <span lang=\"en\"> : « 1.1.1 Non-text Content », « 4.1.2 Name, Role, Value », « G140, ARIA4, ARIA6 » et 3 descriptions de règles axe-core : code « en » valide (ISO 639-1) et pertinent."
+		},
+		{
+			"criterion": "8.8",
+			"page": "https://chikimuras.github.io/rampe/plan-du-site/",
+			"status": "NA",
+			"note": "Test 8.8.1 : Page examinée : page Plan du site (/plan-du-site/). Recherche des attributs lang et xml:lang dans le corps (body [lang], body [xml:lang]) : 0 élément. Aucun changement de langue indiqué dont le code serait à vérifier : non applicable (les mots anglais non balisés relèvent du critère 8.7)."
 		},
 		{
 			"criterion": "8.9",
 			"page": "https://chikimuras.github.io/rampe/",
 			"status": "C",
-			"note": "Test 8.9.1 : balises examinées (h1, p, strong, em, nav, header, main, footer) : chacune conforme à sa sémantique. Aucun titre, blockquote, paragraphe vide, série de <br> ou espace utilisé pour un effet visuel ; aucun role=\"presentation\" (DOM vérifié)."
+			"note": "Test 8.9.1 : Page examinée : page d’accueil (/). Balises examinées dans le DOM : header, nav (ul de 7 li), main, h1, 5 p, em (titre de l’acte européen), strong, footer. Aucun titre, blockquote, paragraphe vide, série de <br>, tableau de mise en forme ou espace utilisé pour un effet visuel ; aucune balise de présentation (b, i, u, font, center) ; aucun role=\"presentation\"."
 		},
 		{
 			"criterion": "8.9",
 			"page": "https://chikimuras.github.io/rampe/referentiel/",
 			"status": "C",
-			"note": "Test 8.9.1 : h1/h2 pour les titres, ol pour le sommaire, ul pour les critères, section par thématique, code pour un identifiant. Aucun titre, blockquote, paragraphe vide, série de <br> ou espace utilisé pour un effet visuel ; aucun role=\"presentation\" (DOM vérifié)."
+			"note": "Test 8.9.1 : Page examinée : page Référentiel (/referentiel/). Balises examinées dans le DOM : h1, 13 section avec h2, ol (sommaire), ul de critères, p, span de numéro, code. Aucun titre, blockquote, paragraphe vide, série de <br>, tableau de mise en forme ou espace utilisé pour un effet visuel ; aucune balise de présentation (b, i, u, font, center) ; aucun role=\"presentation\"."
 		},
 		{
 			"criterion": "8.9",
 			"page": "https://chikimuras.github.io/rampe/referentiel/1-1/",
 			"status": "C",
-			"note": "Test 8.9.1 : h2/h3 de titres, details/summary pour les méthodologies, ol/ul pour les étapes, code pour le balisage cité, strong pour « le test est validé ». Aucun titre, blockquote, paragraphe vide, série de <br> ou espace utilisé pour un effet visuel ; aucun role=\"presentation\" (DOM vérifié)."
+			"note": "Test 8.9.1 : Page examinée : fiche du critère 1.1 (/referentiel/1-1/). Balises examinées dans le DOM : h1, h2/h3, 8 details/summary pour les méthodologies, ol/ul pour les étapes, code pour le balisage cité, strong pour « le test est validé ». Aucun titre, blockquote, paragraphe vide, série de <br>, tableau de mise en forme ou espace utilisé pour un effet visuel ; aucune balise de présentation (b, i, u, font, center) ; aucun role=\"presentation\"."
 		},
 		{
 			"criterion": "8.9",
 			"page": "https://chikimuras.github.io/rampe/referentiel/glossaire/",
 			"status": "C",
-			"note": "Test 8.9.1 : dl/dt/dd pour les 119 termes, code pour les extraits de code, abbr avec title pour WCAG. Aucun titre, blockquote, paragraphe vide, série de <br> ou espace utilisé pour un effet visuel ; aucun role=\"presentation\" (DOM vérifié)."
+			"note": "Test 8.9.1 : Page examinée : page Glossaire (/referentiel/glossaire/). Balises examinées dans le DOM : dl avec 119 dt/dd, p et ul dans les définitions, code pour les extraits de code, abbr pour WCAG, span lang. Aucun titre, blockquote, paragraphe vide, série de <br>, tableau de mise en forme ou espace utilisé pour un effet visuel ; aucune balise de présentation (b, i, u, font, center) ; aucun role=\"presentation\"."
 		},
 		{
 			"criterion": "8.9",
 			"page": "https://chikimuras.github.io/rampe/audit/",
 			"status": "C",
-			"note": "Test 8.9.1 : états interactifs examinés : vierge, audit complet importé (2 pages, 106 critères, taux et tableau d’actions affichés), audit effacé puis rapport automatique importé (statuts « à confirmer », indices dépliés), boîte de dialogue « Remplacer l’audit en cours ? » ouverte ; fieldset/legend pour les statuts, dl pour les taux, table pour les résultats, dialog pour la confirmation ; le seul <p> vide est la zone aria-live (fonctionnelle) et les <br> séparent les lignes d’une adresse postale. Aucun titre, blockquote, paragraphe vide, série de <br> ou espace utilisé pour un effet visuel ; aucun role=\"presentation\" (DOM vérifié)."
+			"note": "Test 8.9.1 : Page examinée : audit guidé (/audit/). Balises examinées dans le DOM : états examinés : vierge, audit complet importé (12 pages, résultat, déclaration et schéma), rapport automatique importé (indices dépliés), tableau d’actions rempli, boîte « Remplacer l’audit en cours ? » ouverte ; section/h2-h5 (l’aperçu de déclaration et de schéma reprend la hiérarchie du format officiel), fieldset/legend pour les statuts, label, details/summary, dialog, progress, mark pour les mentions [à compléter] ; les 6 <br> séparent les lignes d’une adresse postale ou d’un énoncé officiel, les deux <p> vides sont les régions d’annonce role=status et role=alert (fonctionnelles). Aucun titre, blockquote, paragraphe vide, série de <br>, tableau de mise en forme ou espace utilisé pour un effet visuel ; aucune balise de présentation (b, i, u, font, center) ; aucun role=\"presentation\"."
 		},
 		{
 			"criterion": "8.9",
 			"page": "https://chikimuras.github.io/rampe/cockpit/",
 			"status": "C",
-			"note": "Test 8.9.1 : ul/ol pour les listes, progress pour l’avancement, section/h2/h3. Aucun titre, blockquote, paragraphe vide, série de <br> ou espace utilisé pour un effet visuel ; aucun role=\"presentation\" (DOM vérifié)."
+			"note": "Test 8.9.1 : Page examinée : page Cockpit (/cockpit/). Balises examinées dans le DOM : h1, section/h2/h3, ul/ol de listes, 7 progress pour l’avancement, strong, span de statut, code. Aucun titre, blockquote, paragraphe vide, série de <br>, tableau de mise en forme ou espace utilisé pour un effet visuel ; aucune balise de présentation (b, i, u, font, center) ; aucun role=\"presentation\"."
 		},
 		{
 			"criterion": "8.9",
 			"page": "https://chikimuras.github.io/rampe/cockpit/adr/0011-cli-audit-playwright/",
 			"status": "C",
-			"note": "Test 8.9.1 : table de données avec th, ol/ul, strong pour l’emphase. Aucun titre, blockquote, paragraphe vide, série de <br> ou espace utilisé pour un effet visuel ; aucun role=\"presentation\" (DOM vérifié)."
+			"note": "Test 8.9.1 : Page examinée : page ADR-0011 (/cockpit/adr/0011-cli-audit-playwright/). Balises examinées dans le DOM : article, h1/h2, table de données avec caption et 3 th, ol/ul, strong pour l’emphase, em pour un titre de document, code. Aucun titre, blockquote, paragraphe vide, série de <br>, tableau de mise en forme ou espace utilisé pour un effet visuel ; aucune balise de présentation (b, i, u, font, center) ; aucun role=\"presentation\"."
 		},
 		{
 			"criterion": "8.9",
 			"page": "https://chikimuras.github.io/rampe/cockpit/journal/2026-10-15/",
 			"status": "C",
-			"note": "Test 8.9.1 : h2 de section, ul, strong et em pour l’emphase, code pour les identifiants. Aucun titre, blockquote, paragraphe vide, série de <br> ou espace utilisé pour un effet visuel ; aucun role=\"presentation\" (DOM vérifié)."
+			"note": "Test 8.9.1 : Page examinée : page du journal du 15/10/2026 (/cockpit/journal/2026-10-15/). Balises examinées dans le DOM : article, h1, 22 h2 de section, ul/li, strong et em pour l’emphase, code pour les identifiants, span lang. Aucun titre, blockquote, paragraphe vide, série de <br>, tableau de mise en forme ou espace utilisé pour un effet visuel ; aucune balise de présentation (b, i, u, font, center) ; aucun role=\"presentation\"."
 		},
 		{
 			"criterion": "8.9",
 			"page": "https://chikimuras.github.io/rampe/cockpit/docs/roadmap/",
 			"status": "C",
-			"note": "Test 8.9.1 : h2 de phases, ul de tâches, span de statut textuel. Aucun titre, blockquote, paragraphe vide, série de <br> ou espace utilisé pour un effet visuel ; aucun role=\"presentation\" (DOM vérifié)."
+			"note": "Test 8.9.1 : Page examinée : page Roadmap (/cockpit/docs/roadmap/). Balises examinées dans le DOM : article, h1, 7 h2 de phases, ul de tâches, span de statut textuel (« Fait », « À faire »), code. Aucun titre, blockquote, paragraphe vide, série de <br>, tableau de mise en forme ou espace utilisé pour un effet visuel ; aucune balise de présentation (b, i, u, font, center) ; aucun role=\"presentation\"."
 		},
 		{
 			"criterion": "8.9",
 			"page": "https://chikimuras.github.io/rampe/referentiel/5-1/",
 			"status": "C",
-			"note": "Test 8.9.1 : Page examinée : fiche du critère 5.1 (/referentiel/5-1/). Balises utilisées : h1, h2/h3 pour les titres, 1 details/summary pour les méthodologies, ul/ol pour les listes, code pour le code cité, nav pour le fil d’Ariane et les critères voisins. 0 paragraphe vide, 0 <br>, 0 role=\"presentation\" ; aucun titre, blockquote ou espace utilisé pour un effet visuel."
+			"note": "Test 8.9.1 : Page examinée : fiche du critère 5.1 (/referentiel/5-1/). Balises examinées dans le DOM : h1, h2/h3, 1 details/summary, ul/ol, code, nav du fil d’Ariane et des critères voisins. Aucun titre, blockquote, paragraphe vide, série de <br>, tableau de mise en forme ou espace utilisé pour un effet visuel ; aucune balise de présentation (b, i, u, font, center) ; aucun role=\"presentation\"."
 		},
 		{
 			"criterion": "8.9",
 			"page": "https://chikimuras.github.io/rampe/referentiel/1-9/",
 			"status": "C",
-			"note": "Test 8.9.1 : Page examinée : fiche du critère 1.9 (/referentiel/1-9/). Balises utilisées : h1, h2/h3 pour les titres, 5 details/summary pour les méthodologies, ul/ol pour les listes, code pour le code cité, nav pour le fil d’Ariane et les critères voisins. 0 paragraphe vide, 0 <br>, 0 role=\"presentation\" ; aucun titre, blockquote ou espace utilisé pour un effet visuel."
+			"note": "Test 8.9.1 : Page examinée : fiche du critère 1.9 (/referentiel/1-9/). Balises examinées dans le DOM : h1, h2/h3, 5 details/summary, ul/ol, code, nav du fil d’Ariane et des critères voisins. Aucun titre, blockquote, paragraphe vide, série de <br>, tableau de mise en forme ou espace utilisé pour un effet visuel ; aucune balise de présentation (b, i, u, font, center) ; aucun role=\"presentation\"."
+		},
+		{
+			"criterion": "8.9",
+			"page": "https://chikimuras.github.io/rampe/plan-du-site/",
+			"status": "C",
+			"note": "Test 8.9.1 : Page examinée : page Plan du site (/plan-du-site/). Balises examinées dans le DOM : h1, 4 section avec h2, h3, 20 ul et 2 ol imbriqués pour l’arborescence des 160 liens. Aucun titre, blockquote, paragraphe vide, série de <br>, tableau de mise en forme ou espace utilisé pour un effet visuel ; aucune balise de présentation (b, i, u, font, center) ; aucun role=\"presentation\"."
 		},
 		{
 			"criterion": "8.10",
 			"page": "https://chikimuras.github.io/rampe/",
 			"status": "NA",
-			"note": "Tests 8.10.1 et 8.10.2 : Page examinée : page d’accueil (/). Recherche de caractères des écritures de droite à gauche (hébreu, arabe, syriaque…) dans tout le texte : aucun ; 0 attribut dir. Pas de changement de sens de lecture : non applicable."
+			"note": "Tests 8.10.1 et 8.10.2 : Page examinée : page d’accueil (/). Recherche de caractères des écritures de droite à gauche (plages Unicode hébreu, arabe, syriaque, thâna, N’Ko…) dans tout le texte : aucun ; aucun attribut dir. Pas de changement de sens de lecture : non applicable."
 		},
 		{
 			"criterion": "8.10",
 			"page": "https://chikimuras.github.io/rampe/referentiel/",
 			"status": "NA",
-			"note": "Tests 8.10.1 et 8.10.2 : Page examinée : page Référentiel (/referentiel/). Recherche de caractères des écritures de droite à gauche (hébreu, arabe, syriaque…) dans tout le texte : aucun ; 0 attribut dir. Pas de changement de sens de lecture : non applicable."
+			"note": "Tests 8.10.1 et 8.10.2 : Page examinée : page Référentiel (/referentiel/). Recherche de caractères des écritures de droite à gauche (plages Unicode hébreu, arabe, syriaque, thâna, N’Ko…) dans tout le texte : aucun ; aucun attribut dir. Pas de changement de sens de lecture : non applicable."
 		},
 		{
 			"criterion": "8.10",
 			"page": "https://chikimuras.github.io/rampe/referentiel/1-1/",
 			"status": "NA",
-			"note": "Tests 8.10.1 et 8.10.2 : Page examinée : fiche du critère 1.1 (/referentiel/1-1/). Recherche de caractères des écritures de droite à gauche (hébreu, arabe, syriaque…) dans tout le texte : aucun ; 0 attribut dir. Pas de changement de sens de lecture : non applicable."
+			"note": "Tests 8.10.1 et 8.10.2 : Page examinée : fiche du critère 1.1 (/referentiel/1-1/). Recherche de caractères des écritures de droite à gauche (plages Unicode hébreu, arabe, syriaque, thâna, N’Ko…) dans tout le texte : aucun ; aucun attribut dir. Pas de changement de sens de lecture : non applicable."
 		},
 		{
 			"criterion": "8.10",
 			"page": "https://chikimuras.github.io/rampe/referentiel/glossaire/",
 			"status": "NA",
-			"note": "Tests 8.10.1 et 8.10.2 : Page examinée : page Glossaire (/referentiel/glossaire/). Recherche de caractères des écritures de droite à gauche (hébreu, arabe, syriaque…) dans tout le texte : aucun ; 0 attribut dir. Pas de changement de sens de lecture : non applicable."
+			"note": "Tests 8.10.1 et 8.10.2 : Page examinée : page Glossaire (/referentiel/glossaire/). Recherche de caractères des écritures de droite à gauche (plages Unicode hébreu, arabe, syriaque, thâna, N’Ko…) dans tout le texte : aucun ; aucun attribut dir. Pas de changement de sens de lecture : non applicable."
 		},
 		{
 			"criterion": "8.10",
 			"page": "https://chikimuras.github.io/rampe/audit/",
 			"status": "NA",
-			"note": "Tests 8.10.1 et 8.10.2 : recherche de caractères des écritures de droite à gauche (plages Unicode hébreu, arabe, syriaque…) dans tout le texte : aucun ; aucun attribut dir. Pas de changement de sens de lecture : non applicable."
+			"note": "Tests 8.10.1 et 8.10.2 : Page examinée : audit guidé (/audit/). Recherche de caractères des écritures de droite à gauche (plages Unicode hébreu, arabe, syriaque, thâna, N’Ko…) dans tout le texte de l’îlot dans ses états examinés : aucun ; aucun attribut dir. Pas de changement de sens de lecture : non applicable."
 		},
 		{
 			"criterion": "8.10",
 			"page": "https://chikimuras.github.io/rampe/cockpit/",
 			"status": "NA",
-			"note": "Tests 8.10.1 et 8.10.2 : Page examinée : page Cockpit (/cockpit/). Recherche de caractères des écritures de droite à gauche (hébreu, arabe, syriaque…) dans tout le texte : aucun ; 0 attribut dir. Pas de changement de sens de lecture : non applicable."
+			"note": "Tests 8.10.1 et 8.10.2 : Page examinée : page Cockpit (/cockpit/). Recherche de caractères des écritures de droite à gauche (plages Unicode hébreu, arabe, syriaque, thâna, N’Ko…) dans tout le texte : aucun ; aucun attribut dir. Pas de changement de sens de lecture : non applicable."
 		},
 		{
 			"criterion": "8.10",
 			"page": "https://chikimuras.github.io/rampe/cockpit/adr/0011-cli-audit-playwright/",
 			"status": "NA",
-			"note": "Tests 8.10.1 et 8.10.2 : Page examinée : page ADR-0011 (/cockpit/adr/0011-cli-audit-playwright/). Recherche de caractères des écritures de droite à gauche (hébreu, arabe, syriaque…) dans tout le texte : aucun ; 0 attribut dir. Pas de changement de sens de lecture : non applicable."
+			"note": "Tests 8.10.1 et 8.10.2 : Page examinée : page ADR-0011 (/cockpit/adr/0011-cli-audit-playwright/). Recherche de caractères des écritures de droite à gauche (plages Unicode hébreu, arabe, syriaque, thâna, N’Ko…) dans tout le texte : aucun ; aucun attribut dir. Pas de changement de sens de lecture : non applicable."
 		},
 		{
 			"criterion": "8.10",
 			"page": "https://chikimuras.github.io/rampe/cockpit/journal/2026-10-15/",
 			"status": "NA",
-			"note": "Tests 8.10.1 et 8.10.2 : Page examinée : page du journal du 15/10/2026 (/cockpit/journal/2026-10-15/). Recherche de caractères des écritures de droite à gauche (hébreu, arabe, syriaque…) dans tout le texte : aucun ; 0 attribut dir. Pas de changement de sens de lecture : non applicable."
+			"note": "Tests 8.10.1 et 8.10.2 : Page examinée : page du journal du 15/10/2026 (/cockpit/journal/2026-10-15/). Recherche de caractères des écritures de droite à gauche (plages Unicode hébreu, arabe, syriaque, thâna, N’Ko…) dans tout le texte : aucun ; aucun attribut dir. Pas de changement de sens de lecture : non applicable."
 		},
 		{
 			"criterion": "8.10",
 			"page": "https://chikimuras.github.io/rampe/cockpit/docs/roadmap/",
 			"status": "NA",
-			"note": "Tests 8.10.1 et 8.10.2 : Page examinée : page Roadmap (/cockpit/docs/roadmap/). Recherche de caractères des écritures de droite à gauche (hébreu, arabe, syriaque…) dans tout le texte : aucun ; 0 attribut dir. Pas de changement de sens de lecture : non applicable."
+			"note": "Tests 8.10.1 et 8.10.2 : Page examinée : page Roadmap (/cockpit/docs/roadmap/). Recherche de caractères des écritures de droite à gauche (plages Unicode hébreu, arabe, syriaque, thâna, N’Ko…) dans tout le texte : aucun ; aucun attribut dir. Pas de changement de sens de lecture : non applicable."
 		},
 		{
 			"criterion": "8.10",
 			"page": "https://chikimuras.github.io/rampe/referentiel/5-1/",
 			"status": "NA",
-			"note": "Tests 8.10.1 et 8.10.2 : Page examinée : fiche du critère 5.1 (/referentiel/5-1/). Recherche de caractères des écritures de droite à gauche (hébreu, arabe, syriaque…) dans tout le texte : aucun ; 0 attribut dir. Pas de changement de sens de lecture : non applicable."
+			"note": "Tests 8.10.1 et 8.10.2 : Page examinée : fiche du critère 5.1 (/referentiel/5-1/). Recherche de caractères des écritures de droite à gauche (plages Unicode hébreu, arabe, syriaque, thâna, N’Ko…) dans tout le texte : aucun ; aucun attribut dir. Pas de changement de sens de lecture : non applicable."
 		},
 		{
 			"criterion": "8.10",
 			"page": "https://chikimuras.github.io/rampe/referentiel/1-9/",
 			"status": "NA",
-			"note": "Tests 8.10.1 et 8.10.2 : Page examinée : fiche du critère 1.9 (/referentiel/1-9/). Recherche de caractères des écritures de droite à gauche (hébreu, arabe, syriaque…) dans tout le texte : aucun ; 0 attribut dir. Pas de changement de sens de lecture : non applicable."
+			"note": "Tests 8.10.1 et 8.10.2 : Page examinée : fiche du critère 1.9 (/referentiel/1-9/). Recherche de caractères des écritures de droite à gauche (plages Unicode hébreu, arabe, syriaque, thâna, N’Ko…) dans tout le texte : aucun ; aucun attribut dir. Pas de changement de sens de lecture : non applicable."
+		},
+		{
+			"criterion": "8.10",
+			"page": "https://chikimuras.github.io/rampe/plan-du-site/",
+			"status": "NA",
+			"note": "Tests 8.10.1 et 8.10.2 : Page examinée : page Plan du site (/plan-du-site/). Recherche de caractères des écritures de droite à gauche (plages Unicode hébreu, arabe, syriaque, thâna, N’Ko…) dans tout le texte : aucun ; aucun attribut dir. Pas de changement de sens de lecture : non applicable."
 		}
 	]
 }
