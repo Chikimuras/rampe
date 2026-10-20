@@ -1,5 +1,5 @@
 ---
-title: Workflow des agents
+title: Méthode de travail des agents
 order: 3
 ---
 

@@ -22,4 +22,4 @@ C’est le défaut que la PR #30 a reproduit de façon déterministe. **Le rappo
 
 - Un rapport de la CLI porte toujours l’adresse du document réellement analysé.
 - Certaines pages très dynamiques demanderont une relance. Le message l’explique.
-- Cet ADR complète l’ADR-0020 §5, déjà mergé et donc non réécrit, comme le veut l’ADR-0001.
+- Cet ADR complète l’ADR-0020 §5, déjà fusionné et donc non réécrit, comme le veut l’ADR-0001.
