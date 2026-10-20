@@ -6,361 +6,361 @@
 			"criterion": "7.1",
 			"page": "https://chikimuras.github.io/rampe/",
 			"status": "NA",
-			"note": "Tests 7.1.1, 7.1.2 et 7.1.3 : HTML servi et DOM rendu de la page d’accueil (/) examinés (build servi le 2026-10-20 (main 29a4a10), Chromium/Playwright) : 0 balise <script>, 0 attribut gestionnaire d’événement (on…=), aucun îlot Astro (astro-island), aucune URL javascript:, ni <iframe>, <object> ou <embed>. Aucun composant d’interface n’est généré ou contrôlé par un script (éléments interactifs : 10 liens, sans JavaScript) : non applicable."
+			"note": "Tests 7.1.1, 7.1.2 et 7.1.3 : HTML servi et DOM rendu de la page d’accueil (/) examinés (build final servi le 2026-10-20 (branche fix/rgaa-dernieres-nc, bfab09d), Chromium/Playwright) : 0 balise <script>, 0 attribut gestionnaire d’événement (on…=), aucun îlot Astro (astro-island), aucune URL javascript:, ni <iframe>, <object> ou <embed>. Aucun composant d’interface n’est généré ou contrôlé par un script (éléments interactifs : 10 liens, sans JavaScript) : non applicable."
 		},
 		{
 			"criterion": "7.1",
 			"page": "https://chikimuras.github.io/rampe/referentiel/",
 			"status": "NA",
-			"note": "Tests 7.1.1, 7.1.2 et 7.1.3 : HTML servi et DOM rendu de la page Référentiel (/referentiel/) examinés (build servi le 2026-10-20 (main 29a4a10), Chromium/Playwright) : 0 balise <script>, 0 attribut gestionnaire d’événement (on…=), aucun îlot Astro (astro-island), aucune URL javascript:, ni <iframe>, <object> ou <embed>. Aucun composant d’interface n’est généré ou contrôlé par un script (éléments interactifs : 132 liens, sans JavaScript) : non applicable."
+			"note": "Tests 7.1.1, 7.1.2 et 7.1.3 : HTML servi et DOM rendu de la page Référentiel (/referentiel/) examinés (build final servi le 2026-10-20 (branche fix/rgaa-dernieres-nc, bfab09d), Chromium/Playwright) : 0 balise <script>, 0 attribut gestionnaire d’événement (on…=), aucun îlot Astro (astro-island), aucune URL javascript:, ni <iframe>, <object> ou <embed>. Aucun composant d’interface n’est généré ou contrôlé par un script (éléments interactifs : 132 liens, sans JavaScript) : non applicable."
 		},
 		{
 			"criterion": "7.1",
 			"page": "https://chikimuras.github.io/rampe/referentiel/1-1/",
 			"status": "NA",
-			"note": "Tests 7.1.1, 7.1.2 et 7.1.3 : HTML servi et DOM rendu de la fiche du critère 1.1 (/referentiel/1-1/) examinés (build servi le 2026-10-20 (main 29a4a10), Chromium/Playwright) : 0 balise <script>, 0 attribut gestionnaire d’événement (on…=), aucun îlot Astro (astro-island), aucune URL javascript:, ni <iframe>, <object> ou <embed>. Aucun composant d’interface n’est généré ou contrôlé par un script (éléments interactifs : 44 liens et 8 <details> natifs, sans JavaScript) : non applicable."
+			"note": "Tests 7.1.1, 7.1.2 et 7.1.3 : HTML servi et DOM rendu de la fiche du critère 1.1 (/referentiel/1-1/) examinés (build final servi le 2026-10-20 (branche fix/rgaa-dernieres-nc, bfab09d), Chromium/Playwright) : 0 balise <script>, 0 attribut gestionnaire d’événement (on…=), aucun îlot Astro (astro-island), aucune URL javascript:, ni <iframe>, <object> ou <embed>. Aucun composant d’interface n’est généré ou contrôlé par un script (éléments interactifs : 44 liens et 8 <details> natifs, sans JavaScript) : non applicable."
 		},
 		{
 			"criterion": "7.1",
 			"page": "https://chikimuras.github.io/rampe/referentiel/glossaire/",
 			"status": "NA",
-			"note": "Tests 7.1.1, 7.1.2 et 7.1.3 : HTML servi et DOM rendu de la page Glossaire (/referentiel/glossaire/) examinés (build servi le 2026-10-20 (main 29a4a10), Chromium/Playwright) : 0 balise <script>, 0 attribut gestionnaire d’événement (on…=), aucun îlot Astro (astro-island), aucune URL javascript:, ni <iframe>, <object> ou <embed>. Aucun composant d’interface n’est généré ou contrôlé par un script (éléments interactifs : 77 liens, sans JavaScript) : non applicable."
+			"note": "Tests 7.1.1, 7.1.2 et 7.1.3 : HTML servi et DOM rendu de la page Glossaire (/referentiel/glossaire/) examinés (build final servi le 2026-10-20 (branche fix/rgaa-dernieres-nc, bfab09d), Chromium/Playwright) : 0 balise <script>, 0 attribut gestionnaire d’événement (on…=), aucun îlot Astro (astro-island), aucune URL javascript:, ni <iframe>, <object> ou <embed>. Aucun composant d’interface n’est généré ou contrôlé par un script (éléments interactifs : 77 liens, sans JavaScript) : non applicable."
 		},
 		{
 			"criterion": "7.1",
 			"page": "https://chikimuras.github.io/rampe/audit/",
 			"status": "C",
-			"note": "Îlot Preact de /audit/ exercé sur le build servi le 2026-10-20 (main 29a4a10), Chromium/Playwright (pas de lecteur d’écran réel : restitution jugée sur l’arbre d’accessibilité CDP Accessibility.getFullAXTree, à confirmer par un humain). Tests 7.1.1 et 7.1.2 : l’îlot n’utilise que des éléments natifs (button, input radio/text/file, textarea, select, details/summary, progress, dialog ouvert en modal) ; rôles, noms et états exposés : radios « Conforme / Non conforme / Non applicable / Non testé » dans des groupes nommés « Critère X, page … », état coché mis à jour, expanded sur les summary, aria-invalid sur les champs en erreur, dialog modal nommé « Remplacer l’audit en cours ? » et décrit, progressbar nommée « Il reste N évaluations… », boutons « Retirer / Rétablir l’action N : … » dont le nom suit l’état. Test 7.1.3 : nom accessible comparé à l’intitulé visible (texte du bouton ou <label>) pour chaque contrôle visible, dans les états vierge (87 contrôles), 2 pages ajoutées et chacune des 13 thématiques affichée (boutons « 7.1 Chaque script… 2 non testés » : espaces réels, l’ancien défaut « 1.1Chaque » est corrigé), audit complet importé (184, puis 221 détails ouverts), rapport importé (145), tableau d’actions rempli (193) et boîte de dialogue ouverte : 0 écart, chaque nom contient l’intitulé visible et le rôle est pertinent."
+			"note": "Îlot Preact de /audit/ exercé sur le build final servi le 2026-10-20 (branche fix/rgaa-dernieres-nc, bfab09d), Chromium/Playwright (pas de lecteur d’écran réel : restitution jugée sur l’arbre d’accessibilité CDP Accessibility.getFullAXTree, à confirmer par un humain). Tests 7.1.1 et 7.1.2 : l’îlot n’utilise que des éléments natifs (button, input radio/text/file, textarea, select, details/summary, progress, dialog ouvert en modal) ; rôles, noms et états exposés : radios « Conforme / Non conforme / Non applicable / Non testé » dans des groupes nommés « Critère X, page … », état coché mis à jour, expanded sur les summary, aria-invalid sur les champs en erreur, dialog modal nommé « Remplacer l’audit en cours ? » et décrit, progressbar nommée « Il reste N évaluations… », boutons « Retirer / Rétablir l’action N : … » dont le nom suit l’état. Test 7.1.3 : nom accessible comparé à l’intitulé visible (texte du bouton ou <label>) pour chaque contrôle visible, dans les états vierge (87 contrôles), 2 pages ajoutées et chacune des 13 thématiques affichée (boutons « 7.1 Chaque script… 2 non testés » : espaces réels, l’ancien défaut « 1.1Chaque » est corrigé), audit complet importé (184, puis 221 détails ouverts), rapport importé (145), tableau d’actions rempli (193) et boîte de dialogue ouverte : 0 écart, chaque nom contient l’intitulé visible et le rôle est pertinent. Changement de la branche revérifié : la barre « Critères voisins » est désormais un <ul> dont chaque <li> contient un <button> natif ; noms inchangés (« Critère précédent : 1.1 », « Critère suivant : 1.3 »), activation à Entrée puis focus sur le titre du critère (h3#audit-titre tabindex=-1), Maj+Tab revient dans la liste des critères ; sans JavaScript, 0 contrôle visible et seul le message <noscript> s’affiche."
 		},
 		{
 			"criterion": "7.1",
 			"page": "https://chikimuras.github.io/rampe/cockpit/",
 			"status": "NA",
-			"note": "Tests 7.1.1, 7.1.2 et 7.1.3 : HTML servi et DOM rendu de la page Cockpit (/cockpit/) examinés (build servi le 2026-10-20 (main 29a4a10), Chromium/Playwright) : 0 balise <script>, 0 attribut gestionnaire d’événement (on…=), aucun îlot Astro (astro-island), aucune URL javascript:, ni <iframe>, <object> ou <embed>. Aucun composant d’interface n’est généré ou contrôlé par un script (éléments interactifs : 41 liens, sans JavaScript) : non applicable."
+			"note": "Tests 7.1.1, 7.1.2 et 7.1.3 : HTML servi et DOM rendu de la page Cockpit (/cockpit/) examinés (build final servi le 2026-10-20 (branche fix/rgaa-dernieres-nc, bfab09d), Chromium/Playwright) : 0 balise <script>, 0 attribut gestionnaire d’événement (on…=), aucun îlot Astro (astro-island), aucune URL javascript:, ni <iframe>, <object> ou <embed>. Aucun composant d’interface n’est généré ou contrôlé par un script (éléments interactifs : 43 liens, sans JavaScript) : non applicable."
 		},
 		{
 			"criterion": "7.1",
 			"page": "https://chikimuras.github.io/rampe/cockpit/adr/0011-cli-audit-playwright/",
 			"status": "NA",
-			"note": "Tests 7.1.1, 7.1.2 et 7.1.3 : HTML servi et DOM rendu de la page ADR-0011 (/cockpit/adr/0011-cli-audit-playwright/) examinés (build servi le 2026-10-20 (main 29a4a10), Chromium/Playwright) : 0 balise <script>, 0 attribut gestionnaire d’événement (on…=), aucun îlot Astro (astro-island), aucune URL javascript:, ni <iframe>, <object> ou <embed>. Aucun composant d’interface n’est généré ou contrôlé par un script (éléments interactifs : 11 liens, sans JavaScript) : non applicable."
+			"note": "Tests 7.1.1, 7.1.2 et 7.1.3 : HTML servi et DOM rendu de la page ADR-0011 (/cockpit/adr/0011-cli-audit-playwright/) examinés (build final servi le 2026-10-20 (branche fix/rgaa-dernieres-nc, bfab09d), Chromium/Playwright) : 0 balise <script>, 0 attribut gestionnaire d’événement (on…=), aucun îlot Astro (astro-island), aucune URL javascript:, ni <iframe>, <object> ou <embed>. Aucun composant d’interface n’est généré ou contrôlé par un script (éléments interactifs : 11 liens, sans JavaScript) : non applicable."
 		},
 		{
 			"criterion": "7.1",
 			"page": "https://chikimuras.github.io/rampe/cockpit/journal/2026-10-15/",
 			"status": "NA",
-			"note": "Tests 7.1.1, 7.1.2 et 7.1.3 : HTML servi et DOM rendu de la page du journal du 15/10/2026 (/cockpit/journal/2026-10-15/) examinés (build servi le 2026-10-20 (main 29a4a10), Chromium/Playwright) : 0 balise <script>, 0 attribut gestionnaire d’événement (on…=), aucun îlot Astro (astro-island), aucune URL javascript:, ni <iframe>, <object> ou <embed>. Aucun composant d’interface n’est généré ou contrôlé par un script (éléments interactifs : 11 liens, sans JavaScript) : non applicable."
+			"note": "Tests 7.1.1, 7.1.2 et 7.1.3 : HTML servi et DOM rendu de la page du journal du 15/10/2026 (/cockpit/journal/2026-10-15/) examinés (build final servi le 2026-10-20 (branche fix/rgaa-dernieres-nc, bfab09d), Chromium/Playwright) : 0 balise <script>, 0 attribut gestionnaire d’événement (on…=), aucun îlot Astro (astro-island), aucune URL javascript:, ni <iframe>, <object> ou <embed>. Aucun composant d’interface n’est généré ou contrôlé par un script (éléments interactifs : 11 liens, sans JavaScript) : non applicable."
 		},
 		{
 			"criterion": "7.1",
 			"page": "https://chikimuras.github.io/rampe/cockpit/docs/roadmap/",
 			"status": "NA",
-			"note": "Tests 7.1.1, 7.1.2 et 7.1.3 : HTML servi et DOM rendu de la page Roadmap (/cockpit/docs/roadmap/) examinés (build servi le 2026-10-20 (main 29a4a10), Chromium/Playwright) : 0 balise <script>, 0 attribut gestionnaire d’événement (on…=), aucun îlot Astro (astro-island), aucune URL javascript:, ni <iframe>, <object> ou <embed>. Aucun composant d’interface n’est généré ou contrôlé par un script (éléments interactifs : 11 liens, sans JavaScript) : non applicable."
+			"note": "Tests 7.1.1, 7.1.2 et 7.1.3 : HTML servi et DOM rendu de la page Feuille de route (/cockpit/docs/roadmap/) examinés (build final servi le 2026-10-20 (branche fix/rgaa-dernieres-nc, bfab09d), Chromium/Playwright) : 0 balise <script>, 0 attribut gestionnaire d’événement (on…=), aucun îlot Astro (astro-island), aucune URL javascript:, ni <iframe>, <object> ou <embed>. Aucun composant d’interface n’est généré ou contrôlé par un script (éléments interactifs : 11 liens, sans JavaScript) : non applicable."
 		},
 		{
 			"criterion": "7.1",
 			"page": "https://chikimuras.github.io/rampe/referentiel/5-1/",
 			"status": "NA",
-			"note": "Tests 7.1.1, 7.1.2 et 7.1.3 : HTML servi et DOM rendu de la fiche du critère 5.1 (/referentiel/5-1/) examinés (build servi le 2026-10-20 (main 29a4a10), Chromium/Playwright) : 0 balise <script>, 0 attribut gestionnaire d’événement (on…=), aucun îlot Astro (astro-island), aucune URL javascript:, ni <iframe>, <object> ou <embed>. Aucun composant d’interface n’est généré ou contrôlé par un script (éléments interactifs : 20 liens et 1 <details> natifs, sans JavaScript) : non applicable."
+			"note": "Tests 7.1.1, 7.1.2 et 7.1.3 : HTML servi et DOM rendu de la fiche du critère 5.1 (/referentiel/5-1/) examinés (build final servi le 2026-10-20 (branche fix/rgaa-dernieres-nc, bfab09d), Chromium/Playwright) : 0 balise <script>, 0 attribut gestionnaire d’événement (on…=), aucun îlot Astro (astro-island), aucune URL javascript:, ni <iframe>, <object> ou <embed>. Aucun composant d’interface n’est généré ou contrôlé par un script (éléments interactifs : 20 liens et 1 <details> natifs, sans JavaScript) : non applicable."
 		},
 		{
 			"criterion": "7.1",
 			"page": "https://chikimuras.github.io/rampe/referentiel/1-9/",
 			"status": "NA",
-			"note": "Tests 7.1.1, 7.1.2 et 7.1.3 : HTML servi et DOM rendu de la fiche du critère 1.9 (/referentiel/1-9/) examinés (build servi le 2026-10-20 (main 29a4a10), Chromium/Playwright) : 0 balise <script>, 0 attribut gestionnaire d’événement (on…=), aucun îlot Astro (astro-island), aucune URL javascript:, ni <iframe>, <object> ou <embed>. Aucun composant d’interface n’est généré ou contrôlé par un script (éléments interactifs : 46 liens et 5 <details> natifs, sans JavaScript) : non applicable."
+			"note": "Tests 7.1.1, 7.1.2 et 7.1.3 : HTML servi et DOM rendu de la fiche du critère 1.9 (/referentiel/1-9/) examinés (build final servi le 2026-10-20 (branche fix/rgaa-dernieres-nc, bfab09d), Chromium/Playwright) : 0 balise <script>, 0 attribut gestionnaire d’événement (on…=), aucun îlot Astro (astro-island), aucune URL javascript:, ni <iframe>, <object> ou <embed>. Aucun composant d’interface n’est généré ou contrôlé par un script (éléments interactifs : 46 liens et 5 <details> natifs, sans JavaScript) : non applicable."
 		},
 		{
 			"criterion": "7.1",
 			"page": "https://chikimuras.github.io/rampe/plan-du-site/",
 			"status": "NA",
-			"note": "Tests 7.1.1, 7.1.2 et 7.1.3 : HTML servi et DOM rendu de la page Plan du site (/plan-du-site/) examinés (build servi le 2026-10-20 (main 29a4a10), Chromium/Playwright) : 0 balise <script>, 0 attribut gestionnaire d’événement (on…=), aucun îlot Astro (astro-island), aucune URL javascript:, ni <iframe>, <object> ou <embed>. Aucun composant d’interface n’est généré ou contrôlé par un script (éléments interactifs : 162 liens, sans JavaScript) : non applicable."
+			"note": "Tests 7.1.1, 7.1.2 et 7.1.3 : HTML servi et DOM rendu de la page Plan du site (/plan-du-site/) examinés (build final servi le 2026-10-20 (branche fix/rgaa-dernieres-nc, bfab09d), Chromium/Playwright) : 0 balise <script>, 0 attribut gestionnaire d’événement (on…=), aucun îlot Astro (astro-island), aucune URL javascript:, ni <iframe>, <object> ou <embed>. Aucun composant d’interface n’est généré ou contrôlé par un script (éléments interactifs : 164 liens, sans JavaScript) : non applicable."
 		},
 		{
 			"criterion": "7.2",
 			"page": "https://chikimuras.github.io/rampe/",
 			"status": "NA",
-			"note": "Tests 7.2.1 et 7.2.2 : HTML servi et DOM rendu de la page d’accueil (/) examinés (build servi le 2026-10-20 (main 29a4a10), Chromium/Playwright) : 0 balise <script>, 0 attribut gestionnaire d’événement (on…=), aucun îlot Astro (astro-island), aucune URL javascript:, ni <iframe>, <object> ou <embed>. Sans script, il n’y a ni alternative à un script (aucun <noscript>) ni élément non textuel mis à jour par un script : non applicable."
+			"note": "Tests 7.2.1 et 7.2.2 : HTML servi et DOM rendu de la page d’accueil (/) examinés (build final servi le 2026-10-20 (branche fix/rgaa-dernieres-nc, bfab09d), Chromium/Playwright) : 0 balise <script>, 0 attribut gestionnaire d’événement (on…=), aucun îlot Astro (astro-island), aucune URL javascript:, ni <iframe>, <object> ou <embed>. Sans script, il n’y a ni alternative à un script (aucun <noscript>) ni élément non textuel mis à jour par un script : non applicable."
 		},
 		{
 			"criterion": "7.2",
 			"page": "https://chikimuras.github.io/rampe/referentiel/",
 			"status": "NA",
-			"note": "Tests 7.2.1 et 7.2.2 : HTML servi et DOM rendu de la page Référentiel (/referentiel/) examinés (build servi le 2026-10-20 (main 29a4a10), Chromium/Playwright) : 0 balise <script>, 0 attribut gestionnaire d’événement (on…=), aucun îlot Astro (astro-island), aucune URL javascript:, ni <iframe>, <object> ou <embed>. Sans script, il n’y a ni alternative à un script (aucun <noscript>) ni élément non textuel mis à jour par un script : non applicable."
+			"note": "Tests 7.2.1 et 7.2.2 : HTML servi et DOM rendu de la page Référentiel (/referentiel/) examinés (build final servi le 2026-10-20 (branche fix/rgaa-dernieres-nc, bfab09d), Chromium/Playwright) : 0 balise <script>, 0 attribut gestionnaire d’événement (on…=), aucun îlot Astro (astro-island), aucune URL javascript:, ni <iframe>, <object> ou <embed>. Sans script, il n’y a ni alternative à un script (aucun <noscript>) ni élément non textuel mis à jour par un script : non applicable."
 		},
 		{
 			"criterion": "7.2",
 			"page": "https://chikimuras.github.io/rampe/referentiel/1-1/",
 			"status": "NA",
-			"note": "Tests 7.2.1 et 7.2.2 : HTML servi et DOM rendu de la fiche du critère 1.1 (/referentiel/1-1/) examinés (build servi le 2026-10-20 (main 29a4a10), Chromium/Playwright) : 0 balise <script>, 0 attribut gestionnaire d’événement (on…=), aucun îlot Astro (astro-island), aucune URL javascript:, ni <iframe>, <object> ou <embed>. Sans script, il n’y a ni alternative à un script (aucun <noscript>) ni élément non textuel mis à jour par un script : non applicable."
+			"note": "Tests 7.2.1 et 7.2.2 : HTML servi et DOM rendu de la fiche du critère 1.1 (/referentiel/1-1/) examinés (build final servi le 2026-10-20 (branche fix/rgaa-dernieres-nc, bfab09d), Chromium/Playwright) : 0 balise <script>, 0 attribut gestionnaire d’événement (on…=), aucun îlot Astro (astro-island), aucune URL javascript:, ni <iframe>, <object> ou <embed>. Sans script, il n’y a ni alternative à un script (aucun <noscript>) ni élément non textuel mis à jour par un script : non applicable."
 		},
 		{
 			"criterion": "7.2",
 			"page": "https://chikimuras.github.io/rampe/referentiel/glossaire/",
 			"status": "NA",
-			"note": "Tests 7.2.1 et 7.2.2 : HTML servi et DOM rendu de la page Glossaire (/referentiel/glossaire/) examinés (build servi le 2026-10-20 (main 29a4a10), Chromium/Playwright) : 0 balise <script>, 0 attribut gestionnaire d’événement (on…=), aucun îlot Astro (astro-island), aucune URL javascript:, ni <iframe>, <object> ou <embed>. Sans script, il n’y a ni alternative à un script (aucun <noscript>) ni élément non textuel mis à jour par un script : non applicable."
+			"note": "Tests 7.2.1 et 7.2.2 : HTML servi et DOM rendu de la page Glossaire (/referentiel/glossaire/) examinés (build final servi le 2026-10-20 (branche fix/rgaa-dernieres-nc, bfab09d), Chromium/Playwright) : 0 balise <script>, 0 attribut gestionnaire d’événement (on…=), aucun îlot Astro (astro-island), aucune URL javascript:, ni <iframe>, <object> ou <embed>. Sans script, il n’y a ni alternative à un script (aucun <noscript>) ni élément non textuel mis à jour par un script : non applicable."
 		},
 		{
 			"criterion": "7.2",
 			"page": "https://chikimuras.github.io/rampe/audit/",
 			"status": "C",
-			"note": "Îlot Preact de /audit/ exercé sur le build servi le 2026-10-20 (main 29a4a10), Chromium/Playwright (pas de lecteur d’écran réel : restitution jugée sur l’arbre d’accessibilité CDP Accessibility.getFullAXTree, à confirmer par un humain). Test 7.2.1 : JavaScript désactivé (contexte javaScriptEnabled: false), les 89 contrôles rendus au build sont masqués (0 visible ni atteignable : <noscript><style> dans le <head>), et seul s’affiche le message <noscript> « L’audit guidé nécessite JavaScript : il ne s’affiche pas sans. Le référentiel reste consultable. » avec un lien vers /referentiel/. Ce message informe ; il ne se présente pas comme un moyen de faire l’audit autrement et n’est donc pas une alternative au sens du glossaire (procédé mettant à disposition une fonction ou un contenu similaire au script) : aucun script n’a d’alternative, le test 7.2.1 est sans objet (jugement : si un auditeur tient le lien vers le référentiel pour une alternative, elle ne donne pas de fonctionnalité similaire et le critère devient non conforme). Test 7.2.2 : seul élément non textuel mis à jour par script, la barre <progress id=\"audit-avancement\"> ; son nom « Il reste 208 évaluations « non testé » sur 212 » devient « … 207 … » en même temps que la valeur après la saisie d’un statut : alternative mise à jour et pertinente."
+			"note": "Îlot Preact de /audit/ exercé sur le build final servi le 2026-10-20 (branche fix/rgaa-dernieres-nc, bfab09d), Chromium/Playwright (pas de lecteur d’écran réel : restitution jugée sur l’arbre d’accessibilité CDP Accessibility.getFullAXTree, à confirmer par un humain). Test 7.2.1 : JavaScript désactivé (contexte javaScriptEnabled: false), les 89 contrôles rendus au build sont masqués (0 visible ni atteignable : <noscript><style> dans le <head>), et seul s’affiche le message <noscript> « L’audit guidé nécessite JavaScript : il ne s’affiche pas sans. Le référentiel reste consultable. » avec un lien vers /referentiel/. Ce message informe ; il ne se présente pas comme un moyen de faire l’audit autrement et n’est donc pas une alternative au sens du glossaire (procédé mettant à disposition une fonction ou un contenu similaire au script) : aucun script n’a d’alternative, le test 7.2.1 est sans objet (jugement : si un auditeur tient le lien vers le référentiel pour une alternative, elle ne donne pas de fonctionnalité similaire et le critère devient non conforme). Test 7.2.2 : seul élément non textuel mis à jour par script, la barre <progress id=\"audit-avancement\"> ; son nom « Il reste 208 évaluations « non testé » sur 212 » devient « … 207 … » en même temps que la valeur après la saisie d’un statut : alternative mise à jour et pertinente. Changement de la branche revérifié : la barre « Critères voisins » est désormais un <ul> dont chaque <li> contient un <button> natif ; noms inchangés (« Critère précédent : 1.1 », « Critère suivant : 1.3 »), activation à Entrée puis focus sur le titre du critère (h3#audit-titre tabindex=-1), Maj+Tab revient dans la liste des critères ; sans JavaScript, 0 contrôle visible et seul le message <noscript> s’affiche."
 		},
 		{
 			"criterion": "7.2",
 			"page": "https://chikimuras.github.io/rampe/cockpit/",
 			"status": "NA",
-			"note": "Tests 7.2.1 et 7.2.2 : HTML servi et DOM rendu de la page Cockpit (/cockpit/) examinés (build servi le 2026-10-20 (main 29a4a10), Chromium/Playwright) : 0 balise <script>, 0 attribut gestionnaire d’événement (on…=), aucun îlot Astro (astro-island), aucune URL javascript:, ni <iframe>, <object> ou <embed>. Sans script, il n’y a ni alternative à un script (aucun <noscript>) ni élément non textuel mis à jour par un script : non applicable."
+			"note": "Tests 7.2.1 et 7.2.2 : HTML servi et DOM rendu de la page Cockpit (/cockpit/) examinés (build final servi le 2026-10-20 (branche fix/rgaa-dernieres-nc, bfab09d), Chromium/Playwright) : 0 balise <script>, 0 attribut gestionnaire d’événement (on…=), aucun îlot Astro (astro-island), aucune URL javascript:, ni <iframe>, <object> ou <embed>. Sans script, il n’y a ni alternative à un script (aucun <noscript>) ni élément non textuel mis à jour par un script : non applicable."
 		},
 		{
 			"criterion": "7.2",
 			"page": "https://chikimuras.github.io/rampe/cockpit/adr/0011-cli-audit-playwright/",
 			"status": "NA",
-			"note": "Tests 7.2.1 et 7.2.2 : HTML servi et DOM rendu de la page ADR-0011 (/cockpit/adr/0011-cli-audit-playwright/) examinés (build servi le 2026-10-20 (main 29a4a10), Chromium/Playwright) : 0 balise <script>, 0 attribut gestionnaire d’événement (on…=), aucun îlot Astro (astro-island), aucune URL javascript:, ni <iframe>, <object> ou <embed>. Sans script, il n’y a ni alternative à un script (aucun <noscript>) ni élément non textuel mis à jour par un script : non applicable."
+			"note": "Tests 7.2.1 et 7.2.2 : HTML servi et DOM rendu de la page ADR-0011 (/cockpit/adr/0011-cli-audit-playwright/) examinés (build final servi le 2026-10-20 (branche fix/rgaa-dernieres-nc, bfab09d), Chromium/Playwright) : 0 balise <script>, 0 attribut gestionnaire d’événement (on…=), aucun îlot Astro (astro-island), aucune URL javascript:, ni <iframe>, <object> ou <embed>. Sans script, il n’y a ni alternative à un script (aucun <noscript>) ni élément non textuel mis à jour par un script : non applicable."
 		},
 		{
 			"criterion": "7.2",
 			"page": "https://chikimuras.github.io/rampe/cockpit/journal/2026-10-15/",
 			"status": "NA",
-			"note": "Tests 7.2.1 et 7.2.2 : HTML servi et DOM rendu de la page du journal du 15/10/2026 (/cockpit/journal/2026-10-15/) examinés (build servi le 2026-10-20 (main 29a4a10), Chromium/Playwright) : 0 balise <script>, 0 attribut gestionnaire d’événement (on…=), aucun îlot Astro (astro-island), aucune URL javascript:, ni <iframe>, <object> ou <embed>. Sans script, il n’y a ni alternative à un script (aucun <noscript>) ni élément non textuel mis à jour par un script : non applicable."
+			"note": "Tests 7.2.1 et 7.2.2 : HTML servi et DOM rendu de la page du journal du 15/10/2026 (/cockpit/journal/2026-10-15/) examinés (build final servi le 2026-10-20 (branche fix/rgaa-dernieres-nc, bfab09d), Chromium/Playwright) : 0 balise <script>, 0 attribut gestionnaire d’événement (on…=), aucun îlot Astro (astro-island), aucune URL javascript:, ni <iframe>, <object> ou <embed>. Sans script, il n’y a ni alternative à un script (aucun <noscript>) ni élément non textuel mis à jour par un script : non applicable."
 		},
 		{
 			"criterion": "7.2",
 			"page": "https://chikimuras.github.io/rampe/cockpit/docs/roadmap/",
 			"status": "NA",
-			"note": "Tests 7.2.1 et 7.2.2 : HTML servi et DOM rendu de la page Roadmap (/cockpit/docs/roadmap/) examinés (build servi le 2026-10-20 (main 29a4a10), Chromium/Playwright) : 0 balise <script>, 0 attribut gestionnaire d’événement (on…=), aucun îlot Astro (astro-island), aucune URL javascript:, ni <iframe>, <object> ou <embed>. Sans script, il n’y a ni alternative à un script (aucun <noscript>) ni élément non textuel mis à jour par un script : non applicable."
+			"note": "Tests 7.2.1 et 7.2.2 : HTML servi et DOM rendu de la page Feuille de route (/cockpit/docs/roadmap/) examinés (build final servi le 2026-10-20 (branche fix/rgaa-dernieres-nc, bfab09d), Chromium/Playwright) : 0 balise <script>, 0 attribut gestionnaire d’événement (on…=), aucun îlot Astro (astro-island), aucune URL javascript:, ni <iframe>, <object> ou <embed>. Sans script, il n’y a ni alternative à un script (aucun <noscript>) ni élément non textuel mis à jour par un script : non applicable."
 		},
 		{
 			"criterion": "7.2",
 			"page": "https://chikimuras.github.io/rampe/referentiel/5-1/",
 			"status": "NA",
-			"note": "Tests 7.2.1 et 7.2.2 : HTML servi et DOM rendu de la fiche du critère 5.1 (/referentiel/5-1/) examinés (build servi le 2026-10-20 (main 29a4a10), Chromium/Playwright) : 0 balise <script>, 0 attribut gestionnaire d’événement (on…=), aucun îlot Astro (astro-island), aucune URL javascript:, ni <iframe>, <object> ou <embed>. Sans script, il n’y a ni alternative à un script (aucun <noscript>) ni élément non textuel mis à jour par un script : non applicable."
+			"note": "Tests 7.2.1 et 7.2.2 : HTML servi et DOM rendu de la fiche du critère 5.1 (/referentiel/5-1/) examinés (build final servi le 2026-10-20 (branche fix/rgaa-dernieres-nc, bfab09d), Chromium/Playwright) : 0 balise <script>, 0 attribut gestionnaire d’événement (on…=), aucun îlot Astro (astro-island), aucune URL javascript:, ni <iframe>, <object> ou <embed>. Sans script, il n’y a ni alternative à un script (aucun <noscript>) ni élément non textuel mis à jour par un script : non applicable."
 		},
 		{
 			"criterion": "7.2",
 			"page": "https://chikimuras.github.io/rampe/referentiel/1-9/",
 			"status": "NA",
-			"note": "Tests 7.2.1 et 7.2.2 : HTML servi et DOM rendu de la fiche du critère 1.9 (/referentiel/1-9/) examinés (build servi le 2026-10-20 (main 29a4a10), Chromium/Playwright) : 0 balise <script>, 0 attribut gestionnaire d’événement (on…=), aucun îlot Astro (astro-island), aucune URL javascript:, ni <iframe>, <object> ou <embed>. Sans script, il n’y a ni alternative à un script (aucun <noscript>) ni élément non textuel mis à jour par un script : non applicable."
+			"note": "Tests 7.2.1 et 7.2.2 : HTML servi et DOM rendu de la fiche du critère 1.9 (/referentiel/1-9/) examinés (build final servi le 2026-10-20 (branche fix/rgaa-dernieres-nc, bfab09d), Chromium/Playwright) : 0 balise <script>, 0 attribut gestionnaire d’événement (on…=), aucun îlot Astro (astro-island), aucune URL javascript:, ni <iframe>, <object> ou <embed>. Sans script, il n’y a ni alternative à un script (aucun <noscript>) ni élément non textuel mis à jour par un script : non applicable."
 		},
 		{
 			"criterion": "7.2",
 			"page": "https://chikimuras.github.io/rampe/plan-du-site/",
 			"status": "NA",
-			"note": "Tests 7.2.1 et 7.2.2 : HTML servi et DOM rendu de la page Plan du site (/plan-du-site/) examinés (build servi le 2026-10-20 (main 29a4a10), Chromium/Playwright) : 0 balise <script>, 0 attribut gestionnaire d’événement (on…=), aucun îlot Astro (astro-island), aucune URL javascript:, ni <iframe>, <object> ou <embed>. Sans script, il n’y a ni alternative à un script (aucun <noscript>) ni élément non textuel mis à jour par un script : non applicable."
+			"note": "Tests 7.2.1 et 7.2.2 : HTML servi et DOM rendu de la page Plan du site (/plan-du-site/) examinés (build final servi le 2026-10-20 (branche fix/rgaa-dernieres-nc, bfab09d), Chromium/Playwright) : 0 balise <script>, 0 attribut gestionnaire d’événement (on…=), aucun îlot Astro (astro-island), aucune URL javascript:, ni <iframe>, <object> ou <embed>. Sans script, il n’y a ni alternative à un script (aucun <noscript>) ni élément non textuel mis à jour par un script : non applicable."
 		},
 		{
 			"criterion": "7.3",
 			"page": "https://chikimuras.github.io/rampe/",
 			"status": "NA",
-			"note": "Tests 7.3.1 et 7.3.2 : HTML servi et DOM rendu de la page d’accueil (/) examinés (build servi le 2026-10-20 (main 29a4a10), Chromium/Playwright) : 0 balise <script>, 0 attribut gestionnaire d’événement (on…=), aucun îlot Astro (astro-island), aucune URL javascript:, ni <iframe>, <object> ou <embed>. Aucun gestionnaire d’événement scripté, et aucun script ne peut manipuler le focus (les 10 liens sont natifs) : non applicable."
+			"note": "Tests 7.3.1 et 7.3.2 : HTML servi et DOM rendu de la page d’accueil (/) examinés (build final servi le 2026-10-20 (branche fix/rgaa-dernieres-nc, bfab09d), Chromium/Playwright) : 0 balise <script>, 0 attribut gestionnaire d’événement (on…=), aucun îlot Astro (astro-island), aucune URL javascript:, ni <iframe>, <object> ou <embed>. Aucun gestionnaire d’événement scripté, et aucun script ne peut manipuler le focus (les 10 liens sont natifs) : non applicable."
 		},
 		{
 			"criterion": "7.3",
 			"page": "https://chikimuras.github.io/rampe/referentiel/",
 			"status": "NA",
-			"note": "Tests 7.3.1 et 7.3.2 : HTML servi et DOM rendu de la page Référentiel (/referentiel/) examinés (build servi le 2026-10-20 (main 29a4a10), Chromium/Playwright) : 0 balise <script>, 0 attribut gestionnaire d’événement (on…=), aucun îlot Astro (astro-island), aucune URL javascript:, ni <iframe>, <object> ou <embed>. Aucun gestionnaire d’événement scripté, et aucun script ne peut manipuler le focus (les 132 liens sont natifs) : non applicable."
+			"note": "Tests 7.3.1 et 7.3.2 : HTML servi et DOM rendu de la page Référentiel (/referentiel/) examinés (build final servi le 2026-10-20 (branche fix/rgaa-dernieres-nc, bfab09d), Chromium/Playwright) : 0 balise <script>, 0 attribut gestionnaire d’événement (on…=), aucun îlot Astro (astro-island), aucune URL javascript:, ni <iframe>, <object> ou <embed>. Aucun gestionnaire d’événement scripté, et aucun script ne peut manipuler le focus (les 132 liens sont natifs) : non applicable."
 		},
 		{
 			"criterion": "7.3",
 			"page": "https://chikimuras.github.io/rampe/referentiel/1-1/",
 			"status": "NA",
-			"note": "Tests 7.3.1 et 7.3.2 : HTML servi et DOM rendu de la fiche du critère 1.1 (/referentiel/1-1/) examinés (build servi le 2026-10-20 (main 29a4a10), Chromium/Playwright) : 0 balise <script>, 0 attribut gestionnaire d’événement (on…=), aucun îlot Astro (astro-island), aucune URL javascript:, ni <iframe>, <object> ou <embed>. Aucun gestionnaire d’événement scripté, et aucun script ne peut manipuler le focus (les 44 liens et 8 <details> natifs sont natifs) : non applicable."
+			"note": "Tests 7.3.1 et 7.3.2 : HTML servi et DOM rendu de la fiche du critère 1.1 (/referentiel/1-1/) examinés (build final servi le 2026-10-20 (branche fix/rgaa-dernieres-nc, bfab09d), Chromium/Playwright) : 0 balise <script>, 0 attribut gestionnaire d’événement (on…=), aucun îlot Astro (astro-island), aucune URL javascript:, ni <iframe>, <object> ou <embed>. Aucun gestionnaire d’événement scripté, et aucun script ne peut manipuler le focus (les 44 liens et 8 <details> natifs sont natifs) : non applicable."
 		},
 		{
 			"criterion": "7.3",
 			"page": "https://chikimuras.github.io/rampe/referentiel/glossaire/",
 			"status": "NA",
-			"note": "Tests 7.3.1 et 7.3.2 : HTML servi et DOM rendu de la page Glossaire (/referentiel/glossaire/) examinés (build servi le 2026-10-20 (main 29a4a10), Chromium/Playwright) : 0 balise <script>, 0 attribut gestionnaire d’événement (on…=), aucun îlot Astro (astro-island), aucune URL javascript:, ni <iframe>, <object> ou <embed>. Aucun gestionnaire d’événement scripté, et aucun script ne peut manipuler le focus (les 77 liens sont natifs) : non applicable."
+			"note": "Tests 7.3.1 et 7.3.2 : HTML servi et DOM rendu de la page Glossaire (/referentiel/glossaire/) examinés (build final servi le 2026-10-20 (branche fix/rgaa-dernieres-nc, bfab09d), Chromium/Playwright) : 0 balise <script>, 0 attribut gestionnaire d’événement (on…=), aucun îlot Astro (astro-island), aucune URL javascript:, ni <iframe>, <object> ou <embed>. Aucun gestionnaire d’événement scripté, et aucun script ne peut manipuler le focus (les 77 liens sont natifs) : non applicable."
 		},
 		{
 			"criterion": "7.3",
 			"page": "https://chikimuras.github.io/rampe/audit/",
 			"status": "C",
-			"note": "Îlot Preact de /audit/ exercé sur le build servi le 2026-10-20 (main 29a4a10), Chromium/Playwright (pas de lecteur d’écran réel : restitution jugée sur l’arbre d’accessibilité CDP Accessibility.getFullAXTree, à confirmer par un humain). Test 7.3.1 : sur l’audit complet importé, Tab parcourt les 186 contrôles visibles (147 atteints directement, les 39 autres sont les radios non cochées de groupes, atteintes aux flèches) ; activation au clavier (Entrée, Espace, flèches, Échap) et au clic de : ajout de page (champ et bouton), import d’audit et de rapport, « Annuler cet import », « Retirer » (confirm natif), thématiques, liste des critères, statuts, « Confirmer « Non conforme » », filtres, « Je reprends cet audit à mon compte » / « Annuler », téléchargements, actions libres, « Retirer / Rétablir l’action », « Effacer cet audit et recommencer », boîte « Remplacer l’audit en cours ? » ; aucun élément non focalisable ne porte de curseur de clic. Test 7.3.2 : chaque élément qui disparaît à son activation rend le focus à un voisin, jamais à <body> : « J’ai bien enregistré le fichier, continuer » (session illisible, stockage plein simulé) → « Télécharger la session mise de côté » (ancien défaut corrigé) ; « Retirer » → « Retirer » suivant puis titre de section pour la dernière page ; « Annuler cet import » → champ du rapport ; « Je reprends… » ↔ « Annuler » ; Échap sur la boîte → bouton d’origine ; « Confirmer » → radio cochée."
+			"note": "Îlot Preact de /audit/ exercé sur le build final servi le 2026-10-20 (branche fix/rgaa-dernieres-nc, bfab09d), Chromium/Playwright (pas de lecteur d’écran réel : restitution jugée sur l’arbre d’accessibilité CDP Accessibility.getFullAXTree, à confirmer par un humain). Test 7.3.1 : sur l’audit complet importé, Tab parcourt les 186 contrôles visibles (147 atteints directement, les 39 autres sont les radios non cochées de groupes, atteintes aux flèches) ; activation au clavier (Entrée, Espace, flèches, Échap) et au clic de : ajout de page (champ et bouton), import d’audit et de rapport, « Annuler cet import », « Retirer » (confirm natif), thématiques, liste des critères, statuts, « Confirmer « Non conforme » », filtres, « Je reprends cet audit à mon compte » / « Annuler », téléchargements, actions libres, « Retirer / Rétablir l’action », « Effacer cet audit et recommencer », boîte « Remplacer l’audit en cours ? » ; aucun élément non focalisable ne porte de curseur de clic. Test 7.3.2 : chaque élément qui disparaît à son activation rend le focus à un voisin, jamais à <body> : « J’ai bien enregistré le fichier, continuer » (session illisible, stockage plein simulé) → « Télécharger la session mise de côté » (ancien défaut corrigé) ; « Retirer » → « Retirer » suivant puis titre de section pour la dernière page ; « Annuler cet import » → champ du rapport ; « Je reprends… » ↔ « Annuler » ; Échap sur la boîte → bouton d’origine ; « Confirmer » → radio cochée. Changement de la branche revérifié : la barre « Critères voisins » est désormais un <ul> dont chaque <li> contient un <button> natif ; noms inchangés (« Critère précédent : 1.1 », « Critère suivant : 1.3 »), activation à Entrée puis focus sur le titre du critère (h3#audit-titre tabindex=-1), Maj+Tab revient dans la liste des critères ; sans JavaScript, 0 contrôle visible et seul le message <noscript> s’affiche."
 		},
 		{
 			"criterion": "7.3",
 			"page": "https://chikimuras.github.io/rampe/cockpit/",
 			"status": "NA",
-			"note": "Tests 7.3.1 et 7.3.2 : HTML servi et DOM rendu de la page Cockpit (/cockpit/) examinés (build servi le 2026-10-20 (main 29a4a10), Chromium/Playwright) : 0 balise <script>, 0 attribut gestionnaire d’événement (on…=), aucun îlot Astro (astro-island), aucune URL javascript:, ni <iframe>, <object> ou <embed>. Aucun gestionnaire d’événement scripté, et aucun script ne peut manipuler le focus (les 41 liens sont natifs) : non applicable."
+			"note": "Tests 7.3.1 et 7.3.2 : HTML servi et DOM rendu de la page Cockpit (/cockpit/) examinés (build final servi le 2026-10-20 (branche fix/rgaa-dernieres-nc, bfab09d), Chromium/Playwright) : 0 balise <script>, 0 attribut gestionnaire d’événement (on…=), aucun îlot Astro (astro-island), aucune URL javascript:, ni <iframe>, <object> ou <embed>. Aucun gestionnaire d’événement scripté, et aucun script ne peut manipuler le focus (les 43 liens sont natifs) : non applicable."
 		},
 		{
 			"criterion": "7.3",
 			"page": "https://chikimuras.github.io/rampe/cockpit/adr/0011-cli-audit-playwright/",
 			"status": "NA",
-			"note": "Tests 7.3.1 et 7.3.2 : HTML servi et DOM rendu de la page ADR-0011 (/cockpit/adr/0011-cli-audit-playwright/) examinés (build servi le 2026-10-20 (main 29a4a10), Chromium/Playwright) : 0 balise <script>, 0 attribut gestionnaire d’événement (on…=), aucun îlot Astro (astro-island), aucune URL javascript:, ni <iframe>, <object> ou <embed>. Aucun gestionnaire d’événement scripté, et aucun script ne peut manipuler le focus (les 11 liens sont natifs) : non applicable."
+			"note": "Tests 7.3.1 et 7.3.2 : HTML servi et DOM rendu de la page ADR-0011 (/cockpit/adr/0011-cli-audit-playwright/) examinés (build final servi le 2026-10-20 (branche fix/rgaa-dernieres-nc, bfab09d), Chromium/Playwright) : 0 balise <script>, 0 attribut gestionnaire d’événement (on…=), aucun îlot Astro (astro-island), aucune URL javascript:, ni <iframe>, <object> ou <embed>. Aucun gestionnaire d’événement scripté, et aucun script ne peut manipuler le focus (les 11 liens sont natifs) : non applicable."
 		},
 		{
 			"criterion": "7.3",
 			"page": "https://chikimuras.github.io/rampe/cockpit/journal/2026-10-15/",
 			"status": "NA",
-			"note": "Tests 7.3.1 et 7.3.2 : HTML servi et DOM rendu de la page du journal du 15/10/2026 (/cockpit/journal/2026-10-15/) examinés (build servi le 2026-10-20 (main 29a4a10), Chromium/Playwright) : 0 balise <script>, 0 attribut gestionnaire d’événement (on…=), aucun îlot Astro (astro-island), aucune URL javascript:, ni <iframe>, <object> ou <embed>. Aucun gestionnaire d’événement scripté, et aucun script ne peut manipuler le focus (les 11 liens sont natifs) : non applicable."
+			"note": "Tests 7.3.1 et 7.3.2 : HTML servi et DOM rendu de la page du journal du 15/10/2026 (/cockpit/journal/2026-10-15/) examinés (build final servi le 2026-10-20 (branche fix/rgaa-dernieres-nc, bfab09d), Chromium/Playwright) : 0 balise <script>, 0 attribut gestionnaire d’événement (on…=), aucun îlot Astro (astro-island), aucune URL javascript:, ni <iframe>, <object> ou <embed>. Aucun gestionnaire d’événement scripté, et aucun script ne peut manipuler le focus (les 11 liens sont natifs) : non applicable."
 		},
 		{
 			"criterion": "7.3",
 			"page": "https://chikimuras.github.io/rampe/cockpit/docs/roadmap/",
 			"status": "NA",
-			"note": "Tests 7.3.1 et 7.3.2 : HTML servi et DOM rendu de la page Roadmap (/cockpit/docs/roadmap/) examinés (build servi le 2026-10-20 (main 29a4a10), Chromium/Playwright) : 0 balise <script>, 0 attribut gestionnaire d’événement (on…=), aucun îlot Astro (astro-island), aucune URL javascript:, ni <iframe>, <object> ou <embed>. Aucun gestionnaire d’événement scripté, et aucun script ne peut manipuler le focus (les 11 liens sont natifs) : non applicable."
+			"note": "Tests 7.3.1 et 7.3.2 : HTML servi et DOM rendu de la page Feuille de route (/cockpit/docs/roadmap/) examinés (build final servi le 2026-10-20 (branche fix/rgaa-dernieres-nc, bfab09d), Chromium/Playwright) : 0 balise <script>, 0 attribut gestionnaire d’événement (on…=), aucun îlot Astro (astro-island), aucune URL javascript:, ni <iframe>, <object> ou <embed>. Aucun gestionnaire d’événement scripté, et aucun script ne peut manipuler le focus (les 11 liens sont natifs) : non applicable."
 		},
 		{
 			"criterion": "7.3",
 			"page": "https://chikimuras.github.io/rampe/referentiel/5-1/",
 			"status": "NA",
-			"note": "Tests 7.3.1 et 7.3.2 : HTML servi et DOM rendu de la fiche du critère 5.1 (/referentiel/5-1/) examinés (build servi le 2026-10-20 (main 29a4a10), Chromium/Playwright) : 0 balise <script>, 0 attribut gestionnaire d’événement (on…=), aucun îlot Astro (astro-island), aucune URL javascript:, ni <iframe>, <object> ou <embed>. Aucun gestionnaire d’événement scripté, et aucun script ne peut manipuler le focus (les 20 liens et 1 <details> natifs sont natifs) : non applicable."
+			"note": "Tests 7.3.1 et 7.3.2 : HTML servi et DOM rendu de la fiche du critère 5.1 (/referentiel/5-1/) examinés (build final servi le 2026-10-20 (branche fix/rgaa-dernieres-nc, bfab09d), Chromium/Playwright) : 0 balise <script>, 0 attribut gestionnaire d’événement (on…=), aucun îlot Astro (astro-island), aucune URL javascript:, ni <iframe>, <object> ou <embed>. Aucun gestionnaire d’événement scripté, et aucun script ne peut manipuler le focus (les 20 liens et 1 <details> natifs sont natifs) : non applicable."
 		},
 		{
 			"criterion": "7.3",
 			"page": "https://chikimuras.github.io/rampe/referentiel/1-9/",
 			"status": "NA",
-			"note": "Tests 7.3.1 et 7.3.2 : HTML servi et DOM rendu de la fiche du critère 1.9 (/referentiel/1-9/) examinés (build servi le 2026-10-20 (main 29a4a10), Chromium/Playwright) : 0 balise <script>, 0 attribut gestionnaire d’événement (on…=), aucun îlot Astro (astro-island), aucune URL javascript:, ni <iframe>, <object> ou <embed>. Aucun gestionnaire d’événement scripté, et aucun script ne peut manipuler le focus (les 46 liens et 5 <details> natifs sont natifs) : non applicable."
+			"note": "Tests 7.3.1 et 7.3.2 : HTML servi et DOM rendu de la fiche du critère 1.9 (/referentiel/1-9/) examinés (build final servi le 2026-10-20 (branche fix/rgaa-dernieres-nc, bfab09d), Chromium/Playwright) : 0 balise <script>, 0 attribut gestionnaire d’événement (on…=), aucun îlot Astro (astro-island), aucune URL javascript:, ni <iframe>, <object> ou <embed>. Aucun gestionnaire d’événement scripté, et aucun script ne peut manipuler le focus (les 46 liens et 5 <details> natifs sont natifs) : non applicable."
 		},
 		{
 			"criterion": "7.3",
 			"page": "https://chikimuras.github.io/rampe/plan-du-site/",
 			"status": "NA",
-			"note": "Tests 7.3.1 et 7.3.2 : HTML servi et DOM rendu de la page Plan du site (/plan-du-site/) examinés (build servi le 2026-10-20 (main 29a4a10), Chromium/Playwright) : 0 balise <script>, 0 attribut gestionnaire d’événement (on…=), aucun îlot Astro (astro-island), aucune URL javascript:, ni <iframe>, <object> ou <embed>. Aucun gestionnaire d’événement scripté, et aucun script ne peut manipuler le focus (les 162 liens sont natifs) : non applicable."
+			"note": "Tests 7.3.1 et 7.3.2 : HTML servi et DOM rendu de la page Plan du site (/plan-du-site/) examinés (build final servi le 2026-10-20 (branche fix/rgaa-dernieres-nc, bfab09d), Chromium/Playwright) : 0 balise <script>, 0 attribut gestionnaire d’événement (on…=), aucun îlot Astro (astro-island), aucune URL javascript:, ni <iframe>, <object> ou <embed>. Aucun gestionnaire d’événement scripté, et aucun script ne peut manipuler le focus (les 164 liens sont natifs) : non applicable."
 		},
 		{
 			"criterion": "7.4",
 			"page": "https://chikimuras.github.io/rampe/",
 			"status": "NA",
-			"note": "Test 7.4.1 : HTML servi et DOM rendu de la page d’accueil (/) examinés (build servi le 2026-10-20 (main 29a4a10), Chromium/Playwright) : 0 balise <script>, 0 attribut gestionnaire d’événement (on…=), aucun îlot Astro (astro-island), aucune URL javascript:, ni <iframe>, <object> ou <embed>. Aucun script ne peut initier de changement de contexte (les changements de page passent par des liens HTML) : non applicable."
+			"note": "Test 7.4.1 : HTML servi et DOM rendu de la page d’accueil (/) examinés (build final servi le 2026-10-20 (branche fix/rgaa-dernieres-nc, bfab09d), Chromium/Playwright) : 0 balise <script>, 0 attribut gestionnaire d’événement (on…=), aucun îlot Astro (astro-island), aucune URL javascript:, ni <iframe>, <object> ou <embed>. Aucun script ne peut initier de changement de contexte (les changements de page passent par des liens HTML) : non applicable."
 		},
 		{
 			"criterion": "7.4",
 			"page": "https://chikimuras.github.io/rampe/referentiel/",
 			"status": "NA",
-			"note": "Test 7.4.1 : HTML servi et DOM rendu de la page Référentiel (/referentiel/) examinés (build servi le 2026-10-20 (main 29a4a10), Chromium/Playwright) : 0 balise <script>, 0 attribut gestionnaire d’événement (on…=), aucun îlot Astro (astro-island), aucune URL javascript:, ni <iframe>, <object> ou <embed>. Aucun script ne peut initier de changement de contexte (les changements de page passent par des liens HTML) : non applicable."
+			"note": "Test 7.4.1 : HTML servi et DOM rendu de la page Référentiel (/referentiel/) examinés (build final servi le 2026-10-20 (branche fix/rgaa-dernieres-nc, bfab09d), Chromium/Playwright) : 0 balise <script>, 0 attribut gestionnaire d’événement (on…=), aucun îlot Astro (astro-island), aucune URL javascript:, ni <iframe>, <object> ou <embed>. Aucun script ne peut initier de changement de contexte (les changements de page passent par des liens HTML) : non applicable."
 		},
 		{
 			"criterion": "7.4",
 			"page": "https://chikimuras.github.io/rampe/referentiel/1-1/",
 			"status": "NA",
-			"note": "Test 7.4.1 : HTML servi et DOM rendu de la fiche du critère 1.1 (/referentiel/1-1/) examinés (build servi le 2026-10-20 (main 29a4a10), Chromium/Playwright) : 0 balise <script>, 0 attribut gestionnaire d’événement (on…=), aucun îlot Astro (astro-island), aucune URL javascript:, ni <iframe>, <object> ou <embed>. Aucun script ne peut initier de changement de contexte (les changements de page passent par des liens HTML) : non applicable."
+			"note": "Test 7.4.1 : HTML servi et DOM rendu de la fiche du critère 1.1 (/referentiel/1-1/) examinés (build final servi le 2026-10-20 (branche fix/rgaa-dernieres-nc, bfab09d), Chromium/Playwright) : 0 balise <script>, 0 attribut gestionnaire d’événement (on…=), aucun îlot Astro (astro-island), aucune URL javascript:, ni <iframe>, <object> ou <embed>. Aucun script ne peut initier de changement de contexte (les changements de page passent par des liens HTML) : non applicable."
 		},
 		{
 			"criterion": "7.4",
 			"page": "https://chikimuras.github.io/rampe/referentiel/glossaire/",
 			"status": "NA",
-			"note": "Test 7.4.1 : HTML servi et DOM rendu de la page Glossaire (/referentiel/glossaire/) examinés (build servi le 2026-10-20 (main 29a4a10), Chromium/Playwright) : 0 balise <script>, 0 attribut gestionnaire d’événement (on…=), aucun îlot Astro (astro-island), aucune URL javascript:, ni <iframe>, <object> ou <embed>. Aucun script ne peut initier de changement de contexte (les changements de page passent par des liens HTML) : non applicable."
+			"note": "Test 7.4.1 : HTML servi et DOM rendu de la page Glossaire (/referentiel/glossaire/) examinés (build final servi le 2026-10-20 (branche fix/rgaa-dernieres-nc, bfab09d), Chromium/Playwright) : 0 balise <script>, 0 attribut gestionnaire d’événement (on…=), aucun îlot Astro (astro-island), aucune URL javascript:, ni <iframe>, <object> ou <embed>. Aucun script ne peut initier de changement de contexte (les changements de page passent par des liens HTML) : non applicable."
 		},
 		{
 			"criterion": "7.4",
 			"page": "https://chikimuras.github.io/rampe/audit/",
 			"status": "C",
-			"note": "Îlot Preact de /audit/ exercé sur le build servi le 2026-10-20 (main 29a4a10), Chromium/Playwright (pas de lecteur d’écran réel : restitution jugée sur l’arbre d’accessibilité CDP Accessibility.getFullAXTree, à confirmer par un humain). Test 7.4.1 : changements de contexte recensés : focus déplacé sur le titre du critère (h3 tabindex=-1) après un bouton de la liste des critères ou « Critère suivant / précédent » ; focus déplacé après « Retirer » ; ouverture de la boîte modale puis remplacement de l’audit à l’import ; effacement par « Effacer cet audit et recommencer » (confirm natif). Tous sont initiés par un bouton explicite (<button>, ou bouton natif du champ fichier « Importer un audit (JSON) » dont l’aide reliée annonce « Il remplace l’audit en cours »). Les radios de filtre « Afficher » et les select (durée, priorité, année, bilan) ne font que filtrer ou mettre à jour du contenu, sans déplacer le focus (vérifié : le focus reste sur la radio après Flèche bas) ni changer de page ; aucun changement de contexte à la prise de focus ou à la saisie."
+			"note": "Îlot Preact de /audit/ exercé sur le build final servi le 2026-10-20 (branche fix/rgaa-dernieres-nc, bfab09d), Chromium/Playwright (pas de lecteur d’écran réel : restitution jugée sur l’arbre d’accessibilité CDP Accessibility.getFullAXTree, à confirmer par un humain). Test 7.4.1 : changements de contexte recensés : focus déplacé sur le titre du critère (h3 tabindex=-1) après un bouton de la liste des critères ou « Critère suivant / précédent » ; focus déplacé après « Retirer » ; ouverture de la boîte modale puis remplacement de l’audit à l’import ; effacement par « Effacer cet audit et recommencer » (confirm natif). Tous sont initiés par un bouton explicite (<button>, ou bouton natif du champ fichier « Importer un audit (JSON) » dont l’aide reliée annonce « Il remplace l’audit en cours »). Les radios de filtre « Afficher » et les select (durée, priorité, année, bilan) ne font que filtrer ou mettre à jour du contenu, sans déplacer le focus (vérifié : le focus reste sur la radio après Flèche bas) ni changer de page ; aucun changement de contexte à la prise de focus ou à la saisie. Changement de la branche revérifié : la barre « Critères voisins » est désormais un <ul> dont chaque <li> contient un <button> natif ; noms inchangés (« Critère précédent : 1.1 », « Critère suivant : 1.3 »), activation à Entrée puis focus sur le titre du critère (h3#audit-titre tabindex=-1), Maj+Tab revient dans la liste des critères ; sans JavaScript, 0 contrôle visible et seul le message <noscript> s’affiche."
 		},
 		{
 			"criterion": "7.4",
 			"page": "https://chikimuras.github.io/rampe/cockpit/",
 			"status": "NA",
-			"note": "Test 7.4.1 : HTML servi et DOM rendu de la page Cockpit (/cockpit/) examinés (build servi le 2026-10-20 (main 29a4a10), Chromium/Playwright) : 0 balise <script>, 0 attribut gestionnaire d’événement (on…=), aucun îlot Astro (astro-island), aucune URL javascript:, ni <iframe>, <object> ou <embed>. Aucun script ne peut initier de changement de contexte (les changements de page passent par des liens HTML) : non applicable."
+			"note": "Test 7.4.1 : HTML servi et DOM rendu de la page Cockpit (/cockpit/) examinés (build final servi le 2026-10-20 (branche fix/rgaa-dernieres-nc, bfab09d), Chromium/Playwright) : 0 balise <script>, 0 attribut gestionnaire d’événement (on…=), aucun îlot Astro (astro-island), aucune URL javascript:, ni <iframe>, <object> ou <embed>. Aucun script ne peut initier de changement de contexte (les changements de page passent par des liens HTML) : non applicable."
 		},
 		{
 			"criterion": "7.4",
 			"page": "https://chikimuras.github.io/rampe/cockpit/adr/0011-cli-audit-playwright/",
 			"status": "NA",
-			"note": "Test 7.4.1 : HTML servi et DOM rendu de la page ADR-0011 (/cockpit/adr/0011-cli-audit-playwright/) examinés (build servi le 2026-10-20 (main 29a4a10), Chromium/Playwright) : 0 balise <script>, 0 attribut gestionnaire d’événement (on…=), aucun îlot Astro (astro-island), aucune URL javascript:, ni <iframe>, <object> ou <embed>. Aucun script ne peut initier de changement de contexte (les changements de page passent par des liens HTML) : non applicable."
+			"note": "Test 7.4.1 : HTML servi et DOM rendu de la page ADR-0011 (/cockpit/adr/0011-cli-audit-playwright/) examinés (build final servi le 2026-10-20 (branche fix/rgaa-dernieres-nc, bfab09d), Chromium/Playwright) : 0 balise <script>, 0 attribut gestionnaire d’événement (on…=), aucun îlot Astro (astro-island), aucune URL javascript:, ni <iframe>, <object> ou <embed>. Aucun script ne peut initier de changement de contexte (les changements de page passent par des liens HTML) : non applicable."
 		},
 		{
 			"criterion": "7.4",
 			"page": "https://chikimuras.github.io/rampe/cockpit/journal/2026-10-15/",
 			"status": "NA",
-			"note": "Test 7.4.1 : HTML servi et DOM rendu de la page du journal du 15/10/2026 (/cockpit/journal/2026-10-15/) examinés (build servi le 2026-10-20 (main 29a4a10), Chromium/Playwright) : 0 balise <script>, 0 attribut gestionnaire d’événement (on…=), aucun îlot Astro (astro-island), aucune URL javascript:, ni <iframe>, <object> ou <embed>. Aucun script ne peut initier de changement de contexte (les changements de page passent par des liens HTML) : non applicable."
+			"note": "Test 7.4.1 : HTML servi et DOM rendu de la page du journal du 15/10/2026 (/cockpit/journal/2026-10-15/) examinés (build final servi le 2026-10-20 (branche fix/rgaa-dernieres-nc, bfab09d), Chromium/Playwright) : 0 balise <script>, 0 attribut gestionnaire d’événement (on…=), aucun îlot Astro (astro-island), aucune URL javascript:, ni <iframe>, <object> ou <embed>. Aucun script ne peut initier de changement de contexte (les changements de page passent par des liens HTML) : non applicable."
 		},
 		{
 			"criterion": "7.4",
 			"page": "https://chikimuras.github.io/rampe/cockpit/docs/roadmap/",
 			"status": "NA",
-			"note": "Test 7.4.1 : HTML servi et DOM rendu de la page Roadmap (/cockpit/docs/roadmap/) examinés (build servi le 2026-10-20 (main 29a4a10), Chromium/Playwright) : 0 balise <script>, 0 attribut gestionnaire d’événement (on…=), aucun îlot Astro (astro-island), aucune URL javascript:, ni <iframe>, <object> ou <embed>. Aucun script ne peut initier de changement de contexte (les changements de page passent par des liens HTML) : non applicable."
+			"note": "Test 7.4.1 : HTML servi et DOM rendu de la page Feuille de route (/cockpit/docs/roadmap/) examinés (build final servi le 2026-10-20 (branche fix/rgaa-dernieres-nc, bfab09d), Chromium/Playwright) : 0 balise <script>, 0 attribut gestionnaire d’événement (on…=), aucun îlot Astro (astro-island), aucune URL javascript:, ni <iframe>, <object> ou <embed>. Aucun script ne peut initier de changement de contexte (les changements de page passent par des liens HTML) : non applicable."
 		},
 		{
 			"criterion": "7.4",
 			"page": "https://chikimuras.github.io/rampe/referentiel/5-1/",
 			"status": "NA",
-			"note": "Test 7.4.1 : HTML servi et DOM rendu de la fiche du critère 5.1 (/referentiel/5-1/) examinés (build servi le 2026-10-20 (main 29a4a10), Chromium/Playwright) : 0 balise <script>, 0 attribut gestionnaire d’événement (on…=), aucun îlot Astro (astro-island), aucune URL javascript:, ni <iframe>, <object> ou <embed>. Aucun script ne peut initier de changement de contexte (les changements de page passent par des liens HTML) : non applicable."
+			"note": "Test 7.4.1 : HTML servi et DOM rendu de la fiche du critère 5.1 (/referentiel/5-1/) examinés (build final servi le 2026-10-20 (branche fix/rgaa-dernieres-nc, bfab09d), Chromium/Playwright) : 0 balise <script>, 0 attribut gestionnaire d’événement (on…=), aucun îlot Astro (astro-island), aucune URL javascript:, ni <iframe>, <object> ou <embed>. Aucun script ne peut initier de changement de contexte (les changements de page passent par des liens HTML) : non applicable."
 		},
 		{
 			"criterion": "7.4",
 			"page": "https://chikimuras.github.io/rampe/referentiel/1-9/",
 			"status": "NA",
-			"note": "Test 7.4.1 : HTML servi et DOM rendu de la fiche du critère 1.9 (/referentiel/1-9/) examinés (build servi le 2026-10-20 (main 29a4a10), Chromium/Playwright) : 0 balise <script>, 0 attribut gestionnaire d’événement (on…=), aucun îlot Astro (astro-island), aucune URL javascript:, ni <iframe>, <object> ou <embed>. Aucun script ne peut initier de changement de contexte (les changements de page passent par des liens HTML) : non applicable."
+			"note": "Test 7.4.1 : HTML servi et DOM rendu de la fiche du critère 1.9 (/referentiel/1-9/) examinés (build final servi le 2026-10-20 (branche fix/rgaa-dernieres-nc, bfab09d), Chromium/Playwright) : 0 balise <script>, 0 attribut gestionnaire d’événement (on…=), aucun îlot Astro (astro-island), aucune URL javascript:, ni <iframe>, <object> ou <embed>. Aucun script ne peut initier de changement de contexte (les changements de page passent par des liens HTML) : non applicable."
 		},
 		{
 			"criterion": "7.4",
 			"page": "https://chikimuras.github.io/rampe/plan-du-site/",
 			"status": "NA",
-			"note": "Test 7.4.1 : HTML servi et DOM rendu de la page Plan du site (/plan-du-site/) examinés (build servi le 2026-10-20 (main 29a4a10), Chromium/Playwright) : 0 balise <script>, 0 attribut gestionnaire d’événement (on…=), aucun îlot Astro (astro-island), aucune URL javascript:, ni <iframe>, <object> ou <embed>. Aucun script ne peut initier de changement de contexte (les changements de page passent par des liens HTML) : non applicable."
+			"note": "Test 7.4.1 : HTML servi et DOM rendu de la page Plan du site (/plan-du-site/) examinés (build final servi le 2026-10-20 (branche fix/rgaa-dernieres-nc, bfab09d), Chromium/Playwright) : 0 balise <script>, 0 attribut gestionnaire d’événement (on…=), aucun îlot Astro (astro-island), aucune URL javascript:, ni <iframe>, <object> ou <embed>. Aucun script ne peut initier de changement de contexte (les changements de page passent par des liens HTML) : non applicable."
 		},
 		{
 			"criterion": "7.5",
 			"page": "https://chikimuras.github.io/rampe/",
 			"status": "NA",
-			"note": "Tests 7.5.1, 7.5.2 et 7.5.3 : HTML servi et DOM rendu de la page d’accueil (/) examinés (build servi le 2026-10-20 (main 29a4a10), Chromium/Playwright) : 0 balise <script>, 0 attribut gestionnaire d’événement (on…=), aucun îlot Astro (astro-island), aucune URL javascript:, ni <iframe>, <object> ou <embed>. Contenu statique : aucun message de statut (succès, erreur, progression) n’est inséré ou modifié dans la page, aucune région aria-live ni role status/alert/log/progressbar : non applicable."
+			"note": "Tests 7.5.1, 7.5.2 et 7.5.3 : HTML servi et DOM rendu de la page d’accueil (/) examinés (build final servi le 2026-10-20 (branche fix/rgaa-dernieres-nc, bfab09d), Chromium/Playwright) : 0 balise <script>, 0 attribut gestionnaire d’événement (on…=), aucun îlot Astro (astro-island), aucune URL javascript:, ni <iframe>, <object> ou <embed>. Contenu statique : aucun message de statut (succès, erreur, progression) n’est inséré ou modifié dans la page, aucune région aria-live ni role status/alert/log/progressbar : non applicable."
 		},
 		{
 			"criterion": "7.5",
 			"page": "https://chikimuras.github.io/rampe/referentiel/",
 			"status": "NA",
-			"note": "Tests 7.5.1, 7.5.2 et 7.5.3 : HTML servi et DOM rendu de la page Référentiel (/referentiel/) examinés (build servi le 2026-10-20 (main 29a4a10), Chromium/Playwright) : 0 balise <script>, 0 attribut gestionnaire d’événement (on…=), aucun îlot Astro (astro-island), aucune URL javascript:, ni <iframe>, <object> ou <embed>. Contenu statique : aucun message de statut (succès, erreur, progression) n’est inséré ou modifié dans la page, aucune région aria-live ni role status/alert/log/progressbar : non applicable."
+			"note": "Tests 7.5.1, 7.5.2 et 7.5.3 : HTML servi et DOM rendu de la page Référentiel (/referentiel/) examinés (build final servi le 2026-10-20 (branche fix/rgaa-dernieres-nc, bfab09d), Chromium/Playwright) : 0 balise <script>, 0 attribut gestionnaire d’événement (on…=), aucun îlot Astro (astro-island), aucune URL javascript:, ni <iframe>, <object> ou <embed>. Contenu statique : aucun message de statut (succès, erreur, progression) n’est inséré ou modifié dans la page, aucune région aria-live ni role status/alert/log/progressbar : non applicable."
 		},
 		{
 			"criterion": "7.5",
 			"page": "https://chikimuras.github.io/rampe/referentiel/1-1/",
 			"status": "NA",
-			"note": "Tests 7.5.1, 7.5.2 et 7.5.3 : HTML servi et DOM rendu de la fiche du critère 1.1 (/referentiel/1-1/) examinés (build servi le 2026-10-20 (main 29a4a10), Chromium/Playwright) : 0 balise <script>, 0 attribut gestionnaire d’événement (on…=), aucun îlot Astro (astro-island), aucune URL javascript:, ni <iframe>, <object> ou <embed>. Contenu statique : aucun message de statut (succès, erreur, progression) n’est inséré ou modifié dans la page, aucune région aria-live ni role status/alert/log/progressbar : non applicable."
+			"note": "Tests 7.5.1, 7.5.2 et 7.5.3 : HTML servi et DOM rendu de la fiche du critère 1.1 (/referentiel/1-1/) examinés (build final servi le 2026-10-20 (branche fix/rgaa-dernieres-nc, bfab09d), Chromium/Playwright) : 0 balise <script>, 0 attribut gestionnaire d’événement (on…=), aucun îlot Astro (astro-island), aucune URL javascript:, ni <iframe>, <object> ou <embed>. Contenu statique : aucun message de statut (succès, erreur, progression) n’est inséré ou modifié dans la page, aucune région aria-live ni role status/alert/log/progressbar : non applicable."
 		},
 		{
 			"criterion": "7.5",
 			"page": "https://chikimuras.github.io/rampe/referentiel/glossaire/",
 			"status": "NA",
-			"note": "Tests 7.5.1, 7.5.2 et 7.5.3 : HTML servi et DOM rendu de la page Glossaire (/referentiel/glossaire/) examinés (build servi le 2026-10-20 (main 29a4a10), Chromium/Playwright) : 0 balise <script>, 0 attribut gestionnaire d’événement (on…=), aucun îlot Astro (astro-island), aucune URL javascript:, ni <iframe>, <object> ou <embed>. Contenu statique : aucun message de statut (succès, erreur, progression) n’est inséré ou modifié dans la page, aucune région aria-live ni role status/alert/log/progressbar : non applicable."
+			"note": "Tests 7.5.1, 7.5.2 et 7.5.3 : HTML servi et DOM rendu de la page Glossaire (/referentiel/glossaire/) examinés (build final servi le 2026-10-20 (branche fix/rgaa-dernieres-nc, bfab09d), Chromium/Playwright) : 0 balise <script>, 0 attribut gestionnaire d’événement (on…=), aucun îlot Astro (astro-island), aucune URL javascript:, ni <iframe>, <object> ou <embed>. Contenu statique : aucun message de statut (succès, erreur, progression) n’est inséré ou modifié dans la page, aucune région aria-live ni role status/alert/log/progressbar : non applicable."
 		},
 		{
 			"criterion": "7.5",
 			"page": "https://chikimuras.github.io/rampe/audit/",
-			"status": "NC",
-			"note": "Îlot Preact de /audit/ exercé sur le build servi le 2026-10-20 (main 29a4a10), Chromium/Playwright (pas de lecteur d’écran réel : restitution jugée sur l’arbre d’accessibilité CDP Accessibility.getFullAXTree, à confirmer par un humain). Messages relevés par un MutationObserver sur les deux régions <p class=\"audit-live\"> : role=\"status\" aria-atomic=\"true\" et role=\"alert\" aria-atomic=\"true\". Test 7.5.1 validé : « Page ajoutée : … », « Import terminé : … », « Audit importé : … », « Audit téléchargé : … », « Statut « Non conforme » confirmé… », « N critères affichés… », « Action ajoutée : … », « Audit effacé… » passent par role=status. Test 7.5.2 en échec : si la plupart des erreurs sans déplacement du focus passent par role=alert (« Cette page est déjà dans l’échantillon. », adresse vide après Entrée, « Cette adresse n’est pas sur le site audité… », fichier JSON illisible, audit importé comme rapport, « Saisissez l’intitulé de l’action. », erreurs à la sortie des champs « Année de début » et « Page web de ses coordonnées »), deux messages d’erreur sont envoyés dans la région role=\"status\" : « Échec de l’enregistrement » (stockage plein simulé : AuditApp.tsx l. 344, setAnnounce sans le drapeau d’erreur ; au second échec, le bandeau role=alert déjà affiché n’est pas réannoncé et seule la région status parle) et « Export impossible : l’année de début est incomplète ou hors limites. » (clic sur « Télécharger le schéma (HTML) » avec l’année 12, observé ; même cas pour « Export impossible : une date est incomplète… » de la déclaration, l. 1886). Test 7.5.3 : progression portée par <progress> (rôle progressbar natif), conforme. Correction : passer ces messages par setAnnounce(…, true)."
+			"status": "C",
+			"note": "Îlot Preact de /audit/ exercé sur le build final servi le 2026-10-20 (branche fix/rgaa-dernieres-nc, bfab09d), Chromium/Playwright (pas de lecteur d’écran réel : restitution jugée sur l’arbre d’accessibilité et sur les régions d’annonce, à confirmer par un humain). Messages relevés par un MutationObserver sur tout le document (régions <p class=\"audit-live\"> role=\"status\" aria-atomic=\"true\" et role=\"alert\" aria-atomic=\"true\", bandeaux role=\"alert\", <p role=\"status\"> du dialogue). Test 7.5.1 : « Page ajoutée : https://exemple.fr/ », « Audit téléchargé : … », « Déclaration téléchargée : … », « 1 action ajoutée, 0 action mise à jour. », « Tableau déjà à jour… », « 1 critère affiché ; critère 1.1 affiché » (filtre) passent par role=status ; dans la boîte modale « Remplacer l’audit en cours ? », « Audit en cours téléchargé : … » par le <p role=\"status\"> du dialogue. « Audit incomplet : aucune action n’est proposée tant que l’audit n’est pas terminé. » (bouton « Mettre à jour depuis l’audit », audit incomplet) passe par role=status : jugé message d’état de l’application (aucune erreur de saisie). Test 7.5.2 : toutes les erreurs affichées sans déplacement du focus passent par role=alert : adresse vide ou hors du site audité validée par Entrée (focus resté dans le champ), intitulé d’action vide validé par Entrée, fichier JSON illisible (rapport et audit), sortie des champs « Année de début » (année 13), « Date de mise à jour » et « Page web de ses coordonnées » en erreur. Stockage plein simulé (Storage.setItem qui lève QuotaExceededError) : le bandeau <p class=\"audit-banner\" role=\"alert\"> « Échec de l’enregistrement… » apparaît, et la région role=status ne reçoit plus « Échec de l’enregistrement » (ancien défaut corrigé) ; au second échec, rien de plus. Export bloqué (« Télécharger le schéma (HTML) » avec l’année 12, « Télécharger (HTML) » de la déclaration avec une date invalide) : plus de message « Export impossible… » dans la région role=status (ancien défaut corrigé) ; le focus revient sur le champ (aria-invalid=\"true\", aria-describedby vers son message d’erreur). Quand l’erreur suit un déplacement du focus vers le champ (bouton « Ajouter la page » avec un doublon ou une adresse hors site), elle est portée par la description du champ et n’est pas un message de statut. Double lecture supprimée sur ce build : au clic sur « Télécharger le schéma (HTML) » (année 12) et sur « Télécharger (HTML) » de la déclaration (date invalide), aucune annonce dans les régions role=status ni role=alert ; le seul message entendu est la description du champ quand il reprend le focus. La sortie du champ par Tab vers un autre champ annonce toujours l’erreur par role=alert (année 13). Test 7.5.3 : progression portée par <progress id=\"audit-avancement\"> (rôle progressbar natif). Conforme."
 		},
 		{
 			"criterion": "7.5",
 			"page": "https://chikimuras.github.io/rampe/cockpit/",
 			"status": "NA",
-			"note": "Tests 7.5.1, 7.5.2 et 7.5.3 : HTML servi et DOM rendu de la page Cockpit (/cockpit/) examinés (build servi le 2026-10-20 (main 29a4a10), Chromium/Playwright) : 0 balise <script>, 0 attribut gestionnaire d’événement (on…=), aucun îlot Astro (astro-island), aucune URL javascript:, ni <iframe>, <object> ou <embed>. Contenu statique : aucun message de statut (succès, erreur, progression) n’est inséré ou modifié dans la page, aucune région aria-live ni role status/alert/log/progressbar : non applicable."
+			"note": "Tests 7.5.1, 7.5.2 et 7.5.3 : HTML servi et DOM rendu de la page Cockpit (/cockpit/) examinés (build final servi le 2026-10-20 (branche fix/rgaa-dernieres-nc, bfab09d), Chromium/Playwright) : 0 balise <script>, 0 attribut gestionnaire d’événement (on…=), aucun îlot Astro (astro-island), aucune URL javascript:, ni <iframe>, <object> ou <embed>. Contenu statique : aucun message de statut (succès, erreur, progression) n’est inséré ou modifié dans la page, aucune région aria-live ni role status/alert/log ; les 7 <progress> d’avancement sont statiques (valeurs fixées au build, jamais mises à jour), donc pas des messages de statut : non applicable."
 		},
 		{
 			"criterion": "7.5",
 			"page": "https://chikimuras.github.io/rampe/cockpit/adr/0011-cli-audit-playwright/",
 			"status": "NA",
-			"note": "Tests 7.5.1, 7.5.2 et 7.5.3 : HTML servi et DOM rendu de la page ADR-0011 (/cockpit/adr/0011-cli-audit-playwright/) examinés (build servi le 2026-10-20 (main 29a4a10), Chromium/Playwright) : 0 balise <script>, 0 attribut gestionnaire d’événement (on…=), aucun îlot Astro (astro-island), aucune URL javascript:, ni <iframe>, <object> ou <embed>. Contenu statique : aucun message de statut (succès, erreur, progression) n’est inséré ou modifié dans la page, aucune région aria-live ni role status/alert/log/progressbar : non applicable."
+			"note": "Tests 7.5.1, 7.5.2 et 7.5.3 : HTML servi et DOM rendu de la page ADR-0011 (/cockpit/adr/0011-cli-audit-playwright/) examinés (build final servi le 2026-10-20 (branche fix/rgaa-dernieres-nc, bfab09d), Chromium/Playwright) : 0 balise <script>, 0 attribut gestionnaire d’événement (on…=), aucun îlot Astro (astro-island), aucune URL javascript:, ni <iframe>, <object> ou <embed>. Contenu statique : aucun message de statut (succès, erreur, progression) n’est inséré ou modifié dans la page, aucune région aria-live ni role status/alert/log/progressbar : non applicable."
 		},
 		{
 			"criterion": "7.5",
 			"page": "https://chikimuras.github.io/rampe/cockpit/journal/2026-10-15/",
 			"status": "NA",
-			"note": "Tests 7.5.1, 7.5.2 et 7.5.3 : HTML servi et DOM rendu de la page du journal du 15/10/2026 (/cockpit/journal/2026-10-15/) examinés (build servi le 2026-10-20 (main 29a4a10), Chromium/Playwright) : 0 balise <script>, 0 attribut gestionnaire d’événement (on…=), aucun îlot Astro (astro-island), aucune URL javascript:, ni <iframe>, <object> ou <embed>. Contenu statique : aucun message de statut (succès, erreur, progression) n’est inséré ou modifié dans la page, aucune région aria-live ni role status/alert/log/progressbar : non applicable."
+			"note": "Tests 7.5.1, 7.5.2 et 7.5.3 : HTML servi et DOM rendu de la page du journal du 15/10/2026 (/cockpit/journal/2026-10-15/) examinés (build final servi le 2026-10-20 (branche fix/rgaa-dernieres-nc, bfab09d), Chromium/Playwright) : 0 balise <script>, 0 attribut gestionnaire d’événement (on…=), aucun îlot Astro (astro-island), aucune URL javascript:, ni <iframe>, <object> ou <embed>. Contenu statique : aucun message de statut (succès, erreur, progression) n’est inséré ou modifié dans la page, aucune région aria-live ni role status/alert/log/progressbar : non applicable."
 		},
 		{
 			"criterion": "7.5",
 			"page": "https://chikimuras.github.io/rampe/cockpit/docs/roadmap/",
 			"status": "NA",
-			"note": "Tests 7.5.1, 7.5.2 et 7.5.3 : HTML servi et DOM rendu de la page Roadmap (/cockpit/docs/roadmap/) examinés (build servi le 2026-10-20 (main 29a4a10), Chromium/Playwright) : 0 balise <script>, 0 attribut gestionnaire d’événement (on…=), aucun îlot Astro (astro-island), aucune URL javascript:, ni <iframe>, <object> ou <embed>. Contenu statique : aucun message de statut (succès, erreur, progression) n’est inséré ou modifié dans la page, aucune région aria-live ni role status/alert/log/progressbar : non applicable."
+			"note": "Tests 7.5.1, 7.5.2 et 7.5.3 : HTML servi et DOM rendu de la page Feuille de route (/cockpit/docs/roadmap/) examinés (build final servi le 2026-10-20 (branche fix/rgaa-dernieres-nc, bfab09d), Chromium/Playwright) : 0 balise <script>, 0 attribut gestionnaire d’événement (on…=), aucun îlot Astro (astro-island), aucune URL javascript:, ni <iframe>, <object> ou <embed>. Contenu statique : aucun message de statut (succès, erreur, progression) n’est inséré ou modifié dans la page, aucune région aria-live ni role status/alert/log/progressbar : non applicable."
 		},
 		{
 			"criterion": "7.5",
 			"page": "https://chikimuras.github.io/rampe/referentiel/5-1/",
 			"status": "NA",
-			"note": "Tests 7.5.1, 7.5.2 et 7.5.3 : HTML servi et DOM rendu de la fiche du critère 5.1 (/referentiel/5-1/) examinés (build servi le 2026-10-20 (main 29a4a10), Chromium/Playwright) : 0 balise <script>, 0 attribut gestionnaire d’événement (on…=), aucun îlot Astro (astro-island), aucune URL javascript:, ni <iframe>, <object> ou <embed>. Contenu statique : aucun message de statut (succès, erreur, progression) n’est inséré ou modifié dans la page, aucune région aria-live ni role status/alert/log/progressbar : non applicable."
+			"note": "Tests 7.5.1, 7.5.2 et 7.5.3 : HTML servi et DOM rendu de la fiche du critère 5.1 (/referentiel/5-1/) examinés (build final servi le 2026-10-20 (branche fix/rgaa-dernieres-nc, bfab09d), Chromium/Playwright) : 0 balise <script>, 0 attribut gestionnaire d’événement (on…=), aucun îlot Astro (astro-island), aucune URL javascript:, ni <iframe>, <object> ou <embed>. Contenu statique : aucun message de statut (succès, erreur, progression) n’est inséré ou modifié dans la page, aucune région aria-live ni role status/alert/log/progressbar : non applicable."
 		},
 		{
 			"criterion": "7.5",
 			"page": "https://chikimuras.github.io/rampe/referentiel/1-9/",
 			"status": "NA",
-			"note": "Tests 7.5.1, 7.5.2 et 7.5.3 : HTML servi et DOM rendu de la fiche du critère 1.9 (/referentiel/1-9/) examinés (build servi le 2026-10-20 (main 29a4a10), Chromium/Playwright) : 0 balise <script>, 0 attribut gestionnaire d’événement (on…=), aucun îlot Astro (astro-island), aucune URL javascript:, ni <iframe>, <object> ou <embed>. Contenu statique : aucun message de statut (succès, erreur, progression) n’est inséré ou modifié dans la page, aucune région aria-live ni role status/alert/log/progressbar : non applicable."
+			"note": "Tests 7.5.1, 7.5.2 et 7.5.3 : HTML servi et DOM rendu de la fiche du critère 1.9 (/referentiel/1-9/) examinés (build final servi le 2026-10-20 (branche fix/rgaa-dernieres-nc, bfab09d), Chromium/Playwright) : 0 balise <script>, 0 attribut gestionnaire d’événement (on…=), aucun îlot Astro (astro-island), aucune URL javascript:, ni <iframe>, <object> ou <embed>. Contenu statique : aucun message de statut (succès, erreur, progression) n’est inséré ou modifié dans la page, aucune région aria-live ni role status/alert/log/progressbar : non applicable."
 		},
 		{
 			"criterion": "7.5",
 			"page": "https://chikimuras.github.io/rampe/plan-du-site/",
 			"status": "NA",
-			"note": "Tests 7.5.1, 7.5.2 et 7.5.3 : HTML servi et DOM rendu de la page Plan du site (/plan-du-site/) examinés (build servi le 2026-10-20 (main 29a4a10), Chromium/Playwright) : 0 balise <script>, 0 attribut gestionnaire d’événement (on…=), aucun îlot Astro (astro-island), aucune URL javascript:, ni <iframe>, <object> ou <embed>. Contenu statique : aucun message de statut (succès, erreur, progression) n’est inséré ou modifié dans la page, aucune région aria-live ni role status/alert/log/progressbar : non applicable."
+			"note": "Tests 7.5.1, 7.5.2 et 7.5.3 : HTML servi et DOM rendu de la page Plan du site (/plan-du-site/) examinés (build final servi le 2026-10-20 (branche fix/rgaa-dernieres-nc, bfab09d), Chromium/Playwright) : 0 balise <script>, 0 attribut gestionnaire d’événement (on…=), aucun îlot Astro (astro-island), aucune URL javascript:, ni <iframe>, <object> ou <embed>. Contenu statique : aucun message de statut (succès, erreur, progression) n’est inséré ou modifié dans la page, aucune région aria-live ni role status/alert/log/progressbar : non applicable."
 		}
 	]
 }
