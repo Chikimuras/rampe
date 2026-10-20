@@ -20,10 +20,16 @@ const npm = (args: string[], cwd: string) => execFileSync("npm", args, { cwd, en
 let dir: string;
 let server: Server;
 let base: string;
+let packed: { filename: string; files: { path: string }[] };
 
 beforeAll(async () => {
 	dir = await mkdtemp(join(tmpdir(), "rampe-paquet-"));
-	npm(["run", "build"], pkgDir);
+	// Une seule construction : `npm pack` lance le script prepack (build). dist/ est retiré avant, pour prouver que
+	// l'archive ne peut pas partir sans build.
+	await rm(join(pkgDir, "dist"), { recursive: true, force: true });
+	const out = npm(["pack", "--json", "--pack-destination", dir], pkgDir);
+	// La sortie du build (prepack) précède le JSON sur la sortie standard.
+	[packed] = JSON.parse(out.slice(out.search(/^\[$/m)));
 	server = createServer(async (req, res) => {
 		// Une seule page servie, nom fixe : aucun chemin venu de la requête n'atteint le disque.
 		if (req.url !== "/defauts") return res.writeHead(404).end();
@@ -33,7 +39,7 @@ beforeAll(async () => {
 	});
 	await new Promise<void>((resolve) => server.listen(0, "127.0.0.1", resolve));
 	base = `http://127.0.0.1:${(server.address() as AddressInfo).port}`;
-}, 60_000);
+}, 120_000);
 
 afterAll(async () => {
 	if (server) await new Promise<void>((resolve) => server.close(() => resolve()));
@@ -41,18 +47,11 @@ afterAll(async () => {
 });
 
 describe("paquet npm rampe", () => {
-	it("contient exactement le binaire, le README, la licence et package.json", () => {
-		const [packed] = JSON.parse(npm(["pack", "--dry-run", "--json"], pkgDir));
-		expect(packed.files.map((f: { path: string }) => f.path).sort()).toEqual([
-			"LICENSE",
-			"README.md",
-			"dist/rampe.mjs",
-			"package.json",
-		]);
+	it("contient exactement le binaire, le README, la licence et package.json", { timeout: 10_000 }, () => {
+		expect(packed.files.map((f) => f.path).sort()).toEqual(["LICENSE", "README.md", "dist/rampe.mjs", "package.json"]);
 	});
 
 	it("installé dans un dossier vierge, son binaire audite une page", { timeout: 300_000 }, async () => {
-		const [packed] = JSON.parse(npm(["pack", "--json", "--pack-destination", dir], pkgDir));
 		const project = join(dir, "projet");
 		await mkdir(project);
 		await writeFile(join(project, "package.json"), '{ "private": true }\n');
@@ -70,6 +69,11 @@ describe("paquet npm rampe", () => {
 					resolve({ code: typeof error?.code === "number" ? error.code : error ? -1 : 0, stdout, stderr });
 				});
 			});
+
+		const version = await new Promise<string>((resolve) =>
+			execFile(bin, ["--version"], (_error, stdout) => resolve(stdout.trim())),
+		);
+		expect(version).toBe(`rampe ${pkg.version}`);
 
 		const { code, stderr } = await run(["--json", json]);
 		expect(code, stderr).toBe(1);

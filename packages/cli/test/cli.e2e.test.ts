@@ -11,6 +11,7 @@ import axe from "axe-core";
 import { chromium } from "playwright";
 import playwrightPkg from "playwright/package.json" with { type: "json" };
 import { afterAll, beforeAll, describe, expect, it } from "vitest";
+import cliPkg from "../package.json" with { type: "json" };
 import type { AuditReport } from "../src/audit.ts";
 
 const cli = fileURLToPath(new URL("../src/cli.ts", import.meta.url));
@@ -276,6 +277,12 @@ describe("rampe audit (bout en bout)", { timeout: 60_000 }, () => {
 		const { code, stderr } = await run("audit", `${base}/quitte`);
 		expect(code).toBe(2);
 		expect(stderr).toContain("about:blank");
+	});
+
+	it("--version affiche « rampe <version> » et sort en 0", async () => {
+		const { code, stdout } = await runCli("--version");
+		expect(code).toBe(0);
+		expect(stdout.trim()).toBe(`rampe ${cliPkg.version}`);
 	});
 
 	it("Chromium absent : sort en 2 avec la commande d'installation exacte (ADR-0025 §4)", async () => {

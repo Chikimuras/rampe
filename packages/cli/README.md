@@ -17,6 +17,7 @@ Ou installé une fois pour toutes :
 npm i -g rampe
 npx playwright@1.64.0 install chromium   # une fois
 rampe audit https://exemple.fr/ --json rapport.json --html rapport.html
+rampe --version
 ```
 
 La version de Playwright doit être celle de la CLI (1.64.0 aujourd’hui). Si Chromium manque, `rampe` sort en 2 et affiche la commande exacte à lancer. Sous Linux, `--with-deps` installe aussi les bibliothèques système du navigateur.
@@ -220,7 +221,7 @@ Le titre de page est borné à 300 caractères dans le JSON (« … (tronqué) �
 
 `pnpm --filter rampe test` lance les tests unitaires et des tests de bout en bout : la vraie CLI audite les pages de `test/fixtures/` servies par un serveur `node:http` local (défauts connus aux critères 1.1, 3.2, 8.3 et 11.1 ; page propre ; `region` seule, aussi en `--strict` ; défauts de contraste propres au thème sombre et à la fenêtre étroite (`--theme`, `--largeur`) ; boucle infinie ; départ vers `about:blank` ; CSP `script-src 'none'` ; page piège qui falsifie `window.axe` et casse des primitives JavaScript, et accueil piège qui fausse la collecte de l’échantillon ; redirection vers une autre origine avec identifiants dans l’URL). Un mini-site local (`test/fixtures/site-accueil.html` et des pages générées) sert à enchaîner `rampe echantillon` puis `rampe audit --echantillon` : pages types et raisons, page manquante signalée, JSON multi-pages, page en erreur et codes de sortie. Il faut Chromium (commande ci-dessus). Les pages de test sont exclues de Biome, puisqu’elles sont fautives exprès.
 
-`test/paquet.e2e.test.ts` teste le paquet réel : `pnpm --filter rampe build`, liste exacte de `npm pack` (`dist/rampe.mjs`, `README.md`, `LICENSE`, `package.json`), puis installation de l’archive dans un dossier vierge et audit de `test/fixtures/defauts.html` par `node_modules/.bin/rampe`, y compris sans Chromium (code 2). Il lui faut npm et l’accès au registre.
+`pnpm --filter rampe test:paquet` (hors de `pnpm check`, car il demande npm et l’accès au registre ; lancé par la CI) teste le paquet réel, `test/paquet.e2e.test.ts` : `npm pack` (le build passe par `prepack`), liste exacte de l’archive (`dist/rampe.mjs`, `README.md`, `LICENSE`, `package.json`), puis installation de l’archive dans un dossier vierge et audit de `test/fixtures/defauts.html` par `node_modules/.bin/rampe`, y compris sans Chromium (code 2).
 
 ## Publier une version
 
@@ -229,7 +230,7 @@ La publication passe par la CI (`.github/workflows/publish.yml`), jamais depuis 
 1. changer `version` dans `packages/cli/package.json` par une PR ;
 2. une fois la PR fusionnée, poser l’étiquette sur `main` : `git tag v<version> && git push origin v<version>`.
 
-Le workflow vérifie que l’étiquette correspond à la version, lance `pnpm check`, construit, puis publie avec le *Trusted Publishing* de npm (jeton OIDC éphémère, aucun jeton npm stocké) et une attestation de provenance.
+Le workflow a deux jobs. `build`, sans droit d’écriture, vérifie que l’étiquette correspond à la version et que le commit est sur `main`, lance `pnpm check` et le test du paquet, puis produit l’archive (`npm pack`, qui construit par `prepack`). `publish`, dans l’environnement GitHub `npm`, publie cette archive telle quelle avec le *Trusted Publishing* de npm (jeton OIDC éphémère, aucun jeton npm stocké) et une attestation de provenance.
 
 ### Première publication (manuelle, par Alexandre)
 
@@ -240,8 +241,8 @@ npm login
 pnpm install --frozen-lockfile
 pnpm --filter rampe exec playwright install chromium
 pnpm check
-pnpm --filter rampe build
-cd packages/cli && npm publish --access public
+pnpm --filter rampe test:paquet
+cd packages/cli && npm publish --access public   # prepack construit dist/rampe.mjs
 ```
 
 Pas de `--provenance` ici : l’attestation n’est possible que depuis la CI.
@@ -252,7 +253,7 @@ Ensuite, déclarer l’éditeur de confiance **juste avant de poser l’étiquet
 - *Organization or user* : `Chikimuras` ;
 - *Repository* : `rampe` ;
 - *Workflow filename* : `publish.yml` ;
-- *Environment name* : vide ;
+- *Environment name* : `npm` (environnement GitHub du job `publish`) ;
 - autoriser la publication directe (`npm publish`).
 
 Puis, dans les 2 jours, publier la version suivante par la CI (PR de version, puis étiquette, voir plus haut). Une fois la configuration validée, npm recommande d’interdire la publication par jeton classique (*Publishing access* : exiger la double authentification et refuser les jetons).

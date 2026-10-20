@@ -9,6 +9,7 @@ import { parseArgs } from "node:util";
 import { AXE_RUN_OPTIONS } from "@rampe/core";
 import axe from "axe-core";
 import { type Browser, chromium, type Page, type Request } from "playwright";
+import pkg from "../package.json" with { type: "json" };
 import {
 	type AuditPage,
 	buildReport,
@@ -38,6 +39,7 @@ import {
 import { renderHtmlReport } from "./rapport.ts";
 
 const USAGE = `Usage :
+  rampe --version
   rampe audit <url> [--json <fichier>] [--html <fichier>] [--timeout <ms>] [--theme clair|sombre] [--largeur <px>] [--strict]
   rampe audit --echantillon <fichier> [mêmes options]
   rampe echantillon <url> [--sortie <fichier>] [--max <n>] [--graine <n>] [--timeout <ms>]
@@ -86,8 +88,13 @@ function parseCli(argv: string[]) {
 			largeur: { type: "string" },
 			strict: { type: "boolean" },
 			help: { type: "boolean", short: "h" },
+			version: { type: "boolean" },
 		},
 	});
+	if (values.version) {
+		console.log(`rampe ${pkg.version}`);
+		process.exit(0);
+	}
 	if (values.help) {
 		console.log(USAGE);
 		process.exit(0);

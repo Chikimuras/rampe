@@ -31,7 +31,9 @@
 	},
 	"scripts": {
 		"build": "rolldown src/cli.ts --file dist/rampe.mjs --format esm --platform node --external playwright --external axe-core",
-		"test": "vitest run",
+		"prepack": "npm run build",
+		"test": "vitest run --exclude test/paquet.e2e.test.ts",
+		"test:paquet": "vitest run test/paquet.e2e.test.ts",
 		"typecheck": "tsc --noEmit"
 	},
 	"dependencies": {

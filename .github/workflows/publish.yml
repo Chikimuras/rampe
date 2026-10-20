@@ -1,21 +1,23 @@
 # Publication de la CLI sur npm (ADR-0025 §5) : étiquette `v<version>` posée sur main, gate complet, puis publication
 # par Trusted Publishing (identité OIDC de GitHub Actions), sans jeton npm stocké, avec attestation de provenance.
+# Deux jobs : `build` vérifie, teste et produit l'archive sans aucun droit d'écriture ; `publish`, seul à pouvoir
+# demander un jeton OIDC, ne fait que publier cette archive (ni installation de dépendances, ni test, ni build).
 name: Publication npm
 
 on:
   push:
     tags: ["v*"]
 
-# Moindre privilège — OWASP Top 10 CI/CD, CICD-SEC-5 : lecture du dépôt, et jeton OIDC éphémère pour npm
-# (pas de jeton de longue durée en secret : CICD-SEC-6 ; provenance : CICD-SEC-9).
+# Moindre privilège par défaut — OWASP Top 10 CI/CD, CICD-SEC-5 ; chaque job déclare le sien.
 permissions:
   contents: read
-  id-token: write
 
 jobs:
-  publish:
+  build:
     runs-on: ubuntu-latest
     timeout-minutes: 30
+    permissions:
+      contents: read
     steps:
       # Mêmes actions et versions que ci.yml, épinglées par SHA — OWASP Top 10 CI/CD, CICD-SEC-3.
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
@@ -53,8 +55,42 @@ jobs:
             '  userns,' '}' | sudo tee /etc/apparmor.d/playwright-chromium
           sudo apparmor_parser -r /etc/apparmor.d/playwright-chromium
       - run: pnpm check
-      - run: pnpm --filter rampe build
+      # Test du paquet réel (archive installée dans un dossier vierge), hors de pnpm check car il demande le registre.
+      - run: pnpm --filter rampe test:paquet
+      # npm pack lance le build (prepack) : une seule construction, celle de l'archive publiée.
+      - run: npm pack --pack-destination "$RUNNER_TEMP/paquet"
+        working-directory: packages/cli
+      # Épinglée par SHA (CICD-SEC-3), à une version publiée depuis plus de 2 semaines.
+      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: paquet-npm
+          path: ${{ runner.temp }}/paquet/
+          if-no-files-found: error
+          retention-days: 7
+
+  publish:
+    needs: build
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    # Environnement GitHub « npm » : déclaré aussi dans l'éditeur de confiance sur npmjs.com, ses règles de protection
+    # s'appliquent avant que le jeton OIDC puisse être demandé.
+    environment: npm
+    # Jeton OIDC limité à ce job — CICD-SEC-5 ; aucun jeton npm de longue durée — CICD-SEC-6 ; provenance — CICD-SEC-9.
+    # GitHub, « Security hardening with OpenID Connect » : n'accorder id-token: write qu'au job qui en a besoin.
+    permissions:
+      contents: read
+      id-token: write
+    steps:
+      # Épinglée par SHA (CICD-SEC-3), à une version publiée depuis plus de 2 semaines.
+      - uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
+        with:
+          name: paquet-npm
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: 22
+          # Aucun cache pour une publication : recommandation de la documentation npm (Trusted publishing, étape 2).
+          package-manager-cache: false
       # Trusted Publishing demande npm ≥ 11.5.1 (documentation npm) ; Node 22 livre npm 10. Version exacte.
       - run: npm install -g npm@11.21.0
-      - run: npm publish --provenance --access public
-        working-directory: packages/cli
+      # Archive produite par le job build, publiée telle quelle (pas de prepack sur une archive).
+      - run: npm publish "rampe-${GITHUB_REF_NAME#v}.tgz" --provenance --access public

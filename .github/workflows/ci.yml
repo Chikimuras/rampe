@@ -44,6 +44,9 @@ jobs:
             '  userns,' '}' | sudo tee /etc/apparmor.d/playwright-chromium
           sudo apparmor_parser -r /etc/apparmor.d/playwright-chromium
       - run: pnpm check
+      # Paquet npm réel (ADR-0025 §3) : archive installée dans un dossier vierge, puis audit. Hors de pnpm check, car il
+      # demande le registre npm.
+      - run: pnpm --filter rampe test:paquet
       # Auto-évaluation de Rampe (ADR-0021 §2) : fragments validés strictement, et docs/audit-rampe/session.json
       # identique à ce qu'ils produisent.
       - run: pnpm auto-evaluation --verifier
