@@ -2,7 +2,7 @@
 import { type CollectionEntry, getCollection } from "astro:content";
 import Base from "../../../layouts/Base.astro";
 import { ADR_STATUS, journalTitle } from "../../../lib/labels";
-import { markEnglishHtml, markEnglishText, TECH_TERMS } from "../../../lib/lang";
+import { markEnglishHtml, TECH_TERMS } from "../../../lib/lang";
 import { url } from "../../../lib/url";
 
 type Entry = CollectionEntry<"adr" | "journal" | "docs">;
@@ -43,9 +43,8 @@ const source = `${entry.collection === "docs" ? "" : `${entry.collection}/`}${en
 
 <Base title={title}>
 	<p><a href={url("cockpit/")}>← Cockpit</a></p>
-	{/* <title> ne peut pas contenir de balisage : le titre affiché, lui, balise son jargon anglais (critère 8.7). */}
-	<h1 set:html={markEnglishText(title, TECH_TERMS)} />
-	{isJournal && <p class="subtitle" set:html={markEnglishText(entry.data.title, TECH_TERMS)} />}
+	<h1>{title}</h1>
+	{isJournal && <p class="subtitle">{entry.data.title}</p>}
 	{meta && <p class="meta">{meta}</p>}
 	<article set:html={html} />
 	<p><a href={`https://github.com/Chikimuras/rampe/blob/main/docs/${source}`}>Voir la source sur GitHub</a></p>

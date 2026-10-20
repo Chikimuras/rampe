@@ -1,6 +1,11 @@
-// Changements de langue (critère RGAA 8.7) : les mots anglais courants du texte reçoivent `lang="en"`, au rendu.
-// Règle (décision consignée dans l'auto-évaluation, délégation ADR-0001) : les mots courants anglais absents du
-// dictionnaire français, jargon technique compris, exigent `lang` ; les noms propres, sigles et titres d'œuvres non.
+// Changements de langue (critère RGAA 8.7) : des mots anglais du texte reçoivent `lang="en"`, au rendu.
+// Règle (consignée au journal du 20 octobre 2026, délégation ADR-0001), d'après les notes du critère 8.7 :
+//   a) mot du dictionnaire de l'Académie française (note 1 : « le dictionnaire de référence est celui de l'Académie
+//      française ») : pas de `lang` ;
+//   b) mot passé dans le langage commun, présent dans un dictionnaire d'usage (Larousse, Robert) : pas de `lang`, sauf
+//      risque d'incompréhension (note 2, exemple officiel : « newsletter ») ;
+//   c) jargon technique ou mot absent des dictionnaires d'usage : `lang` exigé. SEULS ces mots figurent dans les listes ;
+//   d) nom propre, nom d'outil, titre d'œuvre, identifiant ou code : exempté.
 // Listes FERMÉES : un mot absent n'est jamais deviné. Seuls les nœuds texte sont touchés, jamais le contenu de
 // <code>, <pre>, etc., ni un passage déjà marqué par un `lang`, ni un attribut, ni le texte d'un lien qui est une URL.
 // Analyse : satteri, déjà utilisé par render.ts (aucune dépendance de plus).
@@ -9,29 +14,21 @@ import { toHtml } from "hast-util-to-html";
 import { htmlToHast } from "satteri";
 
 /**
- * Jargon technique anglais des pages du cockpit (ADR, journal, documentation). Pluriel en -s reconnu.
- * Dictionnaire de référence (note 1 du critère 8.7) : celui de l'Académie française, 9e édition ; un mot anglais
- * qui n'y figure pas exige `lang`, même courant.
+ * Jargon technique anglais des pages du cockpit (ADR, journal, documentation), cas (c). Pluriel en -s reconnu.
+ * Hors liste : cas (a) et (b) (squash, job, focus, bug, cookie, e-mail, proxy, plugin, widget…) et (d) (titres
+ * d'œuvres comme les OWASP Cheat Sheets).
  */
 export const TECH_TERMS = [
-	"admin",
 	"backend",
 	"bidi",
-	"bug",
 	"build",
-	"cheat sheet",
 	"check",
 	"checkout",
 	"commit",
-	"cookie",
 	"cron",
 	"diff",
 	"dogfooding",
-	"e-commerce",
-	"e-mail",
-	"emoji",
 	"fixture",
-	"focus",
 	"force-push",
 	"fork",
 	"fuzzer",
@@ -41,58 +38,30 @@ export const TECH_TERMS = [
 	"headless",
 	"hook",
 	"incomplete",
-	"job",
 	"lint",
 	"merge",
 	"monorepo",
-	"open source",
 	"overlay",
-	"plugin",
-	"popup",
-	"proxy",
 	"push",
 	"roadmap",
 	"run",
 	"runner",
 	"shell",
-	"spam",
-	"squash",
 	"token",
 	"typecheck",
-	"widget",
 	"workflow",
 	"workspace",
 	"worktree",
 ];
 
 /**
- * Mots anglais des intitulés et définitions officiels du RGAA. Le texte officiel n'est pas modifié (ADR-0010) :
+ * Mots anglais des intitulés et définitions officiels du RGAA, cas (c). Le texte officiel n'est pas modifié (ADR-0010) :
  * `lang` est un balisage, ajouté autour des mots tels quels.
+ * Hors liste : cas (a) et (b) (focus, pop-up, e-mail, plugin, widget, newsletter, bitmap…), et (d) : noms propres et
+ * d'outils (Ace by DAISY, PAC, W3C Nu markup checker, Word Accessibility Plug-in), identifiants (`submit`, `click`…),
+ * titres d'œuvres (notes et techniques du W3C, vidéo citée).
  */
-// Hors liste, par décision : noms propres (Ace by DAISY, PAC, W3C Nu markup checker), identifiants (`submit`, événements
-// `click`, `blur`…), titres d'œuvres (notes et techniques du W3C, vidéo citée), et mots présents dans le dictionnaire de
-// l'Académie française, 9e édition (flash, script, zoom, logo, design, quiz, item…).
-export const OFFICIAL_TERMS = [
-	"all frames",
-	"anti-spam",
-	"bitmap",
-	"blog",
-	"e-mail",
-	"field name",
-	"focus",
-	"landmark",
-	"newsletter",
-	"off",
-	"playlist",
-	"plug-in",
-	"plugin",
-	"podcast",
-	"pop-under",
-	"pop-up",
-	"style switcher",
-	"tag",
-	"widget",
-];
+export const OFFICIAL_TERMS = ["all frames", "field name", "landmark", "pop-under", "style switcher"];
 
 const SKIP = new Set(["code", "kbd", "pre", "samp", "script", "style", "var"]);
 

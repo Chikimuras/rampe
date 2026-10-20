@@ -6,7 +6,6 @@ import { computeConformity, formatRate } from "@rampe/core/conformity";
 import sessionText from "../../../../../docs/audit-rampe/session.json?raw";
 import Base from "../../layouts/Base.astro";
 import { ADR_STATUS, journalTitle } from "../../lib/labels";
-import { markEnglishText, TECH_TERMS } from "../../lib/lang";
 import { url } from "../../lib/url";
 
 const byDate = <T extends { data: { date: Date } }>(a: T, b: T) => b.data.date.getTime() - a.data.date.getTime();
@@ -122,14 +121,7 @@ const rate = (r: number | null) => (r === null ? "sans objet" : formatRate(r));
 
 	<h2 id="journal">Journal de bord</h2>
 	<ul>
-		{
-			// Titres de docs/ : jargon anglais balisé (critère 8.7).
-			journal.map((j) => (
-				<li>
-					<a href={url(`cockpit/journal/${j.id}/`)}>{journalTitle(j)}</a> — <Fragment set:html={markEnglishText(j.data.title, TECH_TERMS)} />
-				</li>
-			))
-		}
+		{journal.map((j) => <li><a href={url(`cockpit/journal/${j.id}/`)}>{journalTitle(j)}</a> — {j.data.title}</li>)}
 	</ul>
 
 	<h2 id="adr">Décisions d’architecture (ADR), dans l’ordre</h2>
@@ -137,7 +129,7 @@ const rate = (r: number | null) => (r === null ? "sans objet" : formatRate(r));
 		{
 			adrs.map((a) => (
 				<li>
-					<a href={url(`cockpit/adr/${a.id}/`)} set:html={markEnglishText(a.data.title, TECH_TERMS)} />
+					<a href={url(`cockpit/adr/${a.id}/`)}>{a.data.title}</a>
 					<span class={`status ${a.data.status}`}>{ADR_STATUS[a.data.status]}</span>
 				</li>
 			))
@@ -146,7 +138,7 @@ const rate = (r: number | null) => (r === null ? "sans objet" : formatRate(r));
 
 	<h2 id="docs">Documentation</h2>
 	<ul>
-		{docs.map((d) => <li><a href={url(`cockpit/docs/${d.id}/`)} set:html={markEnglishText(d.data.title, TECH_TERMS)} /></li>)}
+		{docs.map((d) => <li><a href={url(`cockpit/docs/${d.id}/`)}>{d.data.title}</a></li>)}
 	</ul>
 </Base>
 
