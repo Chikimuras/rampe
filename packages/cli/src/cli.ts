@@ -19,6 +19,7 @@ import {
 	parseAuditUrl,
 	parseAxeOutput,
 	redact,
+	sameDocument,
 	stripControl,
 	TITLE_MAX,
 	truncate,
@@ -253,7 +254,8 @@ const AXE_RUN = `${axe.source}
 /**
  * Charge la page et lance axe-core. Toute navigation du cadre principal pendant l'analyse arrête l'audit (ADR-0020) :
  * la requête de navigation suffit, sans attendre la validation du nouveau document (qui peut n'arriver qu'après la fin
- * d'axe), et l'URL du document analysé doit être encore celle de la page. Les résultats ne sont donc jamais attribués
+ * d'axe), et l'URL du document analysé doit être encore celle de la page, aux identifiants et au fragment près
+ * (ADR-0023). Les résultats ne sont donc jamais attribués
  * à une autre page que celle analysée.
  */
 async function inspect(page: Page, url: URL, timeout: number): Promise<AuditPage> {
@@ -265,8 +267,10 @@ async function inspect(page: Page, url: URL, timeout: number): Promise<AuditPage
 	page.on("request", onRequest);
 	const raw = parseAxeOutput(await evaluateIsolated(page, AXE_RUN));
 	page.off("request", onRequest);
-	if (navigated || page.url() !== raw.url) throw new Error(NAVIGATED);
-	const finalUrl = raw.url;
+	// Adresse de la page (identifiants compris, masqués à la sortie), une fois vérifié qu'elle désigne bien le document
+	// analysé.
+	const finalUrl = page.url();
+	if (navigated || !sameDocument(finalUrl, raw.url)) throw new Error(NAVIGATED);
 	if (!isHttp(finalUrl)) throw new Error(`la page a quitté le web (http/https) : ${finalUrl}`);
 	return {
 		url: redact(url.href),

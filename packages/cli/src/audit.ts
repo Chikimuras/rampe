@@ -61,6 +61,21 @@ function isAxeResult(r: unknown): r is AxeRawResult {
 }
 
 /**
+ * Même document à deux adresses près des identifiants et du fragment (ADR-0023 §2 et §4) : `page.url()` garde
+ * `user:pass@`, `location.href` les retire, et un changement d'ancre ne change pas de document.
+ */
+export function sameDocument(a: string, b: string): boolean {
+	const bare = (u: string) => {
+		const url = new URL(u);
+		url.username = "";
+		url.password = "";
+		url.hash = "";
+		return url.href;
+	};
+	return bare(a) === bare(b);
+}
+
+/**
  * Relit le JSON sérialisé par axe dans le monde isolé (ADR-0020) et en vérifie la forme ; lève une erreur sinon.
  */
 export function parseAxeOutput(value: unknown): {

@@ -9,6 +9,7 @@ import {
 	parseAuditUrl,
 	parseAxeOutput,
 	redact,
+	sameDocument,
 	stripControl,
 } from "../src/audit.ts";
 
@@ -46,6 +47,16 @@ describe("parseAxeOutput", () => {
 		],
 	])("refuse un résultat %s", (_, value) => {
 		expect(() => parseAxeOutput(value)).toThrow("résultat d’axe-core illisible");
+	});
+});
+
+describe("sameDocument", () => {
+	it("ignore identifiants et fragment, pas le chemin ni la requête", () => {
+		expect(sameDocument("http://a:b@h.fr/p?q=1#x", "http://h.fr/p?q=1")).toBe(true);
+		expect(sameDocument("http://h.fr/p", "http://h.fr/p#ancre")).toBe(true);
+		expect(sameDocument("http://h.fr/p", "http://h.fr/ailleurs")).toBe(false);
+		expect(sameDocument("http://h.fr/p?q=1", "http://h.fr/p?q=2")).toBe(false);
+		expect(sameDocument("http://h.fr/p", "https://h.fr/p")).toBe(false);
 	});
 });
 
