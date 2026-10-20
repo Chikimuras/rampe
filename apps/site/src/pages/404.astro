@@ -1,0 +1,16 @@
+---
+// Page servie par GitHub Pages pour toute adresse inconnue sous /rampe/ (404.html à la racine du build).
+// Hors du plan du site (ce n'est pas une page du site, lib/sitemap.ts), mais validée et auditée par `pnpm audit:rampe`.
+// Liens absolus (avec la base) : la page est servie à n'importe quelle profondeur d'adresse.
+import Base from "../layouts/Base.astro";
+import { url } from "../lib/url";
+---
+
+<Base title="Page introuvable" description="Cette adresse ne correspond à aucune page du site de Rampe.">
+	<h1>Page introuvable</h1>
+	<p>Cette adresse ne correspond à aucune page du site de Rampe. Elle a peut-être changé, ou contient une faute de frappe.</p>
+	<ul>
+		<li><a href={url()}>Revenir à l’accueil</a></li>
+		<li><a href={url("plan-du-site/")}>Consulter le plan du site</a></li>
+	</ul>
+</Base>

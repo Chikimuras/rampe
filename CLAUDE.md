@@ -28,6 +28,7 @@ Outil open source d’accompagnement à la conformité RGAA pour les PME. Vision
 - Serveurs locaux de test : toujours un **port libre attribué dynamiquement**, et vérifier le titre de la page servie (plusieurs agents tournent en parallèle).
 - Le proxy rtk réécrit aussi `grep` en `rg` (syntaxe d’expressions différente) : `rtk proxy grep` si besoin.
 - Mutations temporaires d’un fichier pour éprouver un test : chemins ABSOLUS et restauration par `git checkout -- <fichier>` (arbre propre au préalable).
+- Arrêter un processus de test **par son PID uniquement**, jamais `pkill -f <motif>` : plusieurs agents peuvent servir le site ou lancer des tests en parallèle, et un motif peut toucher le processus d’un autre.
 - `cp` et `rm` sont des alias interactifs sur la machine : utiliser `command cp` / `command rm`.
 
 ## Conventions

@@ -75,6 +75,15 @@ describe("renderGlossaryHtml", () => {
 		expect(renderGlossaryHtml(input)).not.toMatch(/<script|<img|onerror=|onclick=|style=|id=|href="javascript/i);
 	});
 
+	it("balise les mots anglais du texte officiel sans le modifier (8.7), une seule fois", () => {
+		expect(renderGlossaryHtml('<p>le style switcher et les <span lang="en">landmarks</span></p>')).toBe(
+			'<p>le <span lang="en">style switcher</span> et les <span lang="en">landmarks</span></p>',
+		);
+		expect(renderMarkdown("rôle de type [landmark](#landmarks)", { inline: true })).toBe(
+			'rôle de type <a href="/referentiel/glossaire/#landmarks"><span lang="en">landmark</span></a>',
+		);
+	});
+
 	it("laisse les ancres internes à la page du glossaire", () => {
 		expect(renderGlossaryHtml('<p>Voir <a href="#lien">lien</a>.</p>')).toBe('<p>Voir <a href="#lien">lien</a>.</p>');
 	});

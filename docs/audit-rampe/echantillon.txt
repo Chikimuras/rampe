@@ -11,7 +11,6 @@
 #   contact — n'existe pas encore
 #   mentions légales — n'existe pas encore (avec la déclaration : ⛔ Alexandre, ADR-0021 §3)
 #   accessibilité (déclaration) — n'existe pas encore (obligation légale ; publication : ⛔ Alexandre, ADR-0021 §3)
-#   plan du site — n'existe pas encore
 #   aide — n'existe pas encore
 #   authentification — sans objet tant que le site n'a pas de compte (ADR-0005 : pas de backend)
 #   recherche — n'existe pas encore
@@ -47,7 +46,7 @@ https://chikimuras.github.io/rampe/cockpit/journal/2026-10-15/
 # contenu particulier — une page de documentation (feuille de route : listes de tâches converties en statuts)
 https://chikimuras.github.io/rampe/cockpit/docs/roadmap/
 
-# hasard — 2 pages sur 11, soit 18 % (au moins 10 % exigés). Méthode, rejouable :
+# hasard — 2 pages sur 12, soit 17 % (au moins 10 % exigés). Méthode, rejouable :
 #   liste de départ : chaque dossier contenant un index.html dans le build (137 pages), moins les 9 pages ci-dessus
 #   choisies à la main (dans leur version d'origine : ADR-0021 au lieu de l'ADR-0011), triée par ordre
 #   alphabétique : 128 pages ;
@@ -57,3 +56,7 @@ https://chikimuras.github.io/rampe/referentiel/5-1/
 
 # hasard — second tirage de la même méthode
 https://chikimuras.github.io/rampe/referentiel/1-9/
+
+# plan du site — lien « Plan du site » du pied de page de chaque page (critère 12.1), ajouté après le tirage
+# « hasard » ci-dessus (fait sur le build d'avant, sans cette page) : il n'en change pas la méthode
+https://chikimuras.github.io/rampe/plan-du-site/
