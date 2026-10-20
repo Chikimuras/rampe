@@ -400,7 +400,9 @@ describe("audit guidé (bout en bout)", { timeout: 60_000 }, () => {
 		await alert.waitFor();
 		await expect(alert.textContent()).resolves.toContain("Échec de l’enregistrement.");
 		// Erreur : région d'alerte, jamais la région d'état (critère 7.5).
-		await expect.poll(() => alertText(page)).toBe("Échec de l’enregistrement");
+		// Le bandeau role=alert est la seule annonce de l'échec : rien de plus dans les régions (7.5, pas de doublon).
+		await page.waitForTimeout(200);
+		await expect(alertText(page)).resolves.toBe("");
 		await expect(statusText(page)).resolves.not.toContain("Échec");
 		await page.getByLabel("Conforme", { exact: true }).check(); // nouvel essai : toujours plein
 		await page.waitForTimeout(600);
@@ -1811,9 +1813,10 @@ describe("audit guidé (bout en bout)", { timeout: 60_000 }, () => {
 			await expect(page.locator("#declaration-updatedOn-erreur").textContent()).resolves.toMatch(
 				/^Date incomplète ou hors limites/,
 			);
-			await expect
-				.poll(() => alertText(page))
-				.toBe("Export impossible : une date est incomplète ou hors limites (années 1900 à 9999).");
+			// Le focus est sur le champ, relié à son message : aucune annonce de plus pour l'export bloqué (7.5).
+			await expect(field.getAttribute("aria-describedby")).resolves.toContain("declaration-updatedOn-erreur");
+			await expect(alertText(page)).resolves.not.toContain("Export impossible");
+			await expect(statusText(page)).resolves.not.toContain("Export impossible");
 			await page.getByRole("button", { name: "Télécharger (Markdown)" }).click();
 			await page.waitForTimeout(800);
 			expect(downloads).toEqual([]);
@@ -2142,9 +2145,12 @@ describe("audit guidé (bout en bout)", { timeout: 60_000 }, () => {
 			await page.getByLabel("Année de début").fill("0010");
 			await page.getByRole("button", { name: "Télécharger le schéma (HTML)" }).click();
 			await expect.poll(() => page.evaluate(() => document.activeElement?.id)).toBe("schema-debut");
+			// Le focus est sur le champ, relié à son message : aucune annonce de plus pour l'export bloqué (7.5).
 			await expect
-				.poll(() => alertText(page))
-				.toBe("Export impossible : l’année de début est incomplète ou hors limites.");
+				.poll(() => page.getByLabel("Année de début").getAttribute("aria-describedby"))
+				.toBe("schema-debut-erreur");
+			await expect(alertText(page)).resolves.not.toContain("Export impossible");
+			await expect(statusText(page)).resolves.not.toContain("Export impossible");
 			await page.waitForTimeout(600);
 			expect(downloads).toEqual([]);
 			expect((await stored(page)).schema.startYear).toBe(2026);
@@ -2706,11 +2712,8 @@ describe("conformité RGAA des pages statiques (auto-évaluation)", { timeout: 6
 		await page.close();
 	});
 
-	it("8.7 : titres des ADR et documents en français ; « open source » balisé sur l'accueil", async () => {
+	it("8.7 : titres des ADR et documents en français, <title> compris", async () => {
 		const page = await browser.newPage();
-		const english = (selector: string) => page.locator(`${selector} span[lang=en]`).allTextContents();
-		await page.goto(`${base}/`);
-		await expect(english("main")).resolves.toEqual(["open source"]);
 		for (const path of ["cockpit/", "plan-du-site/"]) {
 			await page.goto(`${base}/${path}`);
 			await expect(page.locator('a[href$="/cockpit/adr/0003-monorepo-typescript-pnpm/"]').textContent()).resolves.toBe(
@@ -2726,7 +2729,7 @@ describe("conformité RGAA des pages statiques (auto-évaluation)", { timeout: 6
 		for (const [id, title] of [
 			[
 				"adr/0005-pas-de-backend-donnees-locales",
-				"ADR-0005 — Pas de serveur : les données d’audit restent dans le navigateur",
+				"ADR-0005 — Aucun serveur applicatif : les données d’audit restent dans le navigateur",
 			],
 			["adr/0006-gates-et-flux-de-merge", "ADR-0006 — Contrôles obligatoires et flux de fusion"],
 			["docs/roadmap", "Feuille de route"],

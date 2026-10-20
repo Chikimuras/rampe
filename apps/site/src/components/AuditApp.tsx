@@ -340,8 +340,8 @@ export default function AuditApp({
 				saved.current = session;
 				setSaveFailed(false);
 			} else {
+				// Annoncé par le bandeau role="alert" à son apparition ; un nouvel échec, bandeau affiché, n'ajoute rien.
 				setSaveFailed(true);
-				setAnnounce("Échec de l’enregistrement", true);
 			}
 		}, SAVE_DELAY);
 		return () => clearTimeout(timer);
@@ -1889,8 +1889,8 @@ function Declaration({
 		for (const [field, value] of Object.entries(drafts) as [DeclarationField, string][]) {
 			if (value !== "" && !isDay(value)) {
 				setTouched((t) => new Set(t).add(field));
+				// Focus sur le champ, relié à son message : aucune annonce de plus (RGAA 7.5, pas de doublon).
 				focusAfterRender(() => document.getElementById(`declaration-${field}`));
-				setAnnounce("Export impossible : une date est incomplète ou hors limites (années 1900 à 9999).", true);
 				return null;
 			}
 			updates.push([field, value]);
@@ -2265,8 +2265,8 @@ function Schema({
 	const download = (doc: "schema" | "plan", format: "html" | "markdown") => {
 		const current = commitStart();
 		if (!current) {
+			// Focus sur le champ, relié à son message : aucune annonce de plus (RGAA 7.5, pas de doublon).
 			focusAfterRender(() => document.getElementById("schema-debut"));
-			setAnnounce("Export impossible : l’année de début est incomplète ou hors limites.", true);
 			return;
 		}
 		const ext = format === "html" ? "html" : "md";
