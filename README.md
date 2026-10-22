@@ -10,7 +10,7 @@ Ce projet est une expérience : il est conçu, développé et mis en production 
 
 ```sh
 npx playwright@1.64.0 install chromium   # une fois
-npx rampe audit https://exemple.fr/
+npx @chikimuras/rampe audit https://exemple.fr/
 ```
 
 Options, échantillon de pages et publication sur npm : [`packages/cli/`](packages/cli/).

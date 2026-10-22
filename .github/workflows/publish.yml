@@ -47,7 +47,7 @@ jobs:
           fi
       - run: pnpm install --frozen-lockfile
       # Gate complet, comme ci.yml : Chromium et profil AppArmor (voir ci.yml), puis pnpm check.
-      - run: pnpm --filter rampe exec playwright install --with-deps chromium
+      - run: pnpm --filter @chikimuras/rampe exec playwright install --with-deps chromium
       - name: Autoriser le bac à sable de Chromium (AppArmor)
         run: |
           printf '%s\n' 'abi <abi/4.0>,' 'include <tunables/global>' \
@@ -56,7 +56,7 @@ jobs:
           sudo apparmor_parser -r /etc/apparmor.d/playwright-chromium
       - run: pnpm check
       # Test du paquet réel (archive installée dans un dossier vierge), hors de pnpm check car il demande le registre.
-      - run: pnpm --filter rampe test:paquet
+      - run: pnpm --filter @chikimuras/rampe test:paquet
       # npm pack lance le build (prepack) : une seule construction, celle de l'archive publiée.
       - run: npm pack --pack-destination "$RUNNER_TEMP/paquet"
         working-directory: packages/cli
@@ -93,4 +93,4 @@ jobs:
       # Trusted Publishing demande npm ≥ 11.5.1 (documentation npm) ; Node 22 livre npm 10. Version exacte.
       - run: npm install -g npm@11.21.0
       # Archive produite par le job build, publiée telle quelle (pas de prepack sur une archive).
-      - run: npm publish "rampe-${GITHUB_REF_NAME#v}.tgz" --provenance --access public
+      - run: npm publish "chikimuras-rampe-${GITHUB_REF_NAME#v}.tgz" --provenance --access public

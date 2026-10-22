@@ -33,7 +33,7 @@ jobs:
       - run: pnpm install --frozen-lockfile
       # Chromium pour les tests de bout en bout de la CLI (ADR-0011 §5), de /audit/ (ADR-0013 §5) et de l'extension
       # (ADR-0019 §7), même version de Playwright.
-      - run: pnpm --filter rampe exec playwright install --with-deps chromium
+      - run: pnpm --filter @chikimuras/rampe exec playwright install --with-deps chromium
       # Ubuntu 24.04 interdit par AppArmor les espaces de noms utilisateur dont le bac à sable de Chromium a besoin.
       # Profil ciblé sur les seuls binaires Playwright plutôt que --no-sandbox ou un sysctl global (ADR-0011 §6) :
       # https://chromium.googlesource.com/chromium/src/+/main/docs/security/apparmor-userns-restrictions.md
@@ -46,7 +46,7 @@ jobs:
       - run: pnpm check
       # Paquet npm réel (ADR-0025 §3) : archive installée dans un dossier vierge, puis audit. Hors de pnpm check, car il
       # demande le registre npm.
-      - run: pnpm --filter rampe test:paquet
+      - run: pnpm --filter @chikimuras/rampe test:paquet
       # Auto-évaluation de Rampe (ADR-0021 §2) : fragments validés strictement, et docs/audit-rampe/session.json
       # identique à ce qu'ils produisent.
       - run: pnpm auto-evaluation --verifier

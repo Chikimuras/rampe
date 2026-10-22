@@ -34,3 +34,4 @@ Alexandre a un compte npm. Les noms `rampe`, `@rampe/cli` et `@rampe/core` sont 
 - Le binaire du dépôt reste exécutable sans build pour le développement ; seul le paquet publié passe par `dist/`.
 - Publier une version = changer la version dans `packages/cli/package.json` par PR, puis poser l’étiquette `v<version>` sur `main`.
 - Écarté : publier `@rampe/core` à part (deux paquets à maintenir et à déclarer, sans usage public prévu) ; compiler avec `tsc` (ne résout pas la dépendance interne) ; un jeton npm en secret (CICD-SEC-6).
+- Le point 1 (nom publié) est remplacé par l’ADR-0026 : npm a refusé le nom `rampe`. Renvoi ajouté au titre des corrections éditoriales (ADR-0024).
