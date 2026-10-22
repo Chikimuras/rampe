@@ -1,5 +1,5 @@
 {
-	"name": "rampe",
+	"name": "@chikimuras/rampe",
 	"version": "0.1.0",
 	"description": "Audit automatique d’accessibilité d’un site web, résultats rangés par critère RGAA (axe-core dans Chromium)",
 	"keywords": [
@@ -21,7 +21,7 @@
 	},
 	"type": "module",
 	"bin": {
-		"rampe": "./dist/rampe.mjs"
+		"rampe": "dist/rampe.mjs"
 	},
 	"files": [
 		"dist"

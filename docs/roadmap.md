@@ -25,7 +25,7 @@ Chaque case cochée correspond à du code fusionné sur `main` avec la CI verte.
 - [x] `rampe audit <url>` : Playwright + axe-core, résultats par critère RGAA
 - [x] Échantillon de pages (pages types exigées par la méthode RGAA)
 - [x] Rapport HTML lisible par un non-expert + export JSON
-- [ ] Publication npm ⛔ première publication par Alexandre (procédure prête, ADR-0025), puis éditeur de confiance à déclarer sur npm
+- [ ] Publication npm ⛔ première publication de @chikimuras/rampe par Alexandre (procédure prête, ADR-0025 et ADR-0026), puis éditeur de confiance à déclarer sur npm
 
 ## Phase 3 — Audit guidé (web)
 

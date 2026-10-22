@@ -1,4 +1,4 @@
-# rampe
+# @chikimuras/rampe
 
 Audit automatique d’une page web ou d’un échantillon de pages, avec les résultats rangés par **critère RGAA** (ADR-0011). Le moteur est axe-core 4.14.0, exécuté dans un vrai Chromium par Playwright : les contrastes, la visibilité et les noms accessibles dépendent du rendu.
 
@@ -8,13 +8,13 @@ Node ≥ 22.18. Sans installation, avec `npx` :
 
 ```sh
 npx playwright@1.64.0 install chromium   # une fois : le navigateur de l’audit
-npx rampe audit https://exemple.fr/
+npx @chikimuras/rampe audit https://exemple.fr/
 ```
 
 Ou installé une fois pour toutes :
 
 ```sh
-npm i -g rampe
+npm i -g @chikimuras/rampe
 npx playwright@1.64.0 install chromium   # une fois
 rampe audit https://exemple.fr/ --json rapport.json --html rapport.html
 rampe --version
@@ -22,14 +22,14 @@ rampe --version
 
 La version de Playwright doit être celle de la CLI (1.64.0 aujourd’hui). Si Chromium manque, `rampe` sort en 2 et affiche la commande exacte à lancer. Sous Linux, `--with-deps` installe aussi les bibliothèques système du navigateur.
 
-Le paquet publié contient un seul fichier, `dist/rampe.mjs`, où `@rampe/core` est intégré ; `playwright` et `axe-core` sont ses seules dépendances (ADR-0025).
+Le paquet publié contient un seul fichier, `dist/rampe.mjs`, où `@rampe/core` est intégré ; `playwright` et `axe-core` sont ses seules dépendances (ADR-0025, nom du paquet : ADR-0026). La commande installée reste `rampe`.
 
 ## Utilisation depuis le dépôt
 
 Depuis la racine du dépôt, après `pnpm install` :
 
 ```sh
-pnpm --filter rampe exec playwright install chromium   # une fois
+pnpm --filter @chikimuras/rampe exec playwright install chromium   # une fois
 pnpm rampe audit https://exemple.fr/
 pnpm rampe audit https://exemple.fr/ --json rapport.json --html rapport.html --timeout 60000
 ```
@@ -219,9 +219,9 @@ Le titre de page est borné à 300 caractères dans le JSON (« … (tronqué) �
 
 ## Tests
 
-`pnpm --filter rampe test` lance les tests unitaires et des tests de bout en bout : la vraie CLI audite les pages de `test/fixtures/` servies par un serveur `node:http` local (défauts connus aux critères 1.1, 3.2, 8.3 et 11.1 ; page propre ; `region` seule, aussi en `--strict` ; défauts de contraste propres au thème sombre et à la fenêtre étroite (`--theme`, `--largeur`) ; boucle infinie ; départ vers `about:blank` ; CSP `script-src 'none'` ; page piège qui falsifie `window.axe` et casse des primitives JavaScript, et accueil piège qui fausse la collecte de l’échantillon ; redirection vers une autre origine avec identifiants dans l’URL). Un mini-site local (`test/fixtures/site-accueil.html` et des pages générées) sert à enchaîner `rampe echantillon` puis `rampe audit --echantillon` : pages types et raisons, page manquante signalée, JSON multi-pages, page en erreur et codes de sortie. Il faut Chromium (commande ci-dessus). Les pages de test sont exclues de Biome, puisqu’elles sont fautives exprès.
+`pnpm --filter @chikimuras/rampe test` lance les tests unitaires et des tests de bout en bout : la vraie CLI audite les pages de `test/fixtures/` servies par un serveur `node:http` local (défauts connus aux critères 1.1, 3.2, 8.3 et 11.1 ; page propre ; `region` seule, aussi en `--strict` ; défauts de contraste propres au thème sombre et à la fenêtre étroite (`--theme`, `--largeur`) ; boucle infinie ; départ vers `about:blank` ; CSP `script-src 'none'` ; page piège qui falsifie `window.axe` et casse des primitives JavaScript, et accueil piège qui fausse la collecte de l’échantillon ; redirection vers une autre origine avec identifiants dans l’URL). Un mini-site local (`test/fixtures/site-accueil.html` et des pages générées) sert à enchaîner `rampe echantillon` puis `rampe audit --echantillon` : pages types et raisons, page manquante signalée, JSON multi-pages, page en erreur et codes de sortie. Il faut Chromium (commande ci-dessus). Les pages de test sont exclues de Biome, puisqu’elles sont fautives exprès.
 
-`pnpm --filter rampe test:paquet` (hors de `pnpm check`, car il demande npm et l’accès au registre ; lancé par la CI) teste le paquet réel, `test/paquet.e2e.test.ts` : `npm pack` (le build passe par `prepack`), liste exacte de l’archive (`dist/rampe.mjs`, `README.md`, `LICENSE`, `package.json`), puis installation de l’archive dans un dossier vierge et audit de `test/fixtures/defauts.html` par `node_modules/.bin/rampe`, y compris sans Chromium (code 2).
+`pnpm --filter @chikimuras/rampe test:paquet` (hors de `pnpm check`, car il demande npm et l’accès au registre ; lancé par la CI) teste le paquet réel, `test/paquet.e2e.test.ts` : `npm pack` (le build passe par `prepack`), liste exacte de l’archive (`dist/rampe.mjs`, `README.md`, `LICENSE`, `package.json`), puis installation de l’archive dans un dossier vierge et audit de `test/fixtures/defauts.html` par `node_modules/.bin/rampe`, y compris sans Chromium (code 2).
 
 ## Publier une version
 
@@ -239,15 +239,15 @@ npm ne déclare un éditeur de confiance que pour un paquet qui existe déjà. L
 ```sh
 npm login
 pnpm install --frozen-lockfile
-pnpm --filter rampe exec playwright install chromium
+pnpm --filter @chikimuras/rampe exec playwright install chromium
 pnpm check
-pnpm --filter rampe test:paquet
+pnpm --filter @chikimuras/rampe test:paquet
 cd packages/cli && npm publish --access public   # prepack construit dist/rampe.mjs
 ```
 
 Pas de `--provenance` ici : l’attestation n’est possible que depuis la CI.
 
-Ensuite, déclarer l’éditeur de confiance **juste avant de poser l’étiquette de la version suivante** : une configuration doit être validée par une publication réussie **dans les 2 jours** (documentation npm), sinon elle expire et il faut la supprimer puis la recréer. Sur npmjs.com, page du paquet `rampe`, *Settings*, section *Trusted Publisher* :
+Ensuite, déclarer l’éditeur de confiance **juste avant de poser l’étiquette de la version suivante** : une configuration doit être validée par une publication réussie **dans les 2 jours** (documentation npm), sinon elle expire et il faut la supprimer puis la recréer. Sur npmjs.com, page du paquet `@chikimuras/rampe`, *Settings*, section *Trusted Publisher* :
 
 - fournisseur : GitHub Actions ;
 - *Organization or user* : `Chikimuras` ;
