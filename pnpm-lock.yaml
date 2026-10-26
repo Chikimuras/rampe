@@ -15,8 +15,8 @@ importers:
         specifier: ^6.0.3
         version: 6.0.3
       vnu-jar:
-        specifier: 26.10.11
-        version: 26.10.11
+        specifier: 26.10.12
+        version: 26.10.12
 
   apps/site:
     dependencies:
@@ -58,8 +58,8 @@ importers:
         specifier: 1.64.0
         version: 1.64.0
       vitest:
-        specifier: 5.0.4
-        version: 5.0.4(@types/node@22.20.5)(vite@8.3.4(@types/node@22.20.5)(yaml@2.9.1))
+        specifier: 5.0.5
+        version: 5.0.5(@types/node@22.20.5)(vite@8.3.4(@types/node@22.20.5)(yaml@2.9.1))
 
   packages/cli:
     dependencies:
@@ -80,8 +80,8 @@ importers:
         specifier: 1.2.14
         version: 1.2.14
       vitest:
-        specifier: 5.0.4
-        version: 5.0.4(@types/node@22.20.5)(vite@8.3.4(@types/node@22.20.5)(yaml@2.9.1))
+        specifier: 5.0.5
+        version: 5.0.5(@types/node@22.20.5)(vite@8.3.4(@types/node@22.20.5)(yaml@2.9.1))
 
   packages/core:
     devDependencies:
@@ -89,8 +89,8 @@ importers:
         specifier: 4.14.0
         version: 4.14.0
       vitest:
-        specifier: 5.0.4
-        version: 5.0.4(@types/node@22.20.5)(vite@8.3.4(@types/node@22.20.5)(yaml@2.9.1))
+        specifier: 5.0.5
+        version: 5.0.5(@types/node@22.20.5)(vite@8.3.4(@types/node@22.20.5)(yaml@2.9.1))
 
   packages/extension:
     dependencies:
@@ -114,8 +114,8 @@ importers:
         specifier: 8.3.4
         version: 8.3.4(@types/node@22.20.5)(yaml@2.9.1)
       vitest:
-        specifier: 5.0.4
-        version: 5.0.4(@types/node@22.20.5)(vite@8.3.4(@types/node@22.20.5)(yaml@2.9.1))
+        specifier: 5.0.5
+        version: 5.0.5(@types/node@22.20.5)(vite@8.3.4(@types/node@22.20.5)(yaml@2.9.1))
 
 packages:
 
@@ -858,8 +858,8 @@ packages:
   '@ungap/structured-clone@1.4.0':
     resolution: {integrity: sha512-1mEZtMKPM09vDmQt5y7YvmN2+DFTP7Tg0EWXdic8/C6VRnpb33e4ghisCIE3WZjsE2N8mf+QV1Zqh7ZFYLWInQ==}
 
-  '@vitest/mocker@5.0.4':
-    resolution: {integrity: sha512-tqAlrYWce4iUxhr3ncNohejtCTOcHeE8XWrSNZY3OhPoDn01yeGv+gnaBy64ATp7o6pb03eIbBAjzmibpc9vIQ==}
+  '@vitest/mocker@5.0.5':
+    resolution: {integrity: sha512-xLL3lkDegJZw+MGoGaCCsFayDZthGgpAtr3Vziyfc4p7xH89K7KRPcRBBh/kEYm0Aqkt5DtTmkYpBtRV/FrHZg==}
     peerDependencies:
       msw: ^2.4.9 || ^3.0.0
       vite: ^6.0.0 || ^7.0.0 || ^8.0.0
@@ -869,8 +869,8 @@ packages:
       vite:
         optional: true
 
-  '@vitest/spy@5.0.4':
-    resolution: {integrity: sha512-MZKk/gSkm2q+ICobMxCpH1mA+cCAWm8WV7UhxlqGjq/sJ3AGc1BqFOs5CRVXxH78wQtme9q/NAAgBquj4AcyMw==}
+  '@vitest/spy@5.0.5':
+    resolution: {integrity: sha512-lwJRExuH417257Q5wv9QYugN9IMJkoxcrKrYxGPQkBzl7wlNpTUxD/5yNX4ESKVUIShKPgkGchYPFMWOOk0wzw==}
 
   '@volar/kit@2.4.28':
     resolution: {integrity: sha512-cKX4vK9dtZvDRaAzeoUdaAJEew6IdxHNCRrdp5Kvcl6zZOqb6jTOfk3kXkIkG3T7oTFXguEMt5+9ptyqYR84Pg==}
@@ -1364,6 +1364,9 @@ packages:
   magic-string@1.4.3:
     resolution: {integrity: sha512-z12OxmaPGE0F4xlpGdjuAUckipLpQlTAuAmyGhNoD7ODpYUzvDfvtxUbjM/jwznyP178oju/KDdyi220wNJ0RQ==}
 
+  magic-string@1.4.4:
+    resolution: {integrity: sha512-jQz9sVhrZuphH4NrAIHSgkDJCluQO7Ioi4KGRLa7aTUjAODQ13hENX0YIytqYE/rIkO485gQG2LeBxJaW53kkQ==}
+
   magicast@0.5.5:
     resolution: {integrity: sha512-UicdXN8zQ3JHlxVq+28afMXPr1z7WNY6+7EJnzTdQWkTAlMLF5fNCCKxJHBQwGaNGR11581EiQmQzx73+MvszA==}
 
@@ -1852,20 +1855,20 @@ packages:
       vite:
         optional: true
 
-  vitest@5.0.4:
-    resolution: {integrity: sha512-z0WxZRV2Sg48wF0FSgMq3TFG8JS38/Qr96vZVZdX6+Em9raQTvnXQvdTFJe2m3rfyJnEHeHQ/snceIdi8D1pVg==}
+  vitest@5.0.5:
+    resolution: {integrity: sha512-cPODOMF8YnkiiYtDdHo6n4wWmBrOBBbOIYH2d33M4l3CdNn72h+qMmO6uXffUN6A5AZFXNND/d+krS9mgkXRfg==}
     engines: {node: ^22.12.0 || ^24.0.0 || >=26.0.0}
     hasBin: true
     peerDependencies:
       '@edge-runtime/vm': '*'
       '@opentelemetry/api': ^1.9.0
       '@types/node': ^22.0.0 || >=24.0.0
-      '@vitest/browser-playwright': 5.0.4
-      '@vitest/browser-preview': 5.0.4
+      '@vitest/browser-playwright': 5.0.5
+      '@vitest/browser-preview': 5.0.5
       '@vitest/browser-webdriverio': ^5.0.0-beta.5 || >=5.0.0
-      '@vitest/coverage-istanbul': 5.0.4
-      '@vitest/coverage-v8': 5.0.4
-      '@vitest/ui': 5.0.4
+      '@vitest/coverage-istanbul': 5.0.5
+      '@vitest/coverage-v8': 5.0.5
+      '@vitest/ui': 5.0.5
       happy-dom: '*'
       jsdom: '*'
       vite: ^6.4.0 || ^7.0.0 || ^8.0.0
@@ -1893,8 +1896,8 @@ packages:
       jsdom:
         optional: true
 
-  vnu-jar@26.10.11:
-    resolution: {integrity: sha512-YKqIChv06STl9LWSVx/7A3+qwgvfK2YHUv4E1KNVOHHDuESLEOfF1c8FD2XdFS3juaO5E33qdx99mmjOrm7afQ==}
+  vnu-jar@26.10.12:
+    resolution: {integrity: sha512-Zg67G1zM28UGEVIOSn1ns6rFSZ6JVI/FNXhw+UJaXM02AQcDE84arp/b5c0OFrvzsgd/VcmpAd9B4hX38BeZvA==}
     engines: {node: '>=18'}
     hasBin: true
 
@@ -2806,16 +2809,16 @@ snapshots:
 
   '@ungap/structured-clone@1.4.0': {}
 
-  '@vitest/mocker@5.0.4(vite@8.3.4(@types/node@22.20.5)(yaml@2.9.1))':
+  '@vitest/mocker@5.0.5(vite@8.3.4(@types/node@22.20.5)(yaml@2.9.1))':
     dependencies:
       '@jridgewell/trace-mapping': 0.3.31
-      '@vitest/spy': 5.0.4
+      '@vitest/spy': 5.0.5
       estree-walker: 3.0.3
-      magic-string: 1.4.3
+      magic-string: 1.4.4
     optionalDependencies:
       vite: 8.3.4(@types/node@22.20.5)(yaml@2.9.1)
 
-  '@vitest/spy@5.0.4': {}
+  '@vitest/spy@5.0.5': {}
 
   '@volar/kit@2.4.28(typescript@6.0.3)':
     dependencies:
@@ -3331,6 +3334,10 @@ snapshots:
     dependencies:
       '@jridgewell/sourcemap-codec': 1.6.0
 
+  magic-string@1.4.4:
+    dependencies:
+      '@jridgewell/sourcemap-codec': 1.6.0
+
   magicast@0.5.5:
     dependencies:
       '@babel/parser': 7.29.9
@@ -3768,14 +3775,14 @@ snapshots:
     optionalDependencies:
       vite: 8.3.4(@types/node@22.20.5)(yaml@2.9.1)
 
-  vitest@5.0.4(@types/node@22.20.5)(vite@8.3.4(@types/node@22.20.5)(yaml@2.9.1)):
+  vitest@5.0.5(@types/node@22.20.5)(vite@8.3.4(@types/node@22.20.5)(yaml@2.9.1)):
     dependencies:
       '@types/chai': 5.2.3
-      '@vitest/mocker': 5.0.4(vite@8.3.4(@types/node@22.20.5)(yaml@2.9.1))
+      '@vitest/mocker': 5.0.5(vite@8.3.4(@types/node@22.20.5)(yaml@2.9.1))
       chai: 6.3.0
       es-module-lexer: 2.3.2
       expect-type: 1.4.0
-      magic-string: 1.4.3
+      magic-string: 1.4.4
       obug: 3.0.0
       picomatch: 4.0.7
       std-env: 4.3.0
@@ -3789,7 +3796,7 @@ snapshots:
     transitivePeerDependencies:
       - msw
 
-  vnu-jar@26.10.11: {}
+  vnu-jar@26.10.12: {}
 
   volar-service-css@0.0.71(@volar/language-service@2.4.28):
     dependencies:
