@@ -12,7 +12,7 @@
 		"@astrojs/check": "0.9.10",
 		"@astrojs/preact": "6.0.6",
 		"@rampe/core": "workspace:*",
-		"astro": "7.3.8",
+		"astro": "7.4.0",
 		"hast-util-sanitize": "5.0.2",
 		"hast-util-to-html": "9.0.5",
 		"preact": "11.0.1",
